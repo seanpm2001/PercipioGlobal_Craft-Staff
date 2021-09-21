@@ -1,0 +1,12 @@
+{%- extends '_layouts/elementindex' -%}
+
+{% set scriptTagOptions = {
+    'depends': [
+        'percipiolondon\\craftstaff\\assetbundles\\craftstaff\\CraftstaffAsset'
+    ],
+} %}
+
+{%- set title = "Employees"|t('staff-management') -%}
+{%- set selectedSubnavItem = 'employees' -%}
+
+{%- set elementType = 'percipiolondon\\craftstaff\\elements\\Employee' -%}
