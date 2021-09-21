@@ -14,6 +14,7 @@ use percipiolondon\craftstaff\Craftstaff;
 
 use Craft;
 use craft\db\ActiveRecord;
+use percipiolondon\craftstaff\db\Table;
 
 /**
  * Employee Record
@@ -31,6 +32,24 @@ use craft\db\ActiveRecord;
  * @package   Craftstaff
  * @since     1.0.0-alpha.1
  */
+
+/**
+ * Employee record
+ * @property int $siteId;
+ * @property string $staffologyId;
+ * @property int $employerId;
+ * @property int $userId;
+ * @property string $personalDetails;
+ * @property string $employmentDetails;
+ * @property string $autoEnrolment;
+ * @property string $leaveSettings;
+ * @property string $rightToWork;
+ * @property string $bankDetails;
+ * @property string $status;
+ * @property boolean $aeNotEnroledWarning;
+ * @property string $sourceSystemId;
+ */
+
 class Employee extends ActiveRecord
 {
     // Public Static Methods
@@ -50,6 +69,6 @@ class Employee extends ActiveRecord
      */
     public static function tableName()
     {
-        return '{{%craftstaff_employee}}';
+        return Table::STAFF_EMPLOYEES;
     }
 }

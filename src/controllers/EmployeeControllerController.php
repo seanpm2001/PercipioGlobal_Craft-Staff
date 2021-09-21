@@ -70,10 +70,8 @@ class EmployeeControllerController extends Controller
      *
      * @return mixed
      */
-    public function actionDoSomething()
+    public function actionFetch()
     {
-        $result = 'Welcome to the EmployeeControllerController actionDoSomething() method';
-
-        return $result;
+        return  Craftstaff::$plugin->employees->fetch();
     }
 }

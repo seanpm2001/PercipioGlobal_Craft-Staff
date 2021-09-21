@@ -10,10 +10,13 @@
 
 namespace percipiolondon\craftstaff\services;
 
+use craft\helpers\Queue;
 use percipiolondon\craftstaff\Craftstaff;
 
 use Craft;
 use craft\base\Component;
+use percipiolondon\craftstaff\jobs\CreateEmployeeJob;
+use percipiolondon\craftstaff\records\Employer;
 
 /**
  * Employees Service
@@ -43,13 +46,51 @@ class Employees extends Component
      *
      * @return mixed
      */
-    public function exampleService()
+    public function fetch()
     {
-        $result = 'something';
-        // Check our Plugin's settings for `someAttribute`
-        if (Craftstaff::$plugin->getSettings()->someAttribute) {
-        }
+        $api = \Craft::parseEnv(Craftstaff::$plugin->getSettings()->staffologyApiKey);
+        $credentials = base64_encode("craftstaff:".$api);
+        $headers = [
+            'headers' => [
+                'Authorization' => 'Basic ' . $credentials,
+            ],
+        ];
 
-        return $result;
+        if($api) {
+
+            // GET EMPLOYERS
+            $employers = Employer::find()->all();
+
+            foreach($employers as $employer) {
+
+                $base_url = 'https://api.staffology.co.uk/employers/' . $employer->staffologyId . '/employees';
+
+                $client = new \GuzzleHttp\Client();
+
+                //GET LIST OF EMPLOYEES INSIDE OF EMPLOYER
+                try {
+
+                    $response = $client->get($base_url, $headers);
+
+                    $results = json_decode($response->getBody()->getContents(), true);
+
+                    // LOOP THROUGH LIST WITH COMPANIES
+                    foreach ($results as $i => $entry) {
+
+                        Craft::$app->getQueue()->push(new CreateEmployeeJob([
+                            'headers' => $headers,
+                            'employer' => $employer,
+                            'endpoint' => $entry['url'],
+                        ]));
+
+                    }
+                } catch (\Throwable $e) {
+
+                    \Craft::error("Something went wrong: {$e->getMessage()}", __METHOD__);
+                }
+            }
+
+            Craft::$app->getQueue()->run(0);
+        }
     }
 }

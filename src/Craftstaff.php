@@ -127,6 +127,7 @@ class Craftstaff extends Plugin
             UrlManager::EVENT_REGISTER_CP_URL_RULES,
             function (RegisterUrlRulesEvent $event) {
                 $event->rules['staff-management/employers/fetch'] = 'staff-management/employer-controller/fetch';
+                $event->rules['staff-management/employees/fetch'] = 'staff-management/employee-controller/fetch';
             }
         );
 
