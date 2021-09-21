@@ -111,9 +111,9 @@ class Install extends Migration
                     'slug' => $this->string(255)->notNull()->defaultValue(''),
                     'siteId' => $this->integer()->notNull(),
                 // Custom columns in the table
-                    'staffologyId' => $this->integer()->notNull(),
+                    'staffologyId' => $this->string(255)->notNull(),
                     'name' => $this->string(255)->notNull()->defaultValue(''),
-                    'logoId' =>  $this->integer()->notNull(),
+//                    'logoId' =>  $this->integer()->notNull(),
                     'crn' => $this->string()->notNull()->defaultValue(''),
                     'address' => $this->longText()->notNull(),
                     'hmrcDetails' => $this->longText()->notNull(),
@@ -138,11 +138,11 @@ class Install extends Migration
                     'uid' => $this->uid(),
                     'siteId' => $this->integer()->notNull(),
                 // Custom columns in the table
-                    'staffologyId' => $this->integer()->notNull(),
+                    'staffologyId' => $this->string(255)->notNull(),
                     'employerId' => $this->integer()->notNull(),
-                    'userId' => $this->integer()->notNull(),
+                    'userId' => $this->integer(),
                     'personalDetails' => $this->longText()->notNull(),
-                    'employmentlDetails' => $this->longText()->notNull(),
+                    'employmentDetails' => $this->longText()->notNull(),
                     'autoEnrolment' => $this->longText()->notNull(),
                     'leaveSettings' => $this->longText()->notNull(),
                     'rightToWork' => $this->longText()->notNull(),
@@ -346,15 +346,15 @@ class Install extends Migration
             'CASCADE'
         );
 
-        $this->addForeignKey(
-            $this->db->getForeignKeyName(Table::STAFF_EMPLOYERS, 'logoId'),
-            Table::STAFF_EMPLOYERS,
-            'logoId',
-            \craft\db\Table::ASSETS,
-            'id',
-            'CASCADE',
-            'CASCADE'
-        );
+//        $this->addForeignKey(
+//            $this->db->getForeignKeyName(Table::STAFF_EMPLOYERS, 'logoId'),
+//            Table::STAFF_EMPLOYERS,
+//            'logoId',
+//            \craft\db\Table::ASSETS,
+//            'id',
+//            'CASCADE',
+//            'CASCADE'
+//        );
 
     // staff_employee table
         $this->addForeignKey(
@@ -506,5 +506,12 @@ class Install extends Migration
 
     // staff_employer table
         $this->dropTableIfExists(Table::STAFF_EMPLOYERS);
+
+    // staff_permissions_users table
+        $this->dropTableIfExists(Table::STAFF_PERMISSIONS_USERS);
+
+    // staff_permissions table
+        $this->dropTableIfExists(Table::STAFF_PERMISSIONS);
+
     }
 }
