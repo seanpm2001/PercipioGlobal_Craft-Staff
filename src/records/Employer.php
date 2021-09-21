@@ -14,6 +14,7 @@ use percipiolondon\craftstaff\Craftstaff;
 
 use Craft;
 use craft\db\ActiveRecord;
+use percipiolondon\craftstaff\db\Table;
 
 /**
  * Employer Record
@@ -67,6 +68,6 @@ class Employer extends ActiveRecord
      */
     public static function tableName()
     {
-        return '{{%craftstaff_employer}}';
+        return Table::STAFF_EMPLOYERS;
     }
 }

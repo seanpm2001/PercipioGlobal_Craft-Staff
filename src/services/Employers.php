@@ -10,10 +10,13 @@
 
 namespace percipiolondon\craftstaff\services;
 
+use percipiolondon\craftstaff\helpers\AssetHelper;
 use percipiolondon\craftstaff\Craftstaff;
+
 
 use Craft;
 use craft\base\Component;
+use percipiolondon\craftstaff\records\Employer;
 
 /**
  * Employers Service
@@ -45,12 +48,109 @@ class Employers extends Component
      */
     public function fetch()
     {
-        $result = 'something';
+        $api = Craft::parseEnv(Craftstaff::$plugin->getSettings()->staffologyApiKey);
 
-        if (Craftstaff::$plugin->getSettings()->staffologyApiKey) {
-            $result = Craftstaff::$plugin->getSettings()->staffologyApiKey;
+        if ($api) {
+
+            // connection props
+            $base_url = 'https://api.staffology.co.uk/employers';
+            $credentials = base64_encode("craftstaff:".$api);
+            $headers = [
+                'headers' => [
+                    'Authorization' => 'Basic ' . $credentials,
+                ],
+            ];
+
+            $client = new \GuzzleHttp\Client();
+
+
+            // FETCH THE EMPLOYERS LIST
+            try {
+
+                $response = $client->get($base_url, $headers);
+
+                $results = json_decode($response->getBody()->getContents());
+
+                // LOOP THROUGH LIST WITH EMPLOYERS
+                foreach($results as $entry) {
+
+                    // FETCH DETAILED EMPLOYER INFO
+                    try {
+                        $response = $client->get($entry->url, $headers);
+
+                        $employer = $response->getBody()->getContents();
+
+                        if ($employer) {
+                            $employer = json_decode($employer);
+
+                            $employerRecord = Employer::findOne(['staffologyId' => $employer->id]);
+
+                            if (!$employerRecord) {
+
+                                $employerRecord = new Employer();
+                                $employerRecord->slug = strtolower(trim(preg_replace('/[^A-Za-z0-9-]+/', '-', $employer->name), '-'));
+                                $employerRecord->siteId = Craft::$app->getSites()->currentSite->id;
+                                $employerRecord->staffologyId = $employer->id ?? "";
+                                $employerRecord->name = $employer->name ?? '';
+                                //TODO: logo --> AssetHelper::fetchRemoteImage($employer->logoUrl);
+                                //                        $employerRecord->crn = $employer->crn; // not existing?
+                                $employerRecord->address = json_encode($employer->address) ?? '';
+                                $employerRecord->hmrcDetails = json_encode($employer->hmrcDetails) ?? '';
+                                $employerRecord->startYear = $employer->startYear ?? '';
+                                $employerRecord->currentYear = $employer->currentYear ?? '';
+                                $employerRecord->employeeCount = $employer->employeeCount ?? 0;
+                                $employerRecord->defaultPayOptions = json_encode($employer->defaultPayOptions) ?? '';
+                            }
+
+                            $employerRecord->save(false);
+                        }
+                    } catch (\Exception $e) {
+
+                        return 'error';
+                    }
+
+                }
+
+                return "success";
+
+            } catch (\Exception $e) {
+
+                return 'error';
+
+            }
+
         }
-
-        return $result;
     }
 }
+
+//if (Craftstaff::$plugin->getSettings()->staffologyApiKey) {
+//
+//    $api = Craft::parseEnv(Craftstaff::$plugin->getSettings()->staffologyApiKey);
+//
+//    $base_url = 'https://api.staffology.co.uk/employers';
+//    $credentials = base64_encode("craftstaff:".$result);
+//    $headers = [
+//        'headers' => [
+//            'Authorization' => 'Basic ' . $credentials,
+//        ],
+//    ];
+//
+//    $client = new \GuzzleHttp\Client();
+//
+//    try {
+//
+//        $response = $client->get($base_url, $headers);
+//
+//        return $response->getBody();
+//
+//    } catch (\Exception $e) {
+//
+////                return [
+////                    'error' => true,
+////                    'reason' => $e->getMessage()
+////                ];
+//
+//        return "error";
+//
+//    }
+//}
