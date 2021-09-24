@@ -10,11 +10,13 @@
 
 namespace percipiolondon\craftstaff\migrations;
 
+use craft\helpers\MigrationHelper;
 use percipiolondon\craftstaff\db\Table;
 
 use Craft;
 use craft\config\DbConfig;
 use craft\db\Migration;
+use yii\base\NotSupportedException;
 
 /**
  * staff-management Install Migration
@@ -80,6 +82,7 @@ class Install extends Migration
     public function safeDown()
     {
         $this->driver = Craft::$app->getConfig()->getDb()->driver;
+        $this->dropForeignKeys();
         $this->removeTables();
 
         return true;
@@ -173,6 +176,7 @@ class Install extends Migration
                     'lastPeriodNumber' => $this->integer()->notNull()->defaultValue(0),
                     'url' => $this->string(255)->notNull()->defaultValue(0),
                     'employerId' => $this->integer()->notNull()->defaultValue(0),
+                    'payRunId' => $this->integer()->notNull()->defaultValue(0),
                 ]
             );
         }
@@ -224,41 +228,41 @@ class Install extends Migration
                     'siteId' => $this->integer()->notNull(),
                 // Custom columns in the table
                     'staffologyId' => $this->string(255)->notNull(),
-                    'payrunId' => $this->integer()->notNull()->defaultValue(0),
-                    'taxYear' => $this->string(255)->notNull()->defaultValue(''),
-                    'startDate' => $this->dateTime()->notNull(),
-                    'endDate' => $this->dateTime()->notNull(),
-                    'note' => $this->longText()->notNull()->defaultValue(''),
-                    'bacsSubReference' => $this->string(255)->notNull()->defaultValue(''),
-                    'bacsHashcode' => $this->string(255)->notNull()->defaultValue(''),
-                    'percentageOfWorkingDaysPaidAsNormal' => $this->double()->notNull()->defaultValue(0),
-                    'workingDaysNotPaidAsNormal' => $this->double()->notNull()->defaultValue(0),
-                    'payPeriod' => $this->string(255)->notNull()->defaultValue(''),
-                    'ordinal' => $this->integer()->notNull()->defaultValue(1),
-                    'period' => $this->integer()->notNull()->defaultValue(1),
-                    'isNewStarter' => $this->boolean()->notNull(),
-                    'unpaidAbsence' => $this->boolean()->notNull(),
-                    'hasAttachmentOrders' => $this->boolean()->notNull(),
-                    'paymentDate' => $this->dateTime()->notNull(),
-                    'priorPayrollCode' => $this->string(255)->notNull()->defaultValue(''),
-                    'payOptions' => $this->longText()->notNull(),
-                    'pensionSummary' => $this->longText()->notNull(),
-                    'totals' => $this->longText()->notNull(),
-                    'periodOverrides' => $this->longText()->notNull(),
-                    'totalsYtd' => $this->longText()->notNull(),
-                    'totalsYtdOverrides' => $this->longText()->notNull(),
-                    'forcedCisVatAmount' => $this->double()->notNull()->defaultValue(0),
-                    'holidayAccured' => $this->double()->notNull()->defaultValue(0),
-                    'state' => $this->string(255)->notNull()->defaultValue('Open'),
-                    'isClosed' => $this->boolean()->notNull(),
-                    'manualNi' => $this->boolean()->notNull(),
-                    'nationalInsuranceCalculation' => $this->longText()->notNull(),
-                    'payrollCodeChanged' => $this->boolean()->notNull(),
-                    'aeNotEnrolledWarning' => $this->boolean()->notNull(),
-                    'fps' => $this->longText()->notNull(),
-                    'recievingOffsetPay' => $this->boolean()->notNull(),
-                    'paymentAfterLearning' => $this->boolean()->notNull(),
-                    'umbrellaPayment' => $this->longText()->notNull(),
+                    'payRunId' => $this->integer()->notNull()->defaultValue(0),
+                    'taxYear' => $this->string(255)->defaultValue(''),
+                    'startDate' => $this->dateTime(),
+                    'endDate' => $this->dateTime(),
+                    'note' => $this->longText(),
+                    'bacsSubReference' => $this->string(255)->defaultValue(''),
+                    'bacsHashcode' => $this->string(255)->defaultValue(''),
+                    'percentageOfWorkingDaysPaidAsNormal' => $this->double()->defaultValue(0),
+                    'workingDaysNotPaidAsNormal' => $this->double()->defaultValue(0),
+                    'payPeriod' => $this->string(255)->defaultValue(''),
+                    'ordinal' => $this->integer()->defaultValue(1),
+                    'period' => $this->integer()->defaultValue(1),
+                    'isNewStarter' => $this->boolean(),
+                    'unpaidAbsence' => $this->boolean(),
+                    'hasAttachmentOrders' => $this->boolean(),
+                    'paymentDate' => $this->dateTime(),
+                    'priorPayrollCode' => $this->string(255)->defaultValue(''),
+                    'payOptions' => $this->longText(),
+                    'pensionSummary' => $this->longText(),
+                    'totals' => $this->longText(),
+                    'periodOverrides' => $this->longText(),
+                    'totalsYtd' => $this->longText(),
+                    'totalsYtdOverrides' => $this->longText(),
+                    'forcedCisVatAmount' => $this->double()->defaultValue(0),
+                    'holidayAccured' => $this->double()->defaultValue(0),
+                    'state' => $this->string(255)->defaultValue('Open'),
+                    'isClosed' => $this->boolean(),
+                    'manualNi' => $this->boolean(),
+                    'nationalInsuranceCalculation' => $this->longText(),
+                    'payrollCodeChanged' => $this->boolean(),
+                    'aeNotEnrolledWarning' => $this->boolean(),
+                    'fps' => $this->longText(),
+                    'recievingOffsetPay' => $this->boolean(),
+                    'paymentAfterLearning' => $this->boolean(),
+                    'umbrellaPayment' => $this->longText(),
                     'pdf' => $this->string()->defaultValue(''),
                     'employerId' => $this->integer()->notNull()->defaultValue(null),
                 ]
@@ -404,6 +408,16 @@ class Install extends Migration
             'CASCADE'
         );
 
+        $this->addForeignKey(
+            $this->db->getForeignKeyName(Table::STAFF_PAYRUN_LOG, 'payRunId'),
+            Table::STAFF_PAYRUN_LOG,
+            'payRunId',
+            Table::STAFF_PAYRUN,
+            'id',
+            'CASCADE',
+            'CASCADE'
+        );
+
     // staff_payrun table
         $this->addForeignKey(
             $this->db->getForeignKeyName(Table::STAFF_PAYRUN, 'siteId'),
@@ -437,10 +451,20 @@ class Install extends Migration
         );
 
         $this->addForeignKey(
-            $this->db->getForeignKeyName(Table::STAFF_PAYRUNENTRIES, 'payrunId'),
+            $this->db->getForeignKeyName(Table::STAFF_PAYRUNENTRIES, 'payRunId'),
             Table::STAFF_PAYRUNENTRIES,
-            'payrunId',
+            'payRunId',
             Table::STAFF_PAYRUN,
+            'id',
+            'CASCADE',
+            'CASCADE'
+        );
+
+        $this->addForeignKey(
+            $this->db->getForeignKeyName(Table::STAFF_PAYRUNENTRIES, 'employerId'),
+            Table::STAFF_PAYRUNENTRIES,
+            'employerId',
+            Table::STAFF_EMPLOYERS,
             'id',
             'CASCADE',
             'CASCADE'
@@ -477,6 +501,26 @@ class Install extends Migration
             'CASCADE',
             'CASCADE'
         );
+    }
+
+    /**
+     * Drop the foreign keys
+     */
+    public function dropForeignKeys()
+    {
+        $tables = [
+            Table::STAFF_EMPLOYERS,
+            Table::STAFF_PAYRUN,
+            Table::STAFF_PAYRUNENTRIES,
+            Table::STAFF_PAYRUN_LOG,
+            Table::STAFF_PERMISSIONS_USERS,
+            Table::STAFF_PERMISSIONS,
+            Table::STAFF_EMPLOYERS,
+            Table::STAFF_USERS,
+        ];
+        foreach ($tables as $table) {
+            $this->_dropForeignKeyToAndFromTable($table);
+        }
     }
 
     /**
@@ -540,5 +584,34 @@ class Install extends Migration
         $rows[] = ['purchase:voluntarybenefits'];
 
         $this->batchInsert(Table::STAFF_PERMISSIONS, ['name'], $rows);
+    }
+    /**
+     * Returns if the table exists.
+     *
+     * @param string $tableName
+     * @param \yii\db\Migration|null $migration
+     * @return bool If the table exists.
+     * @throws NotSupportedException
+     */
+    private function _tableExists(string $tableName): bool
+    {
+        $schema = $this->db->getSchema();
+        $schema->refresh();
+        $rawTableName = $schema->getRawTableName($tableName);
+        $table = $schema->getTableSchema($rawTableName);
+
+        return (bool)$table;
+    }
+
+    /**
+     * @param string $tableName
+     * @throws NotSupportedException
+     */
+    private function _dropForeignKeyToAndFromTable(string $tableName)
+    {
+        if ($this->_tableExists($tableName)) {
+            MigrationHelper::dropAllForeignKeysToTable($tableName, $this);
+            MigrationHelper::dropAllForeignKeysOnTable($tableName, $this);
+        }
     }
 }

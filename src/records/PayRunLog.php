@@ -40,6 +40,7 @@ use percipiolondon\craftstaff\db\Table;
  * @property int $lastPeriodNumber;
  * @property string $url
  * @property int $employerId
+ * @property int $payRunId
  */
 
 class PayRunLog extends ActiveRecord
