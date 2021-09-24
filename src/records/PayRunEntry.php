@@ -37,7 +37,7 @@ use percipiolondon\craftstaff\db\Table;
  * PayRunEntry record
  * @property string $siteId;
  * @property string $staffologyId;
- * @property int $payrunId;
+ * @property int $payRunId;
  * @property int $employerId;
  * @property int $taxYear;
  * @property \DateTime $startDate;
@@ -86,9 +86,8 @@ class PayRunEntry extends ActiveRecord
         return [
             [[
                 'siteId',
-                'payrunId',
+                'payRunId',
                 'employerId',
-                'taxYear',
                 'ordinal',
                 'period',
             ], 'number', 'integerOnly' => true], [[
@@ -98,9 +97,10 @@ class PayRunEntry extends ActiveRecord
                 'holidayAccured',
             ], 'double'],
             [['startDate', 'endDate', 'paymentDate'], DateTimeValidator::class],
-            ['state', 'exists', 'targetAttribute' => ['Open', 'SubmittedForProcessing', 'Processing', 'AwaitingApproval', 'Approved', 'Finalised']],
+//            ['state', 'exists', 'targetAttribute' => ['Open', 'SubmittedForProcessing', 'Processing', 'AwaitingApproval', 'Approved', 'Finalised']],
             [[
                 'staffologyId',
+                'taxYear',
                 'note',
                 'bacsSubReference',
                 'bacsHashcode',
