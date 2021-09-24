@@ -284,6 +284,20 @@ class Employer extends Element
         return $html;
     }
 
+    /**
+     * @inheritdoc
+     * @since 3.3.0
+     */
+    public static function gqlScopesByContext($context): array
+    {
+        return ['employers.' . $context->uid];
+    }
+
+    public static function gqlTypeNameByContext($context): string
+    {
+        return $context->handle . '_Employer';
+    }
+
     // Events
     // -------------------------------------------------------------------------
 
