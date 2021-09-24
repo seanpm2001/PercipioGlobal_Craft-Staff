@@ -13,11 +13,12 @@ namespace percipiolondon\craftstaff\records;
 use percipiolondon\craftstaff\Craftstaff;
 
 use Craft;
+use DateTime;
 use craft\db\ActiveRecord;
 use percipiolondon\craftstaff\db\Table;
 
 /**
- * PayRun Record
+ * Company Record
  *
  * ActiveRecord is the base class for classes representing relational data in terms of objects.
  *
@@ -29,38 +30,25 @@ use percipiolondon\craftstaff\db\Table;
  * http://www.yiiframework.com/doc-2.0/guide-db-active-record.html
  *
  * @author    Percipio
- * @package   Craftstaff
- * @since     1.0.0-alpha.1
+ * @package   CompanyManagement
+ * @since     0.1.0
  */
 
 /**
- * PayRun record
- * @property int $siteId;
- * @property string $staffologyId;
- * @property string $taxYear;
- * @property int $taxMonth;
- * @property string $payPeriod;
- * @property int $ordinal;
- * @property int $period;
- * @property \DateTime $startDate;
- * @property \DateTime $endDate;
- * @property int $employeeCount;
- * @property int $subContractorCount;
- * @property string $totals;
- * @property string $state;
- * @property boolean $isClosed;
- * @property \DateTime $dateClosed;
- * @property string $pdf
- * @property string $url
- * @property int $employerId
+ * UserPermission record.
+ *
+ * @property int id
+ * @property int userId
+ * @property int employeeId
+ * @property int permissionId
+ *
  */
-
-class PayRun extends ActiveRecord
+class UserPermission extends ActiveRecord
 {
     // Public Static Methods
     // =========================================================================
 
-     /**
+    /**
      * Declares the name of the database table associated with this AR class.
      * By default this method returns the class name as the table name by calling [[Inflector::camel2id()]]
      * with prefix [[Connection::tablePrefix]]. For example if [[Connection::tablePrefix]] is `tbl_`,
@@ -74,6 +62,6 @@ class PayRun extends ActiveRecord
      */
     public static function tableName()
     {
-        return Table::STAFF_PAYRUN;
+        return Table::STAFF_PERMISSIONS_USERS;
     }
 }

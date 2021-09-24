@@ -149,6 +149,7 @@ class Install extends Migration
                     'bankDetails' => $this->longText()->notNull(),
                     'status' => $this->string(255)->notNull()->defaultValue('Current'),
                     'aeNotEnroledWarning' => $this->boolean()->notNull()->defaultValue(0),
+                    'niNumber' => $this->string(255)->notNull()->defaultValue(0),
                     'sourceSystemId' => $this->string(255)->notNull()->defaultValue(0),
                 ]
             );
@@ -189,7 +190,7 @@ class Install extends Migration
                     'uid' => $this->uid(),
                     'siteId' => $this->integer()->notNull(),
                     // Custom columns in the table
-                    'staffologyId' => $this->string(255)->notNull(),
+                    'staffologyId' => $this->string(255),
                     'taxYear' => $this->string(255)->notNull()->defaultValue(''),
                     'taxMonth' => $this->integer()->notNull()->defaultValue(0),
                     'payPeriod' => $this->string(255)->notNull()->defaultValue(''),
@@ -202,8 +203,9 @@ class Install extends Migration
                     'totals' => $this->longText()->notNull(),
                     'state' => $this->string(255)->notNull()->defaultValue(''),
                     'isClosed' => $this->boolean()->notNull(),
-                    'dateClosed' => $this->dateTime()->notNull(),
-                    'employerId' => $this->integer()->notNull()->defaultValue(0),
+                    'dateClosed' => $this->dateTime(),
+                    'url' => $this->string()->defaultValue(''),
+                    'employerId' => $this->integer()->notNull()->defaultValue(null),
                 ]
             );
         }
@@ -226,7 +228,7 @@ class Install extends Migration
                     'taxYear' => $this->string(255)->notNull()->defaultValue(''),
                     'startDate' => $this->dateTime()->notNull(),
                     'endDate' => $this->dateTime()->notNull(),
-                    'note' => $this->string()->notNull()->defaultValue(''),
+                    'note' => $this->longText()->notNull()->defaultValue(''),
                     'bacsSubReference' => $this->string(255)->notNull()->defaultValue(''),
                     'bacsHashcode' => $this->string(255)->notNull()->defaultValue(''),
                     'percentageOfWorkingDaysPaidAsNormal' => $this->double()->notNull()->defaultValue(0),
@@ -257,6 +259,8 @@ class Install extends Migration
                     'recievingOffsetPay' => $this->boolean()->notNull(),
                     'paymentAfterLearning' => $this->boolean()->notNull(),
                     'umbrellaPayment' => $this->longText()->notNull(),
+                    'pdf' => $this->string()->defaultValue(''),
+                    'employerId' => $this->integer()->notNull()->defaultValue(null),
                 ]
             );
         }
@@ -310,7 +314,8 @@ class Install extends Migration
                     'uid' => $this->uid(),
                     // Custom columns in the table
                     'permissionId' => $this->integer()->notNull()->defaultValue(0),
-                    'userId' => $this->integer()->notNull()->defaultValue(0),
+                    'userId' => $this->integer()->defaultValue(null),
+                    'employeeId' => $this->integer()->notNull()->defaultValue(0),
                 ]
             );
         }
@@ -326,6 +331,7 @@ class Install extends Migration
     protected function createIndexes()
     {
         $this->createIndex(null, Table::STAFF_EMPLOYERS, 'name', false);
+        $this->createIndex(null, Table::STAFF_EMPLOYEES, 'niNumber', false);
     }
 
     /**
@@ -442,20 +448,20 @@ class Install extends Migration
 
     // staff_permissions_users table
         $this->addForeignKey(
-            $this->db->getForeignKeyName(Table::STAFF_PERMISSIONS_USERS, 'siteId'),
+            $this->db->getForeignKeyName(Table::STAFF_PERMISSIONS_USERS, 'userId'),
             Table::STAFF_PERMISSIONS_USERS,
-            'permissionId',
-            Table::STAFF_PERMISSIONS,
+            'userId',
+            \craft\db\Table::USERS,
             'id',
             'CASCADE',
             'CASCADE'
         );
 
         $this->addForeignKey(
-            $this->db->getForeignKeyName(Table::STAFF_PERMISSIONS_USERS, 'employerId'),
+            $this->db->getForeignKeyName(Table::STAFF_PERMISSIONS_USERS, 'employeeId'),
             Table::STAFF_PERMISSIONS_USERS,
-            'userId',
-            \craft\db\Table::USERS,
+            'employeeId',
+            Table::STAFF_EMPLOYEES,
             'id',
             'CASCADE',
             'CASCADE'
@@ -480,6 +486,7 @@ class Install extends Migration
      */
     protected function insertDefaultData()
     {
+        $this->_createPermissions();
     }
 
     /**
@@ -489,29 +496,49 @@ class Install extends Migration
      */
     protected function removeTables()
     {
-    // staff_employee table
+        // staff_employee table
         $this->dropTableIfExists(Table::STAFF_EMPLOYEES);
 
-    // staff_payrunentries table
+        // staff_payrunentries table
         $this->dropTableIfExists(Table::STAFF_PAYRUNENTRIES);
 
-    // staff_user table
+        // staff_user table
         $this->dropTableIfExists(Table::STAFF_USERS);
 
-    // staff_payrun table
+        // staff_payrun table
         $this->dropTableIfExists(Table::STAFF_PAYRUN);
 
-    // staff_payrun_log table
+        // staff_payrun_log table
         $this->dropTableIfExists(Table::STAFF_PAYRUN_LOG);
 
-    // staff_employer table
+        // staff_employer table
         $this->dropTableIfExists(Table::STAFF_EMPLOYERS);
 
-    // staff_permissions_users table
+        // staff_permissions_users table
         $this->dropTableIfExists(Table::STAFF_PERMISSIONS_USERS);
 
-    // staff_permissions table
+        // staff_permissions table
         $this->dropTableIfExists(Table::STAFF_PERMISSIONS);
 
+    }
+
+    /**
+     * Create the permissions for the Company Users
+     */
+    private function _createPermissions()
+    {
+        $rows = [];
+
+        $rows[] = ['access:employer'];
+        $rows[] = ['access:groupbenefits'];
+        $rows[] = ['access:voluntarybenefits'];
+        $rows[] = ['manage:notifications'];
+        $rows[] = ['manage:employees'];
+        $rows[] = ['manage:employer'];
+        $rows[] = ['manage:benefits'];
+        $rows[] = ['purchase:groupbenefits'];
+        $rows[] = ['purchase:voluntarybenefits'];
+
+        $this->batchInsert(Table::STAFF_PERMISSIONS, ['name'], $rows);
     }
 }

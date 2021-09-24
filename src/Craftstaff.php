@@ -121,16 +121,6 @@ class Craftstaff extends Plugin
             $this->controllerNamespace = 'percipiolondon\craftstaff\console\controllers';
         }
 
-        // Register our CP routes
-        Event::on(
-            UrlManager::class,
-            UrlManager::EVENT_REGISTER_CP_URL_RULES,
-            function (RegisterUrlRulesEvent $event) {
-                $event->rules['staff-management/employers/fetch'] = 'staff-management/employer-controller/fetch';
-                $event->rules['staff-management/employees/fetch'] = 'staff-management/employee-controller/fetch';
-            }
-        );
-
         // Register our elements
         Event::on(
             Elements::class,

@@ -106,7 +106,9 @@ class Employers extends Component
                         }
                     } catch (\Exception $e) {
 
-                        return 'error';
+                        echo "---- error -----\n";
+                        var_dump($e->getMessage());
+                        echo "\n---- end error ----";
                     }
 
                 }
@@ -115,7 +117,9 @@ class Employers extends Component
 
             } catch (\Exception $e) {
 
-                return 'error';
+                echo "---- error -----\n";
+                var_dump($e->getMessage());
+                echo "\n---- end error ----";
 
             }
 

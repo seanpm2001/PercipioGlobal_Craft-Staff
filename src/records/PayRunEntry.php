@@ -10,10 +10,12 @@
 
 namespace percipiolondon\craftstaff\records;
 
+use craft\validators\DateTimeValidator;
 use percipiolondon\craftstaff\Craftstaff;
 
 use Craft;
 use craft\db\ActiveRecord;
+use percipiolondon\craftstaff\db\Table;
 
 /**
  * PayRunEntry Record
@@ -30,11 +32,105 @@ use craft\db\ActiveRecord;
  * @author    Percipio
  * @package   Craftstaff
  * @since     1.0.0-alpha.1
+ *
+ *
+ * PayRunEntry record
+ * @property string $siteId;
+ * @property string $staffologyId;
+ * @property int $payrunId;
+ * @property int $employerId;
+ * @property int $taxYear;
+ * @property \DateTime $startDate;
+ * @property \DateTime $endDate;
+ * @property string $note
+ * @property string $bacsSubReference
+ * @property string $bacsHashcode
+ * @property double $percentageOfWorkingDaysPaidAsNormal
+ * @property double $workingDaysNotPaidAsNormal
+ * @property string $payPeriod
+ * @property int $ordinal
+ * @property int $period
+ * @property boolean $isNewStarter
+ * @property boolean $unpaidAbsence
+ * @property boolean $hasAttachmentOrders
+ * @property \DateTime $paymentDate
+ * @property string $priorPayrollCode
+ * @property string $payOptions
+ * @property string $pensionSummary
+ * @property string $totals
+ * @property string $periodOverrides
+ * @property string $totalsYtd
+ * @property string $totalsYtdOverrides
+ * @property double $forcedCisVatAmount
+ * @property double $holidayAccured
+ * @property string $state
+ * @property boolean $isClosed
+ * @property boolean $manualNi
+ * @property string $nationalInsuranceCalculation
+ * @property boolean $payrollCodeChanged
+ * @property boolean $aeNotEnrolledWarning
+ * @property string $fps
+ * @property boolean $recievingOffsetPay
+ * @property boolean $paymentAfterLearning
+ * @property string $umbrellaPayment
+ * @property string $pdf
  */
+
 class PayRunEntry extends ActiveRecord
 {
     // Public Static Methods
     // =========================================================================
+
+    public function rules()
+    {
+        return [
+            [[
+                'siteId',
+                'payrunId',
+                'employerId',
+                'taxYear',
+                'ordinal',
+                'period',
+            ], 'number', 'integerOnly' => true], [[
+                'percentageOfWorkingDaysPaidAsNormal',
+                'workingDaysNotPaidAsNormal',
+                'forcedCisVatAmount',
+                'holidayAccured',
+            ], 'double'],
+            [['startDate', 'endDate', 'paymentDate'], DateTimeValidator::class],
+            ['state', 'exists', 'targetAttribute' => ['Open', 'SubmittedForProcessing', 'Processing', 'AwaitingApproval', 'Approved', 'Finalised']],
+            [[
+                'staffologyId',
+                'note',
+                'bacsSubReference',
+                'bacsHashcode',
+                'payPeriod',
+                'priorPayrollCode',
+                'payOptions',
+                'pensionSummary',
+                'totals',
+                'periodOverrides',
+                'totalsYtd',
+                'totalsYtdOverrides',
+                'state',
+                'nationalInsuranceCalculation',
+                'fps',
+                'umbrellaPayment',
+                'pdf',
+            ], 'string'],
+            [[
+                'unpaidAbsence',
+                'unpaidAbsence',
+                'hasAttachmentOrders',
+                'isClosed',
+                'manualNi',
+                'payrollCodeChanged',
+                'aeNotEnrolledWarning',
+                'recievingOffsetPay',
+                'paymentAfterLearning',
+            ], 'boolean'],
+        ];
+    }
 
      /**
      * Declares the name of the database table associated with this AR class.
@@ -50,6 +146,6 @@ class PayRunEntry extends ActiveRecord
      */
     public static function tableName()
     {
-        return '{{%craftstaff_payrunentry}}';
+        return Table::STAFF_PAYRUNENTRIES;
     }
 }

@@ -8,12 +8,12 @@
  * @copyright Copyright (c) 2021 Percipio
  */
 
-namespace percipiolondon\craftstaff\controllers;
+namespace percipiolondon\craftstaff\console\controllers;
 
 use percipiolondon\craftstaff\Craftstaff;
 
 use Craft;
-use craft\web\Controller;
+use craft\console\Controller;
 
 /**
  * PayRunController Controller
@@ -38,42 +38,14 @@ use craft\web\Controller;
 class PayRunControllerController extends Controller
 {
 
-    // Protected Properties
-    // =========================================================================
-
     /**
-     * @var    bool|array Allows anonymous access to this controller's actions.
-     *         The actions must be in 'kebab-case'
-     * @access protected
-     */
-    protected $allowAnonymous = ['index', 'do-something'];
-
-    // Public Methods
-    // =========================================================================
-
-    /**
-     * Handle a request going to our plugin's index action URL,
-     * e.g.: actions/staff-management/pay-run-controller
-     *
-     * @return mixed
-     */
-    public function actionIndex()
-    {
-        $result = 'Welcome to the PayRunControllerController actionIndex() method';
-
-        return $result;
-    }
-
-    /**
-     * Handle a request going to our plugin's actionDoSomething URL,
+     * Fetch all pay run from staffology
      * e.g.: actions/staff-management/pay-run-controller/do-something
      *
      * @return mixed
      */
-    public function actionDoSomething()
+    public function actionFetch()
     {
-        $result = 'Welcome to the PayRunControllerController actionDoSomething() method';
-
-        return $result;
+        return  Craftstaff::$plugin->payRun->fetch();
     }
 }

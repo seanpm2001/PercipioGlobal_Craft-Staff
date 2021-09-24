@@ -10,13 +10,19 @@
 
 namespace percipiolondon\craftstaff\services;
 
+use craft\elements\User;
 use craft\helpers\Queue;
 use percipiolondon\craftstaff\Craftstaff;
 
 use Craft;
 use craft\base\Component;
 use percipiolondon\craftstaff\jobs\CreateEmployeeJob;
+use percipiolondon\craftstaff\records\Employee;
 use percipiolondon\craftstaff\records\Employer;
+use percipiolondon\craftstaff\records\Permission;
+use percipiolondon\craftstaff\records\UserPermission;
+use yii\base\BaseObject;
+use yii\db\Exception;
 
 /**
  * Employees Service
@@ -56,6 +62,9 @@ class Employees extends Component
             ],
         ];
 
+//        $permissions = [Permission::findOne(['name' => 'access:employer'])];
+//        Craftstaff::$plugin->userPermissions->createPermissions($permissions, 1, 1);
+
         if($api) {
 
             // GET EMPLOYERS
@@ -77,7 +86,7 @@ class Employees extends Component
                     // LOOP THROUGH LIST WITH COMPANIES
                     foreach ($results as $i => $entry) {
 
-                        Craft::$app->getQueue()->push(new CreateEmployeeJob([
+                        Queue::push(new CreateEmployeeJob([
                             'headers' => $headers,
                             'employer' => $employer,
                             'endpoint' => $entry['url'],
@@ -85,12 +94,13 @@ class Employees extends Component
 
                     }
                 } catch (\Throwable $e) {
-
-                    \Craft::error("Something went wrong: {$e->getMessage()}", __METHOD__);
+                    echo "---- error -----\n";
+                    var_dump($e->getMessage());
+                    echo "\n---- end error ----";
                 }
             }
 
-            Craft::$app->getQueue()->run(0);
+//            Craft::$app->getQueue()->run(0);
         }
     }
 }

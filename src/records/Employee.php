@@ -48,6 +48,7 @@ use percipiolondon\craftstaff\db\Table;
  * @property string $status;
  * @property boolean $aeNotEnroledWarning;
  * @property string $sourceSystemId;
+ * @property string $niNumber
  */
 
 class Employee extends ActiveRecord

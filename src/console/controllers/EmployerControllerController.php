@@ -8,13 +8,12 @@
  * @copyright Copyright (c) 2021 Percipio
  */
 
-namespace percipiolondon\craftstaff\controllers;
+namespace percipiolondon\craftstaff\console\controllers;
 
 use percipiolondon\craftstaff\Craftstaff;
 
 use Craft;
-use craft\web\Controller;
-use percipiolondon\craftstaff\services\Employers as EmployersService;
+use craft\console\Controller;
 
 /**
  * EmployerController Controller
@@ -39,35 +38,9 @@ use percipiolondon\craftstaff\services\Employers as EmployersService;
 class EmployerControllerController extends Controller
 {
 
-    // Protected Properties
-    // =========================================================================
-
     /**
-     * @var    bool|array Allows anonymous access to this controller's actions.
-     *         The actions must be in 'kebab-case'
-     * @access protected
-     */
-    protected $allowAnonymous = ['index'];
-
-    // Public Methods
-    // =========================================================================
-
-    /**
-     * Handle a request going to our plugin's index action URL,
-     * e.g.: actions/staff-management/employer-controller
-     *
-     * @return mixed
-     */
-    public function actionIndex()
-    {
-        $result = 'Welcome to the EmployerControllerController actionIndex() method';
-
-        return $result;
-    }
-
-    /**
-     * Handle a request going to our plugin's actionDoSomething URL,
-     * e.g.: actions/staff-management/employer-controller/do-something
+     * Fetch all the employers from staffology
+     * e.g.: actions/staff-management/employer-controller/fetch
      *
      * @return mixed
      */

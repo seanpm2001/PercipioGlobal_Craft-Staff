@@ -31,36 +31,23 @@ use percipiolondon\craftstaff\db\Table;
  * @author    Percipio
  * @package   Craftstaff
  * @since     1.0.0-alpha.1
- */
-
-/**
- * PayRun record
- * @property int $siteId;
- * @property string $staffologyId;
+ *
+ *
+ * PayRunLog record
+ * @property string $siteId;
  * @property string $taxYear;
- * @property int $taxMonth;
- * @property string $payPeriod;
- * @property int $ordinal;
- * @property int $period;
- * @property \DateTime $startDate;
- * @property \DateTime $endDate;
  * @property int $employeeCount;
- * @property int $subContractorCount;
- * @property string $totals;
- * @property string $state;
- * @property boolean $isClosed;
- * @property \DateTime $dateClosed;
- * @property string $pdf
+ * @property int $lastPeriodNumber;
  * @property string $url
  * @property int $employerId
  */
 
-class PayRun extends ActiveRecord
+class PayRunLog extends ActiveRecord
 {
     // Public Static Methods
     // =========================================================================
 
-     /**
+    /**
      * Declares the name of the database table associated with this AR class.
      * By default this method returns the class name as the table name by calling [[Inflector::camel2id()]]
      * with prefix [[Connection::tablePrefix]]. For example if [[Connection::tablePrefix]] is `tbl_`,
@@ -74,6 +61,6 @@ class PayRun extends ActiveRecord
      */
     public static function tableName()
     {
-        return Table::STAFF_PAYRUN;
+        return Table::STAFF_PAYRUN_LOG;
     }
 }
