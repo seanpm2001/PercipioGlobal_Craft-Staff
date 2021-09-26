@@ -10,6 +10,19 @@
 
 namespace percipiolondon\craftstaff;
 
+use Craft;
+use craft\events\RegisterGqlSchemaComponentsEvent;
+use GraphQL\Type\Definition\ObjectType;
+use GraphQL\Type\Definition\Type;
+use percipiolondon\craftstaff\gql\queries\Widget;
+use yii\base\Event;
+use craft\base\Plugin;
+use craft\console\Application as ConsoleApplication;
+use craft\services\Elements;
+use craft\events\RegisterComponentTypesEvent;
+use craft\events\RegisterGqlQueriesEvent;
+use craft\events\RegisterGqlTypesEvent;
+use craft\services\Gql;
 use percipiolondon\craftstaff\services\Employers as EmployersService;
 use percipiolondon\craftstaff\services\Employees as EmployeesService;
 use percipiolondon\craftstaff\services\PayRun as PayRunService;
@@ -21,19 +34,12 @@ use percipiolondon\craftstaff\elements\Employee as EmployeeElement;
 use percipiolondon\craftstaff\elements\PayRun as PayRunElement;
 use percipiolondon\craftstaff\elements\PayRunEntry as PayRunEntryElement;
 use percipiolondon\craftstaff\elements\HardingUser as HardingUserElement;
+use percipiolondon\craftstaff\gql\queries\Employer;
+use percipiolondon\craftstaff\gql\interfaces\elements\Employer as EmployerInterface;
 use percipiolondon\craftstaff\plugin\Services as StaffServices;
 
-use Craft;
-use craft\base\Plugin;
-use craft\services\Plugins;
-use craft\events\PluginEvent;
-use craft\console\Application as ConsoleApplication;
-use craft\web\UrlManager;
-use craft\services\Elements;
-use craft\events\RegisterComponentTypesEvent;
-use craft\events\RegisterUrlRulesEvent;
 
-use yii\base\Event;
+
 
 /**
  * Craft plugins are very much like little applications in and of themselves. We’ve made
@@ -116,53 +122,42 @@ class Craftstaff extends Plugin
         self::$plugin = $this;
         $this->_setPluginComponents();
 
-        // Add in our console commands
-        if (Craft::$app instanceof ConsoleApplication) {
-            $this->controllerNamespace = 'percipiolondon\craftstaff\console\controllers';
-        }
+        $this->_registerGqlInterfaces();
+        $this->_registerGqlSchemaComponents();
 
-        // Register our elements
-        Event::on(
-            Elements::class,
-            Elements::EVENT_REGISTER_ELEMENT_TYPES,
-            function (RegisterComponentTypesEvent $event) {
-                $event->types[] = EmployerElement::class;
-                $event->types[] = EmployeeElement::class;
-                $event->types[] = PayRunElement::class;
-                $event->types[] = PayRunEntryElement::class;
-                $event->types[] = HardingUserElement::class;
-            }
-        );
+        $this->_registerGqlQueries();
+        $this->_registerElementTypes();
+        $this->_registerControllers();
 
         // Do something after we're installed
-        Event::on(
-            Plugins::class,
-            Plugins::EVENT_AFTER_INSTALL_PLUGIN,
-            function (PluginEvent $event) {
-                if ($event->plugin === $this) {
-                    // We were just installed
-                }
-            }
-        );
+//        Event::on(
+//            Plugins::class,
+//            Plugins::EVENT_AFTER_INSTALL_PLUGIN,
+//            function (PluginEvent $event) {
+//                if ($event->plugin === $this) {
+//                    // We were just installed
+//                }
+//            }
+//        );
 
-/**
- * Logging in Craft involves using one of the following methods:
- *
- * Craft::trace(): record a message to trace how a piece of code runs. This is mainly for development use.
- * Craft::info(): record a message that conveys some useful information.
- * Craft::warning(): record a warning message that indicates something unexpected has happened.
- * Craft::error(): record a fatal error that should be investigated as soon as possible.
- *
- * Unless `devMode` is on, only Craft::warning() & Craft::error() will log to `craft/storage/logs/web.log`
- *
- * It's recommended that you pass in the magic constant `__METHOD__` as the second parameter, which sets
- * the category to the method (prefixed with the fully qualified class name) where the constant appears.
- *
- * To enable the Yii debug toolbar, go to your user account in the AdminCP and check the
- * [] Show the debug toolbar on the front end & [] Show the debug toolbar on the Control Panel
- *
- * http://www.yiiframework.com/doc-2.0/guide-runtime-logging.html
- */
+        /**
+         * Logging in Craft involves using one of the following methods:
+         *
+         * Craft::trace(): record a message to trace how a piece of code runs. This is mainly for development use.
+         * Craft::info(): record a message that conveys some useful information.
+         * Craft::warning(): record a warning message that indicates something unexpected has happened.
+         * Craft::error(): record a fatal error that should be investigated as soon as possible.
+         *
+         * Unless `devMode` is on, only Craft::warning() & Craft::error() will log to `craft/storage/logs/web.log`
+         *
+         * It's recommended that you pass in the magic constant `__METHOD__` as the second parameter, which sets
+         * the category to the method (prefixed with the fully qualified class name) where the constant appears.
+         *
+         * To enable the Yii debug toolbar, go to your user account in the AdminCP and check the
+         * [] Show the debug toolbar on the front end & [] Show the debug toolbar on the Control Panel
+         *
+         * http://www.yiiframework.com/doc-2.0/guide-runtime-logging.html
+         */
         Craft::info(
             Craft::t(
                 'staff-management',
@@ -202,6 +197,10 @@ class Craftstaff extends Plugin
         );
     }
 
+
+    // Public Methods
+    // =========================================================================
+
     /**
      * @inheritdoc
      */
@@ -234,5 +233,85 @@ class Craftstaff extends Plugin
         }
 
         return $nav;
+    }
+
+
+    // Private Methods
+    // =========================================================================
+
+    private function _registerGqlInterfaces()
+    {
+        Event::on(
+            Gql::class,
+            Gql::EVENT_REGISTER_GQL_TYPES,
+            function(RegisterGqlTypesEvent $event) {
+//                $event->types[] = \percipiolondon\craftstaff\gql\interfaces\elements\Widget::class;
+                $event->types[] = EmployerInterface::class;
+            }
+        );
+    }
+
+    private function _registerGqlSchemaComponents()
+    {
+        Event::on(
+            Gql::class,
+            Gql::EVENT_REGISTER_GQL_SCHEMA_COMPONENTS,
+            function(RegisterGqlSchemaComponentsEvent $event) {
+//                $event->queries = array_merge($event->queries, [
+//                    // “Widgets” group
+//                    'Widgets' => [
+//                        // widget component with read action, labelled “View Widgets” in UI
+//                        'widget:read' => ['label' => 'View Widgets']
+//                    ],
+//                ]);
+
+                $event->queries = array_merge($event->queries, [
+                    'Employers' => [
+                        // employers component with read action, labelled “View Employers” in UI
+                        'employer:read' => ['label' => Craft::t('staff-management', 'View Employers')]
+                    ],
+                ]);
+
+                // Same format applies for $event->mutations
+            }
+        );
+    }
+
+    private function _registerGqlQueries()
+    {
+        Event::on(
+            Gql::class,
+            Gql::EVENT_REGISTER_GQL_QUERIES,
+            function(RegisterGqlQueriesEvent $event) {
+                $event->queries = array_merge(
+                    $event->queries,
+                    Employer::getQueries()
+                );
+            }
+        );
+    }
+
+    private function _registerElementTypes()
+    {
+        // Register our elements
+        Event::on(
+            Elements::class,
+            Elements::EVENT_REGISTER_ELEMENT_TYPES,
+            function (RegisterComponentTypesEvent $event) {
+                $event->types[] = EmployerElement::class;
+                $event->types[] = EmployeeElement::class;
+                $event->types[] = PayRunElement::class;
+                $event->types[] = PayRunEntryElement::class;
+                $event->types[] = HardingUserElement::class;
+            }
+        );
+    }
+
+    private function _registerControllers()
+    {
+        // Add in our console commands
+        if (Craft::$app instanceof ConsoleApplication) {
+            $this->controllerNamespace = 'percipiolondon\craftstaff\console\controllers';
+        }
     }
 }

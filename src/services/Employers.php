@@ -16,7 +16,8 @@ use percipiolondon\craftstaff\Craftstaff;
 
 use Craft;
 use craft\base\Component;
-use percipiolondon\craftstaff\records\Employer;
+use percipiolondon\craftstaff\records\Employer as EmployerRecord;
+use percipiolondon\craftstaff\elements\Employer;
 
 /**
  * Employers Service
@@ -49,6 +50,11 @@ class Employers extends Component
     public function fetch()
     {
         $api = Craft::parseEnv(Craftstaff::$plugin->getSettings()->staffologyApiKey);
+
+        if(!$api) {
+            var_dump("There's no staffoligy API key set");
+            Craft::error("There's no staffoligy API key set");
+        }
 
         if ($api) {
 
@@ -83,31 +89,36 @@ class Employers extends Component
                         if ($employer) {
                             $employer = json_decode($employer);
 
-                            $employerRecord = Employer::findOne(['staffologyId' => $employer->id]);
+                            $employerRecord = EmployerRecord::findOne(['staffologyId' => $employer->id]);
+
+//                            var_dump($employer->id);
 
                             if (!$employerRecord) {
 
                                 $employerRecord = new Employer();
+
                                 $employerRecord->slug = strtolower(trim(preg_replace('/[^A-Za-z0-9-]+/', '-', $employer->name), '-'));
                                 $employerRecord->siteId = Craft::$app->getSites()->currentSite->id;
                                 $employerRecord->staffologyId = $employer->id ?? "";
                                 $employerRecord->name = $employer->name ?? '';
                                 //TODO: logo --> AssetHelper::fetchRemoteImage($employer->logoUrl);
-                                //                        $employerRecord->crn = $employer->crn; // not existing?
+                                $employerRecord->crn = $employer->crn ?? '';
                                 $employerRecord->address = json_encode($employer->address) ?? '';
                                 $employerRecord->hmrcDetails = json_encode($employer->hmrcDetails) ?? '';
                                 $employerRecord->startYear = $employer->startYear ?? '';
                                 $employerRecord->currentYear = $employer->currentYear ?? '';
                                 $employerRecord->employeeCount = $employer->employeeCount ?? 0;
                                 $employerRecord->defaultPayOptions = json_encode($employer->defaultPayOptions) ?? '';
-                            }
 
-                            $employerRecord->save(false);
+                                $elementsService = Craft::$app->getElements();
+                                $elementsService->saveElement($employerRecord);
+                            }
                         }
                     } catch (\Exception $e) {
 
                         echo "---- error -----\n";
                         var_dump($e->getMessage());
+                        Craft::error($e->getMessage(), __METHOD__);
                         echo "\n---- end error ----";
                     }
 
@@ -119,6 +130,7 @@ class Employers extends Component
 
                 echo "---- error -----\n";
                 var_dump($e->getMessage());
+                Craft::error($e->getMessage(), __METHOD__);
                 echo "\n---- end error ----";
 
             }

@@ -3,14 +3,17 @@
 namespace percipiolondon\craftstaff\gql\resolvers\elements;
 
 use craft\gql\base\ElementResolver;
+use percipiolondon\craftstaff\elements\db\EmployerQuery;
 use percipiolondon\craftstaff\helpers\Gql as GqlHelper;
+use percipiolondon\craftstaff\elements\Employer as EmployerElement;
+use yii\db\Query;
 
 class Employer extends ElementResolver
 {
     public static function prepareQuery($source, array $arguments, $fieldName = null)
     {
         if($source === null) {
-            $query = \percipiolondon\craftstaff\elements\Employer::find();
+            $query = EmployerElement::find();
         } else {
             $query = $source->$fieldName;
         }
@@ -23,10 +26,10 @@ class Employer extends ElementResolver
             $query->$key($value);
         }
 
-        $pairs = GqlHelper::extractAllowedEntitiesFromSchema('read');
-
-        if (!GqlHelper::canQueryAssets()) {
+        if (!GqlHelper::canQueryEmployers()) {
             return [];
         }
+
+        return $query;
     }
 }

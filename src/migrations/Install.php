@@ -347,6 +347,16 @@ class Install extends Migration
     {
     // staff_employer table
         $this->addForeignKey(
+            $this->db->getForeignKeyName(Table::STAFF_EMPLOYERS, 'id'),
+            Table::STAFF_EMPLOYERS,
+            'id',
+            \craft\db\Table::ELEMENTS,
+            'id',
+            'CASCADE',
+            'CASCADE'
+        );
+
+        $this->addForeignKey(
             $this->db->getForeignKeyName(Table::STAFF_EMPLOYERS, 'siteId'),
             Table::STAFF_EMPLOYERS,
             'siteId',
@@ -367,6 +377,16 @@ class Install extends Migration
 //        );
 
     // staff_employee table
+        $this->addForeignKey(
+            $this->db->getForeignKeyName(Table::STAFF_EMPLOYEES, 'id'),
+            Table::STAFF_EMPLOYEES,
+            'id',
+            \craft\db\Table::ELEMENTS,
+            'id',
+            'CASCADE',
+            'CASCADE'
+        );
+
         $this->addForeignKey(
             $this->db->getForeignKeyName(Table::STAFF_EMPLOYEES, 'siteId'),
             Table::STAFF_EMPLOYEES,
@@ -420,6 +440,16 @@ class Install extends Migration
 
     // staff_payrun table
         $this->addForeignKey(
+            $this->db->getForeignKeyName(Table::STAFF_PAYRUN, 'id'),
+            Table::STAFF_PAYRUN,
+            'id',
+            \craft\db\Table::ELEMENTS,
+            'id',
+            'CASCADE',
+            'CASCADE'
+        );
+
+        $this->addForeignKey(
             $this->db->getForeignKeyName(Table::STAFF_PAYRUN, 'siteId'),
             Table::STAFF_PAYRUN,
             'siteId',
@@ -440,6 +470,16 @@ class Install extends Migration
         );
 
     // staff_payrunentries table
+        $this->addForeignKey(
+            $this->db->getForeignKeyName(Table::STAFF_PAYRUNENTRIES, 'id'),
+            Table::STAFF_PAYRUNENTRIES,
+            'id',
+            \craft\db\Table::ELEMENTS,
+            'id',
+            'CASCADE',
+            'CASCADE'
+        );
+
         $this->addForeignKey(
             $this->db->getForeignKeyName(Table::STAFF_PAYRUNENTRIES, 'siteId'),
             Table::STAFF_PAYRUNENTRIES,

@@ -16,6 +16,10 @@ use Craft;
 use craft\base\Element;
 use craft\elements\db\ElementQuery;
 use craft\elements\db\ElementQueryInterface;
+use percipiolondon\craftstaff\elements\db\EmployerQuery;
+use yii\base\InvalidConfigException;
+use yii\db\Query;
+use percipiolondon\craftstaff\records\Employer as EmployerRecord;
 
 /**
  * Employer Element
@@ -177,7 +181,8 @@ class Employer extends Element
      */
     public static function find(): ElementQueryInterface
     {
-        return new ElementQuery(get_called_class());
+//        return new ElementQuery(get_called_class());
+        return new EmployerQuery(static::class);
     }
 
     /**
@@ -190,9 +195,16 @@ class Employer extends Element
      */
     protected static function defineSources(string $context = null): array
     {
-        $sources = [];
+        $ids = self::_getEmployerIds();
 
-        return $sources;
+        return [
+            [
+                'key' => '*',
+                'label' => 'All Employers',
+                'defaultSort' => ['id', 'desc'],
+                'criteria' => ['id' => $ids],
+            ]
+        ];
     }
 
     // Public Methods
@@ -210,10 +222,7 @@ class Employer extends Element
      */
     public function rules()
     {
-        return [
-            ['someAttribute', 'string'],
-            ['someAttribute', 'default', 'value' => 'Some Default'],
-        ];
+        return [];
     }
 
     /**
@@ -227,17 +236,25 @@ class Employer extends Element
     }
 
     /**
+     * @return string
+     */
+    public function getCpEditUrl()
+    {
+        return 'staff-management/employers/' . $this->id;
+    }
+
+    /**
      * Returns the field layout used by this element.
      *
      * @return FieldLayout|null
      */
     public function getFieldLayout()
     {
-        $tagGroup = $this->getGroup();
-
-        if ($tagGroup) {
-            return $tagGroup->getFieldLayout();
-        }
+//        $tagGroup = $this->getGroup();
+//
+//        if ($tagGroup) {
+//            return $tagGroup->getFieldLayout();
+//        }
 
         return null;
     }
@@ -249,7 +266,7 @@ class Employer extends Element
         }
 
         if (($group = Craft::$app->getTags()->getTagGroupById($this->groupId)) === null) {
-            throw new InvalidConfigException('Invalid tag group ID: '.$this->groupId);
+            throw new InvalidConfigException('Invalid tag group ID: ' . $this->groupId);
         }
 
         return $group;
@@ -295,7 +312,10 @@ class Employer extends Element
 
     public static function gqlTypeNameByContext($context): string
     {
-        return $context->handle . '_Employer';
+//        return $context->handle . '_Employer';
+//        return 'default_Employer';
+
+        return '';
     }
 
     // Events
@@ -322,6 +342,12 @@ class Employer extends Element
      */
     public function afterSave(bool $isNew)
     {
+        if (!$this->propagating) {
+
+            $this->_saveRecord($isNew);
+        }
+
+        return parent::afterSave($isNew);
     }
 
     /**
@@ -364,5 +390,100 @@ class Employer extends Element
      */
     public function afterMoveInStructure(int $structureId)
     {
+    }
+
+    /**
+     * @return array
+     */
+    protected static function defineTableAttributes(): array
+    {
+        return [
+            'id' => ['label' => Craft::t('staff-management', 'Id')],
+            'dateCreated' => ['label' => Craft::t('staff-management', 'Date Created')],
+        ];
+    }
+
+    /**
+     * @param string $source
+     * @return array
+     */
+    protected static function defineDefaultTableAttributes(string $source): array
+    {
+        $attributes = [];
+        $attributes[] = 'id';
+        $attributes[] = 'dateCreated';
+        $attributes[] = 'dateUpdated';
+
+        return $attributes;
+    }
+
+    /**
+     * @param string $attribute
+     * @return string
+     * @throws InvalidConfigException
+     */
+    protected function tableAttributeHtml(string $attribute): string
+    {
+        switch ($attribute) {
+            case 'id':
+                // use this to customise returned values (add links / mailto's etc)
+                // https://docs.craftcms.com/commerce/api/v3/craft-commerce-elements-traits-orderelementtrait.html#protected-methods
+                return $this->id;
+        }
+
+        return parent::tableAttributeHtml($attribute);
+    }
+
+    private static function _getEmployerIds(): array
+    {
+        $employerIds = [];
+
+        $employers = (new Query())
+            ->from('{{%staff_employers}}')
+            ->select('*')
+            ->all();
+
+        foreach ($employers as $employer) {
+            $employerIds[] = $employer['id'];
+        }
+
+        return $employerIds;
+    }
+
+    private function _saveRecord($isNew)
+    {
+        try {
+            if (!$isNew) {
+                $record = EmployerRecord::findOne($this->id);
+
+                if (!$record) {
+                    throw new Exception('Invalid employer ID: ' . $this->id);
+                }
+            } else {
+                $record = new EmployerRecord();
+                $record->id = (int)$this->id;
+            }
+
+            $record->slug = strtolower(trim(preg_replace('/[^A-Za-z0-9-]+/', '-', $this->name), '-'));
+            $record->siteId = $this->siteId;
+            $record->staffologyId = $this->staffologyId;
+            $record->name = $this->name;
+            $record->address = $this->address;
+            $record->hmrcDetails = $this->hmrcDetails;
+            $record->startYear = $this->startYear;
+            $record->currentYear = $this->currentYear;
+            $record->employeeCount = $this->employeeCount;
+            $record->defaultPayOptions = $this->defaultPayOptions;
+
+            $success = $record->save(false);
+
+        } catch (\Exception $e) {
+
+            echo "---- error -----\n";
+            var_dump($e->getMessage());
+            Craft::error($e->getMessage(), __METHOD__);
+            echo "\n---- end error ----";
+        }
+
     }
 }

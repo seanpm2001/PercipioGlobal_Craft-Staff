@@ -16,6 +16,7 @@ use Craft;
 use craft\base\Element;
 use craft\elements\db\ElementQuery;
 use craft\elements\db\ElementQueryInterface;
+use percipiolondon\craftstaff\elements\db\EmployeeQuery;
 
 /**
  * Employee Element
@@ -171,7 +172,7 @@ class Employee extends Element
      */
     public static function find(): ElementQueryInterface
     {
-        return new ElementQuery(get_called_class());
+        return new EmployeeQuery(static::class);
     }
 
     /**
