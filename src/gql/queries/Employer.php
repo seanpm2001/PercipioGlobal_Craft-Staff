@@ -11,9 +11,9 @@ class Employer extends \craft\gql\base\Query
 {
     public static function getQueries($checkToken = true): array
     {
-        if($checkToken && !GqlHelper::canQueryEmployers()) {
-            return [];
-        }
+//        if($checkToken && !GqlHelper::canQueryEmployers()) {
+//            return [];
+//        }
 
         return [
             'employers' => [

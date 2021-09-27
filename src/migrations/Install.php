@@ -613,6 +613,7 @@ class Install extends Migration
     {
         $rows = [];
 
+        $rows[] = ['access:employers'];
         $rows[] = ['access:employer'];
         $rows[] = ['access:groupbenefits'];
         $rows[] = ['access:voluntarybenefits'];

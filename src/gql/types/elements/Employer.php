@@ -8,9 +8,11 @@
 namespace percipiolondon\craftstaff\gql\types\elements;
 
 use craft\gql\types\elements\Element;
+use craft\helpers\Json;
 use percipiolondon\craftstaff\elements\Employer as EmployerElement;
 use percipiolondon\craftstaff\gql\interfaces\elements\Employer as EmployerInterface;
 use GraphQL\Type\Definition\ResolveInfo;
+
 
 /**
  * Class Entry
@@ -38,14 +40,12 @@ class Employer extends Element
     protected function resolve($source, $arguments, $context, ResolveInfo $resolveInfo)
     {
         /** @var EmployerElement $source */
-        $fieldName = $resolveInfo->fieldName;
-
-        switch($fieldName) {
-            case 'name':
-                return $source->name;
-            case 'crn':
-                return $source->crn;
-        }
+//        $fieldName = $resolveInfo->fieldName;
+//
+//        switch($fieldName) {
+//            case 'address':
+//                return Json::decode($source->address);
+//        }
 
         return parent::resolve($source, $arguments, $context, $resolveInfo);
     }

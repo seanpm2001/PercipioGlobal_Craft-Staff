@@ -13,9 +13,11 @@ use craft\gql\TypeManager;
 use craft\gql\types\DateTime;
 
 use percipiolondon\craftstaff\gql\types\generators\EmployerType;
+use percipiolondon\craftstaff\gql\types\Address;
+use percipiolondon\craftstaff\gql\types\HmrcDetails;
+use percipiolondon\craftstaff\gql\types\PayOptions;
 
 use craft\helpers\Gql;
-use craft\services\Gql as GqlService;
 use GraphQL\Type\Definition\InterfaceType;
 use GraphQL\Type\Definition\Type;
 
@@ -79,6 +81,33 @@ class Employer extends Element
                 'name' => 'crn',
                 'type' => Type::string(),
                 'description' => 'crn.',
+            ],
+            // Custom Resolver --> addressObjectType
+            'address' => [
+                'name' => 'address',
+                'type' => Address::getType(),
+            ],
+            // Custom Resolver --> hmrcObjectType
+            'hmrcDetails' => [
+                'name' => 'hmrcDetails',
+                'type' => HmrcDetails::getType(),
+            ],
+            'startYear' => [
+                'name' => 'startYear',
+                'type' => Type::string(),
+            ],
+            'currentYear' => [
+                'name' => 'currentYear',
+                'type' => Type::string(),
+            ],
+            'employeeCount' => [
+                'name' => 'employeeCount',
+                'type' => Type::int(),
+            ],
+            // Custom Resolver --> payOptionsObjectType
+            'defaultPayOptions' => [
+                'name' => 'defaultPayOptions',
+                'type' => PayOptions::getType(),
             ],
 
         ]), self::getName());
