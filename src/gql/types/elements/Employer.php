@@ -40,12 +40,18 @@ class Employer extends Element
     protected function resolve($source, $arguments, $context, ResolveInfo $resolveInfo)
     {
         /** @var EmployerElement $source */
-//        $fieldName = $resolveInfo->fieldName;
-//
-//        switch($fieldName) {
-//            case 'address':
-//                return Json::decode($source->address);
-//        }
+        $fieldName = $resolveInfo->fieldName;
+
+        switch($fieldName) {
+            case 'address':
+               return Json::decodeIfJson($source->address);
+
+            case 'hmrcDetails':
+                return Json::decodeIfJson($source->hmrcDetails);
+
+            case 'defaultPayOptions':
+                return Json::decodeIfJson($source->defaultPayOptions);
+        }
 
         return parent::resolve($source, $arguments, $context, $resolveInfo);
     }

@@ -73,7 +73,7 @@ class HmrcDetails
             ],
             'id' => [
                 'name' => 'staffologyId',
-                'type' => Type::boolean(),
+                'type' => Type::string(),
                 'description' => 'Staffology employer ID.',
             ],
         ];

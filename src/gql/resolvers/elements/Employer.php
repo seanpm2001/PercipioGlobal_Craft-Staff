@@ -3,10 +3,9 @@
 namespace percipiolondon\craftstaff\gql\resolvers\elements;
 
 use craft\gql\base\ElementResolver;
-use percipiolondon\craftstaff\elements\db\EmployerQuery;
+
 use percipiolondon\craftstaff\helpers\Gql as GqlHelper;
 use percipiolondon\craftstaff\elements\Employer as EmployerElement;
-use yii\db\Query;
 
 class Employer extends ElementResolver
 {

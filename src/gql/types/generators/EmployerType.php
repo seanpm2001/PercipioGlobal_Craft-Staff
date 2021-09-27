@@ -32,7 +32,7 @@ class EmployerType extends Generator implements GeneratorInterface, SingleGenera
      */
     public static function generateTypes($context = null): array
     {
-        // Users have no context
+        // Employers have no context
         $type = static::generateType($context);
         return [$type->name => $type];
     }

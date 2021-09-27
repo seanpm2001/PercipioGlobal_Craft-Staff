@@ -89,18 +89,11 @@ class Employer extends Element
                 'name' => 'address',
                 'type' => Address::getType(),
                 'description' => 'The address object.',
-                'resolve' => function ($source, array $arguments, $context, ResolveInfo $resolveInfo) {
-                    $fieldName = $resolveInfo->fieldName;
-                    return Json::decodeIfJson($source[$fieldName]);
-                }
             ],
             'hmrcDetails' => [
                 'name' => 'hmrcDetails',
                 'type' => HmrcDetails::getType(),
-                'resolve' => function ($source, array $arguments, $context, ResolveInfo $resolveInfo) {
-                    $fieldName = $resolveInfo->fieldName;
-                    return Json::decodeIfJson($source[$fieldName]);
-                }
+                'description' => 'Get the HMRC Details.',
             ],
             'startYear' => [
                 'name' => 'startYear',
@@ -117,10 +110,7 @@ class Employer extends Element
             'defaultPayOptions' => [
                 'name' => 'defaultPayOptions',
                 'type' => PayOptions::getType(),
-                'resolve' => function ($source, array $arguments, $context, ResolveInfo $resolveInfo) {
-                    $fieldName = $resolveInfo->fieldName;
-                    return Json::decodeIfJson($source[$fieldName]);
-                }
+                'description' => 'Get the default pay options',
             ],
 
         ]), self::getName());
