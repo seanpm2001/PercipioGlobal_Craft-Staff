@@ -97,6 +97,38 @@ class Employer extends Element
     }
 
     /**
+     * @inheritdoc
+     */
+    public static function lowerDisplayName(): string
+    {
+        return Craft::t('staff-management', 'employer');
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public static function pluralDisplayName(): string
+    {
+        return Craft::t('staff-management', 'Employers');
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public static function pluralLowerDisplayName(): string
+    {
+        return Craft::t('staff-management', 'employers');
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public static function refHandle()
+    {
+        return 'employer';
+    }
+
+    /**
      * Returns whether elements of this type will be storing any data in the `content`
      * table (tiles or custom fields).
      *
@@ -104,7 +136,7 @@ class Employer extends Element
      */
     public static function hasContent(): bool
     {
-        return true;
+        return false;
     }
 
     /**
@@ -118,6 +150,32 @@ class Employer extends Element
     }
 
     /**
+     * @inheritdoc
+     */
+    public static function hasUris(): bool
+    {
+        return false;
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public static function hasStatuses(): bool
+    {
+        return true;
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public function getStatus()
+    {
+        $status = parent::getStatus();
+
+        return $status;
+    }
+
+    /**
      * Returns whether elements of this type have statuses.
      *
      * If this returns `true`, the element index template will show a Status menu
@@ -127,6 +185,17 @@ class Employer extends Element
      *
      * @return bool Whether elements of this type have statuses.
      * @see statuses()
+     */
+    public static function statuses(): array
+    {
+        return [
+            self::STATUS_ENABLED => Craft::t('company-management', 'Enabled'),
+            self::STATUS_DISABLED => Craft::t('company-management', 'Disabled'),
+        ];
+    }
+
+    /**
+     * @return bool
      */
     public static function isLocalized(): bool
     {
@@ -181,7 +250,6 @@ class Employer extends Element
      */
     public static function find(): ElementQueryInterface
     {
-//        return new ElementQuery(get_called_class());
         return new EmployerQuery(static::class);
     }
 
@@ -312,10 +380,16 @@ class Employer extends Element
 
     public static function gqlTypeNameByContext($context): string
     {
-//        return $context->handle . '_Employer';
-//        return 'default_Employer';
+        return 'Employer';
+    }
 
-        return '';
+    /**
+     * @inheritdoc
+     * @since 3.3.0
+     */
+    public function getGqlTypeName(): string
+    {
+        return static::gqlTypeNameByContext($this);
     }
 
     // Events
