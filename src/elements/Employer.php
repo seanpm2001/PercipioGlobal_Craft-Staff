@@ -318,12 +318,6 @@ class Employer extends Element
      */
     public function getFieldLayout()
     {
-//        $tagGroup = $this->getGroup();
-//
-//        if ($tagGroup) {
-//            return $tagGroup->getFieldLayout();
-//        }
-
         return null;
     }
 

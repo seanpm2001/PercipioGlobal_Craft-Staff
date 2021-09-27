@@ -398,6 +398,16 @@ class Install extends Migration
         );
 
         $this->addForeignKey(
+            $this->db->getForeignKeyName(Table::STAFF_EMPLOYEES, 'userId'),
+            Table::STAFF_EMPLOYEES,
+            'userId',
+            \craft\db\Table::USERS,
+            'id',
+            'CASCADE',
+            'CASCADE'
+        );
+
+        $this->addForeignKey(
             $this->db->getForeignKeyName(Table::STAFF_EMPLOYEES, 'employerId'),
             Table::STAFF_EMPLOYEES,
             'employerId',
