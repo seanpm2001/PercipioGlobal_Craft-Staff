@@ -62,9 +62,6 @@ class Employees extends Component
             ],
         ];
 
-//        $permissions = [Permission::findOne(['name' => 'access:employer'])];
-//        Craftstaff::$plugin->userPermissions->createPermissions($permissions, 1, 1);
-
         if($api) {
 
             // GET EMPLOYERS
@@ -99,8 +96,6 @@ class Employees extends Component
                     echo "\n---- end error ----";
                 }
             }
-
-//            Craft::$app->getQueue()->run(0);
         }
     }
 }

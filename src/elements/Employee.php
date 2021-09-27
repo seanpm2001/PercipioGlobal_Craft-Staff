@@ -13,10 +13,13 @@ namespace percipiolondon\craftstaff\elements;
 use percipiolondon\craftstaff\Craftstaff;
 
 use Craft;
+use craft\elements\User;
 use craft\base\Element;
 use craft\elements\db\ElementQuery;
 use craft\elements\db\ElementQueryInterface;
 use percipiolondon\craftstaff\elements\db\EmployeeQuery;
+use percipiolondon\craftstaff\records\Employee as EmployeeRecord;
+use percipiolondon\craftstaff\records\Permission;
 
 /**
  * Employee Element
@@ -67,12 +70,21 @@ class Employee extends Element
     // Public Properties
     // =========================================================================
 
-    /**
-     * Some attribute
-     *
-     * @var string
-     */
-    public $someAttribute = 'Some Default';
+    public $slug;
+    public $siteId;
+    public $staffologyId;
+    public $employerId;
+    public $userId;
+    public $personalDetails;
+    public $employmentDetails;
+    public $autoEnrolment;
+    public $leaveSettings;
+    public $rightToWork;
+    public $bankDetails;
+    public $status;
+    public $aeNotEnroledWarning;
+    public $niNumber;
+    public $sourceSystemId;
 
     // Static Methods
     // =========================================================================
@@ -88,6 +100,38 @@ class Employee extends Element
     }
 
     /**
+     * @inheritdoc
+     */
+    public static function lowerDisplayName(): string
+    {
+        return Craft::t('staff-management', 'employee');
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public static function pluralDisplayName(): string
+    {
+        return Craft::t('staff-management', 'Employees');
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public static function pluralLowerDisplayName(): string
+    {
+        return Craft::t('staff-management', 'employees');
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public static function refHandle()
+    {
+        return 'employee';
+    }
+
+    /**
      * Returns whether elements of this type will be storing any data in the `content`
      * table (tiles or custom fields).
      *
@@ -95,7 +139,7 @@ class Employee extends Element
      */
     public static function hasContent(): bool
     {
-        return true;
+        return false;
     }
 
     /**
@@ -109,6 +153,14 @@ class Employee extends Element
     }
 
     /**
+     * @inheritdoc
+     */
+    public static function hasUris(): bool
+    {
+        return false;
+    }
+
+    /**
      * Returns whether elements of this type have statuses.
      *
      * If this returns `true`, the element index template will show a Status menu
@@ -119,6 +171,14 @@ class Employee extends Element
      * @return bool Whether elements of this type have statuses.
      * @see statuses()
      */
+    public static function statuses(): array
+    {
+        return [
+            self::STATUS_ENABLED => Craft::t('company-management', 'Enabled'),
+            self::STATUS_DISABLED => Craft::t('company-management', 'Disabled'),
+        ];
+    }
+
     public static function isLocalized(): bool
     {
         return true;
@@ -205,10 +265,7 @@ class Employee extends Element
      */
     public function rules()
     {
-        return [
-            ['someAttribute', 'string'],
-            ['someAttribute', 'default', 'value' => 'Some Default'],
-        ];
+        return [];
     }
 
     /**
@@ -228,12 +285,6 @@ class Employee extends Element
      */
     public function getFieldLayout()
     {
-        $tagGroup = $this->getGroup();
-
-        if ($tagGroup) {
-            return $tagGroup->getFieldLayout();
-        }
-
         return null;
     }
 
@@ -303,6 +354,12 @@ class Employee extends Element
      */
     public function afterSave(bool $isNew)
     {
+        if (!$this->propagating) {
+
+            $this->_saveRecord($isNew);
+        }
+
+        return parent::afterSave($isNew);
     }
 
     /**
@@ -345,5 +402,84 @@ class Employee extends Element
      */
     public function afterMoveInStructure(int $structureId)
     {
+    }
+
+    private function _saveRecord($isNew)
+    {
+        try {
+            if (!$isNew) {
+                $record = EmployeeRecord::findOne($this->id);
+
+                if (!$record) {
+                    throw new Exception('Invalid employee ID: ' . $this->id);
+                }
+            } else {
+                $record = new EmployeeRecord();
+                $record->id = (int)$this->id;
+            }
+
+            Craft::warning($this->personalDetails, __METHOD__);
+
+            if($this->personalDetails && array_key_exists('email', $this->personalDetails)) {
+                $user = User::findOne(['email' => $this->personalDetails['email']]);
+
+                // check if user exists, if so, skip this step
+                if(!$user) {
+
+                    //create user
+                    $user = new User();
+                    $user->firstName = $this->personalDetails['firstName'];
+                    $user->lastName = $this->personalDetails['lastName'];
+                    $user->username = $this->personalDetails['email'];
+                    $user->email = $this->personalDetails['email'];
+
+                    $success = Craft::$app->elements->saveElement($user, true);
+
+                    if(!$success){
+                        throw new Exception("The user couldn't be created");
+                    }
+
+                    Craft::info("Craft Staff: new user creation: ".$user->id);
+
+                    // assign user to group
+                    $group = Craft::$app->getUserGroups()->getGroupByHandle('hardingUsers');
+                    Craft::$app->getUsers()->assignUserToGroups($user->id, [$group->id]);
+                }
+
+                //assign the userId to the employee record
+                $this->userId = $user->id;
+            }
+
+            $record->employerId = $this->employerId;
+            $record->staffologyId = $this->staffologyId;
+            $record->siteId = $this->siteId;
+            $record->personalDetails = $this->personalDetails;
+            $record->employmentDetails = $this->employmentDetails;
+            $record->autoEnrolment = $this->autoEnrolment;
+            $record->leaveSettings = $this->leaveSettings;
+            $record->rightToWork = $this->rightToWork;
+            $record->bankDetails = $this->bankDetails;
+            $record->status = $this->status;
+            $record->aeNotEnroledWarning = $this->aeNotEnroledWarning;
+            $record->sourceSystemId = $this->sourceSystemId;
+            $record->niNumber = $this->niNumber;
+            $record->userId = $this->userId;
+
+            $success = $record->save(false);
+
+            if($isNew) {
+                //assign permissions to employee
+                $permissions = [Permission::findOne(['name' => 'access:employer'])];
+                Craftstaff::$plugin->userPermissions->createPermissions($permissions, $this->userId, $this->id);
+            }
+
+        } catch (\Exception $e) {
+
+            echo "---- error -----\n";
+            var_dump($e->getMessage());
+            Craft::error($e->getMessage(), __METHOD__);
+            echo "\n---- end error ----";
+        }
+
     }
 }
