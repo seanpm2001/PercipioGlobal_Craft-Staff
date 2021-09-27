@@ -81,6 +81,16 @@ class PayOptions
                 'type' => Type::boolean(),
                 'description' => 'Withhold the tax refund if payment is zero.',
             ],
+            'fpsFields' => [
+                'name' => 'fpsFields',
+                'type' => FpsFields::getType(),
+                'description' => 'FPS Fields.',
+            ],
+            'taxAndNi' => [
+                'name' => 'taxAndNi',
+                'type' => TaxAndNi::getType(),
+                'description' => 'Tax and National Insurance',
+            ],
         ];
     }
 

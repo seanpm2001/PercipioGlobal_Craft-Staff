@@ -82,12 +82,10 @@ class Employer extends Element
                 'type' => Type::string(),
                 'description' => 'crn.',
             ],
-            // Custom Resolver --> addressObjectType
             'address' => [
                 'name' => 'address',
                 'type' => Address::getType(),
             ],
-            // Custom Resolver --> hmrcObjectType
             'hmrcDetails' => [
                 'name' => 'hmrcDetails',
                 'type' => HmrcDetails::getType(),
@@ -104,10 +102,10 @@ class Employer extends Element
                 'name' => 'employeeCount',
                 'type' => Type::int(),
             ],
-            // Custom Resolver --> payOptionsObjectType
             'defaultPayOptions' => [
                 'name' => 'defaultPayOptions',
                 'type' => PayOptions::getType(),
+                //'type' => Type::string(),
             ],
 
         ]), self::getName());
