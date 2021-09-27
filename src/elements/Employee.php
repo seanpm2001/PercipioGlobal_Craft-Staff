@@ -67,12 +67,21 @@ class Employee extends Element
     // Public Properties
     // =========================================================================
 
-    /**
-     * Some attribute
-     *
-     * @var string
-     */
-    public $someAttribute = 'Some Default';
+    public $slug;
+    public $siteId;
+    public $staffologyId;
+    public $employerId;
+    public $userId;
+    public $personalDetails;
+    public $employmentDetails;
+    public $autoEnrolment;
+    public $leaveSettings;
+    public $rightToWork;
+    public $bankDetails;
+    public $status;
+    public $aeNotEnroledWarning;
+    public $niNumber;
+    public $sourceSystemId;
 
     // Static Methods
     // =========================================================================
@@ -205,10 +214,7 @@ class Employee extends Element
      */
     public function rules()
     {
-        return [
-            ['someAttribute', 'string'],
-            ['someAttribute', 'default', 'value' => 'Some Default'],
-        ];
+        return [];
     }
 
     /**
