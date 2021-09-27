@@ -2,7 +2,7 @@
 
 namespace percipiolondon\craftstaff\gql\types;
 
-use craft\gql\base\GqlTypeTrait;
+use percipiolondon\craftstaff\gql\base\GqlTypeTrait;
 use GraphQL\Type\Definition\Type;
 
 /**

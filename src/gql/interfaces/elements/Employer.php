@@ -18,7 +18,10 @@ use percipiolondon\craftstaff\gql\types\HmrcDetails;
 use percipiolondon\craftstaff\gql\types\PayOptions;
 
 use craft\helpers\Gql;
+use craft\helpers\Json;
+
 use GraphQL\Type\Definition\InterfaceType;
+use GraphQL\Type\Definition\ResolveInfo;
 use GraphQL\Type\Definition\Type;
 
 /**
@@ -75,20 +78,29 @@ class Employer extends Element
             'name' => [
                 'name' => 'name',
                 'type' => Type::string(),
-                'description' => 'name.',
+                'description' => 'The company name.',
             ],
             'crn' => [
                 'name' => 'crn',
                 'type' => Type::string(),
-                'description' => 'crn.',
+                'description' => 'The company registration number.',
             ],
             'address' => [
                 'name' => 'address',
                 'type' => Address::getType(),
+                'description' => 'The address object.',
+                'resolve' => function ($source, array $arguments, $context, ResolveInfo $resolveInfo) {
+                    $fieldName = $resolveInfo->fieldName;
+                    return Json::decodeIfJson($source[$fieldName]);
+                }
             ],
             'hmrcDetails' => [
                 'name' => 'hmrcDetails',
                 'type' => HmrcDetails::getType(),
+                'resolve' => function ($source, array $arguments, $context, ResolveInfo $resolveInfo) {
+                    $fieldName = $resolveInfo->fieldName;
+                    return Json::decodeIfJson($source[$fieldName]);
+                }
             ],
             'startYear' => [
                 'name' => 'startYear',
@@ -105,7 +117,10 @@ class Employer extends Element
             'defaultPayOptions' => [
                 'name' => 'defaultPayOptions',
                 'type' => PayOptions::getType(),
-                //'type' => Type::string(),
+                'resolve' => function ($source, array $arguments, $context, ResolveInfo $resolveInfo) {
+                    $fieldName = $resolveInfo->fieldName;
+                    return Json::decodeIfJson($source[$fieldName]);
+                }
             ],
 
         ]), self::getName());
@@ -118,4 +133,5 @@ class Employer extends Element
     {
         return [];
     }
+
 }
