@@ -39,6 +39,7 @@ class Employer extends Element
                         return $employer->crn ?? '';
                     }
                 ],
+                // Custom Resolver --> addressObjectType
                 'address' => [
                     'name' => 'address',
                     'type' => Type::string(),
@@ -47,6 +48,7 @@ class Employer extends Element
                         return $employer->address ?? '';
                     }
                 ],
+                // Custom Resolver --> hmrcObjectType
                 'hmrcDetails' => [
                     'name' => 'hmrcDetails',
                     'type' => Type::string(),
@@ -79,6 +81,7 @@ class Employer extends Element
                         return $employer->employeeCount ?? '';
                     }
                 ],
+                // Custom Resolver --> payOptionsObjectType
                 'defaultPayOptions' => [
                     'name' => 'defaultPayOptions',
                     'type' => Type::string(),
