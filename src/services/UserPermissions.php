@@ -123,23 +123,17 @@ class UserPermissions extends Component
      * @param int $employerId
      * @return bool
      */
-    public function applyCanParam(string $permission, int $employeeId, int $userId, int $employerId): bool
+    public function applyCanParam(string $permission, int $userId, int $employerId): bool
     {
-        if (!$permission || $userId || $employeeId || $employerId) {
+        if (!$permission || $userId || $employerId) {
             return false;
         }
 
         $permission = PermissionRecord::findOne(['name' => $permission]); // fetch if permission exists in the company permissions
-        $userPermission = UserPermissionRecord::findOne(['permissionId' => $permission->id, 'employeeId' => $employeeId]); // fetch if permission is assigned to the user
-        $employee = Employee::findOne(['userId' => $userId]); // fetch the employee from employer
+        $userPermission = UserPermissionRecord::findOne(['permissionId' => $permission->id, 'userId' => $userId]); // fetch if permission is assigned to the user
 
         // if no user permission can be fetched --> no access
         if (!$userPermission) {
-            return false;
-        }
-
-        // if the company id parsed in the params isn't the one assigned to the user --> no access
-        if ($employerId !== $employee->employerId) {
             return false;
         }
 

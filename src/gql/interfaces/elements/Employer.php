@@ -13,10 +13,15 @@ use craft\gql\TypeManager;
 use craft\gql\types\DateTime;
 
 use percipiolondon\craftstaff\gql\types\generators\EmployerType;
+use percipiolondon\craftstaff\gql\types\Address;
+use percipiolondon\craftstaff\gql\types\HmrcDetails;
+use percipiolondon\craftstaff\gql\types\PayOptions;
 
 use craft\helpers\Gql;
-use craft\services\Gql as GqlService;
+use craft\helpers\Json;
+
 use GraphQL\Type\Definition\InterfaceType;
+use GraphQL\Type\Definition\ResolveInfo;
 use GraphQL\Type\Definition\Type;
 
 /**
@@ -73,12 +78,44 @@ class Employer extends Element
             'name' => [
                 'name' => 'name',
                 'type' => Type::string(),
-                'description' => 'name.',
+                'description' => 'The company name.',
+            ],
+            'staffologyId' => [
+                'name' => 'staffologyId',
+                'type' => Type::string(),
+                'description' => 'The employer id from staffology, needed for API calls.'
             ],
             'crn' => [
                 'name' => 'crn',
                 'type' => Type::string(),
-                'description' => 'crn.',
+                'description' => 'The company registration number.',
+            ],
+            'address' => [
+                'name' => 'address',
+                'type' => Address::getType(),
+                'description' => 'The address object.',
+            ],
+            'hmrcDetails' => [
+                'name' => 'hmrcDetails',
+                'type' => HmrcDetails::getType(),
+                'description' => 'Get the HMRC Details.',
+            ],
+            'startYear' => [
+                'name' => 'startYear',
+                'type' => Type::string(),
+            ],
+            'currentYear' => [
+                'name' => 'currentYear',
+                'type' => Type::string(),
+            ],
+            'employeeCount' => [
+                'name' => 'employeeCount',
+                'type' => Type::int(),
+            ],
+            'defaultPayOptions' => [
+                'name' => 'defaultPayOptions',
+                'type' => PayOptions::getType(),
+                'description' => 'Get the default pay options',
             ],
 
         ]), self::getName());
@@ -91,4 +128,5 @@ class Employer extends Element
     {
         return [];
     }
+
 }
