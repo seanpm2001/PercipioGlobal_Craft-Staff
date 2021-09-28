@@ -7,6 +7,12 @@ use craft\gql\interfaces\Element;
 use craft\gql\TypeManager;
 use craft\gql\types\DateTime;
 
+use percipiolondon\craftstaff\gql\types\BankDetails;
+use percipiolondon\craftstaff\gql\types\EmploymentDetails;
+use percipiolondon\craftstaff\gql\types\LeaveSettings;
+use percipiolondon\craftstaff\gql\types\PayOptions;
+use percipiolondon\craftstaff\gql\types\PersonalDetails;
+use percipiolondon\craftstaff\gql\types\RightToWork;
 use percipiolondon\craftstaff\gql\types\generators\EmployeeType;
 
 use craft\helpers\Gql;
@@ -16,6 +22,12 @@ use GraphQL\Type\Definition\InterfaceType;
 use GraphQL\Type\Definition\ResolveInfo;
 use GraphQL\Type\Definition\Type;
 
+/**
+ * Class Employee
+ *
+ * @author Percipio Global Ltd. <support@percipio.london>
+ * @since 1.0.0
+ */
 class Employee extends Element
 {
     /**
@@ -31,6 +43,7 @@ class Employee extends Element
      */
     public static function getType($fields = null): Type
     {
+
         if ($type = GqlEntityRegistry::getEntity(self::getName())) {
             return $type;
         }
@@ -61,22 +74,6 @@ class Employee extends Element
     public static function getFieldDefinitions(): array
     {
 
-        //public $slug;
-        //public $siteId;
-        //public $staffologyId;
-        //public $employerId;
-        //public $userId;
-        //public $personalDetails;
-        //public $employmentDetails;
-        //public $autoEnrolment;
-        //public $leaveSettings;
-        //public $rightToWork;
-        //public $bankDetails;
-        //public $status;
-        //public $aeNotEnroledWarning;
-        //public $niNumber;
-        //public $sourceSystemId;
-
         return TypeManager::prepareFieldDefinitions(array_merge(parent::getFieldDefinitions(), self::getConditionalFields(), [
             'staffologyId' => [
                 'name' => 'staffologyId',
@@ -93,10 +90,29 @@ class Employee extends Element
                 'type' => Type::int(),
                 'description' => 'The user ID.',
             ],
+            'personalDetails' => [
+                'name' => 'personalDetails',
+                'type' => PersonalDetails::getType(),
+            ],
+            'employmentDetails' => [
+                'name' => 'employmentDetails',
+                'type' => EmploymentDetails::getType(),
+            ],
+            'leaveSettings' => [
+                'name' => 'leaveSettings',
+                'type' => LeaveSettings::getType(),
+            ],
             'rightToWork' => [
                 'name' => 'rightToWork',
-                'type' => Type::boolean(),
-                'description' => 'Has the employee the right to work?',
+                'type' => RightToWork::getType(),
+            ],
+            'bankDetails' => [
+                'name' => 'bankDetails',
+                'type' => BankDetails::getType(),
+            ],
+            'payOptions' => [
+                'name' => 'payOptions',
+                'type' => PayOptions::getType(),
             ],
             // TODO: Create Enum
             'status' => [

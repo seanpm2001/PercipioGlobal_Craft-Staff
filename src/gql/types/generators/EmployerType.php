@@ -8,22 +8,22 @@
 namespace percipiolondon\craftstaff\gql\types\generators;
 
 use Craft;
-use percipiolondon\craftstaff\elements\Employer as EmployerElement;
 use craft\gql\base\Generator;
 use craft\gql\base\GeneratorInterface;
 use craft\gql\base\ObjectType;
 use craft\gql\base\SingleGeneratorInterface;
 use craft\gql\GqlEntityRegistry;
-use percipiolondon\craftstaff\gql\interfaces\elements\Employer as EmployerInterface;
 use craft\gql\TypeManager;
+
+use percipiolondon\craftstaff\elements\Employer as EmployerElement;
+use percipiolondon\craftstaff\gql\interfaces\elements\Employer as EmployerInterface;
 use percipiolondon\craftstaff\gql\types\elements\Employer;
-use craft\helpers\Gql as GqlHelper;
 
 /**
- * Class AssetType
+ * Class EmployerType
  *
- * @author Pixel & Tonic, Inc. <support@pixelandtonic.com>
- * @since 3.3.0
+ * @author Percipio Global Ltd. <support@percipio.london>
+ * @since 1.0.0
  */
 class EmployerType extends Generator implements GeneratorInterface, SingleGeneratorInterface
 {

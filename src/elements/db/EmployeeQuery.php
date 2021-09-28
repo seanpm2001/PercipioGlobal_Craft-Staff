@@ -7,7 +7,6 @@ use percipiolondon\companymanagement\elements\Department;
 
 class EmployeeQuery extends ElementQuery
 {
-    public $slug;
     public $staffologyId;
     public $employerId;
     public $userId;
@@ -23,11 +22,6 @@ class EmployeeQuery extends ElementQuery
     public $sourceSystemId;
     public $isDirector;
 
-    public function slug($value)
-    {
-        $this->slug = $value;
-        return $this;
-    }
     public function personalDetails($value)
     {
         $this->personalDetails = $value;
@@ -103,7 +97,6 @@ class EmployeeQuery extends ElementQuery
 
         $this->query->select([
             'staff_employees.personalDetails',
-            'staff_employees.slug',
             'staff_employees.siteId',
             'staff_employees.staffologyId',
             'staff_employees.employerId',

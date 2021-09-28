@@ -48,11 +48,17 @@ class Employee extends Element
             case 'autoEnrolment':
                 return Json::decodeIfJson($source->autoEnrolment);
 
+            case 'rightToWork':
+                return Json::decodeIfJson($source->rightToWork);
+
             case 'leaveSettings':
                 return Json::decodeIfJson($source->leaveSettings);
 
             case 'bankDetails':
                 return Json::decodeIfJson($source->bankDetails);
+
+            case 'payOptions':
+                return Json::decodeIfJson($source->payOptions);
         }
 
         return parent::resolve($source, $arguments, $context, $resolveInfo);

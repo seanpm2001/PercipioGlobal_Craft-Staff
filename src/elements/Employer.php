@@ -450,17 +450,6 @@ class Employer extends Element
     }
 
     /**
-     * Performs actions after an element is moved within a structure.
-     *
-     * @param int $structureId The structure ID
-     *
-     * @return void
-     */
-    public function afterMoveInStructure(int $structureId)
-    {
-    }
-
-    /**
      * @return array
      */
     protected static function defineTableAttributes(): array
