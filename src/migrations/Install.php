@@ -151,8 +151,8 @@ class Install extends Migration
                     'rightToWork' => $this->longText(),
                     'bankDetails' => $this->longText(),
                     'status' => $this->string(255)->notNull()->defaultValue('Current'),
-                    'aeNotEnroledWarning' => $this->boolean()->notNull()->defaultValue(0),
-                    'niNumber' => $this->string(255)->notNull()->defaultValue(0),
+                    'aeNotEnroledWarning' => $this->boolean()->defaultValue(0),
+                    'niNumber' => $this->string(255)->defaultValue(0),
                     'sourceSystemId' => $this->string(255)->notNull()->defaultValue(0),
                 ]
             );

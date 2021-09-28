@@ -10,8 +10,6 @@
 
 namespace percipiolondon\craftstaff\records;
 
-use percipiolondon\craftstaff\Craftstaff;
-
 use Craft;
 use craft\db\ActiveRecord;
 use percipiolondon\craftstaff\db\Table;

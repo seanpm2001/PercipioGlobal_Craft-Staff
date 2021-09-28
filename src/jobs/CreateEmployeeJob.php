@@ -4,6 +4,7 @@ namespace percipiolondon\craftstaff\jobs;
 
 use Craft;
 use craft\elements\User;
+use craft\helpers\Json;
 use craft\queue\BaseJob;
 use percipiolondon\craftstaff\Craftstaff;
 use percipiolondon\craftstaff\records\Employee as EmployeeRecord;
@@ -27,8 +28,10 @@ class CreateEmployeeJob extends BaseJob
             $employee = $response->getBody()->getContents();
 
             if ($employee) {
-                $employee = json_decode($employee, true);
+                $employee = Json::decodeIfJson($employee, true);
                 $employeeRecord = EmployeeRecord::findOne(['staffologyId' => $employee['id']]);
+
+                var_dump($employee);
 
                 // check if employee doesn't exist
                 if (!$employeeRecord) {
@@ -38,18 +41,17 @@ class CreateEmployeeJob extends BaseJob
                     $employeeRecord->employerId = $this->employer['id'];
                     $employeeRecord->staffologyId = $employee['id'];
                     $employeeRecord->siteId = Craft::$app->getSites()->currentSite->id;
-                    $employeeRecord->personalDetails = $employee['personalDetails'] ?? '';
-                    $employeeRecord->employmentDetails = $employee['employmentDetails'] ?? '';
-                    $employeeRecord->autoEnrolment = $employee['autoEnrolment'] ?? '';
-                    $employeeRecord->leaveSettings = $employee['leaveSettings'] ?? '';
-                    $employeeRecord->rightToWork = $employee['rightToWork'] ?? '';
-                    $employeeRecord->bankDetails = $employee['bankDetails'] ?? '';
+                    $employeeRecord->personalDetails = $employee['personalDetails'] ?? null;
+                    $employeeRecord->employmentDetails = $employee['employmentDetails'] ?? null;
+                    $employeeRecord->autoEnrolment = $employee['autoEnrolment'] ?? null;
+                    $employeeRecord->leaveSettings = $employee['leaveSettings'] ?? null;
+                    $employeeRecord->rightToWork = $employee['rightToWork'] ?? null;
+                    $employeeRecord->bankDetails = $employee['bankDetails'] ?? null;
                     $employeeRecord->status = $employee['status'] ?? '';
-                    $employeeRecord->aeNotEnroledWarning = $employee['aeNotEnroledWarning'] ?? '';
-                    $employeeRecord->sourceSystemId = $employee['sourceSystemId'] ?? '';
-                    $employeeRecord->niNumber = $employee['personalDetails']['niNumber'] ?? '';
+                    $employeeRecord->aeNotEnroledWarning = $employee['aeNotEnroledWarning'] ?? null;
+                    $employeeRecord->sourceSystemId = $employee['sourceSystemId'];
+                    $employeeRecord->niNumber = $employee['personalDetails']['niNumber'] ?? null;
                     $employeeRecord->userId = null;
-
 
                     // save new employee
                     $elementsService = Craft::$app->getElements();
