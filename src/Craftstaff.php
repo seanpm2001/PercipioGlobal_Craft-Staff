@@ -11,18 +11,18 @@
 namespace percipiolondon\craftstaff;
 
 use Craft;
-use craft\events\RegisterGqlSchemaComponentsEvent;
-use GraphQL\Type\Definition\ObjectType;
-use GraphQL\Type\Definition\Type;
-use percipiolondon\craftstaff\gql\queries\Widget;
-use yii\base\Event;
 use craft\base\Plugin;
 use craft\console\Application as ConsoleApplication;
-use craft\services\Elements;
+use craft\events\RegisterGqlSchemaComponentsEvent;
 use craft\events\RegisterComponentTypesEvent;
 use craft\events\RegisterGqlQueriesEvent;
 use craft\events\RegisterGqlTypesEvent;
+use craft\services\Elements;
 use craft\services\Gql;
+
+use GraphQL\Type\Definition\ObjectType;
+use GraphQL\Type\Definition\Type;
+
 use percipiolondon\craftstaff\services\Employers as EmployersService;
 use percipiolondon\craftstaff\services\Employees as EmployeesService;
 use percipiolondon\craftstaff\services\PayRun as PayRunService;
@@ -36,7 +36,10 @@ use percipiolondon\craftstaff\elements\PayRunEntry as PayRunEntryElement;
 use percipiolondon\craftstaff\elements\HardingUser as HardingUserElement;
 use percipiolondon\craftstaff\gql\queries\Employer;
 use percipiolondon\craftstaff\gql\interfaces\elements\Employer as EmployerInterface;
+use percipiolondon\craftstaff\gql\queries\Widget;
 use percipiolondon\craftstaff\plugin\Services as StaffServices;
+
+use yii\base\Event;
 
 
 

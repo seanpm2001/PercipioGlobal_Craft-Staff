@@ -10,17 +10,18 @@
 
 namespace percipiolondon\craftstaff\services;
 
-use craft\elements\User;
-use craft\helpers\Queue;
-use percipiolondon\craftstaff\Craftstaff;
-
 use Craft;
 use craft\base\Component;
+use craft\elements\User;
+use craft\helpers\Queue;
+
+use percipiolondon\craftstaff\Craftstaff;
 use percipiolondon\craftstaff\jobs\CreateEmployeeJob;
 use percipiolondon\craftstaff\records\Employee;
 use percipiolondon\craftstaff\records\Employer;
 use percipiolondon\craftstaff\records\Permission;
 use percipiolondon\craftstaff\records\UserPermission;
+
 use yii\base\BaseObject;
 use yii\db\Exception;
 

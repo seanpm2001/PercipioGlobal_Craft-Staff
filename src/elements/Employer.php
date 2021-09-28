@@ -508,7 +508,7 @@ class Employer extends Element
 
         $employers = (new Query())
             ->from('{{%staff_employers}}')
-            ->select('*')
+            ->select('id')
             ->all();
 
         foreach ($employers as $employer) {
@@ -522,11 +522,13 @@ class Employer extends Element
     {
         try {
             if (!$isNew) {
+
                 $record = EmployerRecord::findOne($this->id);
 
                 if (!$record) {
                     throw new Exception('Invalid employer ID: ' . $this->id);
                 }
+
             } else {
                 $record = new EmployerRecord();
                 $record->id = (int)$this->id;
@@ -536,6 +538,7 @@ class Employer extends Element
             $record->siteId = $this->siteId;
             $record->staffologyId = $this->staffologyId;
             $record->name = $this->name;
+            $record->crn = $this->crn;
             $record->address = $this->address;
             $record->hmrcDetails = $this->hmrcDetails;
             $record->startYear = $this->startYear;

@@ -12,12 +12,12 @@ namespace percipiolondon\craftstaff\services;
 
 use percipiolondon\craftstaff\helpers\AssetHelper;
 use percipiolondon\craftstaff\Craftstaff;
-
+use percipiolondon\craftstaff\records\Employer as EmployerRecord;
+use percipiolondon\craftstaff\elements\Employer;
 
 use Craft;
 use craft\base\Component;
-use percipiolondon\craftstaff\records\Employer as EmployerRecord;
-use percipiolondon\craftstaff\elements\Employer;
+use craft\helpers\Json;
 
 /**
  * Employers Service
@@ -52,8 +52,7 @@ class Employers extends Component
         $api = Craft::parseEnv(Craftstaff::$plugin->getSettings()->staffologyApiKey);
 
         if(!$api) {
-            var_dump("There's no staffoligy API key set");
-            Craft::error("There's no staffoligy API key set");
+            Craft::error("There is no staffology API key set");
         }
 
         if ($api) {
@@ -69,13 +68,12 @@ class Employers extends Component
 
             $client = new \GuzzleHttp\Client();
 
-
             // FETCH THE EMPLOYERS LIST
             try {
 
                 $response = $client->get($base_url, $headers);
 
-                $results = json_decode($response->getBody()->getContents());
+                $results = Json::decodeIfJson($response->getBody()->getContents(), false);
 
                 // LOOP THROUGH LIST WITH EMPLOYERS
                 foreach($results as $entry) {
@@ -87,11 +85,9 @@ class Employers extends Component
                         $employer = $response->getBody()->getContents();
 
                         if ($employer) {
-                            $employer = json_decode($employer);
+                            $employer = Json::decodeIfJson($employer, false);
 
                             $employerRecord = EmployerRecord::findOne(['staffologyId' => $employer->id]);
-
-//                            var_dump($employer->id);
 
                             if (!$employerRecord) {
 
@@ -99,16 +95,16 @@ class Employers extends Component
 
                                 $employerRecord->slug = strtolower(trim(preg_replace('/[^A-Za-z0-9-]+/', '-', $employer->name), '-'));
                                 $employerRecord->siteId = Craft::$app->getSites()->currentSite->id;
-                                $employerRecord->staffologyId = $employer->id ?? "";
-                                $employerRecord->name = $employer->name ?? '';
-                                //TODO: logo --> AssetHelper::fetchRemoteImage($employer->logoUrl);
-                                $employerRecord->crn = $employer->crn ?? '';
-                                $employerRecord->address = json_encode($employer->address) ?? '';
-                                $employerRecord->hmrcDetails = json_encode($employer->hmrcDetails) ?? '';
-                                $employerRecord->startYear = $employer->startYear ?? '';
-                                $employerRecord->currentYear = $employer->currentYear ?? '';
+                                $employerRecord->staffologyId = $employer->id;
+                                $employerRecord->name = $employer->name ?? null;
+                                //TODO: logo --> AssetHelper::fetchRemoteImage($employer->logoUrl)
+                                $employerRecord->crn = $employer->crn ?? null;
+                                $employerRecord->address = Json::encode($employer->address);
+                                $employerRecord->hmrcDetails = Json::encode($employer->hmrcDetails);
+                                $employerRecord->startYear = $employer->startYear ?? null;
+                                $employerRecord->currentYear = $employer->currentYear ?? null;
                                 $employerRecord->employeeCount = $employer->employeeCount ?? 0;
-                                $employerRecord->defaultPayOptions = json_encode($employer->defaultPayOptions) ?? '';
+                                $employerRecord->defaultPayOptions = Json::encode($employer->defaultPayOptions);
 
                                 $elementsService = Craft::$app->getElements();
                                 $elementsService->saveElement($employerRecord);
@@ -138,35 +134,3 @@ class Employers extends Component
         }
     }
 }
-
-//if (Craftstaff::$plugin->getSettings()->staffologyApiKey) {
-//
-//    $api = Craft::parseEnv(Craftstaff::$plugin->getSettings()->staffologyApiKey);
-//
-//    $base_url = 'https://api.staffology.co.uk/employers';
-//    $credentials = base64_encode("craftstaff:".$result);
-//    $headers = [
-//        'headers' => [
-//            'Authorization' => 'Basic ' . $credentials,
-//        ],
-//    ];
-//
-//    $client = new \GuzzleHttp\Client();
-//
-//    try {
-//
-//        $response = $client->get($base_url, $headers);
-//
-//        return $response->getBody();
-//
-//    } catch (\Exception $e) {
-//
-////                return [
-////                    'error' => true,
-////                    'reason' => $e->getMessage()
-////                ];
-//
-//        return "error";
-//
-//    }
-//}
