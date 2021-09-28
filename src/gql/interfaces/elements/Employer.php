@@ -80,6 +80,11 @@ class Employer extends Element
                 'type' => Type::string(),
                 'description' => 'The company name.',
             ],
+            'staffologyId' => [
+                'name' => 'staffologyId',
+                'type' => Type::string(),
+                'description' => 'The employer id from staffology, needed for API calls.'
+            ],
             'crn' => [
                 'name' => 'crn',
                 'type' => Type::string(),
