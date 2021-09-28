@@ -488,8 +488,6 @@ class Employee extends Element
             $record->userId = $this->userId;
             $record->isDirector = $this->isDirector;
 
-            Craft::warning("isEmployerDirector Employee ".$record->isDirector);
-
             $success = $record->save(false);
 
             if($isNew) {
