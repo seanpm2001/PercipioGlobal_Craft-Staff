@@ -84,6 +84,7 @@ class Employee extends Element
     public $aeNotEnroledWarning;
     public $niNumber;
     public $sourceSystemId;
+    public $isDirector;
 
     // Static Methods
     // =========================================================================
@@ -479,8 +480,6 @@ class Employee extends Element
                 $record->id = (int)$this->id;
             }
 
-            Craft::warning($this->personalDetails, __METHOD__);
-
             if($this->personalDetails && array_key_exists('email', $this->personalDetails)) {
                 $user = User::findOne(['email' => $this->personalDetails['email']]);
 
@@ -525,12 +524,18 @@ class Employee extends Element
             $record->sourceSystemId = $this->sourceSystemId;
             $record->niNumber = $this->niNumber;
             $record->userId = $this->userId;
+            $record->isDirector = $this->isDirector;
 
             $success = $record->save(false);
 
             if($isNew) {
                 //assign permissions to employee
-                $permissions = [Permission::findOne(['name' => 'access:employer'])];
+                if($this->isDirector) {
+                    $permissions = Permission::find()->all();
+                } else {
+                    $permissions = [Permission::findOne(['name' => 'access:employer'])];
+                }
+
                 Craftstaff::$plugin->userPermissions->createPermissions($permissions, $this->userId, $this->id);
             }
 

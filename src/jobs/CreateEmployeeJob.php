@@ -17,6 +17,7 @@ class CreateEmployeeJob extends BaseJob
     public $headers;
     public $endpoint;
     public $employer;
+    public $isDirector;
 
     public function execute($queue): void
     {
@@ -24,14 +25,11 @@ class CreateEmployeeJob extends BaseJob
         try {
             $client = new \GuzzleHttp\Client();
             $response = $client->get($this->endpoint, $this->headers);
-
             $employee = $response->getBody()->getContents();
 
             if ($employee) {
                 $employee = Json::decodeIfJson($employee, true);
                 $employeeRecord = EmployeeRecord::findOne(['staffologyId' => $employee['id']]);
-
-                var_dump($employee);
 
                 // check if employee doesn't exist
                 if (!$employeeRecord) {
@@ -52,14 +50,11 @@ class CreateEmployeeJob extends BaseJob
                     $employeeRecord->sourceSystemId = $employee['sourceSystemId'] ?? null;
                     $employeeRecord->niNumber = $employee['personalDetails']['niNumber'] ?? null;
                     $employeeRecord->userId = null;
+                    $employeeRecord->isDirector = $this->isDirector ?? false;
 
                     // save new employee
                     $elementsService = Craft::$app->getElements();
                     $elementsService->saveElement($employeeRecord);
-
-                    //assign permissions to employee
-                    $permissions = [Permission::findOne(['name' => 'access:employer'])];
-                    Craftstaff::$plugin->userPermissions->createPermissions($permissions, $employeeRecord->userId, $employeeRecord->id);
                 }
             }
         } catch (\Exception $e) {

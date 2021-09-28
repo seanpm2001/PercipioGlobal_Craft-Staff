@@ -84,9 +84,11 @@ class Employees extends Component
                     // LOOP THROUGH LIST WITH COMPANIES
                     foreach ($results as $result) {
 
+
                         Queue::push(new CreateEmployeeJob([
                             'headers' => $headers,
                             'employer' => $employer,
+                            'isDirector' => $result['metadata']['isDirector'] ?? false,
                             'endpoint' => $result['url'],
                         ]));
 
