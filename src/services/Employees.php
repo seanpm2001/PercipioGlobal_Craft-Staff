@@ -13,6 +13,7 @@ namespace percipiolondon\craftstaff\services;
 use Craft;
 use craft\base\Component;
 use craft\elements\User;
+use craft\helpers\Json;
 use craft\helpers\Queue;
 
 use percipiolondon\craftstaff\Craftstaff;
@@ -55,15 +56,16 @@ class Employees extends Component
      */
     public function fetch()
     {
-        $api = \Craft::parseEnv(Craftstaff::$plugin->getSettings()->staffologyApiKey);
-        $credentials = base64_encode("craftstaff:".$api);
-        $headers = [
-            'headers' => [
-                'Authorization' => 'Basic ' . $credentials,
-            ],
-        ];
+        $apiKey = \Craft::parseEnv(Craftstaff::$plugin->getSettings()->staffologyApiKey);
 
-        if($api) {
+        if ($apiKey) {
+
+            $credentials = base64_encode("craftstaff:" . $apiKey);
+            $headers = [
+                'headers' => [
+                    'Authorization' => 'Basic ' . $credentials,
+                ],
+            ];
 
             // GET EMPLOYERS
             $employers = Employer::find()->all();
@@ -71,23 +73,21 @@ class Employees extends Component
             foreach($employers as $employer) {
 
                 $base_url = 'https://api.staffology.co.uk/employers/' . $employer->staffologyId . '/employees';
-
                 $client = new \GuzzleHttp\Client();
 
                 //GET LIST OF EMPLOYEES INSIDE OF EMPLOYER
                 try {
 
                     $response = $client->get($base_url, $headers);
-
-                    $results = json_decode($response->getBody()->getContents(), true);
+                    $results = Json::decodeIfJson($response->getBody()->getContents(), true);
 
                     // LOOP THROUGH LIST WITH COMPANIES
-                    foreach ($results as $i => $entry) {
+                    foreach ($results as $result) {
 
                         Queue::push(new CreateEmployeeJob([
                             'headers' => $headers,
                             'employer' => $employer,
-                            'endpoint' => $entry['url'],
+                            'endpoint' => $result['url'],
                         ]));
 
                     }
