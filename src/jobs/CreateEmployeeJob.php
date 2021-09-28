@@ -49,7 +49,7 @@ class CreateEmployeeJob extends BaseJob
                     $employeeRecord->bankDetails = $employee['bankDetails'] ?? null;
                     $employeeRecord->status = $employee['status'] ?? '';
                     $employeeRecord->aeNotEnroledWarning = $employee['aeNotEnroledWarning'] ?? null;
-                    $employeeRecord->sourceSystemId = $employee['sourceSystemId'];
+                    $employeeRecord->sourceSystemId = $employee['sourceSystemId'] ?? null;
                     $employeeRecord->niNumber = $employee['personalDetails']['niNumber'] ?? null;
                     $employeeRecord->userId = null;
 
