@@ -12,10 +12,10 @@ use craft\gql\interfaces\Element;
 use craft\gql\TypeManager;
 use craft\gql\types\DateTime;
 
-use percipiolondon\craftstaff\gql\types\generators\EmployerType;
 use percipiolondon\craftstaff\gql\types\Address;
 use percipiolondon\craftstaff\gql\types\HmrcDetails;
 use percipiolondon\craftstaff\gql\types\PayOptions;
+use percipiolondon\craftstaff\gql\types\generators\EmployerType;
 
 use craft\helpers\Gql;
 use craft\helpers\Json;
@@ -25,10 +25,10 @@ use GraphQL\Type\Definition\ResolveInfo;
 use GraphQL\Type\Definition\Type;
 
 /**
- * Class Asset
+ * Class Employer
  *
- * @author Pixel & Tonic, Inc. <support@pixelandtonic.com>
- * @since 3.3.0
+ * @author Percipio Global Ltd. <support@percipio.london>
+ * @since 1.0.0
  */
 class Employer extends Element
 {

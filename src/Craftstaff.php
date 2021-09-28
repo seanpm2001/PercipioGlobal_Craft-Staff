@@ -35,8 +35,9 @@ use percipiolondon\craftstaff\elements\PayRun as PayRunElement;
 use percipiolondon\craftstaff\elements\PayRunEntry as PayRunEntryElement;
 use percipiolondon\craftstaff\elements\HardingUser as HardingUserElement;
 use percipiolondon\craftstaff\gql\queries\Employer;
+use percipiolondon\craftstaff\gql\queries\Employee;
 use percipiolondon\craftstaff\gql\interfaces\elements\Employer as EmployerInterface;
-use percipiolondon\craftstaff\gql\queries\Widget;
+use percipiolondon\craftstaff\gql\interfaces\elements\Employee as EmployeeInterface;
 use percipiolondon\craftstaff\plugin\Services as StaffServices;
 
 use yii\base\Event;
@@ -248,8 +249,8 @@ class Craftstaff extends Plugin
             Gql::class,
             Gql::EVENT_REGISTER_GQL_TYPES,
             function(RegisterGqlTypesEvent $event) {
-//                $event->types[] = \percipiolondon\craftstaff\gql\interfaces\elements\Widget::class;
                 $event->types[] = EmployerInterface::class;
+                $event->types[] = EmployeeInterface::class;
             }
         );
     }
@@ -260,18 +261,15 @@ class Craftstaff extends Plugin
             Gql::class,
             Gql::EVENT_REGISTER_GQL_SCHEMA_COMPONENTS,
             function(RegisterGqlSchemaComponentsEvent $event) {
-//                $event->queries = array_merge($event->queries, [
-//                    // “Widgets” group
-//                    'Widgets' => [
-//                        // widget component with read action, labelled “View Widgets” in UI
-//                        'widget:read' => ['label' => 'View Widgets']
-//                    ],
-//                ]);
 
                 $event->queries = array_merge($event->queries, [
                     'Employers' => [
                         // employers component with read action, labelled “View Employers” in UI
-                        'employer:read' => ['label' => Craft::t('staff-management', 'View Employers')]
+                        'employers:read' => ['label' => Craft::t('staff-management', 'View Employers')]
+                    ],
+                    'Employees' => [
+                        // employees component with read action, labelled “View Employees” in UI
+                        'employees:read' => ['label' => Craft::t('staff-management', 'View Employers')]
                     ],
                 ]);
 
@@ -288,7 +286,8 @@ class Craftstaff extends Plugin
             function(RegisterGqlQueriesEvent $event) {
                 $event->queries = array_merge(
                     $event->queries,
-                    Employer::getQueries()
+                    Employer::getQueries(),
+                    Employee::getQueries(),
                 );
             }
         );

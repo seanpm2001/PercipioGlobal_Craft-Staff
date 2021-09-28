@@ -70,7 +70,6 @@ class Employee extends Element
     // Public Properties
     // =========================================================================
 
-    public $slug;
     public $siteId;
     public $staffologyId;
     public $employerId;
@@ -161,6 +160,24 @@ class Employee extends Element
     }
 
     /**
+     * @inheritdoc
+     */
+    public static function hasStatuses(): bool
+    {
+        return true;
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public function getStatus()
+    {
+        $status = parent::getStatus();
+
+        return $status;
+    }
+
+    /**
      * Returns whether elements of this type have statuses.
      *
      * If this returns `true`, the element index template will show a Status menu
@@ -245,9 +262,16 @@ class Employee extends Element
      */
     protected static function defineSources(string $context = null): array
     {
-        $sources = [];
+        $ids = self::_getEmployeeIds();
 
-        return $sources;
+        return [
+            [
+                'key' => '*',
+                'label' => 'All Employees',
+                'defaultSort' => ['id', 'desc'],
+                'criteria' => ['id' => $ids],
+            ]
+        ];
     }
 
     // Public Methods
@@ -276,6 +300,14 @@ class Employee extends Element
     public function getIsEditable(): bool
     {
         return true;
+    }
+
+    /**
+     * @return string
+     */
+    public function getCpEditUrl()
+    {
+        return 'staff-management/employers/' . $this->id;
     }
 
     /**
@@ -416,15 +448,20 @@ class Employee extends Element
         return true;
     }
 
-    /**
-     * Performs actions after an element is moved within a structure.
-     *
-     * @param int $structureId The structure ID
-     *
-     * @return void
-     */
-    public function afterMoveInStructure(int $structureId)
+    private static function _getEmployeeIds(): array
     {
+        $employeeIds = [];
+
+        $employees = (new Query())
+            ->from('{{%staff_employees}}')
+            ->select('id')
+            ->all();
+
+        foreach ($employees as $employee) {
+            $employeeIds[] = $employee['id'];
+        }
+
+        return $employeeIds;
     }
 
     private function _saveRecord($isNew)
@@ -436,6 +473,7 @@ class Employee extends Element
                 if (!$record) {
                     throw new Exception('Invalid employee ID: ' . $this->id);
                 }
+
             } else {
                 $record = new EmployeeRecord();
                 $record->id = (int)$this->id;

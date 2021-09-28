@@ -14,17 +14,17 @@ use craft\gql\base\GeneratorInterface;
 use craft\gql\base\ObjectType;
 use craft\gql\base\SingleGeneratorInterface;
 use craft\gql\GqlEntityRegistry;
-use percipiolondon\craftstaff\gql\interfaces\elements\Employee as EmployeeInterface;
 use craft\gql\TypeManager;
 
-use percipiolondon\craftstaff\elements\Employee as EmployeeElement;
+use percipiolondon\craftstaff\elements\Employer as EmployeeElement;
+use percipiolondon\craftstaff\gql\interfaces\elements\Employee as EmployeeInterface;
 use percipiolondon\craftstaff\gql\types\elements\Employee;
 
 /**
- * Class AssetType
+ * Class EmployeeType
  *
- * @author Pixel & Tonic, Inc. <support@pixelandtonic.com>
- * @since 3.3.0
+ * @author Percipio Global Ltd. <support@percipio.london>
+ * @since 1.0.0
  */
 class EmployeeType extends Generator implements GeneratorInterface, SingleGeneratorInterface
 {

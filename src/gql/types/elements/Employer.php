@@ -9,9 +9,11 @@ namespace percipiolondon\craftstaff\gql\types\elements;
 
 use craft\gql\types\elements\Element;
 use craft\helpers\Json;
+
+use GraphQL\Type\Definition\ResolveInfo;
+
 use percipiolondon\craftstaff\elements\Employer as EmployerElement;
 use percipiolondon\craftstaff\gql\interfaces\elements\Employer as EmployerInterface;
-use GraphQL\Type\Definition\ResolveInfo;
 
 
 /**
