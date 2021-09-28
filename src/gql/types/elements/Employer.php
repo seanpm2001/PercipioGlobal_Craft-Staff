@@ -15,10 +15,10 @@ use GraphQL\Type\Definition\ResolveInfo;
 
 
 /**
- * Class Entry
+ * Class Employer
  *
- * @author Pixel & Tonic, Inc. <support@pixelandtonic.com>
- * @since 3.3.0
+ * @author Percipio Global Ltd. <support@percipio.london>
+ * @since 1.0.0
  */
 class Employer extends Element
 {

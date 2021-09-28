@@ -8,9 +8,6 @@ use craft\gql\TypeManager;
 use craft\gql\types\DateTime;
 
 use percipiolondon\craftstaff\gql\types\generators\EmployeeType;
-use percipiolondon\craftstaff\gql\types\Address;
-use percipiolondon\craftstaff\gql\types\HmrcDetails;
-use percipiolondon\craftstaff\gql\types\PayOptions;
 
 use craft\helpers\Gql;
 use craft\helpers\Json;
@@ -81,47 +78,46 @@ class Employee extends Element
         //public $sourceSystemId;
 
         return TypeManager::prepareFieldDefinitions(array_merge(parent::getFieldDefinitions(), self::getConditionalFields(), [
-            'name' => [
-                'name' => 'name',
-                'type' => Type::string(),
-                'description' => 'The company name.',
-            ],
             'staffologyId' => [
                 'name' => 'staffologyId',
                 'type' => Type::string(),
-                'description' => 'The employer id from staffology, needed for API calls.'
+                'description' => 'The employee id from staffology, needed for API calls.'
             ],
-            'crn' => [
-                'name' => 'crn',
-                'type' => Type::string(),
-                'description' => 'The company registration number.',
-            ],
-            'address' => [
-                'name' => 'address',
-                'type' => Address::getType(),
-                'description' => 'The address object.',
-            ],
-            'hmrcDetails' => [
-                'name' => 'hmrcDetails',
-                'type' => HmrcDetails::getType(),
-                'description' => 'Get the HMRC Details.',
-            ],
-            'startYear' => [
-                'name' => 'startYear',
-                'type' => Type::string(),
-            ],
-            'currentYear' => [
-                'name' => 'currentYear',
-                'type' => Type::string(),
-            ],
-            'employeeCount' => [
-                'name' => 'employeeCount',
+            'employerId' => [
+                'name' => 'employerId',
                 'type' => Type::int(),
+                'description' => 'The id of the employer this employee works for.',
             ],
-            'defaultPayOptions' => [
-                'name' => 'defaultPayOptions',
-                'type' => PayOptions::getType(),
-                'description' => 'Get the default pay options',
+            'userId' => [
+                'name' => 'userId',
+                'type' => Type::int(),
+                'description' => 'The user ID.',
+            ],
+            'rightToWork' => [
+                'name' => 'rightToWork',
+                'type' => Type::boolean(),
+                'description' => 'Has the employee the right to work?',
+            ],
+            // TODO: Create Enum
+            'status' => [
+                'name' => 'status',
+                'type' => Type::string(),
+                'description' => 'The employee status.'
+            ],
+            'aeNotEnroledWarning' => [
+                'name' => 'aeNotEnroledWarning',
+                'type' => Type::boolean(),
+                'description' => 'AE not enroled warning.'
+            ],
+            'niNumber' => [
+                'name' => 'niNumber',
+                'type' => Type::string(),
+                'description' => 'National insurance number.'
+            ],
+            'sourceSystemId' => [
+                'name' => 'sourceSystemId',
+                'type' => Type::string(),
+                'description' => 'Source system ID.'
             ],
 
         ]), self::getName());
