@@ -52,7 +52,6 @@ class PayRun extends Component
      */
     public function fetch()
     {
-        $result = 'something';
         $api = Craft::parseEnv(Craftstaff::$plugin->getSettings()->staffologyApiKey);
         $credentials = base64_encode("craftstaff:".$api);
         $headers = [
@@ -91,6 +90,6 @@ class PayRun extends Component
             }
         }
 
-        return $result;
+        return "success";
     }
 }

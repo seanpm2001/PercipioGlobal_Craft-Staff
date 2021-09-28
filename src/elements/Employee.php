@@ -330,6 +330,29 @@ class Employee extends Element
         return $html;
     }
 
+    /**
+     * @inheritdoc
+     * @since 3.3.0
+     */
+    public static function gqlScopesByContext($context): array
+    {
+        return ['employees.' . $context->uid];
+    }
+
+    public static function gqlTypeNameByContext($context): string
+    {
+        return 'Employee';
+    }
+
+    /**
+     * @inheritdoc
+     * @since 3.3.0
+     */
+    public function getGqlTypeName(): string
+    {
+        return static::gqlTypeNameByContext($this);
+    }
+
     // Events
     // -------------------------------------------------------------------------
 

@@ -54,7 +54,6 @@ class CreateEmployeeJob extends BaseJob
                     // save new employee
                     $elementsService = Craft::$app->getElements();
                     $elementsService->saveElement($employeeRecord);
-                    Craft::info($employeeRecord->userId);
 
                     //assign permissions to employee
                     $permissions = [Permission::findOne(['name' => 'access:employer'])];
