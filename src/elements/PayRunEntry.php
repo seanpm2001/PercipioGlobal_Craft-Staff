@@ -103,7 +103,7 @@ class PayRunEntry extends Element
     public $manualNi;
     public $nationalInsuranceCalculation;
     public $payrollCodeChanged;
-    public $aeNotEnrolledWarning;
+    public $aeNotEnroledWarning;
     public $fps;
     public $recievingOffsetPay;
     public $paymentAfterLearning;
@@ -324,7 +324,7 @@ class PayRunEntry extends Element
 //                'isClosed',
 //                'manualNi',
 //                'payrollCodeChanged',
-//                'aeNotEnrolledWarning',
+//                'aeNotEnroledWarning',
 //                'recievingOffsetPay',
 //                'paymentAfterLearning',
 //            ], 'boolean'],
@@ -520,7 +520,7 @@ class PayRunEntry extends Element
             $record->isClosed = $this->isClosed;
             $record->manualNi = $this->manualNi;
             $record->nationalInsuranceCalculation = $this->nationalInsuranceCalculation;
-            $record->aeNotEnrolledWarning = $this->aeNotEnrolledWarning;
+            $record->aeNotEnroledWarning = $this->aeNotEnroledWarning;
             $record->fps = $this->fps;
             $record->recievingOffsetPay = $this->recievingOffsetPay;
             $record->paymentAfterLearning = $this->paymentAfterLearning;

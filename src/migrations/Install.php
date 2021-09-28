@@ -151,7 +151,7 @@ class Install extends Migration
                     'rightToWork' => $this->longText(),
                     'bankDetails' => $this->longText(),
                     'status' => $this->string(255)->notNull()->defaultValue('Current'),
-                    'aeNotEnrolledWarning' => $this->boolean()->notNull()->defaultValue(0),
+                    'aeNotEnroledWarning' => $this->boolean()->notNull()->defaultValue(0),
                     'niNumber' => $this->string(255)->notNull()->defaultValue(0),
                     'sourceSystemId' => $this->string(255)->notNull()->defaultValue(0),
                 ]
@@ -258,7 +258,7 @@ class Install extends Migration
                     'manualNi' => $this->boolean(),
                     'nationalInsuranceCalculation' => $this->longText(),
                     'payrollCodeChanged' => $this->boolean(),
-                    'aeNotEnrolledWarning' => $this->boolean(),
+                    'aeNotEnroledWarning' => $this->boolean(),
                     'fps' => $this->longText(),
                     'recievingOffsetPay' => $this->boolean(),
                     'paymentAfterLearning' => $this->boolean(),

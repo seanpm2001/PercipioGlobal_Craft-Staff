@@ -40,7 +40,7 @@ class PayRunEntryQuery extends ElementQuery
     public $manualNi;
     public $nationalInsuranceCalculation;
     public $payrollCodeChanged;
-    public $aeNotEnrolledWarning;
+    public $aeNotEnroledWarning;
     public $fps;
     public $recievingOffsetPay;
     public $paymentAfterLearning;
@@ -245,9 +245,9 @@ class PayRunEntryQuery extends ElementQuery
         return $this;
     }
 
-    public function aeNotEnrolledWarning($value)
+    public function aeNotEnroledWarning($value)
     {
-        $this->aeNotEnrolledWarning = $value;
+        $this->aeNotEnroledWarning = $value;
         return $this;
     }
 
@@ -319,7 +319,7 @@ class PayRunEntryQuery extends ElementQuery
             'staff_payrunentry.manualNi',
             'staff_payrunentry.nationalInsuranceCalculation',
             'staff_payrunentry.payrollCodeChanged',
-            'staff_payrunentry.aeNotEnrolledWarning',
+            'staff_payrunentry.aeNotEnroledWarning',
             'staff_payrunentry.fps',
             'staff_payrunentry.recievingOffsetPay',
             'staff_payrunentry.paymentAfterLearning',

@@ -76,7 +76,7 @@ class CreatePayRunEntryJob extends Basejob
         $payRunEntry->isClosed = $payRunEntryData['isClosed'] ?? null;
         $payRunEntry->manualNi = $payRunEntryData['manualNi'] ?? null;
         $payRunEntry->nationalInsuranceCalculation = $payRunEntryData['nationalInsuranceCalculation'] ?? '';
-        $payRunEntry->aeNotEnrolledWarning = $payRunEntryData['aeNotEnrolledWarning'] ?? null;
+        $payRunEntry->aeNotEnroledWarning = $payRunEntryData['aeNotEnroledWarning'] ?? null;
         $payRunEntry->fps = $payRunEntryData['fps'] ?? '';
         $payRunEntry->recievingOffsetPay = $payRunEntryData['recievingOffsetPay'] ?? null;
         $payRunEntry->paymentAfterLearning = $payRunEntryData['paymentAfterLearning'] ?? null;
