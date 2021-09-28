@@ -525,6 +525,7 @@ class PayRunEntry extends Element
             $record->recievingOffsetPay = $this->recievingOffsetPay;
             $record->paymentAfterLearning = $this->paymentAfterLearning;
             $record->umbrellaPayment = $this->umbrellaPayment;
+            $record->pdf = $this->pdf;
 
             $success = $record->save(false);
 

@@ -16,6 +16,7 @@ use percipiolondon\craftstaff\Craftstaff;
 use Craft;
 use craft\base\Component;
 use percipiolondon\craftstaff\jobs\CreatePayRunJob;
+use percipiolondon\craftstaff\jobs\FetchPaySlip;
 use percipiolondon\craftstaff\records\Employer;
 use percipiolondon\craftstaff\records\PayRunLog as PayRunLogRecord;
 use percipiolondon\craftstaff\records\PayRun as PayRunRecord;
@@ -78,6 +79,47 @@ class PayRun extends Component
                         'headers' => $headers,
                         'paySchedules' => $paySchedules,
                         'employerId' => $employer->id,
+                    ]));
+
+                } catch (\Throwable $e) {
+                    echo "---- error -----\n";
+                    var_dump($e->getMessage());
+                    Craft::error($e->getMessage(), __METHOD__);
+//                    Craft::dd($e);
+                    echo "\n---- end error ----";
+                }
+            }
+        }
+
+        return "success";
+    }
+
+    public function fetchPayslips()
+    {
+        $api = Craft::parseEnv(Craftstaff::$plugin->getSettings()->staffologyApiKey);
+        $credentials = base64_encode("craftstaff:".$api);
+        $headers = [
+            'headers' => [
+                'Authorization' => 'Basic ' . $credentials,
+                'Accept' => 'application/pdf'
+            ],
+        ];
+
+        if ($api) {
+            // GET EMPLOYERS
+            $payRunEntries = PayRunEntryRecord::find()->all();
+
+            foreach($payRunEntries as $payRunEntry) {
+
+                try {
+
+                    Queue::push(new FetchPaySlip([
+                        'headers' => $headers,
+                        'employerId' => $payRunEntry->employerId ?? null,
+                        'payPeriod' => $payRunEntry->payPeriod ?? null,
+                        'periodNumber' => $payRunEntry->period ?? null,
+                        'taxYear' => $payRunEntry->taxYear ?? null,
+                        'payRunEntry' => $payRunEntry ?? null
                     ]));
 
                 } catch (\Throwable $e) {

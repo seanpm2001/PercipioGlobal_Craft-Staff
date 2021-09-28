@@ -81,7 +81,6 @@ class Employers extends Component
                     // FETCH DETAILED EMPLOYER INFO
                     try {
                         $response = $client->get($entry->url, $headers);
-
                         $employer = $response->getBody()->getContents();
 
                         if ($employer) {

@@ -6,6 +6,7 @@ use Craft;
 use craft\queue\BaseJob;
 use percipiolondon\craftstaff\records\PayRunEntry as PayRunEntryRecord;
 use percipiolondon\craftstaff\elements\PayRunEntry;
+use craft\helpers\Queue;
 
 class CreatePayRunEntryJob extends Basejob
 {
@@ -88,7 +89,14 @@ class CreatePayRunEntryJob extends Basejob
 
         if(!$success){
             Craft::error($payRunEntry->errors);
-            Craft::info($payRunEntry->payOptions);
         }
+    }
+
+    protected function defaultDescription(): string
+    {
+        return sprintf(
+            'Fetching Pay Run Entries from "%s"',
+            $this->employerId
+        );
     }
 }

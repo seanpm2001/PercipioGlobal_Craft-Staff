@@ -48,4 +48,9 @@ class PayRunControllerController extends Controller
     {
         return  Craftstaff::$plugin->payRun->fetch();
     }
+
+    public function actionFetchPayslips()
+    {
+        return  Craftstaff::$plugin->payRun->fetchPayslips();
+    }
 }
