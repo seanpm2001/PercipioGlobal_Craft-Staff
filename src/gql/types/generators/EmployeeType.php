@@ -16,7 +16,7 @@ use craft\gql\base\SingleGeneratorInterface;
 use craft\gql\GqlEntityRegistry;
 use craft\gql\TypeManager;
 
-use percipiolondon\craftstaff\elements\Employer as EmployeeElement;
+use percipiolondon\craftstaff\elements\Employee as EmployeeElement;
 use percipiolondon\craftstaff\gql\interfaces\elements\Employee as EmployeeInterface;
 use percipiolondon\craftstaff\gql\types\elements\Employee;
 

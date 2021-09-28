@@ -269,7 +269,7 @@ class Craftstaff extends Plugin
                     ],
                     'Employees' => [
                         // employees component with read action, labelled “View Employees” in UI
-                        'employees:read' => ['label' => Craft::t('staff-management', 'View Employers')]
+                        'employees:read' => ['label' => Craft::t('staff-management', 'View Employees')]
                     ],
                 ]);
 
@@ -287,7 +287,7 @@ class Craftstaff extends Plugin
                 $event->queries = array_merge(
                     $event->queries,
                     Employer::getQueries(),
-                    Employee::getQueries(),
+                    Employee::getQueries()
                 );
             }
         );

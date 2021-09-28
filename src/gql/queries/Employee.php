@@ -21,7 +21,7 @@ class Employee extends Query
                 'description' => 'This query is used to query for employees.',
                 'complexity' => GqlHelper::relatedArgumentComplexity(),
             ],
-            'employer' => [
+            'employee' => [
                 'type' => EmployeeInterface::getType(),
                 'args' => EmployeeArguments::getArguments(),
                 'resolve' => EmployeeResolver::class . '::resolveOne',
