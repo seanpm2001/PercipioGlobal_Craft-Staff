@@ -10,12 +10,16 @@
 
 namespace percipiolondon\craftstaff\elements;
 
+use craft\validators\DateTimeValidator;
 use percipiolondon\craftstaff\Craftstaff;
 
 use Craft;
 use craft\base\Element;
 use craft\elements\db\ElementQuery;
 use craft\elements\db\ElementQueryInterface;
+use percipiolondon\craftstaff\elements\db\PayRunEntryQuery;
+use percipiolondon\craftstaff\records\PayRunEntry as PayRunEntryRecord;
+use yii\db\Exception;
 
 /**
  * PayRunEntry Element
@@ -66,12 +70,45 @@ class PayRunEntry extends Element
     // Public Properties
     // =========================================================================
 
-    /**
-     * Some attribute
-     *
-     * @var string
-     */
-    public $someAttribute = 'Some Default';
+    public $siteId;
+    public $staffologyId;
+    public $payRunId;
+    public $employerId;
+    public $taxYear;
+    public $startDate;
+    public $endDate;
+    public $note;
+    public $bacsSubReference;
+    public $bacsHashcode;
+    public $percentageOfWorkingDaysPaidAsNormal;
+    public $workingDaysNotPaidAsNormal;
+    public $payPeriod;
+    public $ordinal;
+    public $period;
+    public $isNewStarter;
+    public $unpaidAbsence;
+    public $hasAttachmentOrders;
+    public $paymentDate;
+    public $priorPayrollCode;
+    public $payOptions;
+    public $pensionSummary;
+    public $totals;
+    public $periodOverrides;
+    public $totalsYtd;
+    public $totalsYtdOverrides;
+    public $forcedCisVatAmount;
+    public $holidayAccured;
+    public $state;
+    public $isClosed;
+    public $manualNi;
+    public $nationalInsuranceCalculation;
+    public $payrollCodeChanged;
+    public $aeNotEnrolledWarning;
+    public $fps;
+    public $recievingOffsetPay;
+    public $paymentAfterLearning;
+    public $umbrellaPayment;
+    public $pdf;
 
     // Static Methods
     // =========================================================================
@@ -87,6 +124,38 @@ class PayRunEntry extends Element
     }
 
     /**
+     * @inheritdoc
+     */
+    public static function lowerDisplayName(): string
+    {
+        return Craft::t('staff-management', 'payrunentry');
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public static function pluralDisplayName(): string
+    {
+        return Craft::t('staff-management', 'PayRunEntries');
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public static function pluralLowerDisplayName(): string
+    {
+        return Craft::t('staff-management', 'payrunentry');
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public static function refHandle()
+    {
+        return 'payRunEntry';
+    }
+
+    /**
      * Returns whether elements of this type will be storing any data in the `content`
      * table (tiles or custom fields).
      *
@@ -94,7 +163,7 @@ class PayRunEntry extends Element
      */
     public static function hasContent(): bool
     {
-        return true;
+        return false;
     }
 
     /**
@@ -105,6 +174,14 @@ class PayRunEntry extends Element
     public static function hasTitles(): bool
     {
         return true;
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public static function hasUris(): bool
+    {
+        return false;
     }
 
     /**
@@ -171,7 +248,7 @@ class PayRunEntry extends Element
      */
     public static function find(): ElementQueryInterface
     {
-        return new ElementQuery(get_called_class());
+        return new PayRunEntryQuery(static::class);
     }
 
     /**
@@ -204,10 +281,54 @@ class PayRunEntry extends Element
      */
     public function rules()
     {
-        return [
-            ['someAttribute', 'string'],
-            ['someAttribute', 'default', 'value' => 'Some Default'],
-        ];
+        return [];
+//        return [
+//            [[
+//                'siteId',
+//                'payRunId',
+//                'employerId',
+//                'ordinal',
+//                'period',
+//            ], 'number', 'integerOnly' => true], [[
+//                'percentageOfWorkingDaysPaidAsNormal',
+//                'workingDaysNotPaidAsNormal',
+//                'forcedCisVatAmount',
+//                'holidayAccured',
+//            ], 'double'],
+//            [['startDate', 'endDate', 'paymentDate'], DateTimeValidator::class],
+////            ['state', 'exists', 'targetAttribute' => ['Open', 'SubmittedForProcessing', 'Processing', 'AwaitingApproval', 'Approved', 'Finalised']],
+//            [[
+//                'staffologyId',
+//                'taxYear',
+//                'note',
+//                'bacsSubReference',
+//                'bacsHashcode',
+//                'payPeriod',
+//                'priorPayrollCode',
+//                'payOptions',
+//                'pensionSummary',
+//                'totals',
+//                'periodOverrides',
+//                'totalsYtd',
+//                'totalsYtdOverrides',
+//                'state',
+//                'nationalInsuranceCalculation',
+//                'fps',
+//                'umbrellaPayment',
+//                'pdf',
+//            ], 'string'],
+//            [[
+//                'unpaidAbsence',
+//                'unpaidAbsence',
+//                'hasAttachmentOrders',
+//                'isClosed',
+//                'manualNi',
+//                'payrollCodeChanged',
+//                'aeNotEnrolledWarning',
+//                'recievingOffsetPay',
+//                'paymentAfterLearning',
+//            ], 'boolean'],
+//        ];
     }
 
     /**
@@ -238,15 +359,16 @@ class PayRunEntry extends Element
 
     public function getGroup()
     {
-        if ($this->groupId === null) {
-            throw new InvalidConfigException('Tag is missing its group ID');
-        }
-
-        if (($group = Craft::$app->getTags()->getTagGroupById($this->groupId)) === null) {
-            throw new InvalidConfigException('Invalid tag group ID: '.$this->groupId);
-        }
-
-        return $group;
+//        if ($this->groupId === null) {
+//            throw new InvalidConfigException('Tag is missing its group ID');
+//        }
+//
+//        if (($group = Craft::$app->getTags()->getTagGroupById($this->groupId)) === null) {
+//            throw new InvalidConfigException('Invalid tag group ID: '.$this->groupId);
+//        }
+//
+//        return $group;
+        return null;
     }
 
     // Indexes, etc.
@@ -302,6 +424,12 @@ class PayRunEntry extends Element
      */
     public function afterSave(bool $isNew)
     {
+        if (!$this->propagating) {
+
+            $this->_saveRecord($isNew);
+        }
+
+        return parent::afterSave($isNew);
     }
 
     /**
@@ -344,5 +472,68 @@ class PayRunEntry extends Element
      */
     public function afterMoveInStructure(int $structureId)
     {
+    }
+
+    private function _saveRecord($isNew)
+    {
+        try {
+            if (!$isNew) {
+                $record = PayRunEntryRecord::findOne($this->id);
+
+                if (!$record) {
+                    throw new Exception('Invalid pay run entry ID: ' . $this->id);
+                }
+            } else {
+                $record = new PayRunEntryRecord();
+                $record->id = (int)$this->id;
+            }
+
+            $record->siteId = $this->siteId;
+            $record->employerId = $this->employerId;
+            $record->payRunId = $this->payRunId;
+            $record->staffologyId = $this->staffologyId;
+            $record->taxYear = $this->taxYear;
+            $record->startDate = $this->startDate;
+            $record->endDate = $this->endDate;
+            $record->note = $this->note;
+            $record->bacsSubReference = $this->bacsSubReference;
+            $record->bacsHashcode = $this->bacsHashcode;
+            $record->percentageOfWorkingDaysPaidAsNormal = $this->percentageOfWorkingDaysPaidAsNormal;
+            $record->workingDaysNotPaidAsNormal = $this->workingDaysNotPaidAsNormal;
+            $record->payPeriod = $this->payPeriod;
+            $record->ordinal = $this->ordinal;
+            $record->period = $this->period;
+            $record->isNewStarter = $this->isNewStarter;
+            $record->unpaidAbsence = $this->unpaidAbsence;
+            $record->hasAttachmentOrders = $this->hasAttachmentOrders;
+            $record->paymentDate = $this->paymentDate;
+            $record->priorPayrollCode = $this->priorPayrollCode;
+            $record->payOptions = $this->payOptions;
+            $record->pensionSummary = $this->pensionSummary;
+            $record->totals = $this->totals;
+            $record->periodOverrides = $this->periodOverrides;
+            $record->totalsYtd = $this->totalsYtd;
+            $record->totalsYtdOverrides = $this->totalsYtdOverrides;
+            $record->forcedCisVatAmount = $this->forcedCisVatAmount;
+            $record->holidayAccured = $this->holidayAccured;
+            $record->state = $this->state;
+            $record->isClosed = $this->isClosed;
+            $record->manualNi = $this->manualNi;
+            $record->nationalInsuranceCalculation = $this->nationalInsuranceCalculation;
+            $record->aeNotEnrolledWarning = $this->aeNotEnrolledWarning;
+            $record->fps = $this->fps;
+            $record->recievingOffsetPay = $this->recievingOffsetPay;
+            $record->paymentAfterLearning = $this->paymentAfterLearning;
+            $record->umbrellaPayment = $this->umbrellaPayment;
+
+            $success = $record->save(false);
+
+        } catch (\Exception $e) {
+
+            echo "---- error -----\n";
+            var_dump($e->getMessage());
+            Craft::error($e->getMessage(), __METHOD__);
+            echo "\n---- end error ----";
+        }
     }
 }

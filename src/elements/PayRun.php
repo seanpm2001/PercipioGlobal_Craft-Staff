@@ -16,6 +16,9 @@ use Craft;
 use craft\base\Element;
 use craft\elements\db\ElementQuery;
 use craft\elements\db\ElementQueryInterface;
+use percipiolondon\craftstaff\elements\db\PayRunQuery;
+use percipiolondon\craftstaff\records\PayRun as PayRunRecord;
+use yii\db\Exception;
 
 /**
  * PayRun Element
@@ -66,12 +69,24 @@ class PayRun extends Element
     // Public Properties
     // =========================================================================
 
-    /**
-     * Some attribute
-     *
-     * @var string
-     */
-    public $someAttribute = 'Some Default';
+    public $siteId;
+    public $staffologyId;
+    public $taxYear;
+    public $taxMonth;
+    public $payPeriod;
+    public $ordinal;
+    public $period;
+    public $startDate;
+    public $endDate;
+    public $employeeCount;
+    public $subContractorCount;
+    public $totals;
+    public $state;
+    public $isClosed;
+    public $dateClosed;
+    public $pdf;
+    public $url;
+    public $employerId;
 
     // Static Methods
     // =========================================================================
@@ -84,6 +99,38 @@ class PayRun extends Element
     public static function displayName(): string
     {
         return Craft::t('staff-management', 'PayRun');
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public static function lowerDisplayName(): string
+    {
+        return Craft::t('staff-management', 'payrun');
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public static function pluralDisplayName(): string
+    {
+        return Craft::t('staff-management', 'PayRuns');
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public static function pluralLowerDisplayName(): string
+    {
+        return Craft::t('staff-management', 'payrun');
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public static function refHandle()
+    {
+        return 'payRun';
     }
 
     /**
@@ -105,6 +152,14 @@ class PayRun extends Element
     public static function hasTitles(): bool
     {
         return true;
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public static function hasUris(): bool
+    {
+        return false;
     }
 
     /**
@@ -171,7 +226,7 @@ class PayRun extends Element
      */
     public static function find(): ElementQueryInterface
     {
-        return new ElementQuery(get_called_class());
+        return new PayRunQuery(static::class);
     }
 
     /**
@@ -204,10 +259,7 @@ class PayRun extends Element
      */
     public function rules()
     {
-        return [
-            ['someAttribute', 'string'],
-            ['someAttribute', 'default', 'value' => 'Some Default'],
-        ];
+        return [];
     }
 
     /**
@@ -238,15 +290,16 @@ class PayRun extends Element
 
     public function getGroup()
     {
-        if ($this->groupId === null) {
-            throw new InvalidConfigException('Tag is missing its group ID');
-        }
-
-        if (($group = Craft::$app->getTags()->getTagGroupById($this->groupId)) === null) {
-            throw new InvalidConfigException('Invalid tag group ID: '.$this->groupId);
-        }
-
-        return $group;
+        return null;
+//        if ($this->groupId === null) {
+//            throw new InvalidConfigException('Tag is missing its group ID');
+//        }
+//
+//        if (($group = Craft::$app->getTags()->getTagGroupById($this->groupId)) === null) {
+//            throw new InvalidConfigException('Invalid tag group ID: '.$this->groupId);
+//        }
+//
+//        return $group;
     }
 
     // Indexes, etc.
@@ -278,6 +331,29 @@ class PayRun extends Element
         return $html;
     }
 
+    /**
+     * @inheritdoc
+     * @since 3.3.0
+     */
+    public static function gqlScopesByContext($context): array
+    {
+        return ['payruns.' . $context->uid];
+    }
+
+    public static function gqlTypeNameByContext($context): string
+    {
+        return 'PayRun';
+    }
+
+    /**
+     * @inheritdoc
+     * @since 3.3.0
+     */
+    public function getGqlTypeName(): string
+    {
+        return static::gqlTypeNameByContext($this);
+    }
+
     // Events
     // -------------------------------------------------------------------------
 
@@ -302,6 +378,12 @@ class PayRun extends Element
      */
     public function afterSave(bool $isNew)
     {
+        if (!$this->propagating) {
+
+            $this->_saveRecord($isNew);
+        }
+
+        return parent::afterSave($isNew);
     }
 
     /**
@@ -344,5 +426,48 @@ class PayRun extends Element
      */
     public function afterMoveInStructure(int $structureId)
     {
+    }
+
+    private function _saveRecord($isNew)
+    {
+        try {
+            if (!$isNew) {
+                $record = PayRunRecord::findOne($this->id);
+
+                if (!$record) {
+                    throw new Exception('Invalid pay run ID: ' . $this->id);
+                }
+            } else {
+                $record = new PayRunRecord();
+                $record->id = (int)$this->id;
+            }
+
+            $record->siteId = $this->siteId;
+            $record->staffologyId = $this->staffologyId;
+            $record->employerId = $this->employerId;
+            $record->taxYear = $this->taxYear;
+            $record->taxMonth = $this->taxMonth;
+            $record->payPeriod = $this->payPeriod;
+            $record->ordinal = $this->ordinal;
+            $record->period = $this->period;
+            $record->startDate = $this->startDate;
+            $record->endDate = $this->endDate;
+            $record->employeeCount = $this->employeeCount;
+            $record->subContractorCount = $this->subContractorCount;
+            $record->totals = $this->totals;
+            $record->state = $this->state;
+            $record->isClosed = $this->isClosed;
+            $record->dateClosed = $this->dateClosed;
+            $record->url = $this->url;
+
+            $success = $record->save(false);
+
+        } catch (\Exception $e) {
+
+            echo "---- error -----\n";
+            var_dump($e->getMessage());
+            Craft::error($e->getMessage(), __METHOD__);
+            echo "\n---- end error ----";
+        }
     }
 }

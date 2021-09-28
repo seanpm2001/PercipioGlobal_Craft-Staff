@@ -6,6 +6,7 @@ use Craft;
 use craft\helpers\Queue;
 use craft\queue\BaseJob;
 use percipiolondon\craftstaff\records\PayRun as PayRunRecord;
+use percipiolondon\craftstaff\elements\PayRun;
 use percipiolondon\craftstaff\records\PayRunLog as PayRunLogRecord;
 use percipiolondon\craftstaff\jobs\CreatePayRunEntryJob;
 
@@ -51,7 +52,6 @@ class CreatePayRunJob extends BaseJob
 
     private function _savePayRunLog($payRun, $url, $payRunId)
     {
-        var_dump($payRunId);
         $payRunLog = new PayRunLogRecord();
 
         $payRunLog->siteId = Craft::$app->getSites()->currentSite->id;
@@ -71,7 +71,7 @@ class CreatePayRunJob extends BaseJob
 
         // CREATE PAYRUN IF NOT EXISTS
         if(!$payRunRecord) {
-            $payRunRecord = new PayRunRecord();
+            $payRunRecord = new PayRun();
 
             $payRunRecord->siteId = Craft::$app->getSites()->currentSite->id;
             $payRunRecord->staffologyId = "";
@@ -91,7 +91,8 @@ class CreatePayRunJob extends BaseJob
             $payRunRecord->dateClosed = $payRun['dateClosed'] ?? null;
             $payRunRecord->url = $url ?? '';
 
-            $success = $payRunRecord->save(true);
+            $elementsService = Craft::$app->getElements();
+            $success = $elementsService->saveElement($payRunRecord);
 
             if($success) {
                 Craft::info("Saving pay run entries and log");

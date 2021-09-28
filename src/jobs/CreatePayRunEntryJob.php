@@ -5,6 +5,7 @@ namespace percipiolondon\craftstaff\jobs;
 use Craft;
 use craft\queue\BaseJob;
 use percipiolondon\craftstaff\records\PayRunEntry as PayRunEntryRecord;
+use percipiolondon\craftstaff\elements\PayRunEntry;
 
 class CreatePayRunEntryJob extends Basejob
 {
@@ -41,7 +42,7 @@ class CreatePayRunEntryJob extends Basejob
 
     private function _savePayRunEntry($payRunEntryData)
     {
-        $payRunEntry = new PayRunEntryRecord();
+        $payRunEntry = new PayRunEntry();
 
         $payRunEntry->siteId = Craft::$app->getSites()->currentSite->id;
         $payRunEntry->employerId = $this->employerId;
@@ -82,10 +83,12 @@ class CreatePayRunEntryJob extends Basejob
         $payRunEntry->umbrellaPayment = $payRunEntryData['umbrellaPayment'] ?? '';
 //        $payRunEntry->pdf = $payRunEntryData['pdf'];
 
-        $success = $payRunEntry->save(true);
+        $elementsService = Craft::$app->getElements();
+        $success = $elementsService->saveElement($payRunEntry);
 
         if(!$success){
             Craft::error($payRunEntry->errors);
+            Craft::info($payRunEntry->payOptions);
         }
     }
 }
