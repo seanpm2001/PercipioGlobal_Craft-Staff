@@ -144,6 +144,7 @@ class Install extends Migration
                     'staffologyId' => $this->string(255)->notNull(),
                     'employerId' => $this->integer()->notNull(),
                     'userId' => $this->integer(),
+                    'isDirector' => $this->boolean(),
                     'personalDetails' => $this->longText(),
                     'employmentDetails' => $this->longText(),
                     'autoEnrolment' => $this->longText(),

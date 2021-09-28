@@ -21,6 +21,7 @@ class EmployeeQuery extends ElementQuery
     public $aeNotEnroledWarning;
     public $niNumber;
     public $sourceSystemId;
+    public $isDirector;
 
     public function slug($value)
     {
@@ -89,9 +90,10 @@ class EmployeeQuery extends ElementQuery
         $this->niNumber = $value;
         return $this;
     }
-    public function sourceSystemId($value)
+
+    public function isDirector($value)
     {
-        $this->sourceSystemId = $value;
+        $this->isDirector = $value;
         return $this;
     }
 
@@ -115,7 +117,8 @@ class EmployeeQuery extends ElementQuery
             'staff_employees.status',
             'staff_employees.aeNotEnroledWarning',
             'staff_employees.niNumber',
-            'staff_employees.sourceSystemId'
+            'staff_employees.sourceSystemId',
+            'staff_employees.isDirector',
         ]);
 
         return parent::beforePrepare();
