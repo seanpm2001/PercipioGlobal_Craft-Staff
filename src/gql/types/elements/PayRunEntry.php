@@ -40,8 +40,24 @@ class PayRunEntry extends Element
         $fieldName = $resolveInfo->fieldName;
 
         switch($fieldName) {
+            case 'nationalInsuranceCalculation':
+                return Json::decodeIfJson($source->nationalInsuranceCalculation);
+            case 'payOptions':
+                return Json::decodeIfJson($source->payOptions);
+            case 'pensionSummary':
+                return Json::decodeIfJson($source->pensionSummary);
             case 'totals':
                 return Json::decodeIfJson($source->totals);
+            case 'periodOverrides':
+                return Json::decodeIfJson($source->periodOverrides);
+            case 'totalsYtd':
+                return Json::decodeIfJson($source->totalsYtd);
+            case 'totalsYtdOverrides':
+                return Json::decodeIfJson($source->totalsYtdOverrides);
+            case 'fps':
+                return Json::decodeIfJson($source->fps);
+            case 'umbrellaPayment':
+                return Json::decodeIfJson($source->umbrellaPayment);
         }
 
         return parent::resolve($source, $arguments, $context, $resolveInfo);
