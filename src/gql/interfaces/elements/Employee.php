@@ -135,6 +135,11 @@ class Employee extends Element
                 'type' => Type::string(),
                 'description' => 'Source system ID.'
             ],
+            'isDirector' => [
+                'name' => 'isDirector',
+                'type' => Type::string(),
+                'description' => 'Is this employer a employer'
+            ]
 
         ]), self::getName());
     }
