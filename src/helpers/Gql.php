@@ -13,18 +13,18 @@ class Gql extends \craft\helpers\Gql
 //            return true;
 //        } else {
             // access:employers
-            $restrictionService = GraphqlAuthentication::$restrictionService;
-
-            if ($restrictionService->shouldRestrictRequests()) {
-
-                $user = GraphqlAuthentication::$tokenService->getUserFromToken();
-
-                if (!Craftstaff::$plugin->userPermissions->applyCanParam("access:employers", $user->id) ) {
-                    return false;
-                }
-
-                return true;
-            }
+//            $restrictionService = GraphqlAuthentication::$restrictionService;
+//
+//            if ($restrictionService->shouldRestrictRequests()) {
+//
+//                $user = GraphqlAuthentication::$tokenService->getUserFromToken();
+//
+//                if (!Craftstaff::$plugin->userPermissions->applyCanParam("access:employers", $user->id) ) {
+//                    return false;
+//                }
+//
+//                return true;
+//            }
 
             return true;
 //        }
@@ -38,18 +38,18 @@ class Gql extends \craft\helpers\Gql
 //            return true;
 //        } else {
         // access:employers
-        $restrictionService = GraphqlAuthentication::$restrictionService;
-
-        if ($restrictionService->shouldRestrictRequests()) {
-
-            $user = GraphqlAuthentication::$tokenService->getUserFromToken();
-
-            if (!Craftstaff::$plugin->userPermissions->applyCanParam("access:employees", $user->id) ) {
-                return false;
-            }
-
-            return true;
-        }
+//        $restrictionService = GraphqlAuthentication::$restrictionService;
+//
+//        if ($restrictionService->shouldRestrictRequests()) {
+//
+//            $user = GraphqlAuthentication::$tokenService->getUserFromToken();
+//
+//            if (!Craftstaff::$plugin->userPermissions->applyCanParam("access:employees", $user->id) ) {
+//                return false;
+//            }
+//
+//            return true;
+//        }
 
         return true;
 //        }

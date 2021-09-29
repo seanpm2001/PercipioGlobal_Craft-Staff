@@ -123,9 +123,9 @@ class UserPermissions extends Component
      * @param int $employerId
      * @return bool
      */
-    public function applyCanParam(string $permission, int $userId, int $employerId): bool
+    public function applyCanParam(string $permission, int $userId): bool
     {
-        if (!$permission || $userId || $employerId) {
+        if (!$permission || $userId) {
             return false;
         }
 
