@@ -263,15 +263,11 @@ class Craftstaff extends Plugin
             function(RegisterGqlSchemaComponentsEvent $event) {
 
                 $event->queries = array_merge($event->queries, [
-                    'Employers' => [
+                    'Staff Management' => [
                         // employers component with read action, labelled “View Employers” in UI
-                        'employers:read' => ['label' => Craft::t('staff-management', 'View Employers')]
-                    ],
-                    'Employees' => [
+                        'employers:read' => ['label' => Craft::t('staff-management', 'View Employers')],
                         // employees component with read action, labelled “View Employees” in UI
-                        'employees:read' => ['label' => Craft::t('staff-management', 'View Employees')]
-                    ],
-                    'Payruns' => [
+                        'employees:read' => ['label' => Craft::t('staff-management', 'View Employees')],
                         // payruns component with read action, labelled “View Payruns” in UI
                         'payruns:read' => ['label' => Craft::t('staff-management', 'View Payruns')]
                     ],
