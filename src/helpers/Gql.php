@@ -9,19 +9,22 @@ class Gql extends \craft\helpers\Gql
 {
     public static function canQueryEmployers(): bool
     {
-
-            $restrictionService = GraphqlAuthentication::$restrictionService;
-
-            if ($restrictionService->shouldRestrictRequests()) {
-
-                $user = GraphqlAuthentication::$tokenService->getUserFromToken();
-
-                if (!Craftstaff::$plugin->userPermissions->applyCanParam("access:employers", $user->id) ) {
-                    return false;
-                }
-
-                return true;
-            }
+//        if(\Craft::$app->getGql()->getActiveSchema()->name === 'Full Schema') {
+//            return true;
+//        } else {
+            // access:employers
+//            $restrictionService = GraphqlAuthentication::$restrictionService;
+//
+//            if ($restrictionService->shouldRestrictRequests()) {
+//
+//                $user = GraphqlAuthentication::$tokenService->getUserFromToken();
+//
+//                if (!Craftstaff::$plugin->userPermissions->applyCanParam("access:employers", $user->id) ) {
+//                    return false;
+//                }
+//
+//                return true;
+//            }
 
             return true;
 
@@ -29,19 +32,22 @@ class Gql extends \craft\helpers\Gql
 
     public static function canQueryEmployees(): bool
     {
-
-        $restrictionService = GraphqlAuthentication::$restrictionService;
-
-        if ($restrictionService->shouldRestrictRequests()) {
-
-            $user = GraphqlAuthentication::$tokenService->getUserFromToken();
-
-            if (!Craftstaff::$plugin->userPermissions->applyCanParam("access:employees", $user->id) ) {
-                return false;
-            }
-
-            return true;
-        }
+//        if(\Craft::$app->getGql()->getActiveSchema()->name === 'Full Schema') {
+//            return true;
+//        } else {
+        // access:employers
+//        $restrictionService = GraphqlAuthentication::$restrictionService;
+//
+//        if ($restrictionService->shouldRestrictRequests()) {
+//
+//            $user = GraphqlAuthentication::$tokenService->getUserFromToken();
+//
+//            if (!Craftstaff::$plugin->userPermissions->applyCanParam("access:employees", $user->id) ) {
+//                return false;
+//            }
+//
+//            return true;
+//        }
 
         return true;
 
@@ -50,18 +56,18 @@ class Gql extends \craft\helpers\Gql
     public static function canQueryPayruns(): bool
     {
 
-        $restrictionService = GraphqlAuthentication::$restrictionService;
+        // $restrictionService = GraphqlAuthentication::$restrictionService;
 
-        if ($restrictionService->shouldRestrictRequests()) {
+        // if ($restrictionService->shouldRestrictRequests()) {
 
-            $user = GraphqlAuthentication::$tokenService->getUserFromToken();
+        //     $user = GraphqlAuthentication::$tokenService->getUserFromToken();
 
-            if (!Craftstaff::$plugin->userPermissions->applyCanParam("access:employees", $user->id) ) {
-                return false;
-            }
+        //     if (!Craftstaff::$plugin->userPermissions->applyCanParam("access:employees", $user->id) ) {
+        //         return false;
+        //     }
 
-            return true;
-        }
+        //     return true;
+        // }
 
         return true;
 
