@@ -203,6 +203,7 @@ class Install extends Migration
                     'period' => $this->integer()->notNull()->defaultValue(1),
                     'startDate' => $this->dateTime()->notNull(),
                     'endDate' => $this->dateTime()->notNull(),
+                    'paymentDate' => $this->dateTime()->notNull(),
                     'employeeCount' => $this->integer()->notNull()->defaultValue(0),
                     'subContractorCount' => $this->integer()->notNull()->defaultValue(0),
                     'totals' => $this->longText()->notNull(),

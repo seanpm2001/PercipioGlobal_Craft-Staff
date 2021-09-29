@@ -83,6 +83,7 @@ class CreatePayRunJob extends BaseJob
             $payRunRecord->period = $payRun['period'] ?? null;
             $payRunRecord->startDate = $payRun['startDate'] ?? null;
             $payRunRecord->endDate = $payRun['endDate'] ?? null;
+            $payRunRecord->paymentDate = $payRun['paymentDate'] ?? null;
             $payRunRecord->employeeCount = $payRun['employeeCount'] ?? null;
             $payRunRecord->subContractorCount = $payRun['subContractorCount'] ?? null;
             $payRunRecord->totals = $payRun['totals'] ?? '';

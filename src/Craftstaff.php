@@ -34,16 +34,15 @@ use percipiolondon\craftstaff\elements\Employee as EmployeeElement;
 use percipiolondon\craftstaff\elements\PayRun as PayRunElement;
 use percipiolondon\craftstaff\elements\PayRunEntry as PayRunEntryElement;
 use percipiolondon\craftstaff\elements\HardingUser as HardingUserElement;
-use percipiolondon\craftstaff\gql\queries\Employer;
-use percipiolondon\craftstaff\gql\queries\Employee;
+use percipiolondon\craftstaff\gql\queries\Employer as EmployerQueries;
+use percipiolondon\craftstaff\gql\queries\Employee as EmployeeQueries;
+use percipiolondon\craftstaff\gql\queries\PayRun as PayRunQueries;
 use percipiolondon\craftstaff\gql\interfaces\elements\Employer as EmployerInterface;
 use percipiolondon\craftstaff\gql\interfaces\elements\Employee as EmployeeInterface;
+use percipiolondon\craftstaff\gql\interfaces\elements\PayRun as PayRunInterface;
 use percipiolondon\craftstaff\plugin\Services as StaffServices;
 
 use yii\base\Event;
-
-
-
 
 /**
  * Craft plugins are very much like little applications in and of themselves. We’ve made
@@ -251,6 +250,7 @@ class Craftstaff extends Plugin
             function(RegisterGqlTypesEvent $event) {
                 $event->types[] = EmployerInterface::class;
                 $event->types[] = EmployeeInterface::class;
+                $event->types[] = PayRunInterface::class;
             }
         );
     }
@@ -271,6 +271,10 @@ class Craftstaff extends Plugin
                         // employees component with read action, labelled “View Employees” in UI
                         'employees:read' => ['label' => Craft::t('staff-management', 'View Employees')]
                     ],
+                    'Payruns' => [
+                        // payruns component with read action, labelled “View Payruns” in UI
+                        'payruns:read' => ['label' => Craft::t('staff-management', 'View Payruns')]
+                    ],
                 ]);
 
                 // Same format applies for $event->mutations
@@ -286,8 +290,9 @@ class Craftstaff extends Plugin
             function(RegisterGqlQueriesEvent $event) {
                 $event->queries = array_merge(
                     $event->queries,
-                    Employer::getQueries(),
-                    Employee::getQueries()
+                    EmployerQueries::getQueries(),
+                    EmployeeQueries::getQueries(),
+                    PayRunQueries::getQueries(),
                 );
             }
         );

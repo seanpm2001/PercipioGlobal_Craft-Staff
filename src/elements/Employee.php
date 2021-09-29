@@ -308,7 +308,7 @@ class Employee extends Element
      */
     public function getCpEditUrl()
     {
-        return 'staff-management/employers/' . $this->id;
+        return 'staff-management/employees/' . $this->id;
     }
 
     /**
@@ -435,18 +435,6 @@ class Employee extends Element
      */
     public function afterDelete()
     {
-    }
-
-    /**
-     * Performs actions before an element is moved within a structure.
-     *
-     * @param int $structureId The structure ID
-     *
-     * @return bool Whether the element should be moved within the structure
-     */
-    public function beforeMoveInStructure(int $structureId): bool
-    {
-        return true;
     }
 
     private static function _getEmployeeIds(): array

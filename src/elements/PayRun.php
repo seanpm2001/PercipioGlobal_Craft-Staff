@@ -78,6 +78,7 @@ class PayRun extends Element
     public $period;
     public $startDate;
     public $endDate;
+    public $paymentDate;
     public $employeeCount;
     public $subContractorCount;
     public $totals;
@@ -122,7 +123,7 @@ class PayRun extends Element
      */
     public static function pluralLowerDisplayName(): string
     {
-        return Craft::t('staff-management', 'payrun');
+        return Craft::t('staff-management', 'payruns');
     }
 
     /**
@@ -141,7 +142,7 @@ class PayRun extends Element
      */
     public static function hasContent(): bool
     {
-        return true;
+        return false;
     }
 
     /**
@@ -158,6 +159,14 @@ class PayRun extends Element
      * @inheritdoc
      */
     public static function hasUris(): bool
+    {
+        return false;
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public static function hasStatuses(): bool
     {
         return false;
     }
@@ -239,9 +248,16 @@ class PayRun extends Element
      */
     protected static function defineSources(string $context = null): array
     {
-        $sources = [];
+        $ids = self::_getPayrunIds();
 
-        return $sources;
+        return [
+            [
+                'key' => '*',
+                'label' => 'All Payruns',
+                'defaultSort' => ['id', 'desc'],
+                'criteria' => ['id' => $ids],
+            ]
+        ];
     }
 
     // Public Methods
@@ -273,33 +289,34 @@ class PayRun extends Element
     }
 
     /**
+     * @return string
+     */
+    public function getCpEditUrl()
+    {
+        return 'staff-management/payruns/' . $this->id;
+    }
+
+    /**
      * Returns the field layout used by this element.
      *
      * @return FieldLayout|null
      */
     public function getFieldLayout()
     {
-        $tagGroup = $this->getGroup();
-
-        if ($tagGroup) {
-            return $tagGroup->getFieldLayout();
-        }
-
         return null;
     }
 
     public function getGroup()
     {
-        return null;
-//        if ($this->groupId === null) {
-//            throw new InvalidConfigException('Tag is missing its group ID');
-//        }
-//
-//        if (($group = Craft::$app->getTags()->getTagGroupById($this->groupId)) === null) {
-//            throw new InvalidConfigException('Invalid tag group ID: '.$this->groupId);
-//        }
-//
-//        return $group;
+        if ($this->groupId === null) {
+            throw new InvalidConfigException('Tag is missing its group ID');
+        }
+
+        if (($group = Craft::$app->getTags()->getTagGroupById($this->groupId)) === null) {
+            throw new InvalidConfigException('Invalid tag group ID: '.$this->groupId);
+        }
+
+        return $group;
     }
 
     // Indexes, etc.
@@ -405,27 +422,20 @@ class PayRun extends Element
     {
     }
 
-    /**
-     * Performs actions before an element is moved within a structure.
-     *
-     * @param int $structureId The structure ID
-     *
-     * @return bool Whether the element should be moved within the structure
-     */
-    public function beforeMoveInStructure(int $structureId): bool
+    private static function _getPayrunIds(): array
     {
-        return true;
-    }
+        $payrunIds = [];
 
-    /**
-     * Performs actions after an element is moved within a structure.
-     *
-     * @param int $structureId The structure ID
-     *
-     * @return void
-     */
-    public function afterMoveInStructure(int $structureId)
-    {
+        $payruns = (new Query())
+            ->from('{{%staff_payrun}}')
+            ->select('id')
+            ->all();
+
+        foreach ($payruns as $payrun) {
+            $payrunIds[] = $payrun['id'];
+        }
+
+        return $payrunIds;
     }
 
     private function _saveRecord($isNew)
@@ -452,6 +462,7 @@ class PayRun extends Element
             $record->period = $this->period;
             $record->startDate = $this->startDate;
             $record->endDate = $this->endDate;
+            $record->paymentDate = $this->paymentDate;
             $record->employeeCount = $this->employeeCount;
             $record->subContractorCount = $this->subContractorCount;
             $record->totals = $this->totals;

@@ -16,6 +16,7 @@ class PayRunQuery extends ElementQuery
     public $period;
     public $startDate;
     public $endDate;
+    public $paymentDate;
     public $employeeCount;
     public $subContractorCount;
     public $totals;
@@ -80,6 +81,12 @@ class PayRunQuery extends ElementQuery
         return $this;
     }
 
+    public function paymentDate($value)
+    {
+        $this->paymentDate = $value;
+        return $this;
+    }
+
     public function employeeCount($value)
     {
         $this->employeeCount = $value;
@@ -136,8 +143,8 @@ class PayRunQuery extends ElementQuery
 
     protected function beforePrepare(): bool
     {
-        $this->joinElementTable('staff_payrun');
 
+        $this->joinElementTable('staff_payrun');
 
         $this->query->select([
             'staff_payrun.siteId',
@@ -149,13 +156,13 @@ class PayRunQuery extends ElementQuery
             'staff_payrun.period',
             'staff_payrun.startDate',
             'staff_payrun.endDate',
+            'staff_payrun.paymentDate',
             'staff_payrun.employeeCount',
             'staff_payrun.subContractorCount',
             'staff_payrun.totals',
             'staff_payrun.state',
             'staff_payrun.isClosed',
             'staff_payrun.dateClosed',
-            'staff_payrun.pdf',
             'staff_payrun.url',
             'staff_payrun.employerId'
         ]);

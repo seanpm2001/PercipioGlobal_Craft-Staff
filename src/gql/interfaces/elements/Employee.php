@@ -7,6 +7,13 @@ use craft\gql\interfaces\Element;
 use craft\gql\TypeManager;
 use craft\gql\types\DateTime;
 
+use craft\helpers\Gql;
+use craft\helpers\Json;
+
+use GraphQL\Type\Definition\InterfaceType;
+use GraphQL\Type\Definition\ResolveInfo;
+use GraphQL\Type\Definition\Type;
+
 use percipiolondon\craftstaff\gql\types\BankDetails;
 use percipiolondon\craftstaff\gql\types\EmploymentDetails;
 use percipiolondon\craftstaff\gql\types\LeaveSettings;
@@ -14,13 +21,6 @@ use percipiolondon\craftstaff\gql\types\PayOptions;
 use percipiolondon\craftstaff\gql\types\PersonalDetails;
 use percipiolondon\craftstaff\gql\types\RightToWork;
 use percipiolondon\craftstaff\gql\types\generators\EmployeeType;
-
-use craft\helpers\Gql;
-use craft\helpers\Json;
-
-use GraphQL\Type\Definition\InterfaceType;
-use GraphQL\Type\Definition\ResolveInfo;
-use GraphQL\Type\Definition\Type;
 
 /**
  * Class Employee
