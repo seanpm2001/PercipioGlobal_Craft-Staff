@@ -17,12 +17,12 @@ class Employee extends ElementArguments
         return array_merge(parent::getArguments(), [
             'employerId' => [
                 'name' => 'employerId',
-                'type' => Type::listOf(Type::string()),
+                'type' => Type::listOf(Type::int()),
                 'description' => 'Narrows the query results based on the employees’ employers.',
             ],
             'userId' => [
                 'name' => 'userId',
-                'type' => Type::listOf(Type::string()),
+                'type' => Type::listOf(Type::int()),
                 'description' => 'Narrows the query results based on the employees’ user ID.',
             ],
         ]);

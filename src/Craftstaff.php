@@ -23,6 +23,7 @@ use craft\services\Gql;
 use GraphQL\Type\Definition\ObjectType;
 use GraphQL\Type\Definition\Type;
 
+use percipiolondon\craftstaff\elements\db\PayRunEntryQuery;
 use percipiolondon\craftstaff\services\Employers as EmployersService;
 use percipiolondon\craftstaff\services\Employees as EmployeesService;
 use percipiolondon\craftstaff\services\PayRun as PayRunService;
@@ -37,9 +38,11 @@ use percipiolondon\craftstaff\elements\HardingUser as HardingUserElement;
 use percipiolondon\craftstaff\gql\queries\Employer as EmployerQueries;
 use percipiolondon\craftstaff\gql\queries\Employee as EmployeeQueries;
 use percipiolondon\craftstaff\gql\queries\PayRun as PayRunQueries;
+use percipiolondon\craftstaff\gql\queries\PayRunEntry as PayRunEntryQueries;
 use percipiolondon\craftstaff\gql\interfaces\elements\Employer as EmployerInterface;
 use percipiolondon\craftstaff\gql\interfaces\elements\Employee as EmployeeInterface;
 use percipiolondon\craftstaff\gql\interfaces\elements\PayRun as PayRunInterface;
+use percipiolondon\craftstaff\gql\interfaces\elements\PayRunEntry as PayRunEntryInterface;
 use percipiolondon\craftstaff\plugin\Services as StaffServices;
 
 use yii\base\Event;
@@ -218,7 +221,7 @@ class Craftstaff extends Plugin
             'url' => 'staff-management'
         ];
 
-        if (Craft::$app->getUser()->checkPermission('companies-mangeCompanies')) {
+        if (Craft::$app->getUser()->checkPermission('companies-manageCompanies')) {
             $nav['subnav']['employers'] = [
                 'label' => Craft::t('staff-management', 'Employers'),
                 'url' => 'staff-management/employers'
@@ -251,6 +254,7 @@ class Craftstaff extends Plugin
                 $event->types[] = EmployerInterface::class;
                 $event->types[] = EmployeeInterface::class;
                 $event->types[] = PayRunInterface::class;
+                $event->types[] = PayRunEntryInterface::class;
             }
         );
     }
@@ -275,9 +279,12 @@ class Craftstaff extends Plugin
                         // payruns component with read action, labelled “View Payruns” in UI
                         'payruns:read' => ['label' => Craft::t('staff-management', 'View Payruns')]
                     ],
+                    'PayrunEntries' => [
+                        // payrun entries component with read action, labelled “View Payruns” in UI
+                        'payrunentries:read' => ['label' => Craft::t('staff-management', 'View Payrun Entries')]
+                    ],
                 ]);
 
-                // Same format applies for $event->mutations
             }
         );
     }
@@ -293,6 +300,7 @@ class Craftstaff extends Plugin
                     EmployerQueries::getQueries(),
                     EmployeeQueries::getQueries(),
                     PayRunQueries::getQueries(),
+                    PayRunEntryQueries::getQueries(),
                 );
             }
         );

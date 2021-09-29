@@ -17,12 +17,12 @@ class PayRunEntry extends ElementArguments
         return array_merge(parent::getArguments(), [
             'employerId' => [
                 'name' => 'employerId',
-                'type' => Type::listOf(Type::string()),
+                'type' => Type::listOf(Type::int()),
                 'description' => 'Narrows the query results based on the payrun’ employers.',
             ],
             'staffologyId' => [
                 'name' => 'staffologyId',
-                'type' => Type::listOf(Type::string()),
+                'type' => Type::listOf(Type::int()),
                 'description' => 'Narrows the query results based on the payrun’ staffology ID.',
             ],
         ]);

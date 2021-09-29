@@ -144,7 +144,7 @@ class PayRunEntry extends Element
      */
     public static function pluralLowerDisplayName(): string
     {
-        return Craft::t('staff-management', 'payrunentry');
+        return Craft::t('staff-management', 'payrunentries');
     }
 
     /**
@@ -180,6 +180,14 @@ class PayRunEntry extends Element
      * @inheritdoc
      */
     public static function hasUris(): bool
+    {
+        return false;
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public static function hasStatuses(): bool
     {
         return false;
     }
@@ -261,9 +269,16 @@ class PayRunEntry extends Element
      */
     protected static function defineSources(string $context = null): array
     {
-        $sources = [];
+        $ids = self::_getPayrunEntryIds();
 
-        return $sources;
+        return [
+            [
+                'key' => '*',
+                'label' => 'All payrun entries',
+                'defaultSort' => ['id', 'desc'],
+                'criteria' => ['id' => $ids],
+            ]
+        ];
     }
 
     // Public Methods
@@ -282,53 +297,6 @@ class PayRunEntry extends Element
     public function rules()
     {
         return [];
-//        return [
-//            [[
-//                'siteId',
-//                'payRunId',
-//                'employerId',
-//                'ordinal',
-//                'period',
-//            ], 'number', 'integerOnly' => true], [[
-//                'percentageOfWorkingDaysPaidAsNormal',
-//                'workingDaysNotPaidAsNormal',
-//                'forcedCisVatAmount',
-//                'holidayAccured',
-//            ], 'double'],
-//            [['startDate', 'endDate', 'paymentDate'], DateTimeValidator::class],
-////            ['state', 'exists', 'targetAttribute' => ['Open', 'SubmittedForProcessing', 'Processing', 'AwaitingApproval', 'Approved', 'Finalised']],
-//            [[
-//                'staffologyId',
-//                'taxYear',
-//                'note',
-//                'bacsSubReference',
-//                'bacsHashcode',
-//                'payPeriod',
-//                'priorPayrollCode',
-//                'payOptions',
-//                'pensionSummary',
-//                'totals',
-//                'periodOverrides',
-//                'totalsYtd',
-//                'totalsYtdOverrides',
-//                'state',
-//                'nationalInsuranceCalculation',
-//                'fps',
-//                'umbrellaPayment',
-//                'pdf',
-//            ], 'string'],
-//            [[
-//                'unpaidAbsence',
-//                'unpaidAbsence',
-//                'hasAttachmentOrders',
-//                'isClosed',
-//                'manualNi',
-//                'payrollCodeChanged',
-//                'aeNotEnroledWarning',
-//                'recievingOffsetPay',
-//                'paymentAfterLearning',
-//            ], 'boolean'],
-//        ];
     }
 
     /**
@@ -342,33 +310,34 @@ class PayRunEntry extends Element
     }
 
     /**
+     * @return string
+     */
+    public function getCpEditUrl()
+    {
+        return 'staff-management/payruns/' . $this->id;
+    }
+
+    /**
      * Returns the field layout used by this element.
      *
      * @return FieldLayout|null
      */
     public function getFieldLayout()
     {
-        $tagGroup = $this->getGroup();
-
-        if ($tagGroup) {
-            return $tagGroup->getFieldLayout();
-        }
-
         return null;
     }
 
     public function getGroup()
     {
-//        if ($this->groupId === null) {
-//            throw new InvalidConfigException('Tag is missing its group ID');
-//        }
-//
-//        if (($group = Craft::$app->getTags()->getTagGroupById($this->groupId)) === null) {
-//            throw new InvalidConfigException('Invalid tag group ID: '.$this->groupId);
-//        }
-//
-//        return $group;
-        return null;
+        if ($this->groupId === null) {
+            throw new InvalidConfigException('Tag is missing its group ID');
+        }
+
+        if (($group = Craft::$app->getTags()->getTagGroupById($this->groupId)) === null) {
+            throw new InvalidConfigException('Invalid tag group ID: '.$this->groupId);
+        }
+
+        return $group;
     }
 
     // Indexes, etc.
@@ -398,6 +367,29 @@ class PayRunEntry extends Element
         $html .= parent::getEditorHtml();
 
         return $html;
+    }
+
+    /**
+     * @inheritdoc
+     * @since 3.3.0
+     */
+    public static function gqlScopesByContext($context): array
+    {
+        return ['payrunentries.' . $context->uid];
+    }
+
+    public static function gqlTypeNameByContext($context): string
+    {
+        return 'PayRunEntry';
+    }
+
+    /**
+     * @inheritdoc
+     * @since 3.3.0
+     */
+    public function getGqlTypeName(): string
+    {
+        return static::gqlTypeNameByContext($this);
     }
 
     // Events
@@ -451,28 +443,22 @@ class PayRunEntry extends Element
     {
     }
 
-    /**
-     * Performs actions before an element is moved within a structure.
-     *
-     * @param int $structureId The structure ID
-     *
-     * @return bool Whether the element should be moved within the structure
-     */
-    public function beforeMoveInStructure(int $structureId): bool
+    private static function _getPayrunEntryIds(): array
     {
-        return true;
+        $payrunEntryIds = [];
+
+        $payrunentries = (new Query())
+            ->from('{{%staff_payrunentries}}')
+            ->select('id')
+            ->all();
+
+        foreach ($payrunentries as $payrunentry) {
+            $payrunEntryIds[] = $payrunentry['id'];
+        }
+
+        return $payrunEntryIds;
     }
 
-    /**
-     * Performs actions after an element is moved within a structure.
-     *
-     * @param int $structureId The structure ID
-     *
-     * @return void
-     */
-    public function afterMoveInStructure(int $structureId)
-    {
-    }
 
     private function _saveRecord($isNew)
     {
@@ -520,6 +506,7 @@ class PayRunEntry extends Element
             $record->isClosed = $this->isClosed;
             $record->manualNi = $this->manualNi;
             $record->nationalInsuranceCalculation = $this->nationalInsuranceCalculation;
+            $record->payrollCodeChanged = $this->payrollCodeChanged;
             $record->aeNotEnroledWarning = $this->aeNotEnroledWarning;
             $record->fps = $this->fps;
             $record->recievingOffsetPay = $this->recievingOffsetPay;

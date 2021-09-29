@@ -253,7 +253,7 @@ class PayRun extends Element
         return [
             [
                 'key' => '*',
-                'label' => 'All Payruns',
+                'label' => 'All payruns',
                 'defaultSort' => ['id', 'desc'],
                 'criteria' => ['id' => $ids],
             ]
