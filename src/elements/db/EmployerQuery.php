@@ -2,8 +2,13 @@
 
 namespace percipiolondon\craftstaff\elements\db;
 
+use craft\db\Query;
+use craft\db\QueryAbortedException;
+use craft\db\Table;
 use craft\elements\db\ElementQuery;
-use percipiolondon\companymanagement\elements\Department;
+use craft\helpers\Db;
+
+use yii\db\Connection;
 
 class EmployerQuery extends ElementQuery
 {
@@ -95,12 +100,6 @@ class EmployerQuery extends ElementQuery
     {
         $this->joinElementTable('staff_employers');
 
-//        $employers = (new Query())
-//            ->from('{{%staff_employers}}')
-//            ->select('*')
-//            ->all();
-
-
         $this->query->select([
             'staff_employers.slug',
             'staff_employers.staffologyId',
@@ -115,8 +114,13 @@ class EmployerQuery extends ElementQuery
             'staff_employers.defaultPayOptions',
         ]);
 
-//        ["staffologyId"]=>
-//  string(36) "64c5de94-7462-4bc6-a0e8-86a1bd52277d"
+        if ($this->staffologyId) {
+            $this->subQuery->andWhere(Db::parseParam('staff_employers.staffologyId', $this->staffologyId));
+        }
+
+        if ($this->crn) {
+            $this->subQuery->andWhere(Db::parseParam('staff_employers.crn', $this->crn));
+        }
 
         return parent::beforePrepare();
     }

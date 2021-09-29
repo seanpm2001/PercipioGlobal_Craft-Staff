@@ -11,6 +11,7 @@ use craft\gql\base\SingleGeneratorInterface;
 use craft\gql\GqlEntityRegistry;
 use craft\gql\TypeManager;
 
+use percipiolondon\craftstaff\gql\arguments\elements\Employee as EmployeeArguments;
 use percipiolondon\craftstaff\elements\Employee as EmployeeElement;
 use percipiolondon\craftstaff\gql\interfaces\elements\Employee as EmployeeInterface;
 use percipiolondon\craftstaff\gql\types\elements\Employee;
@@ -46,9 +47,13 @@ class EmployeeType extends Generator implements GeneratorInterface, SingleGenera
         $contentFieldGqlTypes = self::getContentFields($context);
 
         $employeeFields = TypeManager::prepareFieldDefinitions(array_merge(EmployeeInterface::getFieldDefinitions(), $contentFieldGqlTypes), $typeName);
+        $employeeArgs = EmployeeArguments::getArguments();
 
         return GqlEntityRegistry::getEntity($typeName) ?: GqlEntityRegistry::createEntity($typeName, new Employee([
             'name' => $typeName,
+            'args' => function () use ($employeeArgs) {
+                return $employeeArgs;
+            },
             'fields' => function() use ($employeeFields) {
                 return $employeeFields;
             },

@@ -70,7 +70,7 @@ use percipiolondon\craftstaff\db\Table;
  * @property boolean $payrollCodeChanged
  * @property boolean $aeNotEnroledWarning
  * @property string $fps
- * @property boolean $recievingOffsetPay
+ * @property boolean $receivingOffsetPay
  * @property boolean $paymentAfterLearning
  * @property string $umbrellaPayment
  * @property string $pdf
@@ -126,7 +126,7 @@ class PayRunEntry extends ActiveRecord
                 'manualNi',
                 'payrollCodeChanged',
                 'aeNotEnroledWarning',
-                'recievingOffsetPay',
+                'receivingOffsetPay',
                 'paymentAfterLearning',
             ], 'boolean'],
         ];

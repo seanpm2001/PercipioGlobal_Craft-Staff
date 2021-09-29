@@ -238,8 +238,8 @@ class PayRunEntry extends Element
                 'type' => Type::boolean(),
                 'description' => 'If the Payslip for this PayRunEntry has been emailed to the employee then the Id for an EmployerEmail will be provided here.',
             ],
-            'recievingOffsetPay' => [
-                'name' => 'recievingOffsetPay',
+            'receivingOffsetPay' => [
+                'name' => 'receivingOffsetPay',
                 'type' => Type::boolean(),
                 'description' => 'If the pay is being topped up due to an applied Leave having the offset value set to true then this will be set to true.',
             ],

@@ -19,14 +19,12 @@ class Employee extends Query
                 'args' => EmployeeArguments::getArguments(),
                 'resolve' => EmployeeResolver::class . '::resolve',
                 'description' => 'This query is used to query for employees.',
-                'complexity' => GqlHelper::relatedArgumentComplexity(),
             ],
             'employee' => [
                 'type' => EmployeeInterface::getType(),
                 'args' => EmployeeArguments::getArguments(),
                 'resolve' => EmployeeResolver::class . '::resolveOne',
                 'description' => 'This query is used to query for a single employee.',
-                'complexity' => GqlHelper::relatedArgumentComplexity(),
             ]
         ];
     }

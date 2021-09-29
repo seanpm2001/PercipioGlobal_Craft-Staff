@@ -79,7 +79,7 @@ class CreatePayRunEntryJob extends Basejob
         $payRunEntry->nationalInsuranceCalculation = $payRunEntryData['nationalInsuranceCalculation'] ?? '';
         $payRunEntry->aeNotEnroledWarning = $payRunEntryData['aeNotEnroledWarning'] ?? null;
         $payRunEntry->fps = $payRunEntryData['fps'] ?? '';
-        $payRunEntry->recievingOffsetPay = $payRunEntryData['recievingOffsetPay'] ?? null;
+        $payRunEntry->receivingOffsetPay = $payRunEntryData['receivingOffsetPay'] ?? null;
         $payRunEntry->paymentAfterLearning = $payRunEntryData['paymentAfterLearning'] ?? null;
         $payRunEntry->umbrellaPayment = $payRunEntryData['umbrellaPayment'] ?? '';
 //        $payRunEntry->pdf = $payRunEntryData['pdf'];

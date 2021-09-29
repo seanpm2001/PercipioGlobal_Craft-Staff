@@ -11,6 +11,7 @@ use craft\gql\base\SingleGeneratorInterface;
 use craft\gql\GqlEntityRegistry;
 use craft\gql\TypeManager;
 
+use percipiolondon\craftstaff\gql\arguments\elements\PayRun as PayRunArguments;
 use percipiolondon\craftstaff\elements\PayRun as PayRunElement;
 use percipiolondon\craftstaff\gql\interfaces\elements\PayRun as PayRunInterface;
 use percipiolondon\craftstaff\gql\types\elements\PayRun;
@@ -46,9 +47,13 @@ class PayRunType extends Generator implements GeneratorInterface, SingleGenerato
         $contentFieldGqlTypes = self::getContentFields($context);
 
         $payRunFields = TypeManager::prepareFieldDefinitions(array_merge(PayRunInterface::getFieldDefinitions(), $contentFieldGqlTypes), $typeName);
+        $payRunArgs = PayRunArguments::getArguments();
 
         return GqlEntityRegistry::getEntity($typeName) ?: GqlEntityRegistry::createEntity($typeName, new PayRun([
             'name' => $typeName,
+            'args' => function () use ($payRunArgs) {
+                return $payRunArgs;
+            },
             'fields' => function() use ($payRunFields) {
                 return $payRunFields;
             },

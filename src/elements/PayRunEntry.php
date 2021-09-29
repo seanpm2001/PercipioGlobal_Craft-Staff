@@ -105,7 +105,7 @@ class PayRunEntry extends Element
     public $payrollCodeChanged;
     public $aeNotEnroledWarning;
     public $fps;
-    public $recievingOffsetPay;
+    public $receivingOffsetPay;
     public $paymentAfterLearning;
     public $umbrellaPayment;
     public $pdf;
@@ -509,7 +509,7 @@ class PayRunEntry extends Element
             $record->payrollCodeChanged = $this->payrollCodeChanged;
             $record->aeNotEnroledWarning = $this->aeNotEnroledWarning;
             $record->fps = $this->fps;
-            $record->recievingOffsetPay = $this->recievingOffsetPay;
+            $record->receivingOffsetPay = $this->receivingOffsetPay;
             $record->paymentAfterLearning = $this->paymentAfterLearning;
             $record->umbrellaPayment = $this->umbrellaPayment;
             $record->pdf = $this->pdf;

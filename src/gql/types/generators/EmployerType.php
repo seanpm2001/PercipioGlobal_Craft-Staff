@@ -15,6 +15,7 @@ use craft\gql\base\SingleGeneratorInterface;
 use craft\gql\GqlEntityRegistry;
 use craft\gql\TypeManager;
 
+use percipiolondon\craftstaff\gql\arguments\elements\Employer as EmployerArguments;
 use percipiolondon\craftstaff\elements\Employer as EmployerElement;
 use percipiolondon\craftstaff\gql\interfaces\elements\Employer as EmployerInterface;
 use percipiolondon\craftstaff\gql\types\elements\Employer;
@@ -50,9 +51,13 @@ class EmployerType extends Generator implements GeneratorInterface, SingleGenera
         $contentFieldGqlTypes = self::getContentFields($context);
 
         $employerFields = TypeManager::prepareFieldDefinitions(array_merge(EmployerInterface::getFieldDefinitions(), $contentFieldGqlTypes), $typeName);
+        $employerArgs = EmployerArguments::getArguments();
 
         return GqlEntityRegistry::getEntity($typeName) ?: GqlEntityRegistry::createEntity($typeName, new Employer([
             'name' => $typeName,
+            'args' => function () use ($employerArgs) {
+                return $employerArgs;
+            },
             'fields' => function() use ($employerFields) {
                 return $employerFields;
             },

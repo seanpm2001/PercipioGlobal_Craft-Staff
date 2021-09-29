@@ -20,6 +20,11 @@ class Employer extends ElementArguments
                 'type' => Type::listOf(Type::string()),
                 'description' => 'Narrows the query results based on the employers’ company registration numbers.',
             ],
+            'staffologyId' => [
+                'name' => 'staffologyId',
+                'type' => Type::listOf(Type::string()),
+                'description' => 'Narrows the query results based on the staffology employer ID.',
+            ],
         ]);
     }
 }

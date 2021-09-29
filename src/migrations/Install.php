@@ -262,7 +262,7 @@ class Install extends Migration
                     'payrollCodeChanged' => $this->boolean(),
                     'aeNotEnroledWarning' => $this->boolean(),
                     'fps' => $this->longText(),
-                    'recievingOffsetPay' => $this->boolean(),
+                    'receivingOffsetPay' => $this->boolean(),
                     'paymentAfterLearning' => $this->boolean(),
                     'umbrellaPayment' => $this->longText(),
                     'pdf' => $this->string()->defaultValue(''),

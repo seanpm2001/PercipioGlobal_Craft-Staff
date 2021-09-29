@@ -2,8 +2,13 @@
 
 namespace percipiolondon\craftstaff\elements\db;
 
+use craft\db\Query;
+use craft\db\QueryAbortedException;
+use craft\db\Table;
 use craft\elements\db\ElementQuery;
-use percipiolondon\companymanagement\elements\Department;
+use craft\helpers\Db;
+
+use yii\db\Connection;
 
 class PayRunEntryQuery extends ElementQuery
 {
@@ -42,7 +47,7 @@ class PayRunEntryQuery extends ElementQuery
     public $payrollCodeChanged;
     public $aeNotEnroledWarning;
     public $fps;
-    public $recievingOffsetPay;
+    public $receivingOffsetPay;
     public $paymentAfterLearning;
     public $umbrellaPayment;
     public $pdf;
@@ -257,9 +262,9 @@ class PayRunEntryQuery extends ElementQuery
         return $this;
     }
 
-    public function recievingOffsetPay($value)
+    public function receivingOffsetPay($value)
     {
-        $this->recievingOffsetPay = $value;
+        $this->receivingOffsetPay = $value;
         return $this;
     }
 
@@ -321,12 +326,24 @@ class PayRunEntryQuery extends ElementQuery
             'staff_payrunentries.payrollCodeChanged',
             'staff_payrunentries.aeNotEnroledWarning',
             'staff_payrunentries.fps',
-            'staff_payrunentries.recievingOffsetPay',
+            'staff_payrunentries.receivingOffsetPay',
             'staff_payrunentries.paymentAfterLearning',
             'staff_payrunentries.umbrellaPayment',
             'staff_payrunentries.pdf',
 
         ]);
+
+        if ($this->staffologyId) {
+            $this->subQuery->andWhere(Db::parseParam('staff_payrunentries.staffologyId', $this->staffologyId));
+        }
+
+        if ($this->employerId) {
+            $this->subQuery->andWhere(Db::parseParam('staff_payrunentries.employerId', $this->employerId));
+        }
+
+        if ($this->isClosed) {
+            $this->subQuery->andWhere(Db::parseParam('staff_payrunentries.isClosed', $this->isClosed, '=', false));
+        }
 
         return parent::beforePrepare();
     }

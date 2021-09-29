@@ -2,8 +2,13 @@
 
 namespace percipiolondon\craftstaff\elements\db;
 
+use craft\db\Query;
+use craft\db\QueryAbortedException;
+use craft\db\Table;
 use craft\elements\db\ElementQuery;
-use percipiolondon\companymanagement\elements\Department;
+use craft\helpers\Db;
+
+use yii\db\Connection;
 
 class EmployeeQuery extends ElementQuery
 {
@@ -21,6 +26,14 @@ class EmployeeQuery extends ElementQuery
     public $niNumber;
     public $sourceSystemId;
     public $isDirector;
+
+    /**
+     * @inheritdoc
+     */
+    public function __construct($elementType, array $config = [])
+    {
+        parent::__construct($elementType, $config);
+    }
 
     public function personalDetails($value)
     {
@@ -65,6 +78,11 @@ class EmployeeQuery extends ElementQuery
     public function bankDetails($value)
     {
         $this->bankDetails = $value;
+        return $this;
+    }
+    public function sourceSystemId($value)
+    {
+        $this->sourceSystemId = $value;
         return $this;
     }
     public function status($value)
@@ -113,6 +131,26 @@ class EmployeeQuery extends ElementQuery
             'staff_employees.sourceSystemId',
             'staff_employees.isDirector',
         ]);
+
+        if ($this->staffologyId) {
+            $this->subQuery->andWhere(Db::parseParam('staff_employees.staffologyId', $this->staffologyId));
+        }
+
+        if ($this->employerId) {
+            $this->subQuery->andWhere(Db::parseParam('staff_employees.employerId', $this->employerId));
+        }
+
+        if ($this->userId) {
+            $this->subQuery->andWhere(Db::parseParam('staff_employees.userId', $this->userId));
+        }
+
+        if ($this->isDirector) {
+            $this->subQuery->andWhere(Db::parseParam('staff_employees.isDirector', $this->isDirector, '=', false));
+        }
+
+        if ($this->status) {
+            $this->subQuery->andWhere(Db::parseParam('staff_employees.status', $this->status, '=', true));
+        }
 
         return parent::beforePrepare();
     }

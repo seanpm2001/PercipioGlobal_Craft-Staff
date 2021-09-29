@@ -2,8 +2,13 @@
 
 namespace percipiolondon\craftstaff\elements\db;
 
+use craft\db\Query;
+use craft\db\QueryAbortedException;
+use craft\db\Table;
 use craft\elements\db\ElementQuery;
-use percipiolondon\companymanagement\elements\Department;
+use craft\helpers\Db;
+
+use yii\db\Connection;
 
 class PayRunQuery extends ElementQuery
 {
@@ -166,6 +171,22 @@ class PayRunQuery extends ElementQuery
             'staff_payrun.url',
             'staff_payrun.employerId'
         ]);
+
+        if ($this->staffologyId) {
+            $this->subQuery->andWhere(Db::parseParam('staff_payrun.staffologyId', $this->staffologyId));
+        }
+
+        if ($this->employerId) {
+            $this->subQuery->andWhere(Db::parseParam('staff_payrun.employerId', $this->employerId));
+        }
+
+        if ($this->isClosed) {
+            $this->subQuery->andWhere(Db::parseParam('staff_payrun.isClosed', $this->isClosed));
+        }
+
+        if ($this->state) {
+            $this->subQuery->andWhere(Db::parseParam('staff_payrun.state', $this->state));
+        }
 
         return parent::beforePrepare();
     }
