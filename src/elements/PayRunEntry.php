@@ -314,7 +314,7 @@ class PayRunEntry extends Element
      */
     public function getCpEditUrl()
     {
-        return 'staff-management/payruns/' . $this->id;
+        return 'staff-management/payrunentries/' . $this->id;
     }
 
     /**
