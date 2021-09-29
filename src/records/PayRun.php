@@ -44,6 +44,7 @@ use percipiolondon\craftstaff\db\Table;
  * @property int $period;
  * @property \DateTime $startDate;
  * @property \DateTime $endDate;
+ * @property \DateTime $paymentDate;
  * @property int $employeeCount;
  * @property int $subContractorCount;
  * @property string $totals;
