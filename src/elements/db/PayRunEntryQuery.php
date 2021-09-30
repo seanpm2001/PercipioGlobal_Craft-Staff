@@ -337,6 +337,10 @@ class PayRunEntryQuery extends ElementQuery
             $this->subQuery->andWhere(Db::parseParam('staff_payrunentries.staffologyId', $this->staffologyId));
         }
 
+        if ($this->payRunId) {
+            $this->subQuery->andWhere(Db::parseParam('staff_payrunentries.payRunId', $this->payRunId));
+        }
+
         if ($this->employerId) {
             $this->subQuery->andWhere(Db::parseParam('staff_payrunentries.employerId', $this->employerId));
         }

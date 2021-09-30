@@ -20,6 +20,11 @@ class PayRunEntry extends ElementArguments
                 'type' => Type::listOf(Type::int()),
                 'description' => 'Narrows the query results based on the payrun’ employers.',
             ],
+            'payRunId' => [
+                'name' => 'payRunId',
+                'type' => Type::listOf(Type::int()),
+                'description' => 'Narrows the query results based on the payrun’ employers.',
+            ],
             'staffologyId' => [
                 'name' => 'staffologyId',
                 'type' => Type::listOf(Type::string()),
