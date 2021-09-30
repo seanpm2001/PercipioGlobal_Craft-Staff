@@ -21,6 +21,7 @@ use percipiolondon\craftstaff\gql\types\PayRunTotals;
 use percipiolondon\craftstaff\gql\types\PensionSummary;
 use percipiolondon\craftstaff\gql\types\UmbrellaPayment;
 use percipiolondon\craftstaff\gql\types\ValueOverride;
+use percipiolondon\craftstaff\gql\types\Employee;
 
 
 class PayRunEntry extends Element
@@ -252,10 +253,19 @@ class PayRunEntry extends Element
                 'name' => 'umbrellaPayment',
                 'type' => UmbrellaPayment::getType(),
             ],
+            'employee' => [
+                'name' => 'employee',
+                'type' => Employee::getType(),
+            ],
             'id' => [
                 'name' => 'id',
                 'type' => Type::string(),
                 'description' => 'The unique id of the object.',
+            ],
+            'pdf' => [
+                'name' => 'pdf',
+                'type' => Type::string(),
+                'description' => 'The payslip pdf',
             ],
         ]), self::getName());
     }

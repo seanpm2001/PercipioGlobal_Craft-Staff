@@ -82,6 +82,7 @@ class CreatePayRunEntryJob extends Basejob
         $payRunEntry->receivingOffsetPay = $payRunEntryData['receivingOffsetPay'] ?? null;
         $payRunEntry->paymentAfterLearning = $payRunEntryData['paymentAfterLearning'] ?? null;
         $payRunEntry->umbrellaPayment = $payRunEntryData['umbrellaPayment'] ?? '';
+        $payRunEntry->employee = $payRunEntryData['employee'] ?? '';
 //        $payRunEntry->pdf = $payRunEntryData['pdf'];
 
         $elementsService = Craft::$app->getElements();

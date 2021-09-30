@@ -58,6 +58,8 @@ class PayRunEntry extends Element
                 return Json::decodeIfJson($source->fps);
             case 'umbrellaPayment':
                 return Json::decodeIfJson($source->umbrellaPayment);
+            case 'employee':
+                return Json::decodeIfJson($source->employee);
         }
 
         return parent::resolve($source, $arguments, $context, $resolveInfo);

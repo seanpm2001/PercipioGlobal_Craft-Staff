@@ -73,6 +73,7 @@ use percipiolondon\craftstaff\db\Table;
  * @property boolean $receivingOffsetPay
  * @property boolean $paymentAfterLearning
  * @property string $umbrellaPayment
+ * @property string $employee
  * @property string $pdf
  */
 

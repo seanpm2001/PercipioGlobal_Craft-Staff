@@ -265,6 +265,7 @@ class Install extends Migration
                     'receivingOffsetPay' => $this->boolean(),
                     'paymentAfterLearning' => $this->boolean(),
                     'umbrellaPayment' => $this->longText(),
+                    'employee' => $this->longText(),
                     'pdf' => $this->string()->defaultValue(''),
                     'employerId' => $this->integer()->notNull()->defaultValue(null),
                 ]

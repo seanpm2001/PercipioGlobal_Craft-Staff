@@ -50,6 +50,7 @@ class PayRunEntryQuery extends ElementQuery
     public $receivingOffsetPay;
     public $paymentAfterLearning;
     public $umbrellaPayment;
+    public $employee;
     public $pdf;
 
     public function siteId($value)
@@ -280,6 +281,12 @@ class PayRunEntryQuery extends ElementQuery
         return $this;
     }
 
+    public function employee($value)
+    {
+        $this->employee = $value;
+        return $this;
+    }
+
     public function pdf($value)
     {
         $this->pdf = $value;
@@ -329,6 +336,7 @@ class PayRunEntryQuery extends ElementQuery
             'staff_payrunentries.receivingOffsetPay',
             'staff_payrunentries.paymentAfterLearning',
             'staff_payrunentries.umbrellaPayment',
+            'staff_payrunentries.employee',
             'staff_payrunentries.pdf',
 
         ]);

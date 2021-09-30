@@ -108,6 +108,7 @@ class PayRunEntry extends Element
     public $receivingOffsetPay;
     public $paymentAfterLearning;
     public $umbrellaPayment;
+    public $employee;
     public $pdf;
 
     // Static Methods
@@ -512,6 +513,7 @@ class PayRunEntry extends Element
             $record->receivingOffsetPay = $this->receivingOffsetPay;
             $record->paymentAfterLearning = $this->paymentAfterLearning;
             $record->umbrellaPayment = $this->umbrellaPayment;
+            $record->employee = $this->employee;
             $record->pdf = $this->pdf;
 
             $success = $record->save(false);
