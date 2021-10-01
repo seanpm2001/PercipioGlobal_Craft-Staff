@@ -59,7 +59,7 @@ use yii\base\Event;
  *
  * @author    Percipio
  * @package   Craftstaff
- * @since     1.0.0-alpha.1
+ * @since     0.2.0
  *
  * @property  EmployersService $employers
  * @property  EmployeesService $employees
@@ -92,7 +92,7 @@ class Craftstaff extends Plugin
      *
      * @var string
      */
-    public $schemaVersion = '1.0.0-alpha.1';
+    public $schemaVersion = '0.2.0';
 
     /**
      * Set to `true` if the plugin should have a settings view in the control panel.
