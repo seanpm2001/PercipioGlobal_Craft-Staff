@@ -36,6 +36,11 @@ class HmrcDetails
                 'type' => Type::string(),
                 'description' => 'Office Number.',
             ],
+            'apprenticeshipLevyAllowance' => [
+                'name' => 'apprenticeshipLevyAllowance',
+                'type' => Type::string(),
+                'description' => 'Apprenticeship Levy Allowance',
+            ],
             'payeReference' => [
                 'name' => 'payeReference',
                 'type' => Type::string(),

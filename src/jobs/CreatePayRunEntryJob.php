@@ -4,6 +4,7 @@ namespace percipiolondon\craftstaff\jobs;
 
 use Craft;
 use craft\queue\BaseJob;
+use percipiolondon\craftstaff\records\Employee;
 use percipiolondon\craftstaff\records\PayRunEntry as PayRunEntryRecord;
 use percipiolondon\craftstaff\elements\PayRunEntry;
 use craft\helpers\Queue;
@@ -45,8 +46,11 @@ class CreatePayRunEntryJob extends Basejob
     {
         $payRunEntry = new PayRunEntry();
 
+        $employee = Employee::findOne(['staffologyId' => $payRunEntryData['employee']['id']]);
+
         $payRunEntry->siteId = Craft::$app->getSites()->currentSite->id;
         $payRunEntry->employerId = $this->employerId;
+        $payRunEntry->employeeId = $employee->id ?? null;
         $payRunEntry->payRunId = $this->payRunId;
         $payRunEntry->staffologyId = $payRunEntryData['id'] ?? null;
         $payRunEntry->taxYear = $payRunEntryData['taxYear'] ?? null;

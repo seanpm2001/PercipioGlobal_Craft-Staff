@@ -74,6 +74,7 @@ use percipiolondon\craftstaff\db\Table;
  * @property boolean $paymentAfterLearning
  * @property string $umbrellaPayment
  * @property string $employee
+ * @property int $employeeId
  * @property string $pdf
  */
 
