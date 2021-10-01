@@ -1,0 +1,27 @@
+{# @var craft \craft\web\twig\variables\CraftVariable #}
+{#
+/**
+ * staff-management plugin for Craft CMS 3.x
+ *
+ * staff-management Settings.twig
+ *
+ * @author    Percipio
+ * @copyright Copyright (c) 2021 Percipio
+ * @link      http://percipio.london
+ * @package   Craftstaff
+ * @since     1.0.0-alpha.1
+ */
+#}
+
+{% import "_includes/forms" as forms %}
+
+{% do view.registerAssetBundle("percipiolondon\\craftstaff\\assetbundles\\craftstaff\\CraftstaffAsset") %}
+
+{{ forms.autosuggestField({
+    label: 'Staffology API key',
+    instructions: 'Enter the Staffology API key here',
+    id: 'staffologyApiKey',
+    name: 'staffologyApiKey',
+    suggestEnvVars: true,
+    value: settings['staffologyApiKey']})
+}}
