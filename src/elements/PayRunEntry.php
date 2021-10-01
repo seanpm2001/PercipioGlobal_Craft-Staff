@@ -74,6 +74,7 @@ class PayRunEntry extends Element
     public $staffologyId;
     public $payRunId;
     public $employerId;
+    public $employeeId;
     public $taxYear;
     public $startDate;
     public $endDate;
@@ -477,6 +478,7 @@ class PayRunEntry extends Element
 
             $record->siteId = $this->siteId;
             $record->employerId = $this->employerId;
+            $record->employeeId = $this->employeeId;
             $record->payRunId = $this->payRunId;
             $record->staffologyId = $this->staffologyId;
             $record->taxYear = $this->taxYear;

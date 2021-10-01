@@ -268,6 +268,7 @@ class Install extends Migration
                     'employee' => $this->longText(),
                     'pdf' => $this->string()->defaultValue(''),
                     'employerId' => $this->integer()->notNull()->defaultValue(null),
+                    'employeeId' => $this->integer()->notNull()->defaultValue(null),
                 ]
             );
         }
@@ -518,6 +519,16 @@ class Install extends Migration
             Table::STAFF_PAYRUNENTRIES,
             'employerId',
             Table::STAFF_EMPLOYERS,
+            'id',
+            'CASCADE',
+            'CASCADE'
+        );
+
+        $this->addForeignKey(
+            $this->db->getForeignKeyName(Table::STAFF_PAYRUNENTRIES, 'employeeId'),
+            Table::STAFF_PAYRUNENTRIES,
+            'employeeId',
+            Table::STAFF_EMPLOYEES,
             'id',
             'CASCADE',
             'CASCADE'

@@ -16,6 +16,7 @@ class PayRunEntryQuery extends ElementQuery
     public $staffologyId;
     public $payRunId;
     public $employerId;
+    public $employeeId;
     public $taxYear;
     public $startDate;
     public $endDate;
@@ -293,6 +294,12 @@ class PayRunEntryQuery extends ElementQuery
         return $this;
     }
 
+    public function employeeId($value)
+    {
+        $this->employeeId = $value;
+        return $this;
+    }
+
     protected function beforePrepare(): bool
     {
         $this->joinElementTable('staff_payrunentries');
@@ -302,6 +309,7 @@ class PayRunEntryQuery extends ElementQuery
             'staff_payrunentries.staffologyId',
             'staff_payrunentries.payRunId',
             'staff_payrunentries.employerId',
+            'staff_payrunentries.employeeId',
             'staff_payrunentries.taxYear',
             'staff_payrunentries.startDate',
             'staff_payrunentries.endDate',
@@ -351,6 +359,10 @@ class PayRunEntryQuery extends ElementQuery
 
         if ($this->employerId) {
             $this->subQuery->andWhere(Db::parseParam('staff_payrunentries.employerId', $this->employerId));
+        }
+
+        if ($this->employeeId) {
+            $this->subQuery->andWhere(Db::parseParam('staff_payrunentries.employeeId', $this->employeeId));
         }
 
         if ($this->isClosed) {
