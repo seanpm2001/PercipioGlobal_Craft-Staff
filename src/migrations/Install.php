@@ -100,7 +100,7 @@ class Install extends Migration
     {
         $tablesCreated = false;
 
-    // staff_employer table
+        // staff_employer table
         $tableSchema = Craft::$app->db->schema->getTableSchema(Table::STAFF_EMPLOYERS);
         if ($tableSchema === null) {
             $tablesCreated = true;
@@ -128,7 +128,7 @@ class Install extends Migration
             );
         }
 
-    // staff_employee table
+        // staff_employee table
         $tableSchema = Craft::$app->db->schema->getTableSchema(Table::STAFF_EMPLOYEES);
         if ($tableSchema === null) {
             $tablesCreated = true;
@@ -159,7 +159,7 @@ class Install extends Migration
             );
         }
 
-    // staff_payrun_log table
+        // staff_payrun_log table
         $tableSchema = Craft::$app->db->schema->getTableSchema(Table::STAFF_PAYRUN_LOG);
         if ($tableSchema === null) {
             $tablesCreated = true;
@@ -182,7 +182,7 @@ class Install extends Migration
             );
         }
 
-    // staff_payrun table
+        // staff_payrun table
         $tableSchema = Craft::$app->db->schema->getTableSchema(Table::STAFF_PAYRUN);
         if ($tableSchema === null) {
             $tablesCreated = true;
@@ -216,7 +216,7 @@ class Install extends Migration
             );
         }
 
-    // STAFF_PAYRUNENTRIES table
+        // STAFF_PAYRUNENTRIES table
         $tableSchema = Craft::$app->db->schema->getTableSchema(Table::STAFF_PAYRUNENTRIES);
         if ($tableSchema === null) {
             $tablesCreated = true;
@@ -273,7 +273,7 @@ class Install extends Migration
             );
         }
 
-    // staff_hardinguser table
+        // staff_hardinguser table
         $tableSchema = Craft::$app->db->schema->getTableSchema(Table::STAFF_USERS);
         if ($tableSchema === null) {
             $tablesCreated = true;
@@ -292,7 +292,7 @@ class Install extends Migration
             );
         }
 
-    // staff_permissions table
+        // staff_permissions table
         $tableSchema = Craft::$app->db->schema->getTableSchema(Table::STAFF_PERMISSIONS);
         if ($tableSchema === null) {
             $tablesCreated = true;
@@ -328,6 +328,50 @@ class Install extends Migration
             );
         }
 
+        //request table
+        $tableSchema = Craft::$app->db->schema->getTableSchema(Table::STAFF_REQUESTS);
+        if ($tableSchema === null) {
+            $tablesCreated = true;
+            $this->createTable(
+                Table::STAFF_REQUESTS,
+                [
+                    'id' => $this->primaryKey(),
+                    'dateCreated' => $this->dateTime()->notNull(),
+                    'dateUpdated' => $this->dateTime()->notNull(),
+                    'dateAdministered' => $this->dateTime()->notNull(),
+                    'uid' => $this->uid(),
+                    'employerId' => $this->integer()->notNull(),
+                    'employeeId' => $this->integer()->notNull(),
+                    'administerId' => $this->integer()->notNull(),
+                    'data' => $this->longText(),
+                    'section' => $this->string()->notNull(),
+                    'element' => $this->string()->notNull(),
+                    'status' => $this->string()->notNull(),
+                    'note' => $this->string(255),
+                ]
+            );
+        }
+
+        //history table
+        $tableSchema = Craft::$app->db->schema->getTableSchema(Table::STAFF_HISTORY);
+        if ($tableSchema === null) {
+            $tablesCreated = true;
+            $this->createTable(
+                Table::STAFF_HISTORY,
+                [
+                    'id' => $this->primaryKey(),
+                    'dateCreated' => $this->dateTime()->notNull(),
+                    'dateUpdated' => $this->dateTime()->notNull(),
+                    'uid' => $this->uid(),
+                    'employerId' => $this->integer()->notNull(),
+                    'employeeId' => $this->integer()->notNull(),
+                    'administerId' => $this->integer()->notNull(),
+                    'message' => $this->string(255)->notNull(),
+                    'type' => $this->string()->notNull(),
+                ]
+            );
+        }
+
         return $tablesCreated;
     }
 
@@ -340,6 +384,8 @@ class Install extends Migration
     {
         $this->createIndex(null, Table::STAFF_EMPLOYERS, 'name', false);
         $this->createIndex(null, Table::STAFF_EMPLOYEES, 'niNumber', false);
+        $this->createIndex(null, Table::STAFF_REQUESTS, 'element', false);
+        $this->createIndex(null, Table::STAFF_HISTORY, 'type', false);
     }
 
     /**
@@ -349,7 +395,7 @@ class Install extends Migration
      */
     protected function addForeignKeys()
     {
-    // staff_employer table
+        // staff_employer table
         $this->addForeignKey(
             $this->db->getForeignKeyName(Table::STAFF_EMPLOYERS, 'id'),
             Table::STAFF_EMPLOYERS,
@@ -370,17 +416,28 @@ class Install extends Migration
             'CASCADE'
         );
 
-//        $this->addForeignKey(
-//            $this->db->getForeignKeyName(Table::STAFF_EMPLOYERS, 'logoId'),
-//            Table::STAFF_EMPLOYERS,
-//            'logoId',
-//            \craft\db\Table::ASSETS,
-//            'id',
-//            'CASCADE',
-//            'CASCADE'
-//        );
+        // staff_requests table
+        $this->addForeignKey(
+            $this->db->getForeignKeyName(Table::STAFF_REQUESTS, 'employerId'),
+            Table::STAFF_REQUESTS,
+            'id',
+            Table::STAFF_EMPLOYERS,
+            'id',
+            'CASCADE',
+            'CASCADE'
+        );
 
-    // staff_employee table
+        $this->addForeignKey(
+            $this->db->getForeignKeyName(Table::STAFF_REQUESTS, 'employeeId'),
+            Table::STAFF_REQUESTS,
+            'id',
+            Table::STAFF_EMPLOYEES,
+            'id',
+            'CASCADE',
+            'CASCADE'
+        );
+
+        // staff_employee table
         $this->addForeignKey(
             $this->db->getForeignKeyName(Table::STAFF_EMPLOYEES, 'id'),
             Table::STAFF_EMPLOYEES,
@@ -421,7 +478,7 @@ class Install extends Migration
             'CASCADE'
         );
 
-    // staff_payrun_log table
+        // staff_payrun_log table
         $this->addForeignKey(
             $this->db->getForeignKeyName(Table::STAFF_PAYRUN_LOG, 'siteId'),
             Table::STAFF_PAYRUN_LOG,
@@ -452,7 +509,7 @@ class Install extends Migration
             'CASCADE'
         );
 
-    // staff_payrun table
+        // staff_payrun table
         $this->addForeignKey(
             $this->db->getForeignKeyName(Table::STAFF_PAYRUN, 'id'),
             Table::STAFF_PAYRUN,
@@ -483,7 +540,7 @@ class Install extends Migration
             'CASCADE'
         );
 
-    // staff_payrunentries table
+        // staff_payrunentries table
         $this->addForeignKey(
             $this->db->getForeignKeyName(Table::STAFF_PAYRUNENTRIES, 'id'),
             Table::STAFF_PAYRUNENTRIES,
@@ -534,7 +591,7 @@ class Install extends Migration
             'CASCADE'
         );
 
-    // staff_permissions_users table
+        // staff_permissions_users table
         $this->addForeignKey(
             $this->db->getForeignKeyName(Table::STAFF_PERMISSIONS_USERS, 'userId'),
             Table::STAFF_PERMISSIONS_USERS,
@@ -555,12 +612,54 @@ class Install extends Migration
             'CASCADE'
         );
 
-    // staff_user table
+        // staff_user table
         $this->addForeignKey(
             $this->db->getForeignKeyName(Table::STAFF_USERS, 'siteId'),
             Table::STAFF_USERS,
             'siteId',
             \craft\db\Table::SITES,
+            'id',
+            'CASCADE',
+            'CASCADE'
+        );
+
+        // staff_request table
+        $this->addForeignKey(
+            $this->db->getForeignKeyName(Table::STAFF_REQUESTS, 'employerId'),
+            Table::STAFF_REQUESTS,
+            'id',
+            Table::STAFF_EMPLOYERS,
+            'id',
+            'CASCADE',
+            'CASCADE'
+        );
+
+        $this->addForeignKey(
+            $this->db->getForeignKeyName(Table::STAFF_REQUESTS, 'employeeId'),
+            Table::STAFF_REQUESTS,
+            'id',
+            Table::STAFF_EMPLOYEES,
+            'id',
+            'CASCADE',
+            'CASCADE'
+        );
+
+        // staff_history table
+        $this->addForeignKey(
+            $this->db->getForeignKeyName(Table::STAFF_HISTORY, 'employerId'),
+            Table::STAFF_HISTORY,
+            'id',
+            Table::STAFF_EMPLOYERS,
+            'id',
+            'CASCADE',
+            'CASCADE'
+        );
+
+        $this->addForeignKey(
+            $this->db->getForeignKeyName(Table::STAFF_HISTORY, 'employeeId'),
+            Table::STAFF_HISTORY,
+            'id',
+            Table::STAFF_EMPLOYEES,
             'id',
             'CASCADE',
             'CASCADE'
@@ -581,6 +680,8 @@ class Install extends Migration
             Table::STAFF_PERMISSIONS,
             Table::STAFF_EMPLOYERS,
             Table::STAFF_USERS,
+            Table::STAFF_REQUESTS,
+            Table::STAFF_HISTORY,
         ];
         foreach ($tables as $table) {
             $this->_dropForeignKeyToAndFromTable($table);
@@ -628,6 +729,11 @@ class Install extends Migration
         // staff_permissions table
         $this->dropTableIfExists(Table::STAFF_PERMISSIONS);
 
+        // staff_requests table
+        $this->dropTableIfExists(Table::STAFF_REQUESTS);
+
+        // staff_history table
+        $this->dropTableIfExists(Table::STAFF_HISTORY);
     }
 
     /**

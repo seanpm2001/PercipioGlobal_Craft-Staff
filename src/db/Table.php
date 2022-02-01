@@ -12,4 +12,6 @@ abstract class Table
     const STAFF_PAYRUNENTRIES = "{{%staff_payrunentries}}";
     const STAFF_PERMISSIONS = "{{%staff_permissions}}";
     const STAFF_PERMISSIONS_USERS = "{{%staff_permissions_users}}";
+    const STAFF_REQUESTS = "{{%staff_requests}}";
+    const STAFF_HISTORY = "{{%staff_history}}";
 }
