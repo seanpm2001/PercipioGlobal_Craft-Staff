@@ -290,7 +290,7 @@ class Employer extends Element
      */
     public function rules()
     {
-        return [];
+        return parent::rules();
     }
 
     /**

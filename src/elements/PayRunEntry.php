@@ -298,7 +298,7 @@ class PayRunEntry extends Element
      */
     public function rules()
     {
-        return [];
+        return parent::rules();
     }
 
     /**
