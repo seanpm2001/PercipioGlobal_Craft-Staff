@@ -85,7 +85,6 @@ class Employers extends Component
 
                         if ($employer) {
                             $employer = Json::decodeIfJson($employer, false);
-
                             $employerRecord = EmployerRecord::findOne(['staffologyId' => $employer->id]);
 
                             if (!$employerRecord) {
