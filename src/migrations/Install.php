@@ -200,7 +200,7 @@ class Install extends Migration
             'payRunId' => $this->integer()->notNull()->defaultValue(0),
         ]);
 
-        $this->createTable(Table::PAYRUNENTRIES, [
+        $this->createTable(Table::PAYRUN_ENTRIES, [
             'id' => $this->primaryKey(),
             'dateCreated' => $this->dateTime()->notNull(),
             'dateUpdated' => $this->dateTime()->notNull(),
@@ -355,7 +355,7 @@ class Install extends Migration
         $this->dropTableIfExists(Table::HISTORY);
         $this->dropTableIfExists(Table::PAYRUN);
         $this->dropTableIfExists(Table::PAYRUN_LOG);
-        $this->dropTableIfExists(Table::PAYRUNENTRIES);
+        $this->dropTableIfExists(Table::PAYRUN_ENTRIES);
         $this->dropTableIfExists(Table::PERMISSIONS);
         $this->dropTableIfExists(Table::PERMISSIONS_USERS);
         $this->dropTableIfExists(Table::PERSONAL_DETAILS);
@@ -395,7 +395,7 @@ class Install extends Migration
             Table::HISTORY,
             Table::PAYRUN,
             Table::PAYRUN_LOG,
-            Table::PAYRUNENTRIES,
+            Table::PAYRUN_ENTRIES,
             Table::PERMISSIONS,
             Table::PERMISSIONS_USERS,
             Table::PERSONAL_DETAILS,
@@ -711,45 +711,6 @@ class Install extends Migration
             'CASCADE',
             'CASCADE'
         );
-    }
-
-
-    /**
-     * Removes the tables needed for the Records used by the plugin
-     *
-     * @return void
-     */
-    protected function removeTables()
-    {
-        // staff_employee table
-        $this->dropTableIfExists(Table::EMPLOYEES);
-
-        // staff_payrunentries table
-        $this->dropTableIfExists(Table::PAYRUNENTRIES);
-
-        // staff_user table
-        $this->dropTableIfExists(Table::USERS);
-
-        // staff_payrun table
-        $this->dropTableIfExists(Table::PAYRUN);
-
-        // staff_payrun_log table
-        $this->dropTableIfExists(Table::PAYRUN_LOG);
-
-        // staff_employer table
-        $this->dropTableIfExists(Table::EMPLOYERS);
-
-        // staff_permissions_users table
-        $this->dropTableIfExists(Table::PERMISSIONS_USERS);
-
-        // staff_permissions table
-        $this->dropTableIfExists(Table::PERMISSIONS);
-
-        // staff_requests table
-        $this->dropTableIfExists(Table::REQUESTS);
-
-        // staff_history table
-        $this->dropTableIfExists(Table::HISTORY);
     }
 
     /**

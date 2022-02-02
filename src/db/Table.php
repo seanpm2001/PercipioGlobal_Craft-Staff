@@ -5,6 +5,7 @@ namespace percipiolondon\staff\db;
 abstract class Table
 {
     const ADDRESSES = "{{%staff_addresses}}";
+    const COUNTIES = "{{%staff_counties}}";
     const COUNTRIES = "{{%staff_countries}}";
     const EMPLOYERS = "{{%staff_employers}}";
     const EMPLOYEES = "{{%staff_employees}}";
