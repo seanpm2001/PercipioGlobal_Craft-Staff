@@ -76,6 +76,18 @@ class Install extends Migration
             'address2' => $this->string(),
             'address3' => $this->string(),
             'zipCode' => $this->string(),
+            'dateCreated' => $this->dateTime()->notNull(),
+            'dateUpdated' => $this->dateTime()->notNull(),
+            'uid' => $this->uid(),
+        ]);
+
+        $this->createTable(Table::COUNTRIES, [
+            'id' => $this->primaryKey(),
+            'name' => $this->string()->notNull(),
+            'iso' => $this->string(2)->notNull(),
+            'sortOrder' => $this->integer(),
+            'dateCreated' => $this->dateTime()->notNull(),
+            'dateUpdated' => $this->dateTime()->notNull(),
             'uid' => $this->uid(),
         ]);
 
