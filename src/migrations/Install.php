@@ -323,6 +323,9 @@ class Install extends Migration
 
     }
 
+    /**
+     * Drop the tables
+     */
     public function dropTables() {
         $this->dropTableIfExists(Table::STAFF_EMPLOYEES);
         $this->dropTableIfExists(Table::STAFF_EMPLOYERS);
@@ -335,24 +338,68 @@ class Install extends Migration
         $this->dropTableIfExists(Table::STAFF_PERSONAL_DETAILS);
         $this->dropTableIfExists(Table::STAFF_REQUESTS);
         $this->dropTableIfExists(Table::STAFF_USERS);
+
+        return null;
     }
+
+    /**
+     * Creates the indexes
+     */
+    public function createIndexes()
+    {
+        //$this->createIndex(null, Table::STAFF_EMPLOYERS, 'name', false);
+        //$this->createIndex(null, Table::STAFF_EMPLOYEES, 'niNumber', false);
+        //$this->createIndex(null, Table::STAFF_REQUESTS, 'element', false);
+        //$this->createIndex(null, Table::STAFF_HISTORY, 'type', false);
+    }
+
+    /**
+     * Adds the foreign keys
+     */
+    public function addForeignKeys()
+    {
+
+    }
+
+    /**
+     * Removes the foreign keys
+     */
+    public function dropForeignKeys()
+    {
+        $tables = [
+            Table::STAFF_EMPLOYEES,
+            Table::STAFF_EMPLOYERS,
+            Table::STAFF_HISTORY,
+            Table::STAFF_PAYRUN,
+            Table::STAFF_PAYRUN_LOG,
+            Table::STAFF_PAYRUNENTRIES,
+            Table::STAFF_PERMISSIONS,
+            Table::STAFF_PERMISSIONS_USERS,
+            Table::STAFF_PERSONAL_DETAILS,
+            Table::STAFF_REQUESTS,
+            Table::STAFF_USERS
+        ];
+
+        foreach ($tables as $table) {
+            $this->_dropForeignKeyToAndFromTable($table);
+        }
+    }
+
+    /**
+     * Insert the default data.
+     */
+    public function insertDefaultData()
+    {
+        $this->_createPermissions();
+        //$this->_defaultCountries();
+        //$this->_defaultCounties();
+    }
+
 
     // Protected Methods
     // =========================================================================
 
 
-    /**
-     * Creates the indexes needed for the Records used by the plugin
-     *
-     * @return void
-     */
-    protected function createIndexes()
-    {
-        $this->createIndex(null, Table::STAFF_EMPLOYERS, 'name', false);
-        $this->createIndex(null, Table::STAFF_EMPLOYEES, 'niNumber', false);
-        $this->createIndex(null, Table::STAFF_REQUESTS, 'element', false);
-        $this->createIndex(null, Table::STAFF_HISTORY, 'type', false);
-    }
 
     /**
      * Creates the foreign keys needed for the Records used by the plugin
@@ -643,37 +690,6 @@ class Install extends Migration
         );
     }
 
-    /**
-     * Drop the foreign keys
-     */
-    public function dropForeignKeys()
-    {
-        $tables = [
-            Table::STAFF_EMPLOYERS,
-            Table::STAFF_PAYRUN,
-            Table::STAFF_PAYRUNENTRIES,
-            Table::STAFF_PAYRUN_LOG,
-            Table::STAFF_PERMISSIONS_USERS,
-            Table::STAFF_PERMISSIONS,
-            Table::STAFF_EMPLOYERS,
-            Table::STAFF_USERS,
-            Table::STAFF_REQUESTS,
-            Table::STAFF_HISTORY,
-        ];
-        foreach ($tables as $table) {
-            $this->_dropForeignKeyToAndFromTable($table);
-        }
-    }
-
-    /**
-     * Populates the DB with the default data.
-     *
-     * @return void
-     */
-    protected function insertDefaultData()
-    {
-        $this->_createPermissions();
-    }
 
     /**
      * Removes the tables needed for the Records used by the plugin
