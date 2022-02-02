@@ -68,292 +68,192 @@ class Install extends Migration
 
     public function createTables()
     {
+        $this->createTable(Table::STAFF_EMPLOYEES, [
+            'id' => $this->primaryKey(),
+            'dateCreated' => $this->dateTime()->notNull(),
+            'dateUpdated' => $this->dateTime()->notNull(),
+            'uid' => $this->uid(),
+            // @TODO: drop siteId in migration
+            'siteId' => $this->integer()->notNull(),
+            'staffologyId' => $this->string(255)->notNull(),
+            'employerId' => $this->integer()->notNull(),
+            'userId' => $this->integer(),
+            'isDirector' => $this->boolean(),
+            // @TODO: create own table
+            'personalDetails' => $this->longText(),
+            // @TODO: create own table
+            'employmentDetails' => $this->longText(),
+            // @TODO: create own table
+            'autoEnrolment' => $this->longText(),
+            // @TODO: create own table
+            'leaveSettings' => $this->longText(),
+            // @TODO: create own table
+            'rightToWork' => $this->longText(),
+            // @TODO: create own table
+            'bankDetails' => $this->longText(),
+            'status' => $this->string(255)->notNull()->defaultValue('Current'),
+            'aeNotEnroledWarning' => $this->boolean()->defaultValue(0),
+            'niNumber' => $this->string(255),
+            'sourceSystemId' => $this->string(255),
+        ]);
 
-    }
+        $this->createTable(Table::STAFF_EMPLOYERS, [
+            'id' => $this->primaryKey(),
+            'dateCreated' => $this->dateTime()->notNull(),
+            'dateUpdated' => $this->dateTime()->notNull(),
+            'uid' => $this->uid(),
+            'slug' => $this->string(255)->notNull(),
+            // @TODO: drop siteId in migration
+            'siteId' => $this->integer()->notNull(),
+            'staffologyId' => $this->string(255)->notNull(),
+            'name' => $this->string(255)->notNull(),
+            'crn' => $this->string(),
+            // @TODO: create own table
+            'address' => $this->longText(),
+            // @TODO: create own table
+            'hmrcDetails' => $this->longText(),
+            'startYear' => $this->string(255)->notNull(),
+            'currentYear' => $this->string(255)->notNull(),
+            'employeeCount' => $this->integer()->notNull()->defaultValue(0),
+            // @TODO: create own table
+            'defaultPayOptions' => $this->longText(),
+        ]);
 
-    // Protected Methods
-    // =========================================================================
+        $this->createTable(Table::STAFF_HISTORY,
+            [
+                'id' => $this->primaryKey(),
+                'dateCreated' => $this->dateTime()->notNull(),
+                'dateUpdated' => $this->dateTime()->notNull(),
+                'uid' => $this->uid(),
+                'employerId' => $this->integer()->notNull(),
+                'employeeId' => $this->integer()->notNull(),
+                // This could be null
+                'administerId' => $this->integer(),
+                'message' => $this->string(255)->notNull(),
+                'type' => $this->string()->notNull(),
+            ]
+        );
 
-    /**
-     * Creates the tables needed for the Records used by the plugin
-     *
-     * @return bool
-     */
-    protected function createTables()
-    {
-        $tablesCreated = false;
+        $this->createTable(Table::STAFF_PAYRUN, [
+            'id' => $this->primaryKey(),
+            'dateCreated' => $this->dateTime()->notNull(),
+            'dateUpdated' => $this->dateTime()->notNull(),
+            'uid' => $this->uid(),
+            // @TODO: drop siteId in migration
+            'siteId' => $this->integer()->notNull(),
+            'staffologyId' => $this->string(255),
+            'taxYear' => $this->string(255)->notNull()->defaultValue(''),
+            'taxMonth' => $this->integer()->notNull()->defaultValue(0),
+            'payPeriod' => $this->string(255)->notNull()->defaultValue(''),
+            'ordinal' => $this->integer()->notNull()->defaultValue(1),
+            'period' => $this->integer()->notNull()->defaultValue(1),
+            'startDate' => $this->dateTime()->notNull(),
+            'endDate' => $this->dateTime()->notNull(),
+            'paymentDate' => $this->dateTime()->notNull(),
+            'employeeCount' => $this->integer()->notNull()->defaultValue(0),
+            'subContractorCount' => $this->integer()->notNull()->defaultValue(0),
+            // @TODO: create own table
+            'totals' => $this->longText()->notNull(),
+            'state' => $this->string(255)->notNull()->defaultValue(''),
+            'isClosed' => $this->boolean()->notNull(),
+            'dateClosed' => $this->dateTime(),
+            'url' => $this->string()->defaultValue(''),
+            'employerId' => $this->integer()->notNull()->defaultValue(null),
+        ]);
 
-        // staff_employer table
-        $tableSchema = Craft::$app->db->schema->getTableSchema(Table::STAFF_EMPLOYERS);
-        if ($tableSchema === null) {
-            $tablesCreated = true;
-            $this->createTable(
-                Table::STAFF_EMPLOYERS,
-                [
-                    'id' => $this->primaryKey(),
-                    'dateCreated' => $this->dateTime()->notNull(),
-                    'dateUpdated' => $this->dateTime()->notNull(),
-                    'uid' => $this->uid(),
-                    'slug' => $this->string(255)->notNull(),
-                    'siteId' => $this->integer()->notNull(),
-                    // Custom columns in the table
-                    'staffologyId' => $this->string(255)->notNull(),
-                    'name' => $this->string(255)->notNull(),
-//                   'logoId' =>  $this->integer()->notNull(),
-                    'crn' => $this->string(),
-                    'address' => $this->longText(),
-                    'hmrcDetails' => $this->longText(),
-                    'startYear' => $this->string(255)->notNull(),
-                    'currentYear' => $this->string(255)->notNull(),
-                    'employeeCount' => $this->integer()->notNull()->defaultValue(0),
-                    'defaultPayOptions' => $this->longText(),
-                ]
-            );
-        }
+        $this->createTable(Table::STAFF_PAYRUN_LOG, [
+            'id' => $this->primaryKey(),
+            'dateCreated' => $this->dateTime()->notNull(),
+            'dateUpdated' => $this->dateTime()->notNull(),
+            'uid' => $this->uid(),
+            // @TODO: drop siteId in migration
+            'siteId' => $this->integer()->notNull(),
+            // Custom columns in the table
+            'employeeCount' => $this->integer()->notNull()->defaultValue(0),
+            'taxYear' => $this->string(255)->notNull()->defaultValue(''),
+            'lastPeriodNumber' => $this->integer()->notNull()->defaultValue(0),
+            'url' => $this->string(255)->notNull()->defaultValue(0),
+            'employerId' => $this->integer()->notNull()->defaultValue(0),
+            'payRunId' => $this->integer()->notNull()->defaultValue(0),
+        ]);
 
-        // staff_employee table
-        $tableSchema = Craft::$app->db->schema->getTableSchema(Table::STAFF_EMPLOYEES);
-        if ($tableSchema === null) {
-            $tablesCreated = true;
-            $this->createTable(
-                Table::STAFF_EMPLOYEES,
-                [
-                    'id' => $this->primaryKey(),
-                    'dateCreated' => $this->dateTime()->notNull(),
-                    'dateUpdated' => $this->dateTime()->notNull(),
-                    'uid' => $this->uid(),
-                    'siteId' => $this->integer()->notNull(),
-                    // Custom columns in the table
-                    'staffologyId' => $this->string(255)->notNull(),
-                    'employerId' => $this->integer()->notNull(),
-                    'userId' => $this->integer(),
-                    'isDirector' => $this->boolean(),
-                    'personalDetails' => $this->longText(),
-                    'employmentDetails' => $this->longText(),
-                    'autoEnrolment' => $this->longText(),
-                    'leaveSettings' => $this->longText(),
-                    'rightToWork' => $this->longText(),
-                    'bankDetails' => $this->longText(),
-                    'status' => $this->string(255)->notNull()->defaultValue('Current'),
-                    'aeNotEnroledWarning' => $this->boolean()->defaultValue(0),
-                    'niNumber' => $this->string(255),
-                    'sourceSystemId' => $this->string(255),
-                ]
-            );
-        }
+        $this->createTable(Table::STAFF_PAYRUNENTRIES, [
+            'id' => $this->primaryKey(),
+            'dateCreated' => $this->dateTime()->notNull(),
+            'dateUpdated' => $this->dateTime()->notNull(),
+            'uid' => $this->uid(),
+            // @TODO: drop siteId in migration
+            'siteId' => $this->integer()->notNull(),
+            // Custom columns in the table
+            'staffologyId' => $this->string(255)->notNull(),
+            'payRunId' => $this->integer()->notNull()->defaultValue(0),
+            'taxYear' => $this->string(255)->defaultValue(''),
+            'startDate' => $this->dateTime(),
+            'endDate' => $this->dateTime(),
+            // @TODO: create own table
+            'note' => $this->longText(),
+            'bacsSubReference' => $this->string(255)->defaultValue(''),
+            'bacsHashcode' => $this->string(255)->defaultValue(''),
+            'percentageOfWorkingDaysPaidAsNormal' => $this->double()->defaultValue(0),
+            'workingDaysNotPaidAsNormal' => $this->double()->defaultValue(0),
+            'payPeriod' => $this->string(255)->defaultValue(''),
+            'ordinal' => $this->integer()->defaultValue(1),
+            'period' => $this->integer()->defaultValue(1),
+            'isNewStarter' => $this->boolean(),
+            'unpaidAbsence' => $this->boolean(),
+            'hasAttachmentOrders' => $this->boolean(),
+            'paymentDate' => $this->dateTime(),
+            'priorPayrollCode' => $this->string(255)->defaultValue(''),
+            // @TODO: create own table
+            'payOptions' => $this->longText(),
+            // @TODO: create own table
+            'pensionSummary' => $this->longText(),
+            // @TODO: create own table
+            'totals' => $this->longText(),
+            // @TODO: create own table
+            'periodOverrides' => $this->longText(),
+            // @TODO: create own table
+            'totalsYtd' => $this->longText(),
+            // @TODO: create own table
+            'totalsYtdOverrides' => $this->longText(),
+            'forcedCisVatAmount' => $this->double()->defaultValue(0),
+            'holidayAccured' => $this->double()->defaultValue(0),
+            'state' => $this->string(255)->defaultValue('Open'),
+            'isClosed' => $this->boolean(),
+            'manualNi' => $this->boolean(),
+            // @TODO: create own table
+            'nationalInsuranceCalculation' => $this->longText(),
+            'payrollCodeChanged' => $this->boolean(),
+            'aeNotEnroledWarning' => $this->boolean(),
+            'fps' => $this->longText(),
+            'receivingOffsetPay' => $this->boolean(),
+            'paymentAfterLearning' => $this->boolean(),
+            // @TODO: create own table
+            'umbrellaPayment' => $this->longText(),
+            // @TODO: create own table
+            'employee' => $this->longText(),
+            'pdf' => $this->string()->defaultValue(''),
+            'employerId' => $this->integer()->notNull()->defaultValue(null),
+            'employeeId' => $this->integer()->notNull()->defaultValue(null),
+        ]);
 
-        // staff_payrun_log table
-        $tableSchema = Craft::$app->db->schema->getTableSchema(Table::STAFF_PAYRUN_LOG);
-        if ($tableSchema === null) {
-            $tablesCreated = true;
-            $this->createTable(
-                Table::STAFF_PAYRUN_LOG,
-                [
-                    'id' => $this->primaryKey(),
-                    'dateCreated' => $this->dateTime()->notNull(),
-                    'dateUpdated' => $this->dateTime()->notNull(),
-                    'uid' => $this->uid(),
-                    'siteId' => $this->integer()->notNull(),
-                    // Custom columns in the table
-                    'employeeCount' => $this->integer()->notNull()->defaultValue(0),
-                    'taxYear' => $this->string(255)->notNull()->defaultValue(''),
-                    'lastPeriodNumber' => $this->integer()->notNull()->defaultValue(0),
-                    'url' => $this->string(255)->notNull()->defaultValue(0),
-                    'employerId' => $this->integer()->notNull()->defaultValue(0),
-                    'payRunId' => $this->integer()->notNull()->defaultValue(0),
-                ]
-            );
-        }
+        $this->createTable(Table::STAFF_PERMISSIONS, [
+            'id' => $this->primaryKey(),
+            'dateCreated' => $this->dateTime()->notNull(),
+            'dateUpdated' => $this->dateTime()->notNull(),
+            'uid' => $this->uid(),
+            'name' => $this->string(255)->notNull()->defaultValue(''),
+        ]);
 
-        // staff_payrun table
-        $tableSchema = Craft::$app->db->schema->getTableSchema(Table::STAFF_PAYRUN);
-        if ($tableSchema === null) {
-            $tablesCreated = true;
-            $this->createTable(
-                Table::STAFF_PAYRUN,
-                [
-                    'id' => $this->primaryKey(),
-                    'dateCreated' => $this->dateTime()->notNull(),
-                    'dateUpdated' => $this->dateTime()->notNull(),
-                    'uid' => $this->uid(),
-                    'siteId' => $this->integer()->notNull(),
-                    // Custom columns in the table
-                    'staffologyId' => $this->string(255),
-                    'taxYear' => $this->string(255)->notNull()->defaultValue(''),
-                    'taxMonth' => $this->integer()->notNull()->defaultValue(0),
-                    'payPeriod' => $this->string(255)->notNull()->defaultValue(''),
-                    'ordinal' => $this->integer()->notNull()->defaultValue(1),
-                    'period' => $this->integer()->notNull()->defaultValue(1),
-                    'startDate' => $this->dateTime()->notNull(),
-                    'endDate' => $this->dateTime()->notNull(),
-                    'paymentDate' => $this->dateTime()->notNull(),
-                    'employeeCount' => $this->integer()->notNull()->defaultValue(0),
-                    'subContractorCount' => $this->integer()->notNull()->defaultValue(0),
-                    'totals' => $this->longText()->notNull(),
-                    'state' => $this->string(255)->notNull()->defaultValue(''),
-                    'isClosed' => $this->boolean()->notNull(),
-                    'dateClosed' => $this->dateTime(),
-                    'url' => $this->string()->defaultValue(''),
-                    'employerId' => $this->integer()->notNull()->defaultValue(null),
-                ]
-            );
-        }
-
-        // staff_payrunentries table
-        $tableSchema = Craft::$app->db->schema->getTableSchema(Table::STAFF_PAYRUNENTRIES);
-        if ($tableSchema === null) {
-            $tablesCreated = true;
-            $this->createTable(
-                Table::STAFF_PAYRUNENTRIES,
-                [
-                    'id' => $this->primaryKey(),
-                    'dateCreated' => $this->dateTime()->notNull(),
-                    'dateUpdated' => $this->dateTime()->notNull(),
-                    'uid' => $this->uid(),
-                    'siteId' => $this->integer()->notNull(),
-                    // Custom columns in the table
-                    'staffologyId' => $this->string(255)->notNull(),
-                    'payRunId' => $this->integer()->notNull()->defaultValue(0),
-                    'taxYear' => $this->string(255)->defaultValue(''),
-                    'startDate' => $this->dateTime(),
-                    'endDate' => $this->dateTime(),
-                    'note' => $this->longText(),
-                    'bacsSubReference' => $this->string(255)->defaultValue(''),
-                    'bacsHashcode' => $this->string(255)->defaultValue(''),
-                    'percentageOfWorkingDaysPaidAsNormal' => $this->double()->defaultValue(0),
-                    'workingDaysNotPaidAsNormal' => $this->double()->defaultValue(0),
-                    'payPeriod' => $this->string(255)->defaultValue(''),
-                    'ordinal' => $this->integer()->defaultValue(1),
-                    'period' => $this->integer()->defaultValue(1),
-                    'isNewStarter' => $this->boolean(),
-                    'unpaidAbsence' => $this->boolean(),
-                    'hasAttachmentOrders' => $this->boolean(),
-                    'paymentDate' => $this->dateTime(),
-                    'priorPayrollCode' => $this->string(255)->defaultValue(''),
-                    'payOptions' => $this->longText(),
-                    'pensionSummary' => $this->longText(),
-                    'totals' => $this->longText(),
-                    'periodOverrides' => $this->longText(),
-                    'totalsYtd' => $this->longText(),
-                    'totalsYtdOverrides' => $this->longText(),
-                    'forcedCisVatAmount' => $this->double()->defaultValue(0),
-                    'holidayAccured' => $this->double()->defaultValue(0),
-                    'state' => $this->string(255)->defaultValue('Open'),
-                    'isClosed' => $this->boolean(),
-                    'manualNi' => $this->boolean(),
-                    'nationalInsuranceCalculation' => $this->longText(),
-                    'payrollCodeChanged' => $this->boolean(),
-                    'aeNotEnroledWarning' => $this->boolean(),
-                    'fps' => $this->longText(),
-                    'receivingOffsetPay' => $this->boolean(),
-                    'paymentAfterLearning' => $this->boolean(),
-                    'umbrellaPayment' => $this->longText(),
-                    'employee' => $this->longText(),
-                    'pdf' => $this->string()->defaultValue(''),
-                    'employerId' => $this->integer()->notNull()->defaultValue(null),
-                    'employeeId' => $this->integer()->notNull()->defaultValue(null),
-                ]
-            );
-        }
-
-        // staff_hardinguser table
-        $tableSchema = Craft::$app->db->schema->getTableSchema(Table::STAFF_USERS);
-        if ($tableSchema === null) {
-            $tablesCreated = true;
-            $this->createTable(
-                Table::STAFF_USERS,
-                [
-                    'id' => $this->primaryKey(),
-                    'dateCreated' => $this->dateTime()->notNull(),
-                    'dateUpdated' => $this->dateTime()->notNull(),
-                    'uid' => $this->uid(),
-                    'siteId' => $this->integer()->notNull(),
-                    // Custom columns in the table
-                    'staffologyId' => $this->string(255)->notNull(),
-                    'metadata' => $this->longText()->notNull(),
-                ]
-            );
-        }
-
-        // staff_permissions table
-        $tableSchema = Craft::$app->db->schema->getTableSchema(Table::STAFF_PERMISSIONS);
-        if ($tableSchema === null) {
-            $tablesCreated = true;
-            $this->createTable(
-                Table::STAFF_PERMISSIONS,
-                [
-                    'id' => $this->primaryKey(),
-                    'dateCreated' => $this->dateTime()->notNull(),
-                    'dateUpdated' => $this->dateTime()->notNull(),
-                    'uid' => $this->uid(),
-                    // Custom columns in the table
-                    'name' => $this->string(255)->notNull()->defaultValue(''),
-                ]
-            );
-        }
-
-        // staff_permissions table
-        $tableSchema = Craft::$app->db->schema->getTableSchema(Table::STAFF_PERMISSIONS_USERS);
-        if ($tableSchema === null) {
-            $tablesCreated = true;
-            $this->createTable(
-                Table::STAFF_PERMISSIONS_USERS,
-                [
-                    'id' => $this->primaryKey(),
-                    'dateCreated' => $this->dateTime()->notNull(),
-                    'dateUpdated' => $this->dateTime()->notNull(),
-                    'uid' => $this->uid(),
-                    // Custom columns in the table
-                    'permissionId' => $this->integer()->notNull()->defaultValue(0),
-                    'userId' => $this->integer()->defaultValue(null),
-                    'employeeId' => $this->integer()->notNull()->defaultValue(0),
-                ]
-            );
-        }
-
-        // staff_request table
-        $tableSchema = Craft::$app->db->schema->getTableSchema(Table::STAFF_REQUESTS);
-        if ($tableSchema === null) {
-            $tablesCreated = true;
-            $this->createTable(
-                Table::STAFF_REQUESTS,
-                [
-                    'id' => $this->primaryKey(),
-                    'dateCreated' => $this->dateTime()->notNull(),
-                    'dateUpdated' => $this->dateTime()->notNull(),
-                    'dateAdministered' => $this->dateTime()->notNull(),
-                    'uid' => $this->uid(),
-                    'employerId' => $this->integer()->notNull(),
-                    'employeeId' => $this->integer()->notNull(),
-                    'administerId' => $this->integer()->notNull(),
-                    'data' => $this->longText(),
-                    'section' => $this->string()->notNull(),
-                    'element' => $this->string()->notNull(),
-                    'status' => $this->string()->notNull(),
-                    'note' => $this->string(255),
-                ]
-            );
-        }
-
-        // staff_history table
-        $tableSchema = Craft::$app->db->schema->getTableSchema(Table::STAFF_HISTORY);
-        if ($tableSchema === null) {
-            $tablesCreated = true;
-            $this->createTable(
-                Table::STAFF_HISTORY,
-                [
-                    'id' => $this->primaryKey(),
-                    'dateCreated' => $this->dateTime()->notNull(),
-                    'dateUpdated' => $this->dateTime()->notNull(),
-                    'uid' => $this->uid(),
-                    'employerId' => $this->integer()->notNull(),
-                    'employeeId' => $this->integer()->notNull(),
-                    'administerId' => $this->integer()->notNull(),
-                    'message' => $this->string(255)->notNull(),
-                    'type' => $this->string()->notNull(),
-                ]
-            );
-        }
+        $this->createTable(Table::STAFF_PERMISSIONS_USERS, [
+            'id' => $this->primaryKey(),
+            'dateCreated' => $this->dateTime()->notNull(),
+            'dateUpdated' => $this->dateTime()->notNull(),
+            'uid' => $this->uid(),
+            'permissionId' => $this->integer()->notNull()->defaultValue(0),
+            'userId' => $this->integer()->defaultValue(null),
+            'employeeId' => $this->integer()->notNull()->defaultValue(0),
+        ]);
 
         // staff_personal_details table
         // TODO:
@@ -369,38 +269,77 @@ class Install extends Migration
         //      },
         //      "PartnerDetails": null
         //    },
-        $tableSchema = Craft::$app->db->schema->getTableSchema(Table::STAFF_PERSONAL_DETAILS);
-        if ($tableSchema === null) {
-            $tablesCreated = true;
-            $this->createTable(
-                Table::STAFF_PERSONAL_DETAILS,
-                [
-                    'id' => $this->primaryKey(),
-                    'employeeId' => $this->integer()->notNull(),
-                    'maritalStatus' => $this->string(255)->notNull(),
-                    'title' => $this->string(255),
-                    'firstName' => $this->string(255)->notNull(),
-                    'middleName' => $this->string(255),
-                    'lastName' => $this->string(255)->notNull(),
-                    'email' => $this->string(255)->notNull(),
-                    'emailPayslip' => $this->boolean()->notNull(),
-                    'passwordProtectPayslip' => $this->boolean()->notNull(),
-                    'pdfPassword' => $this->string(255),
-                    'telephone' => $this->string(255),
-                    'mobile' => $this->string(255),
-                    'dob' => $this->dateTime()->notNull(),
-                    'statePensionAge' => $this->int()->notNull(),
-                    'gender' => $this->string(255)->notNull(),
-                    'niNumber' => $this->string(255)->notNull(),
-                    'passportNumber' => $this->string(255)->notNull(),
-                ]
-            );
-        }
+        $this->createTable(Table::STAFF_PERSONAL_DETAILS,
+            [
+                'id' => $this->primaryKey(),
+                'employeeId' => $this->integer()->notNull(),
+                'maritalStatus' => $this->string(255)->notNull(),
+                'title' => $this->string(255),
+                'firstName' => $this->string(255)->notNull(),
+                'middleName' => $this->string(255),
+                'lastName' => $this->string(255)->notNull(),
+                'email' => $this->string(255)->notNull(),
+                'emailPayslip' => $this->boolean()->notNull(),
+                'passwordProtectPayslip' => $this->boolean()->notNull(),
+                'pdfPassword' => $this->string(255),
+                'telephone' => $this->string(255),
+                'mobile' => $this->string(255),
+                'dob' => $this->dateTime()->notNull(),
+                'statePensionAge' => $this->int()->notNull(),
+                'gender' => $this->string(255)->notNull(),
+                'niNumber' => $this->string(255)->notNull(),
+                'passportNumber' => $this->string(255)->notNull(),
+            ]
+        );
 
+        $this->createTable(Table::STAFF_REQUESTS, [
+            'id' => $this->primaryKey(),
+            'dateCreated' => $this->dateTime()->notNull(),
+            'dateUpdated' => $this->dateTime()->notNull(),
+            'dateAdministered' => $this->dateTime()->notNull(),
+            'uid' => $this->uid(),
+            'employerId' => $this->integer()->notNull(),
+            'employeeId' => $this->integer()->notNull(),
+            'administerId' => $this->integer()->notNull(),
+            'data' => $this->longText(),
+            'section' => $this->string()->notNull(),
+            'element' => $this->string()->notNull(),
+            'status' => $this->string()->notNull(),
+            'note' => $this->string(255),
+        ]);
 
+        $this->createTable(Table::STAFF_USERS, [
+            'id' => $this->primaryKey(),
+            'dateCreated' => $this->dateTime()->notNull(),
+            'dateUpdated' => $this->dateTime()->notNull(),
+            'uid' => $this->uid(),
+            // @TODO: drop siteId in migration
+            'siteId' => $this->integer()->notNull(),
+            // Custom columns in the table
+            'staffologyId' => $this->string(255)->notNull(),
+            // @TODO: create own table
+            'metadata' => $this->longText()->notNull(),
+        ]);
 
-        return $tablesCreated;
     }
+
+    public function dropTables() {
+        $this->dropTableIfExists(Table::STAFF_EMPLOYEES);
+        $this->dropTableIfExists(Table::STAFF_EMPLOYERS);
+        $this->dropTableIfExists(Table::STAFF_HISTORY);
+        $this->dropTableIfExists(Table::STAFF_PAYRUN);
+        $this->dropTableIfExists(Table::STAFF_PAYRUN_LOG);
+        $this->dropTableIfExists(Table::STAFF_PAYRUNENTRIES);
+        $this->dropTableIfExists(Table::STAFF_PERMISSIONS);
+        $this->dropTableIfExists(Table::STAFF_PERMISSIONS_USERS);
+        $this->dropTableIfExists(Table::STAFF_PERSONAL_DETAILS);
+        $this->dropTableIfExists(Table::STAFF_REQUESTS);
+        $this->dropTableIfExists(Table::STAFF_USERS);
+    }
+
+    // Protected Methods
+    // =========================================================================
+
 
     /**
      * Creates the indexes needed for the Records used by the plugin
