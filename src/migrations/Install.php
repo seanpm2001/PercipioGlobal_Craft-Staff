@@ -8,10 +8,10 @@
  * @copyright Copyright (c) 2021 Percipio
  */
 
-namespace percipiolondon\craftstaff\migrations;
+namespace percipiolondon\staff\migrations;
 
 use craft\helpers\MigrationHelper;
-use percipiolondon\craftstaff\db\Table;
+use percipiolondon\staff\db\Table;
 
 use Craft;
 use craft\config\DbConfig;

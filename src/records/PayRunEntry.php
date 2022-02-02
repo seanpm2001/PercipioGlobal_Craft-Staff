@@ -8,14 +8,14 @@
  * @copyright Copyright (c) 2021 Percipio
  */
 
-namespace percipiolondon\craftstaff\records;
+namespace percipiolondon\staff\records;
 
 use craft\validators\DateTimeValidator;
-use percipiolondon\craftstaff\Craftstaff;
+use percipiolondon\staff\Staff;
 
 use Craft;
 use craft\db\ActiveRecord;
-use percipiolondon\craftstaff\db\Table;
+use percipiolondon\staff\db\Table;
 
 /**
  * PayRunEntry Record
@@ -30,7 +30,7 @@ use percipiolondon\craftstaff\db\Table;
  * http://www.yiiframework.com/doc-2.0/guide-db-active-record.html
  *
  * @author    Percipio
- * @package   Craftstaff
+ * @package   Staff
  * @since     1.0.0-alpha.1
  *
  *

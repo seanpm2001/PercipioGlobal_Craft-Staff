@@ -8,16 +8,16 @@
  * @copyright Copyright (c) 2021 Percipio
  */
 
-namespace percipiolondon\craftstaff\elements;
+namespace percipiolondon\staff\elements;
 
-use percipiolondon\craftstaff\Craftstaff;
+use percipiolondon\staff\Staff;
 
 use Craft;
 use craft\base\Element;
 use craft\elements\db\ElementQuery;
 use craft\elements\db\ElementQueryInterface;
-use percipiolondon\craftstaff\elements\db\PayRunQuery;
-use percipiolondon\craftstaff\records\PayRun as PayRunRecord;
+use percipiolondon\staff\elements\db\PayRunQuery;
+use percipiolondon\staff\records\PayRun as PayRunRecord;
 use yii\db\Exception;
 
 /**
@@ -61,7 +61,7 @@ use yii\db\Exception;
  * http://pixelandtonic.com/blog/craft-element-types
  *
  * @author    Percipio
- * @package   Craftstaff
+ * @package   Staff
  * @since     1.0.0-alpha.1
  */
 class PayRun extends Element

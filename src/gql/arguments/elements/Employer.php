@@ -1,6 +1,6 @@
 <?php
 
-namespace percipiolondon\craftstaff\gql\arguments\elements;
+namespace percipiolondon\staff\gql\arguments\elements;
 
 use Craft;
 use craft\gql\base\ElementArguments;

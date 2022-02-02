@@ -8,9 +8,9 @@
  * @copyright Copyright (c) 2021 Percipio
  */
 
-namespace percipiolondon\craftstaff\elements;
+namespace percipiolondon\staff\elements;
 
-use percipiolondon\craftstaff\Craftstaff;
+use percipiolondon\staff\Staff;
 
 use Craft;
 use craft\base\Element;
@@ -58,7 +58,7 @@ use craft\elements\db\ElementQueryInterface;
  * http://pixelandtonic.com/blog/craft-element-types
  *
  * @author    Percipio
- * @package   Craftstaff
+ * @package   Staff
  * @since     1.0.0-alpha.1
  */
 class HardingUser extends Element

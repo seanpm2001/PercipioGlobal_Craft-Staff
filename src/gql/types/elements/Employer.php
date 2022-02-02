@@ -5,15 +5,15 @@
  * @license https://craftcms.github.io/license/
  */
 
-namespace percipiolondon\craftstaff\gql\types\elements;
+namespace percipiolondon\staff\gql\types\elements;
 
 use craft\gql\types\elements\Element;
 use craft\helpers\Json;
 
 use GraphQL\Type\Definition\ResolveInfo;
 
-use percipiolondon\craftstaff\elements\Employer as EmployerElement;
-use percipiolondon\craftstaff\gql\interfaces\elements\Employer as EmployerInterface;
+use percipiolondon\staff\elements\Employer as EmployerElement;
+use percipiolondon\staff\gql\interfaces\elements\Employer as EmployerInterface;
 
 
 /**

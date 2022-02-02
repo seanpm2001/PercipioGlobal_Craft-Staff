@@ -1,14 +1,14 @@
 <?php
 
-namespace percipiolondon\craftstaff\gql\types\elements;
+namespace percipiolondon\staff\gql\types\elements;
 
 use craft\gql\types\elements\Element;
 use craft\helpers\Json;
 
 use GraphQL\Type\Definition\ResolveInfo;
 
-use percipiolondon\craftstaff\elements\Employee as EmployeeElement;
-use percipiolondon\craftstaff\gql\interfaces\elements\Employee as EmployeeInterface;
+use percipiolondon\staff\elements\Employee as EmployeeElement;
+use percipiolondon\staff\gql\interfaces\elements\Employee as EmployeeInterface;
 
 /**
  * Class Employee

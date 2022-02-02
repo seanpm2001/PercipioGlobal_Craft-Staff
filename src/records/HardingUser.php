@@ -8,9 +8,9 @@
  * @copyright Copyright (c) 2021 Percipio
  */
 
-namespace percipiolondon\craftstaff\records;
+namespace percipiolondon\staff\records;
 
-use percipiolondon\craftstaff\Craftstaff;
+use percipiolondon\staff\Staff;
 
 use Craft;
 use craft\db\ActiveRecord;
@@ -28,7 +28,7 @@ use craft\db\ActiveRecord;
  * http://www.yiiframework.com/doc-2.0/guide-db-active-record.html
  *
  * @author    Percipio
- * @package   Craftstaff
+ * @package   Staff
  * @since     1.0.0-alpha.1
  */
 class HardingUser extends ActiveRecord
@@ -50,6 +50,6 @@ class HardingUser extends ActiveRecord
      */
     public static function tableName()
     {
-        return '{{%craftstaff_hardinguser}}';
+        return '{{%staff_hardinguser}}';
     }
 }

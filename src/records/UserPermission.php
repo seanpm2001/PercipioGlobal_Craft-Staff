@@ -8,14 +8,14 @@
  * @copyright Copyright (c) 2021 Percipio
  */
 
-namespace percipiolondon\craftstaff\records;
+namespace percipiolondon\staff\records;
 
-use percipiolondon\craftstaff\Craftstaff;
+use percipiolondon\staff\Staff;
 
 use Craft;
 use DateTime;
 use craft\db\ActiveRecord;
-use percipiolondon\craftstaff\db\Table;
+use percipiolondon\staff\db\Table;
 
 /**
  * Company Record

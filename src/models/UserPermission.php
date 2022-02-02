@@ -1,9 +1,9 @@
 <?php
 
-namespace  percipiolondon\craftstaff\models;
+namespace  percipiolondon\staff\models;
 
 use craft\base\Model;
-use percipiolondon\craftstaff\Craftstaff;
+use percipiolondon\staff\Staff;
 
 class UserPermission extends Model
 {
@@ -26,7 +26,7 @@ class UserPermission extends Model
 //    {
 //        if($this->permissionId && $this->userId && $companyId)
 //        {
-//            return Craftstaff::$plugin->userPermissions->applyCanParam($this->permissionId, $this->userId, $companyId);
+//            return Staff::$plugin->userPermissions->applyCanParam($this->permissionId, $this->userId, $companyId);
 //        }
 //
 //        return false;

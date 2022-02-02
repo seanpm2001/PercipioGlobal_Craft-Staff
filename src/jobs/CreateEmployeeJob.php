@@ -1,15 +1,15 @@
 <?php
 
-namespace percipiolondon\craftstaff\jobs;
+namespace percipiolondon\staff\jobs;
 
 use Craft;
 use craft\elements\User;
 use craft\helpers\Json;
 use craft\queue\BaseJob;
-use percipiolondon\craftstaff\Craftstaff;
-use percipiolondon\craftstaff\records\Employee as EmployeeRecord;
-use percipiolondon\craftstaff\elements\Employee;
-use percipiolondon\craftstaff\records\Permission;
+use percipiolondon\staff\Staff;
+use percipiolondon\staff\records\Employee as EmployeeRecord;
+use percipiolondon\staff\elements\Employee;
+use percipiolondon\staff\records\Permission;
 use yii\db\Exception;
 
 class CreateEmployeeJob extends BaseJob

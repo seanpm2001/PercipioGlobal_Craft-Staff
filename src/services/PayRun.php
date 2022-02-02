@@ -8,19 +8,19 @@
  * @copyright Copyright (c) 2021 Percipio
  */
 
-namespace percipiolondon\craftstaff\services;
+namespace percipiolondon\staff\services;
 
 use craft\helpers\Queue;
-use percipiolondon\craftstaff\Craftstaff;
+use percipiolondon\staff\Staff;
 
 use Craft;
 use craft\base\Component;
-use percipiolondon\craftstaff\jobs\CreatePayRunJob;
-use percipiolondon\craftstaff\jobs\FetchPaySlip;
-use percipiolondon\craftstaff\records\Employer;
-use percipiolondon\craftstaff\records\PayRunLog as PayRunLogRecord;
-use percipiolondon\craftstaff\records\PayRun as PayRunRecord;
-use percipiolondon\craftstaff\records\PayRunEntry as PayRunEntryRecord;
+use percipiolondon\staff\jobs\CreatePayRunJob;
+use percipiolondon\staff\jobs\FetchPaySlip;
+use percipiolondon\staff\records\Employer;
+use percipiolondon\staff\records\PayRunLog as PayRunLogRecord;
+use percipiolondon\staff\records\PayRun as PayRunRecord;
+use percipiolondon\staff\records\PayRunEntry as PayRunEntryRecord;
 use yii\base\BaseObject;
 
 /**
@@ -33,7 +33,7 @@ use yii\base\BaseObject;
  * https://craftcms.com/docs/plugins/services
  *
  * @author    Percipio
- * @package   Craftstaff
+ * @package   Staff
  * @since     1.0.0-alpha.1
  */
 class PayRun extends Component
@@ -47,14 +47,14 @@ class PayRun extends Component
      *
      * From any other plugin file, call it like this:
      *
-     *     Craftstaff::$plugin->payRun->exampleService()
+     *     Staff::$plugin->payRun->exampleService()
      *
      * @return mixed
      */
     public function fetch()
     {
-        $api = Craft::parseEnv(Craftstaff::$plugin->getSettings()->staffologyApiKey);
-        $credentials = base64_encode("craftstaff:".$api);
+        $api = Craft::parseEnv(Staff::$plugin->getSettings()->staffologyApiKey);
+        $credentials = base64_encode('staff:'.$api);
         $headers = [
             'headers' => [
                 'Authorization' => 'Basic ' . $credentials,
@@ -96,8 +96,8 @@ class PayRun extends Component
 
     public function fetchPayslips()
     {
-        $api = Craft::parseEnv(Craftstaff::$plugin->getSettings()->staffologyApiKey);
-        $credentials = base64_encode("craftstaff:".$api);
+        $api = Craft::parseEnv(Staff::$plugin->getSettings()->staffologyApiKey);
+        $credentials = base64_encode('staff:'.$api);
         $headers = [
             'headers' => [
                 'Authorization' => 'Basic ' . $credentials,

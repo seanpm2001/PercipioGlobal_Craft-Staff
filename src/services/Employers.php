@@ -8,12 +8,12 @@
  * @copyright Copyright (c) 2021 Percipio
  */
 
-namespace percipiolondon\craftstaff\services;
+namespace percipiolondon\staff\services;
 
-use percipiolondon\craftstaff\helpers\AssetHelper;
-use percipiolondon\craftstaff\Craftstaff;
-use percipiolondon\craftstaff\records\Employer as EmployerRecord;
-use percipiolondon\craftstaff\elements\Employer;
+use percipiolondon\staff\helpers\AssetHelper;
+use percipiolondon\staff\Staff;
+use percipiolondon\staff\records\Employer as EmployerRecord;
+use percipiolondon\staff\elements\Employer;
 
 use Craft;
 use craft\base\Component;
@@ -29,7 +29,7 @@ use craft\helpers\Json;
  * https://craftcms.com/docs/plugins/services
  *
  * @author    Percipio
- * @package   Craftstaff
+ * @package   Staff
  * @since     1.0.0-alpha.1
  */
 class Employers extends Component
@@ -43,13 +43,13 @@ class Employers extends Component
      *
      * From any other plugin file, call it like this:
      *
-     *     Craftstaff::$plugin->employers->exampleService()
+     *     Staff::$plugin->employers->exampleService()
      *
      * @return mixed
      */
     public function fetch()
     {
-        $api = Craft::parseEnv(Craftstaff::$plugin->getSettings()->staffologyApiKey);
+        $api = Craft::parseEnv(Staff::$plugin->getSettings()->staffologyApiKey);
 
         if(!$api) {
             Craft::error("There is no staffology API key set");
@@ -59,7 +59,7 @@ class Employers extends Component
 
             // connection props
             $base_url = 'https://api.staffology.co.uk/employers';
-            $credentials = base64_encode("craftstaff:".$api);
+            $credentials = base64_encode('staff:'.$api);
             $headers = [
                 'headers' => [
                     'Authorization' => 'Basic ' . $credentials,

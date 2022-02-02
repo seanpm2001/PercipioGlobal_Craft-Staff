@@ -8,18 +8,18 @@
  * @copyright Copyright (c) 2021 Percipio
  */
 
-namespace percipiolondon\craftstaff\elements;
+namespace percipiolondon\staff\elements;
 
-use percipiolondon\craftstaff\Craftstaff;
+use percipiolondon\staff\Staff;
 
 use Craft;
 use craft\elements\User;
 use craft\base\Element;
 use craft\elements\db\ElementQuery;
 use craft\elements\db\ElementQueryInterface;
-use percipiolondon\craftstaff\elements\db\EmployeeQuery;
-use percipiolondon\craftstaff\records\Employee as EmployeeRecord;
-use percipiolondon\craftstaff\records\Permission;
+use percipiolondon\staff\elements\db\EmployeeQuery;
+use percipiolondon\staff\records\Employee as EmployeeRecord;
+use percipiolondon\staff\records\Permission;
 
 /**
  * Employee Element
@@ -62,7 +62,7 @@ use percipiolondon\craftstaff\records\Permission;
  * http://pixelandtonic.com/blog/craft-element-types
  *
  * @author    Percipio
- * @package   Craftstaff
+ * @package   Staff
  * @since     1.0.0-alpha.1
  */
 class Employee extends Element
@@ -524,7 +524,7 @@ class Employee extends Element
                     $permissions = [Permission::findOne(['name' => 'access:employer'])];
                 }
 
-                Craftstaff::$plugin->userPermissions->createPermissions($permissions, $this->userId, $this->id);
+                Staff::$plugin->userPermissions->createPermissions($permissions, $this->userId, $this->id);
             }
 
         } catch (\Exception $e) {

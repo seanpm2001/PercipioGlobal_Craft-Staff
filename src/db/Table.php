@@ -1,6 +1,6 @@
 <?php
 
-namespace percipiolondon\craftstaff\db;
+namespace percipiolondon\staff\db;
 
 abstract class Table
 {

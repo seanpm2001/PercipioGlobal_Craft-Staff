@@ -1,11 +1,11 @@
 <?php
 
-namespace percipiolondon\craftstaff\migrations;
+namespace percipiolondon\staff\migrations;
 
 use Craft;
 use craft\db\Migration;
 use craft\helpers\MigrationHelper;
-use percipiolondon\craftstaff\db\Table;
+use percipiolondon\staff\db\Table;
 use yii\base\NotSupportedException;
 
 /**

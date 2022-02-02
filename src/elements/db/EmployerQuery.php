@@ -1,6 +1,6 @@
 <?php
 
-namespace percipiolondon\craftstaff\elements\db;
+namespace percipiolondon\staff\elements\db;
 
 use craft\db\Query;
 use craft\db\QueryAbortedException;

@@ -1,6 +1,6 @@
 <?php
 
-namespace percipiolondon\craftstaff\gql\types\generators;
+namespace percipiolondon\staff\gql\types\generators;
 
 use Craft;
 
@@ -11,10 +11,10 @@ use craft\gql\base\SingleGeneratorInterface;
 use craft\gql\GqlEntityRegistry;
 use craft\gql\TypeManager;
 
-use percipiolondon\craftstaff\gql\arguments\elements\PayRun as PayRunArguments;
-use percipiolondon\craftstaff\elements\PayRun as PayRunElement;
-use percipiolondon\craftstaff\gql\interfaces\elements\PayRun as PayRunInterface;
-use percipiolondon\craftstaff\gql\types\elements\PayRun;
+use percipiolondon\staff\gql\arguments\elements\PayRun as PayRunArguments;
+use percipiolondon\staff\elements\PayRun as PayRunElement;
+use percipiolondon\staff\gql\interfaces\elements\PayRun as PayRunInterface;
+use percipiolondon\staff\gql\types\elements\PayRun;
 
 /**
  * Class PayRunType

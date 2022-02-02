@@ -1,11 +1,11 @@
 <?php
 
-namespace percipiolondon\craftstaff\plugin;
+namespace percipiolondon\staff\plugin;
 
-use percipiolondon\craftstaff\services\Employees;
-use percipiolondon\craftstaff\services\Employers;
-use percipiolondon\craftstaff\services\PayRun;
-use percipiolondon\craftstaff\services\UserPermissions;
+use percipiolondon\staff\services\Employees;
+use percipiolondon\staff\services\Employers;
+use percipiolondon\staff\services\PayRun;
+use percipiolondon\staff\services\UserPermissions;
 
 trait Services
 {

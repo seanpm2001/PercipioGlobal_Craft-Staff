@@ -1,12 +1,12 @@
 <?php
 
-namespace percipiolondon\craftstaff\jobs;
+namespace percipiolondon\staff\jobs;
 
 use Craft;
 use craft\queue\BaseJob;
-use percipiolondon\craftstaff\records\Employee;
-use percipiolondon\craftstaff\records\PayRunEntry as PayRunEntryRecord;
-use percipiolondon\craftstaff\elements\PayRunEntry;
+use percipiolondon\staff\records\Employee;
+use percipiolondon\staff\records\PayRunEntry as PayRunEntryRecord;
+use percipiolondon\staff\elements\PayRunEntry;
 use craft\helpers\Queue;
 
 class CreatePayRunEntryJob extends Basejob

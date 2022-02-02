@@ -1,6 +1,6 @@
 <?php
 
-namespace percipiolondon\craftstafftests\acceptance;
+namespace percipiolondon\stafftests\acceptance;
 
 use Craft;
 use FunctionalTester;

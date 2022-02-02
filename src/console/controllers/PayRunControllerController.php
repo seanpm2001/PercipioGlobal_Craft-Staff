@@ -8,9 +8,9 @@
  * @copyright Copyright (c) 2021 Percipio
  */
 
-namespace percipiolondon\craftstaff\console\controllers;
+namespace percipiolondon\staff\console\controllers;
 
-use percipiolondon\craftstaff\Craftstaff;
+use percipiolondon\staff\Staff;
 
 use Craft;
 use craft\console\Controller;
@@ -32,7 +32,7 @@ use craft\console\Controller;
  * https://craftcms.com/docs/plugins/controllers
  *
  * @author    Percipio
- * @package   Craftstaff
+ * @package   Staff
  * @since     1.0.0-alpha.1
  */
 class PayRunControllerController extends Controller
@@ -46,11 +46,11 @@ class PayRunControllerController extends Controller
      */
     public function actionFetch()
     {
-        return  Craftstaff::$plugin->payRun->fetch();
+        return  Staff::$plugin->payRun->fetch();
     }
 
     public function actionFetchPayslips()
     {
-        return  Craftstaff::$plugin->payRun->fetchPayslips();
+        return  Staff::$plugin->payRun->fetchPayslips();
     }
 }

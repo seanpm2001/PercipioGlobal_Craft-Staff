@@ -1,6 +1,6 @@
 <?php
 
-namespace percipiolondon\craftstaff\gql\types\generators;
+namespace percipiolondon\staff\gql\types\generators;
 
 use Craft;
 
@@ -11,10 +11,10 @@ use craft\gql\base\SingleGeneratorInterface;
 use craft\gql\GqlEntityRegistry;
 use craft\gql\TypeManager;
 
-use percipiolondon\craftstaff\gql\arguments\elements\Employee as EmployeeArguments;
-use percipiolondon\craftstaff\elements\Employee as EmployeeElement;
-use percipiolondon\craftstaff\gql\interfaces\elements\Employee as EmployeeInterface;
-use percipiolondon\craftstaff\gql\types\elements\Employee;
+use percipiolondon\staff\gql\arguments\elements\Employee as EmployeeArguments;
+use percipiolondon\staff\elements\Employee as EmployeeElement;
+use percipiolondon\staff\gql\interfaces\elements\Employee as EmployeeInterface;
+use percipiolondon\staff\gql\types\elements\Employee;
 
 /**
  * Class EmployeeType

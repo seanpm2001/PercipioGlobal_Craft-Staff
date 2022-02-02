@@ -1,6 +1,6 @@
 <?php
 
-namespace percipiolondon\craftstaff\gql\interfaces\elements;
+namespace percipiolondon\staff\gql\interfaces\elements;
 
 use craft\gql\GqlEntityRegistry;
 use craft\gql\interfaces\Element;
@@ -14,14 +14,14 @@ use GraphQL\Type\Definition\InterfaceType;
 use GraphQL\Type\Definition\ResolveInfo;
 use GraphQL\Type\Definition\Type;
 
-use percipiolondon\craftstaff\gql\types\generators\PayRunEntryType;
-use percipiolondon\craftstaff\gql\types\NationalInsuranceCalculation;
-use percipiolondon\craftstaff\gql\types\PayOptions;
-use percipiolondon\craftstaff\gql\types\PayRunTotals;
-use percipiolondon\craftstaff\gql\types\PensionSummary;
-use percipiolondon\craftstaff\gql\types\UmbrellaPayment;
-use percipiolondon\craftstaff\gql\types\ValueOverride;
-use percipiolondon\craftstaff\gql\types\Employee;
+use percipiolondon\staff\gql\types\generators\PayRunEntryType;
+use percipiolondon\staff\gql\types\NationalInsuranceCalculation;
+use percipiolondon\staff\gql\types\PayOptions;
+use percipiolondon\staff\gql\types\PayRunTotals;
+use percipiolondon\staff\gql\types\PensionSummary;
+use percipiolondon\staff\gql\types\UmbrellaPayment;
+use percipiolondon\staff\gql\types\ValueOverride;
+use percipiolondon\staff\gql\types\Employee;
 
 
 class PayRunEntry extends Element

@@ -1,6 +1,6 @@
 <?php
 
-namespace percipiolondon\craftstaff\helpers;
+namespace percipiolondon\staff\helpers;
 
 use Cake\Utility\Hash;
 use Craft;
@@ -176,7 +176,7 @@ class AssetHelper
      */
     private static function createTempPath()
     {
-        $tempPath = Craft::$app->getPath()->getTempPath() . '/craftstaff/';
+        $tempPath = Craft::$app->getPath()->getTempPath() . '/staff/';
 
         if (!is_dir($tempPath)) {
             FileHelper::createDirectory($tempPath);

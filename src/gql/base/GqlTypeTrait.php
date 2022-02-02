@@ -5,7 +5,7 @@
  * @license https://craftcms.github.io/license/
  */
 
-namespace percipiolondon\craftstaff\gql\base;
+namespace percipiolondon\staff\gql\base;
 
 use craft\gql\GqlEntityRegistry;
 use GraphQL\Type\Definition\ObjectType as GqlObjectType;

@@ -8,9 +8,9 @@
  * @copyright Copyright (c) 2021 Percipio
  */
 
-namespace percipiolondon\craftstaff\services;
+namespace percipiolondon\staff\services;
 
-use percipiolondon\craftstaff\Craftstaff;
+use percipiolondon\staff\Staff;
 
 use Craft;
 use craft\base\Component;
@@ -25,7 +25,7 @@ use craft\base\Component;
  * https://craftcms.com/docs/plugins/services
  *
  * @author    Percipio
- * @package   Craftstaff
+ * @package   Staff
  * @since     1.0.0-alpha.1
  */
 class HardingUsers extends Component
@@ -39,7 +39,7 @@ class HardingUsers extends Component
      *
      * From any other plugin file, call it like this:
      *
-     *     Craftstaff::$plugin->hardingUsers->exampleService()
+     *     Staff::$plugin->hardingUsers->exampleService()
      *
      * @return mixed
      */
@@ -47,7 +47,7 @@ class HardingUsers extends Component
     {
         $result = 'something';
         // Check our Plugin's settings for `someAttribute`
-        if (Craftstaff::$plugin->getSettings()->someAttribute) {
+        if (Staff::$plugin->getSettings()->someAttribute) {
         }
 
         return $result;

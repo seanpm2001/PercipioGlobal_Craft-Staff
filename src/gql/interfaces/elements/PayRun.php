@@ -1,6 +1,6 @@
 <?php
 
-namespace percipiolondon\craftstaff\gql\interfaces\elements;
+namespace percipiolondon\staff\gql\interfaces\elements;
 
 use craft\gql\GqlEntityRegistry;
 use craft\gql\interfaces\Element;
@@ -14,8 +14,8 @@ use GraphQL\Type\Definition\InterfaceType;
 use GraphQL\Type\Definition\ResolveInfo;
 use GraphQL\Type\Definition\Type;
 
-use percipiolondon\craftstaff\gql\types\PayRunTotals;
-use percipiolondon\craftstaff\gql\types\generators\PayRunType;
+use percipiolondon\staff\gql\types\PayRunTotals;
+use percipiolondon\staff\gql\types\generators\PayRunType;
 
 
 class PayRun extends Element

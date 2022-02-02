@@ -8,7 +8,7 @@
  * @copyright Copyright (c) 2021 Percipio
  */
 
-namespace percipiolondon\craftstaff;
+namespace percipiolondon\staff;
 
 use Craft;
 use craft\base\Plugin;
@@ -23,27 +23,27 @@ use craft\services\Gql;
 use GraphQL\Type\Definition\ObjectType;
 use GraphQL\Type\Definition\Type;
 
-use percipiolondon\craftstaff\elements\db\PayRunEntryQuery;
-use percipiolondon\craftstaff\services\Employers as EmployersService;
-use percipiolondon\craftstaff\services\Employees as EmployeesService;
-use percipiolondon\craftstaff\services\PayRun as PayRunService;
-use percipiolondon\craftstaff\services\PayRunEntries as PayRunEntriesService;
-use percipiolondon\craftstaff\services\HardingUsers as HardingUsersService;
-use percipiolondon\craftstaff\models\Settings;
-use percipiolondon\craftstaff\elements\Employer as EmployerElement;
-use percipiolondon\craftstaff\elements\Employee as EmployeeElement;
-use percipiolondon\craftstaff\elements\PayRun as PayRunElement;
-use percipiolondon\craftstaff\elements\PayRunEntry as PayRunEntryElement;
-use percipiolondon\craftstaff\elements\HardingUser as HardingUserElement;
-use percipiolondon\craftstaff\gql\queries\Employer as EmployerQueries;
-use percipiolondon\craftstaff\gql\queries\Employee as EmployeeQueries;
-use percipiolondon\craftstaff\gql\queries\PayRun as PayRunQueries;
-use percipiolondon\craftstaff\gql\queries\PayRunEntry as PayRunEntryQueries;
-use percipiolondon\craftstaff\gql\interfaces\elements\Employer as EmployerInterface;
-use percipiolondon\craftstaff\gql\interfaces\elements\Employee as EmployeeInterface;
-use percipiolondon\craftstaff\gql\interfaces\elements\PayRun as PayRunInterface;
-use percipiolondon\craftstaff\gql\interfaces\elements\PayRunEntry as PayRunEntryInterface;
-use percipiolondon\craftstaff\plugin\Services as StaffServices;
+use percipiolondon\staff\elements\db\PayRunEntryQuery;
+use percipiolondon\staff\services\Employers as EmployersService;
+use percipiolondon\staff\services\Employees as EmployeesService;
+use percipiolondon\staff\services\PayRun as PayRunService;
+use percipiolondon\staff\services\PayRunEntries as PayRunEntriesService;
+use percipiolondon\staff\services\HardingUsers as HardingUsersService;
+use percipiolondon\staff\models\Settings;
+use percipiolondon\staff\elements\Employer as EmployerElement;
+use percipiolondon\staff\elements\Employee as EmployeeElement;
+use percipiolondon\staff\elements\PayRun as PayRunElement;
+use percipiolondon\staff\elements\PayRunEntry as PayRunEntryElement;
+use percipiolondon\staff\elements\HardingUser as HardingUserElement;
+use percipiolondon\staff\gql\queries\Employer as EmployerQueries;
+use percipiolondon\staff\gql\queries\Employee as EmployeeQueries;
+use percipiolondon\staff\gql\queries\PayRun as PayRunQueries;
+use percipiolondon\staff\gql\queries\PayRunEntry as PayRunEntryQueries;
+use percipiolondon\staff\gql\interfaces\elements\Employer as EmployerInterface;
+use percipiolondon\staff\gql\interfaces\elements\Employee as EmployeeInterface;
+use percipiolondon\staff\gql\interfaces\elements\PayRun as PayRunInterface;
+use percipiolondon\staff\gql\interfaces\elements\PayRunEntry as PayRunEntryInterface;
+use percipiolondon\staff\plugin\Services as StaffServices;
 
 use yii\base\Event;
 
@@ -58,7 +58,7 @@ use yii\base\Event;
  * https://docs.craftcms.com/v3/extend/
  *
  * @author    Percipio
- * @package   Craftstaff
+ * @package   Staff
  * @since     0.2.0
  *
  * @property  EmployersService $employers
@@ -69,7 +69,7 @@ use yii\base\Event;
  * @property  Settings $settings
  * @method    Settings getSettings()
  */
-class Craftstaff extends Plugin
+class Staff extends Plugin
 {
     use StaffServices;
 
@@ -78,9 +78,9 @@ class Craftstaff extends Plugin
 
     /**
      * Static property that is an instance of this plugin class so that it can be accessed via
-     * Craftstaff::$plugin
+     * Staff::$plugin
      *
-     * @var Craftstaff
+     * @var Staff
      */
     public static $plugin;
 
@@ -113,7 +113,7 @@ class Craftstaff extends Plugin
 
     /**
      * Set our $plugin static property to this class so that it can be accessed via
-     * Craftstaff::$plugin
+     * Staff::$plugin
      *
      * Called after the plugin class is instantiated; do any one-time initialization
      * here such as hooks and events.
@@ -322,7 +322,7 @@ class Craftstaff extends Plugin
     {
         // Add in our console commands
         if (Craft::$app instanceof ConsoleApplication) {
-            $this->controllerNamespace = 'percipiolondon\craftstaff\console\controllers';
+            $this->controllerNamespace = 'percipiolondon\staff\console\controllers';
         }
     }
 }

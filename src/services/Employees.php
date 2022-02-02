@@ -8,7 +8,7 @@
  * @copyright Copyright (c) 2021 Percipio
  */
 
-namespace percipiolondon\craftstaff\services;
+namespace percipiolondon\staff\services;
 
 use Craft;
 use craft\base\Component;
@@ -16,12 +16,12 @@ use craft\elements\User;
 use craft\helpers\Json;
 use craft\helpers\Queue;
 
-use percipiolondon\craftstaff\Craftstaff;
-use percipiolondon\craftstaff\jobs\CreateEmployeeJob;
-use percipiolondon\craftstaff\records\Employee;
-use percipiolondon\craftstaff\records\Employer;
-use percipiolondon\craftstaff\records\Permission;
-use percipiolondon\craftstaff\records\UserPermission;
+use percipiolondon\staff\Staff;
+use percipiolondon\staff\jobs\CreateEmployeeJob;
+use percipiolondon\staff\records\Employee;
+use percipiolondon\staff\records\Employer;
+use percipiolondon\staff\records\Permission;
+use percipiolondon\staff\records\UserPermission;
 
 use yii\base\BaseObject;
 use yii\db\Exception;
@@ -36,7 +36,7 @@ use yii\db\Exception;
  * https://craftcms.com/docs/plugins/services
  *
  * @author    Percipio
- * @package   Craftstaff
+ * @package   Staff
  * @since     1.0.0-alpha.1
  */
 class Employees extends Component
@@ -50,17 +50,17 @@ class Employees extends Component
      *
      * From any other plugin file, call it like this:
      *
-     *     Craftstaff::$plugin->employees->exampleService()
+     *     Staff::$plugin->employees->exampleService()
      *
      * @return mixed
      */
     public function fetch()
     {
-        $apiKey = \Craft::parseEnv(Craftstaff::$plugin->getSettings()->staffologyApiKey);
+        $apiKey = \Craft::parseEnv(Staff::$plugin->getSettings()->staffologyApiKey);
 
         if ($apiKey) {
 
-            $credentials = base64_encode("craftstaff:" . $apiKey);
+            $credentials = base64_encode('staff:' . $apiKey);
             $headers = [
                 'headers' => [
                     'Authorization' => 'Basic ' . $credentials,

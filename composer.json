@@ -25,13 +25,12 @@
         "craftcms/cms": "^3.0.0"
     },
     "require-dev": {
-      "craftcms/cms": "^3.6.0",
       "codeception/codeception": "^3.0",
       "vlucas/phpdotenv": "^3.0"
     },
     "autoload": {
         "psr-4": {
-          "percipiolondon\\craftstaff\\": "src/"
+          "percipiolondon\\staff\\": "src/"
         }
     },
     "extra": {
@@ -42,12 +41,12 @@
         "documentationUrl": "https://github.com/percipioglobal/craft-staff/blob/master/README.md",
         "changelogUrl": "https://raw.githubusercontent.com/percipioglobal/craft-staff/master/CHANGELOG.md",
         "components": {
-            "employers": "percipiolondon\\craftstaff\\services\\Employers",
-            "employees": "percipiolondon\\craftstaff\\services\\Employees",
-            "payRun": "percipiolondon\\craftstaff\\services\\PayRun",
-            "payRunEntries": "percipiolondon\\craftstaff\\services\\PayRunEntries",
-            "hardingUsers": "percipiolondon\\craftstaff\\services\\HardingUsers"
+            "employers": "percipiolondon\\staff\\services\\Employers",
+            "employees": "percipiolondon\\staff\\services\\Employees",
+            "payRun": "percipiolondon\\staff\\services\\PayRun",
+            "payRunEntries": "percipiolondon\\staff\\services\\PayRunEntries",
+            "hardingUsers": "percipiolondon\\staff\\services\\HardingUsers"
         },
-        "class": "percipiolondon\\craftstaff\\Craftstaff"
+        "class": "Staff"
     }
 }

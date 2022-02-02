@@ -5,7 +5,7 @@
  * @license https://craftcms.github.io/license/
  */
 
-namespace percipiolondon\craftstaff\gql\types\generators;
+namespace percipiolondon\staff\gql\types\generators;
 
 use Craft;
 use craft\gql\base\Generator;
@@ -15,10 +15,10 @@ use craft\gql\base\SingleGeneratorInterface;
 use craft\gql\GqlEntityRegistry;
 use craft\gql\TypeManager;
 
-use percipiolondon\craftstaff\gql\arguments\elements\Employer as EmployerArguments;
-use percipiolondon\craftstaff\elements\Employer as EmployerElement;
-use percipiolondon\craftstaff\gql\interfaces\elements\Employer as EmployerInterface;
-use percipiolondon\craftstaff\gql\types\elements\Employer;
+use percipiolondon\staff\gql\arguments\elements\Employer as EmployerArguments;
+use percipiolondon\staff\elements\Employer as EmployerElement;
+use percipiolondon\staff\gql\interfaces\elements\Employer as EmployerInterface;
+use percipiolondon\staff\gql\types\elements\Employer;
 
 /**
  * Class EmployerType

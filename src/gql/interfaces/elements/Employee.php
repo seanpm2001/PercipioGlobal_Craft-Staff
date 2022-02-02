@@ -1,6 +1,6 @@
 <?php
 
-namespace percipiolondon\craftstaff\gql\interfaces\elements;
+namespace percipiolondon\staff\gql\interfaces\elements;
 
 use craft\gql\GqlEntityRegistry;
 use craft\gql\interfaces\Element;
@@ -14,13 +14,13 @@ use GraphQL\Type\Definition\InterfaceType;
 use GraphQL\Type\Definition\ResolveInfo;
 use GraphQL\Type\Definition\Type;
 
-use percipiolondon\craftstaff\gql\types\BankDetails;
-use percipiolondon\craftstaff\gql\types\EmploymentDetails;
-use percipiolondon\craftstaff\gql\types\LeaveSettings;
-use percipiolondon\craftstaff\gql\types\PayOptions;
-use percipiolondon\craftstaff\gql\types\PersonalDetails;
-use percipiolondon\craftstaff\gql\types\RightToWork;
-use percipiolondon\craftstaff\gql\types\generators\EmployeeType;
+use percipiolondon\staff\gql\types\BankDetails;
+use percipiolondon\staff\gql\types\EmploymentDetails;
+use percipiolondon\staff\gql\types\LeaveSettings;
+use percipiolondon\staff\gql\types\PayOptions;
+use percipiolondon\staff\gql\types\PersonalDetails;
+use percipiolondon\staff\gql\types\RightToWork;
+use percipiolondon\staff\gql\types\generators\EmployeeType;
 
 /**
  * Class Employee

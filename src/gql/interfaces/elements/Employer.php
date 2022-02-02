@@ -5,17 +5,17 @@
  * @license https://craftcms.github.io/license/
  */
 
-namespace percipiolondon\craftstaff\gql\interfaces\elements;
+namespace percipiolondon\staff\gql\interfaces\elements;
 
 use craft\gql\GqlEntityRegistry;
 use craft\gql\interfaces\Element;
 use craft\gql\TypeManager;
 use craft\gql\types\DateTime;
 
-use percipiolondon\craftstaff\gql\types\Address;
-use percipiolondon\craftstaff\gql\types\HmrcDetails;
-use percipiolondon\craftstaff\gql\types\PayOptions;
-use percipiolondon\craftstaff\gql\types\generators\EmployerType;
+use percipiolondon\staff\gql\types\Address;
+use percipiolondon\staff\gql\types\HmrcDetails;
+use percipiolondon\staff\gql\types\PayOptions;
+use percipiolondon\staff\gql\types\generators\EmployerType;
 
 use craft\helpers\Gql;
 use craft\helpers\Json;

@@ -8,16 +8,16 @@
  * @copyright Copyright (c) 2021 Percipio
  */
 
-namespace percipiolondon\craftstaff\services;
+namespace percipiolondon\staff\services;
 
-use percipiolondon\craftstaff\Craftstaff;
+use percipiolondon\staff\Staff;
 
 use Craft;
 use craft\base\Component;
-use percipiolondon\craftstaff\records\Employee;
-use percipiolondon\craftstaff\records\Permission as PermissionRecord;
-use percipiolondon\craftstaff\records\UserPermission as UserPermissionRecord;
-use percipiolondon\craftstaff\models\UserPermission as UserPermissionModel;
+use percipiolondon\staff\records\Employee;
+use percipiolondon\staff\records\Permission as PermissionRecord;
+use percipiolondon\staff\records\UserPermission as UserPermissionRecord;
+use percipiolondon\staff\models\UserPermission as UserPermissionModel;
 
 /**
  * UserPermission Service

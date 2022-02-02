@@ -1,9 +1,9 @@
 <?php
 
-namespace percipiolondon\craftstaff\helpers;
+namespace percipiolondon\staff\helpers;
 
 use jamesedmonston\graphqlauthentication\GraphqlAuthentication;
-use percipiolondon\craftstaff\Craftstaff;
+use percipiolondon\staff\Staff;
 
 class Gql extends \craft\helpers\Gql
 {
@@ -19,7 +19,7 @@ class Gql extends \craft\helpers\Gql
 //
 //                $user = GraphqlAuthentication::$tokenService->getUserFromToken();
 //
-//                if (!Craftstaff::$plugin->userPermissions->applyCanParam("access:employers", $user->id) ) {
+//                if (!Staff::$plugin->userPermissions->applyCanParam("access:employers", $user->id) ) {
 //                    return false;
 //                }
 //

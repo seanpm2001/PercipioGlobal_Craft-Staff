@@ -1,14 +1,14 @@
 <?php
 
-namespace percipiolondon\craftstaff\gql\types\elements;
+namespace percipiolondon\staff\gql\types\elements;
 
 use craft\gql\types\elements\Element;
 use craft\helpers\Json;
 
 use GraphQL\Type\Definition\ResolveInfo;
 
-use percipiolondon\craftstaff\elements\PayRun as PayRunElement;
-use percipiolondon\craftstaff\gql\interfaces\elements\PayRun as PayRunInterface;
+use percipiolondon\staff\elements\PayRun as PayRunElement;
+use percipiolondon\staff\gql\interfaces\elements\PayRun as PayRunInterface;
 
 /**
  * Class PayRun

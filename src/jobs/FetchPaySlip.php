@@ -1,13 +1,13 @@
 <?php
 
-namespace percipiolondon\craftstaff\jobs;
+namespace percipiolondon\staff\jobs;
 
 use Craft;
 use craft\helpers\Json;
 use craft\queue\BaseJob;
-use percipiolondon\craftstaff\records\Employer as EmployerRecord;
-use percipiolondon\craftstaff\records\PayRunEntry as PayRunEntryRecord;
-use percipiolondon\craftstaff\elements\PayRunEntry;
+use percipiolondon\staff\records\Employer as EmployerRecord;
+use percipiolondon\staff\records\PayRunEntry as PayRunEntryRecord;
+use percipiolondon\staff\elements\PayRunEntry;
 use yii\db\Exception;
 
 class FetchPaySlip extends Basejob
