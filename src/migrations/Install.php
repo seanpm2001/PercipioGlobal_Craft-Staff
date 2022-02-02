@@ -15,45 +15,27 @@ use percipiolondon\staff\db\Table;
 
 use Craft;
 use craft\config\DbConfig;
+use craft\db\ActiveRecord;
 use craft\db\Migration;
+use craft\db\Query;
 use yii\base\NotSupportedException;
 
 /**
- * staff-management Install Migration
+ * Installation Migration
  *
- * If your plugin needs to create any custom database tables when it gets installed,
- * create a migrations/ folder within your plugin folder, and save an Install.php file
- * within it using the following template:
  *
- * If you need to perform any additional actions on install/uninstall, override the
- * safeUp() and safeDown() methods.
- *
- * @author    Percipio
- * @package   staff
- * @since     1.0.0-alpha.1
+ * @author    Percipio Global Ltd. <support@percipio.london>
+ * @since     1.0.0
  */
 class Install extends Migration
 {
-    // Public Properties
-    // =========================================================================
 
-    /**
-     * @var string The database driver to use
-     */
-    public $driver;
 
     // Public Methods
     // =========================================================================
 
     /**
-     * This method contains the logic to be executed when applying this migration.
-     * This method differs from [[up()]] in that the DB logic implemented here will
-     * be enclosed within a DB transaction.
-     * Child classes may implement this method instead of [[up()]] if the DB logic
-     * needs to be within a transaction.
-     *
-     * @return boolean return a false value to indicate the migration fails
-     * and should not proceed further. All other return values mean the migration succeeds.
+     * @inheritdoc
      */
     public function safeUp()
     {
@@ -61,7 +43,6 @@ class Install extends Migration
         if ($this->createTables()) {
             $this->createIndexes();
             $this->addForeignKeys();
-            // Refresh the db schema caches
             Craft::$app->db->schema->refresh();
             $this->insertDefaultData();
         }
@@ -70,22 +51,24 @@ class Install extends Migration
     }
 
     /**
-     * This method contains the logic to be executed when removing this migration.
-     * This method differs from [[down()]] in that the DB logic implemented here will
-     * be enclosed within a DB transaction.
-     * Child classes may implement this method instead of [[down()]] if the DB logic
-     * needs to be within a transaction.
-     *
-     * @return boolean return a false value to indicate the migration fails
-     * and should not proceed further. All other return values mean the migration succeeds.
+     * @inheritdoc
      */
     public function safeDown()
     {
-        $this->driver = Craft::$app->getConfig()->getDb()->driver;
+
         $this->dropForeignKeys();
         $this->removeTables();
 
         return true;
+    }
+
+    /**
+     * Creates the tables for Staff Management
+     */
+
+    public function createTables()
+    {
+
     }
 
     // Protected Methods
@@ -372,6 +355,50 @@ class Install extends Migration
             );
         }
 
+        // staff_personal_details table
+        // TODO:
+        // "PersonalDetails": {
+        //      "Address": {
+        //        "Line1": "12 High Street",
+        //        "Line2": "Belsize Park",
+        //        "Line3": "London",
+        //        "Line4": null,
+        //        "Line5": null,
+        //        "PostCode": "NW3 4BU",
+        //        "Country": "England"
+        //      },
+        //      "PartnerDetails": null
+        //    },
+        $tableSchema = Craft::$app->db->schema->getTableSchema(Table::STAFF_PERSONAL_DETAILS);
+        if ($tableSchema === null) {
+            $tablesCreated = true;
+            $this->createTable(
+                Table::STAFF_PERSONAL_DETAILS,
+                [
+                    'id' => $this->primaryKey(),
+                    'employeeId' => $this->integer()->notNull(),
+                    'maritalStatus' => $this->string(255)->notNull(),
+                    'title' => $this->string(255),
+                    'firstName' => $this->string(255)->notNull(),
+                    'middleName' => $this->string(255),
+                    'lastName' => $this->string(255)->notNull(),
+                    'email' => $this->string(255)->notNull(),
+                    'emailPayslip' => $this->boolean()->notNull(),
+                    'passwordProtectPayslip' => $this->boolean()->notNull(),
+                    'pdfPassword' => $this->string(255),
+                    'telephone' => $this->string(255),
+                    'mobile' => $this->string(255),
+                    'dob' => $this->dateTime()->notNull(),
+                    'statePensionAge' => $this->int()->notNull(),
+                    'gender' => $this->string(255)->notNull(),
+                    'niNumber' => $this->string(255)->notNull(),
+                    'passportNumber' => $this->string(255)->notNull(),
+                ]
+            );
+        }
+
+
+
         return $tablesCreated;
     }
 
@@ -411,27 +438,6 @@ class Install extends Migration
             Table::STAFF_EMPLOYERS,
             'siteId',
             \craft\db\Table::SITES,
-            'id',
-            'CASCADE',
-            'CASCADE'
-        );
-
-        // staff_requests table
-        $this->addForeignKey(
-            $this->db->getForeignKeyName(Table::STAFF_REQUESTS, 'employerId'),
-            Table::STAFF_REQUESTS,
-            'id',
-            Table::STAFF_EMPLOYERS,
-            'id',
-            'CASCADE',
-            'CASCADE'
-        );
-
-        $this->addForeignKey(
-            $this->db->getForeignKeyName(Table::STAFF_REQUESTS, 'employeeId'),
-            Table::STAFF_REQUESTS,
-            'id',
-            Table::STAFF_EMPLOYEES,
             'id',
             'CASCADE',
             'CASCADE'
@@ -591,7 +597,7 @@ class Install extends Migration
             'CASCADE'
         );
 
-        // staff_permissions_users table
+        // staff_permissions_users
         $this->addForeignKey(
             $this->db->getForeignKeyName(Table::STAFF_PERMISSIONS_USERS, 'userId'),
             Table::STAFF_PERMISSIONS_USERS,
@@ -606,6 +612,38 @@ class Install extends Migration
             $this->db->getForeignKeyName(Table::STAFF_PERMISSIONS_USERS, 'employeeId'),
             Table::STAFF_PERMISSIONS_USERS,
             'employeeId',
+            Table::STAFF_EMPLOYEES,
+            'id',
+            'CASCADE',
+            'CASCADE'
+        );
+
+        // staff_personal_detail
+        $this->addForeignKey(
+            $this->db-getForeignKeyName(Table::STAFF_PERSONAL_DETAILS, 'employeeId'),
+            Table::STAFF_PERSONAL_DETAILS,
+            'employeeId',
+            Table::STAFF_EMPLOYEES,
+            'id',
+            'CASCADE',
+            'CASCADE'
+        );
+
+        // staff_requests
+        $this->addForeignKey(
+            $this->db->getForeignKeyName(Table::STAFF_REQUESTS, 'employerId'),
+            Table::STAFF_REQUESTS,
+            'id',
+            Table::STAFF_EMPLOYERS,
+            'id',
+            'CASCADE',
+            'CASCADE'
+        );
+
+        $this->addForeignKey(
+            $this->db->getForeignKeyName(Table::STAFF_REQUESTS, 'employeeId'),
+            Table::STAFF_REQUESTS,
+            'id',
             Table::STAFF_EMPLOYEES,
             'id',
             'CASCADE',
