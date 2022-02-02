@@ -81,6 +81,17 @@ class Install extends Migration
             'uid' => $this->uid(),
         ]);
 
+        $this->createTable(Table::COUNTIES, [
+            'id' => $this->primaryKey(),
+            'countryId' => $this->integer()->notNull(),
+            'name' => $this->string()->notNull(),
+            'abbreviation' => $this->string(),
+            'sortOrder' => $this->integer(),
+            'dateCreated' => $this->dateTime()->notNull(),
+            'dateUpdated' => $this->dateTime()->notNull(),
+            'uid' => $this->uid(),
+        ]);
+
         $this->createTable(Table::COUNTRIES, [
             'id' => $this->primaryKey(),
             'name' => $this->string()->notNull(),
