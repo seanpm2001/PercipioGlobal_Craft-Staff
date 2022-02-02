@@ -22,11 +22,12 @@
         }
     ],
     "require": {
-        "craftcms/cms": "^3.0.0"
+        "craftcms/cms": "^3.7.0"
     },
     "require-dev": {
-      "codeception/codeception": "^3.0",
-      "vlucas/phpdotenv": "^3.0"
+        "roave/security-advisories": "dev-latest",
+        "codeception/codeception": "^3.0",
+        "vlucas/phpdotenv": "^3.0"
     },
     "autoload": {
         "psr-4": {
@@ -36,7 +37,7 @@
     "extra": {
         "name": "Staff Management",
         "handle": "staff-management",
-        "developer": "Percipio",
+        "developer": "percipiolondon",
         "developerUrl": "http://percipio.london",
         "documentationUrl": "https://github.com/percipioglobal/craft-staff/blob/master/README.md",
         "changelogUrl": "https://raw.githubusercontent.com/percipioglobal/craft-staff/master/CHANGELOG.md",
@@ -47,6 +48,6 @@
             "payRunEntries": "percipiolondon\\staff\\services\\PayRunEntries",
             "hardingUsers": "percipiolondon\\staff\\services\\HardingUsers"
         },
-        "class": "Staff"
+        "class": "percipiolondon\\staff\\Staff"
     }
 }
