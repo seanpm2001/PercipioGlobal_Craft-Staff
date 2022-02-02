@@ -68,7 +68,7 @@ class Install extends Migration
 
     public function createTables()
     {
-        $this->createTable(Table::STAFF_EMPLOYEES, [
+        $this->createTable(Table::EMPLOYEES, [
             'id' => $this->primaryKey(),
             'dateCreated' => $this->dateTime()->notNull(),
             'dateUpdated' => $this->dateTime()->notNull(),
@@ -97,7 +97,7 @@ class Install extends Migration
             'sourceSystemId' => $this->string(255),
         ]);
 
-        $this->createTable(Table::STAFF_EMPLOYERS, [
+        $this->createTable(Table::EMPLOYERS, [
             'id' => $this->primaryKey(),
             'dateCreated' => $this->dateTime()->notNull(),
             'dateUpdated' => $this->dateTime()->notNull(),
@@ -119,7 +119,7 @@ class Install extends Migration
             'defaultPayOptions' => $this->longText(),
         ]);
 
-        $this->createTable(Table::STAFF_HISTORY,
+        $this->createTable(Table::HISTORY,
             [
                 'id' => $this->primaryKey(),
                 'dateCreated' => $this->dateTime()->notNull(),
@@ -134,7 +134,7 @@ class Install extends Migration
             ]
         );
 
-        $this->createTable(Table::STAFF_PAYRUN, [
+        $this->createTable(Table::PAYRUN, [
             'id' => $this->primaryKey(),
             'dateCreated' => $this->dateTime()->notNull(),
             'dateUpdated' => $this->dateTime()->notNull(),
@@ -161,7 +161,7 @@ class Install extends Migration
             'employerId' => $this->integer()->notNull()->defaultValue(null),
         ]);
 
-        $this->createTable(Table::STAFF_PAYRUN_LOG, [
+        $this->createTable(Table::PAYRUN_LOG, [
             'id' => $this->primaryKey(),
             'dateCreated' => $this->dateTime()->notNull(),
             'dateUpdated' => $this->dateTime()->notNull(),
@@ -177,7 +177,7 @@ class Install extends Migration
             'payRunId' => $this->integer()->notNull()->defaultValue(0),
         ]);
 
-        $this->createTable(Table::STAFF_PAYRUNENTRIES, [
+        $this->createTable(Table::PAYRUNENTRIES, [
             'id' => $this->primaryKey(),
             'dateCreated' => $this->dateTime()->notNull(),
             'dateUpdated' => $this->dateTime()->notNull(),
@@ -237,7 +237,7 @@ class Install extends Migration
             'employeeId' => $this->integer()->notNull()->defaultValue(null),
         ]);
 
-        $this->createTable(Table::STAFF_PERMISSIONS, [
+        $this->createTable(Table::PERMISSIONS, [
             'id' => $this->primaryKey(),
             'dateCreated' => $this->dateTime()->notNull(),
             'dateUpdated' => $this->dateTime()->notNull(),
@@ -245,7 +245,7 @@ class Install extends Migration
             'name' => $this->string(255)->notNull()->defaultValue(''),
         ]);
 
-        $this->createTable(Table::STAFF_PERMISSIONS_USERS, [
+        $this->createTable(Table::PERMISSIONS_USERS, [
             'id' => $this->primaryKey(),
             'dateCreated' => $this->dateTime()->notNull(),
             'dateUpdated' => $this->dateTime()->notNull(),
@@ -269,7 +269,7 @@ class Install extends Migration
         //      },
         //      "PartnerDetails": null
         //    },
-        $this->createTable(Table::STAFF_PERSONAL_DETAILS,
+        $this->createTable(Table::PERSONAL_DETAILS,
             [
                 'id' => $this->primaryKey(),
                 'employeeId' => $this->integer()->notNull(),
@@ -292,7 +292,7 @@ class Install extends Migration
             ]
         );
 
-        $this->createTable(Table::STAFF_REQUESTS, [
+        $this->createTable(Table::REQUESTS, [
             'id' => $this->primaryKey(),
             'dateCreated' => $this->dateTime()->notNull(),
             'dateUpdated' => $this->dateTime()->notNull(),
@@ -308,7 +308,7 @@ class Install extends Migration
             'note' => $this->string(255),
         ]);
 
-        $this->createTable(Table::STAFF_USERS, [
+        $this->createTable(Table::USERS, [
             'id' => $this->primaryKey(),
             'dateCreated' => $this->dateTime()->notNull(),
             'dateUpdated' => $this->dateTime()->notNull(),
@@ -327,17 +327,17 @@ class Install extends Migration
      * Drop the tables
      */
     public function dropTables() {
-        $this->dropTableIfExists(Table::STAFF_EMPLOYEES);
-        $this->dropTableIfExists(Table::STAFF_EMPLOYERS);
-        $this->dropTableIfExists(Table::STAFF_HISTORY);
-        $this->dropTableIfExists(Table::STAFF_PAYRUN);
-        $this->dropTableIfExists(Table::STAFF_PAYRUN_LOG);
-        $this->dropTableIfExists(Table::STAFF_PAYRUNENTRIES);
-        $this->dropTableIfExists(Table::STAFF_PERMISSIONS);
-        $this->dropTableIfExists(Table::STAFF_PERMISSIONS_USERS);
-        $this->dropTableIfExists(Table::STAFF_PERSONAL_DETAILS);
-        $this->dropTableIfExists(Table::STAFF_REQUESTS);
-        $this->dropTableIfExists(Table::STAFF_USERS);
+        $this->dropTableIfExists(Table::EMPLOYEES);
+        $this->dropTableIfExists(Table::EMPLOYERS);
+        $this->dropTableIfExists(Table::HISTORY);
+        $this->dropTableIfExists(Table::PAYRUN);
+        $this->dropTableIfExists(Table::PAYRUN_LOG);
+        $this->dropTableIfExists(Table::PAYRUNENTRIES);
+        $this->dropTableIfExists(Table::PERMISSIONS);
+        $this->dropTableIfExists(Table::PERMISSIONS_USERS);
+        $this->dropTableIfExists(Table::PERSONAL_DETAILS);
+        $this->dropTableIfExists(Table::REQUESTS);
+        $this->dropTableIfExists(Table::USERS);
 
         return null;
     }
@@ -367,17 +367,17 @@ class Install extends Migration
     public function dropForeignKeys()
     {
         $tables = [
-            Table::STAFF_EMPLOYEES,
-            Table::STAFF_EMPLOYERS,
-            Table::STAFF_HISTORY,
-            Table::STAFF_PAYRUN,
-            Table::STAFF_PAYRUN_LOG,
-            Table::STAFF_PAYRUNENTRIES,
-            Table::STAFF_PERMISSIONS,
-            Table::STAFF_PERMISSIONS_USERS,
-            Table::STAFF_PERSONAL_DETAILS,
-            Table::STAFF_REQUESTS,
-            Table::STAFF_USERS
+            Table::EMPLOYEES,
+            Table::EMPLOYERS,
+            Table::HISTORY,
+            Table::PAYRUN,
+            Table::PAYRUN_LOG,
+            Table::PAYRUNENTRIES,
+            Table::PERMISSIONS,
+            Table::PERMISSIONS_USERS,
+            Table::PERSONAL_DETAILS,
+            Table::REQUESTS,
+            Table::USERS
         ];
 
         foreach ($tables as $table) {
@@ -699,34 +699,34 @@ class Install extends Migration
     protected function removeTables()
     {
         // staff_employee table
-        $this->dropTableIfExists(Table::STAFF_EMPLOYEES);
+        $this->dropTableIfExists(Table::EMPLOYEES);
 
         // staff_payrunentries table
-        $this->dropTableIfExists(Table::STAFF_PAYRUNENTRIES);
+        $this->dropTableIfExists(Table::PAYRUNENTRIES);
 
         // staff_user table
-        $this->dropTableIfExists(Table::STAFF_USERS);
+        $this->dropTableIfExists(Table::USERS);
 
         // staff_payrun table
-        $this->dropTableIfExists(Table::STAFF_PAYRUN);
+        $this->dropTableIfExists(Table::PAYRUN);
 
         // staff_payrun_log table
-        $this->dropTableIfExists(Table::STAFF_PAYRUN_LOG);
+        $this->dropTableIfExists(Table::PAYRUN_LOG);
 
         // staff_employer table
-        $this->dropTableIfExists(Table::STAFF_EMPLOYERS);
+        $this->dropTableIfExists(Table::EMPLOYERS);
 
         // staff_permissions_users table
-        $this->dropTableIfExists(Table::STAFF_PERMISSIONS_USERS);
+        $this->dropTableIfExists(Table::PERMISSIONS_USERS);
 
         // staff_permissions table
-        $this->dropTableIfExists(Table::STAFF_PERMISSIONS);
+        $this->dropTableIfExists(Table::PERMISSIONS);
 
         // staff_requests table
-        $this->dropTableIfExists(Table::STAFF_REQUESTS);
+        $this->dropTableIfExists(Table::REQUESTS);
 
         // staff_history table
-        $this->dropTableIfExists(Table::STAFF_HISTORY);
+        $this->dropTableIfExists(Table::HISTORY);
     }
 
     /**
