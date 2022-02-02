@@ -216,7 +216,7 @@ class Install extends Migration
             );
         }
 
-        // STAFF_PAYRUNENTRIES table
+        // staff_payrunentries table
         $tableSchema = Craft::$app->db->schema->getTableSchema(Table::STAFF_PAYRUNENTRIES);
         if ($tableSchema === null) {
             $tablesCreated = true;
@@ -328,7 +328,7 @@ class Install extends Migration
             );
         }
 
-        //request table
+        // staff_request table
         $tableSchema = Craft::$app->db->schema->getTableSchema(Table::STAFF_REQUESTS);
         if ($tableSchema === null) {
             $tablesCreated = true;
@@ -352,7 +352,7 @@ class Install extends Migration
             );
         }
 
-        //history table
+        // staff_history table
         $tableSchema = Craft::$app->db->schema->getTableSchema(Table::STAFF_HISTORY);
         if ($tableSchema === null) {
             $tablesCreated = true;

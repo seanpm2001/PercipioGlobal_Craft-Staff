@@ -14,4 +14,5 @@ abstract class Table
     const STAFF_PERMISSIONS_USERS = "{{%staff_permissions_users}}";
     const STAFF_REQUESTS = "{{%staff_requests}}";
     const STAFF_HISTORY = "{{%staff_history}}";
+    const STAFF_PERSONAL_DETAILS = "{{%staff_personal_details}}";
 }
