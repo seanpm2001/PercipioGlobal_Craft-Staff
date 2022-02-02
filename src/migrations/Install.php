@@ -68,6 +68,17 @@ class Install extends Migration
 
     public function createTables()
     {
+        $this->createTable(Table::ADDRESSES, [
+            'id' => $this->primaryKey(),
+            'countryId' => $this->integer(),
+            'countyId' => $this->integer(),
+            'address1' => $this->string(),
+            'address2' => $this->string(),
+            'address3' => $this->string(),
+            'zipCode' => $this->string(),
+            'uid' => $this->uid(),
+        ]);
+
         $this->createTable(Table::EMPLOYEES, [
             'id' => $this->primaryKey(),
             'dateCreated' => $this->dateTime()->notNull(),
