@@ -326,7 +326,7 @@ class Install extends Migration
             // @TODO: create own table
             'totalsYtdOverrides' => $this->longText(),
             'forcedCisVatAmount' => $this->double()->defaultValue(0),
-            'holidayAccured' => $this->double()->defaultValue(0),
+            'holidayAccrued' => $this->double()->defaultValue(0),
             'state' => $this->string(255)->defaultValue('Open'),
             'isClosed' => $this->boolean(),
             'manualNi' => $this->boolean(),
@@ -344,6 +344,16 @@ class Install extends Migration
             'pdf' => $this->string()->defaultValue(''),
             'employerId' => $this->integer()->notNull()->defaultValue(null),
             'employeeId' => $this->integer()->notNull()->defaultValue(null),
+        ]);
+
+        $this->createTable(Table::PENSIONER_PAYROLL, [
+            'id' => $this->primaryKey(),
+            'dateCreated' => $this->dateTime()->notNull(),
+            'dateUpdated' => $this->dateTime()->notNull(),
+            'uid' => $this->uid(),
+            'inReceiptOfPension' => $this->boolean(),
+            'bereaved' => $this->boolean(),
+            'amount' => $this->double(),
         ]);
 
         $this->createTable(Table::PERMISSIONS, [

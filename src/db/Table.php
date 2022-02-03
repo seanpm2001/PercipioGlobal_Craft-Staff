@@ -16,6 +16,7 @@ abstract class Table
     const PAYRUN = "{{%staff_payrun}}";
     const PAYRUN_LOG = "{{%staff_log_payrun}}";
     const PAYRUN_ENTRIES = "{{%staff_payrunentries}}";
+    const PENSIONER_PAYROLL = "{{%staff_pensionerpayroll}}";
     const PERMISSIONS = "{{%staff_permissions}}";
     const PERMISSIONS_USERS = "{{%staff_permissions_users}}";
     const PERSONAL_DETAILS = "{{%staff_personal_details}}";
