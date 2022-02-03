@@ -27,6 +27,7 @@ abstract class Table
     const PERMISSIONS_USERS = "{{%staff_permissions_users}}";
     const PERSONAL_DETAILS = "{{%staff_personal_details}}";
     const REQUESTS = "{{%staff_requests}}";
+    const RTI_EMPLOYEE_NAME = "{{%staff_rtiemployeename}}";
     const STARTER_DETAILS = "{{%staff_starterdetails}}";
     const USERS = "{{%staff_users}}";
 }

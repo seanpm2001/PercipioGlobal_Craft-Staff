@@ -524,6 +524,17 @@ class Install extends Migration
             'note' => $this->string(255),
         ]);
 
+        $this->createTable(Table::RTI_EMPLOYEE_NAME, [
+            'id' => $this->primaryKey(),
+            'dateCreated' => $this->dateTime()->notNull(),
+            'dateUpdated' => $this->dateTime()->notNull(),
+            'uid' => $this->uid(),
+            'ttl' => $this->string(),
+            'fore' => $this->longText(),
+            'initials' => $this->string(),
+            'sur' => $this->string(),
+        ]);
+
         $this->createTable(Table::STARTER_DETAILS, [
             'id' => $this->primaryKey(),
             'dateCreated' => $this->dateTime()->notNull(),
