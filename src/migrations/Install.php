@@ -243,6 +243,18 @@ class Install extends Migration
             'uid' => $this->uid(),
         ]);
 
+        $this->createTable(Table::LEAVER_DETAILS, [
+            'id' => $this->primaryKey(),
+            'dateCreated' => $this->dateTime()->notNull(),
+            'dateUpdated' => $this->dateTime()->notNull(),
+            'uid' => $this->uid(),
+            'hasLeft' => $this->boolean(),
+            'leaveDate' => $this->dateTime(),
+            'isDeceased' => $this->boolean(),
+            'paymentAfterLeaving' => $this->boolean(),
+            'p45Sent' => $this->boolean(),
+        ]);
+
         $this->createTable(Table::OVERSEAS_EMPLOYER_DETAILS, [
             'id' => $this->primaryKey(),
             'dateCreated' => $this->dateTime()->notNull(),
