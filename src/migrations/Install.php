@@ -105,6 +105,17 @@ class Install extends Migration
             'uid' => $this->uid(),
         ]);
 
+        $this->createTable(Table::DIRECTORSHIP_DETAILS, [
+            'id' => $this->primaryKey(),
+            'dateCreated' => $this->dateTime()->notNull(),
+            'dateUpdated' => $this->dateTime()->notNull(),
+            'uid' => $this->uid(),
+            'isDirector' => $this->boolean(),
+            'startDate' => $this->dateTime(),
+            'leaveDate' => $this->dateTime(),
+            'niAlternativeMethod' => $this->boolean(),
+        ]);
+
         $this->createTable(Table::EMPLOYEES, [
             'id' => $this->primaryKey(),
             'dateCreated' => $this->dateTime()->notNull(),
