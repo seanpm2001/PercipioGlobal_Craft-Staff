@@ -603,6 +603,18 @@ class Install extends Migration
             'note' => $this->string(255),
         ]);
 
+        $this->createTable(Table::RIGHT_TO_WORK, [
+            'id' => $this->primaryKey(),
+            'dateCreated' => $this->dateTime()->notNull(),
+            'dateUpdated' => $this->dateTime()->notNull(),
+            'uid' => $this->uid(),
+            'checked' => $this->boolean(),
+            'documentType' => $this->enum('type', ['Other', 'Visa', 'Passport', 'BirthCertificate', 'IdentityCard', 'Sharecode']),
+            'documentRef' => $this->string(),
+            'documentExpiry' => $this->dateTime(),
+            'note' => $this->mediumText(),
+        ]);
+
         $this->createTable(Table::RTI_EMPLOYEE_ADDRESS, [
             'id' => $this->primaryKey(),
             'dateCreated' => $this->dateTime()->notNull(),

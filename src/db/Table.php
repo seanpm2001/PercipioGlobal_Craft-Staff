@@ -32,6 +32,7 @@ abstract class Table
     const PERMISSIONS_USERS = "{{%staff_permissions_users}}";
     const PERSONAL_DETAILS = "{{%staff_personal_details}}";
     const REQUESTS = "{{%staff_requests}}";
+    const RIGHT_TO_WORK = "{{%staff_righttowork}}";
     const RTI_EMPLOYEE_ADDRESS = "{{%staff_rti_employeeaddress}}";
     const RTI_EMPLOYEE_NAME = "{{%staff_rti_employeename}}";
     const STARTER_DETAILS = "{{%staff_starterdetails}}";
