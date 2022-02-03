@@ -11,6 +11,7 @@ abstract class Table
     const CIS_SUBCONTRACTOR = "{{%staff_cissubcontractor}}";
     const CIS_VERIFICATION_DETAILS = "{{%staff_cisverificationdetails}}";
     const COUNTRIES = "{{%staff_countries}}";
+    const DEPARTMENT = "{{%staff_department}}";
     const DIRECTORSHIP_DETAILS = "{{%staff_directorshipdetails}}";
     const EMPLOYEES = "{{%staff_employees}}";
     const EMPLOYERS = "{{%staff_employers}}";

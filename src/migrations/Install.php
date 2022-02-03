@@ -185,6 +185,19 @@ class Install extends Migration
             'uid' => $this->uid(),
         ]);
 
+        $this->createTable(Table::DEPARTMENT, [
+            'id' => $this->primaryKey(),
+            'dateCreated' => $this->dateTime()->notNull(),
+            'dateUpdated' => $this->dateTime()->notNull(),
+            'uid' => $this->uid(),
+            'code' => $this->string(),
+            'title' => $this->string(),
+            // @DISCUSS - needed? Could use better things
+            'color' => $this->string(),
+            // @DISCUSS - needed? Can query this ourselves
+            'employeeCount' => $this->integer(),
+        ]);
+
         $this->createTable(Table::DIRECTORSHIP_DETAILS, [
             'id' => $this->primaryKey(),
             'dateCreated' => $this->dateTime()->notNull(),
@@ -274,6 +287,7 @@ class Install extends Migration
             'leaverDetails' => $this->integer(),
             'cis' => $this->integer(),
             'department' => $this->integer(),
+            // @DISCUSS - Staffology provides an Item Array, so should hold multiple id's?
             'posts' => $this->integer(),
         ]);
 
