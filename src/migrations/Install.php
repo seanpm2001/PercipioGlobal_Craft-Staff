@@ -270,8 +270,6 @@ class Install extends Migration
             'dateCreated' => $this->dateTime()->notNull(),
             'dateUpdated' => $this->dateTime()->notNull(),
             'uid' => $this->uid(),
-            // @TODO: drop siteId in migration
-            'siteId' => $this->integer()->notNull(),
             'staffologyId' => $this->string(255)->notNull(),
             'employerId' => $this->integer()->notNull(),
             'userId' => $this->integer(),
@@ -302,8 +300,6 @@ class Install extends Migration
             'dateUpdated' => $this->dateTime()->notNull(),
             'uid' => $this->uid(),
             'slug' => $this->string(255)->notNull(),
-            // @TODO: drop siteId in migration
-            'siteId' => $this->integer()->notNull(),
             'staffologyId' => $this->string(255)->notNull(),
             'name' => $this->string(255)->notNull(),
             'crn' => $this->string(),
@@ -485,8 +481,6 @@ class Install extends Migration
             'dateCreated' => $this->dateTime()->notNull(),
             'dateUpdated' => $this->dateTime()->notNull(),
             'uid' => $this->uid(),
-            // @TODO: drop siteId in migration
-            'siteId' => $this->integer()->notNull(),
             'staffologyId' => $this->string(255),
             'taxYear' => $this->string(255)->notNull()->defaultValue(''),
             'taxMonth' => $this->integer()->notNull()->defaultValue(0),
@@ -512,8 +506,6 @@ class Install extends Migration
             'dateCreated' => $this->dateTime()->notNull(),
             'dateUpdated' => $this->dateTime()->notNull(),
             'uid' => $this->uid(),
-            // @TODO: drop siteId in migration
-            'siteId' => $this->integer()->notNull(),
             // Custom columns in the table
             'employeeCount' => $this->integer()->notNull()->defaultValue(0),
             'taxYear' => $this->string(255)->notNull()->defaultValue(''),
@@ -528,8 +520,6 @@ class Install extends Migration
             'dateCreated' => $this->dateTime()->notNull(),
             'dateUpdated' => $this->dateTime()->notNull(),
             'uid' => $this->uid(),
-            // @TODO: drop siteId in migration
-            'siteId' => $this->integer()->notNull(),
             // Custom columns in the table
             'staffologyId' => $this->string(255)->notNull(),
             'payRunId' => $this->integer()->notNull()->defaultValue(0),
@@ -724,8 +714,6 @@ class Install extends Migration
             'dateCreated' => $this->dateTime()->notNull(),
             'dateUpdated' => $this->dateTime()->notNull(),
             'uid' => $this->uid(),
-            // @TODO: drop siteId in migration
-            'siteId' => $this->integer()->notNull(),
             // Custom columns in the table
             'staffologyId' => $this->string(255)->notNull(),
             // @TODO: create own table
