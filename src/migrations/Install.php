@@ -277,18 +277,18 @@ class Install extends Migration
             'userId' => $this->integer(),
             'isDirector' => $this->boolean(),
             // @TODO: create ID to table ( FK )
-            'personalDetails' => $this->longText(),
-            // @TODO: create own table
-            'employmentDetails' => $this->longText(),
-            // @TODO: create own table
-            'autoEnrolment' => $this->longText(),
+            'personalDetails' => $this->integer(),
             // @TODO: create ID to table ( FK )
-            'leaveSettings' => $this->longText(),
-            // @TODO: create own table
-            'rightToWork' => $this->longText(),
+            'employmentDetails' => $this->integer(),
             // @TODO: create ID to table ( FK )
-            'bankDetails' => $this->longText(),
-            'status' => $this->string(255)->notNull()->defaultValue('Current'),
+            'autoEnrolment' => $this->integer(),
+            // @TODO: create ID to table ( FK )
+            'leaveSettings' => $this->integer(),
+            // @TODO: create ID to table ( FK )
+            'rightToWork' => $this->integer(),
+            // @TODO: create ID to table ( FK )
+            'bankDetails' => $this->integer(),
+            'status' => $this->enum('status', ['Current', 'Former', 'Upcoming'])->notNull(),
             'aeNotEnroledWarning' => $this->boolean()->defaultValue(0),
             'niNumber' => $this->string(255),
             'sourceSystemId' => $this->string(255),
