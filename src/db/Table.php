@@ -19,12 +19,14 @@ abstract class Table
     const EMPLOYEES = "{{%staff_employees}}";
     const EMPLOYERS = "{{%staff_employers}}";
     const EMPLOYMENT_DETAILS = "{{%staff_employmentdetails}}";
+    const FPS_FIELDS = "{{%staff_fpsfields}}";
     const HISTORY = "{{%staff_history}}";
     const ITEM = "{{%staff_item}}";
     const LEAVE_SETTINGS = "{{%staff_leavesettings}}";
     const LEAVER_DETAILS = "{{%staff_leaverdetails}}";
     const OVERSEAS_EMPLOYER_DETAILS = "{{%staff_oveseasemployerdetails}}";
     const PAY_OPTIONS = "{{%staff_payoptions}}";
+    const PAYLINES = "{{%staff_paylines}}";
     const PAYRUN = "{{%staff_payrun}}";
     const PAYRUN_LOG = "{{%staff_log_payrun}}";
     const PAYRUN_ENTRIES = "{{%staff_payrunentries}}";
