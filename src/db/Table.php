@@ -7,6 +7,7 @@ abstract class Table
     const ADDRESSES = "{{%staff_addresses}}";
     const BANK_DETAILS = "{{%staff_bankdetails}}";
     const CIS_DETAILS = "{{%staff_cisdetails}}";
+    const CIS_SUBCONTRACTOR = "{{%staff_cissubcontractor}}";
     const CIS_VERIFICATION_DETAILS = "{{%staff_cisverificationdetails}}";
     const COUNTRIES = "{{%staff_countries}}";
     const DIRECTORSHIP_DETAILS = "{{%staff_directorshipdetails}}";

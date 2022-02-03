@@ -113,6 +113,44 @@ class Install extends Migration
             'verification' => $this->integer(),
         ]);
 
+        $this->createTable(Table::CIS_SUBCONTRACTOR, [
+            'id' => $this->primaryKey(),
+            'dateCreated' => $this->dateTime()->notNull(),
+            'dateUpdated' => $this->dateTime()->notNull(),
+            'uid' => $this->uid(),
+            'employeeUniqueId' => $this->string(),
+            'emailStatementTo' => $this->string(),
+            'numberOfPayments' => $this->integer(),
+            // Items Table
+            'item' => $this->integer(),
+            'displayName' => $this->string(),
+            'action' => $this->string(),
+            'type'  => $this->string(),
+            // RTI Employee Name Table
+            'name' => $this->integer(),
+            'tradingName' => $this->string(),
+            'worksRef' => $this->string(),
+            'unmatchedRate' => $this->string(),
+            'utr' => $this->string(),
+            'crn' => $this->string(),
+            'nino' => $this->string(),
+            // CIS Partnership Table
+            'partnership' => $this->integer(),
+            // RTI Employee Address
+            'address' => $this->integer(),
+            'telephone' => $this->string(),
+            'totalPaymentsUnrounded' => $this->string(),
+            'costOfMaterialsUnrounded' => $this->string(),
+            'umbrellaFee' => $this->string(),
+            'validationMsg' => $this->string(),
+            'verificationNumber' => $this->string(),
+            'totalPayments' => $this->string(),
+            'costOfMaterials' => $this->string(),
+            'totalDeducted' => $this->string(),
+            'matched' => $this->string(),
+            'taxTreatment' => $this->string(),
+        ]);
+
         $this->createTable(Table::CIS_VERIFICATION_DETAILS, [
             'id' => $this->primaryKey(),
             'dateCreated' => $this->dateTime()->notNull(),
