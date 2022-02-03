@@ -415,7 +415,7 @@ class Install extends Migration
             'dateUpdated' => $this->dateTime()->notNull(),
             'uid' => $this->uid(),
             'startDate' => $this->dateTime(),
-            'starterDeclaration' => $this->string(),
+            'starterDeclaration' => $this->enum('declaration', ['A', 'B', 'C', 'Unknown']),
             'overseasEmployerDetails' => $this->integer(),
             'pensionerPayroll' => $this->integer(),
         ]);
