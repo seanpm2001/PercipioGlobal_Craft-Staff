@@ -21,7 +21,7 @@ abstract class Table
     const EMPLOYMENT_DETAILS = "{{%staff_employmentdetails}}";
     const FPS_FIELDS = "{{%staff_fpsfields}}";
     const HISTORY = "{{%staff_history}}";
-    const ITEM = "{{%staff_item}}";
+    const ITEMS = "{{%staff_items}}";
     const LEAVE_SETTINGS = "{{%staff_leavesettings}}";
     const LEAVER_DETAILS = "{{%staff_leaverdetails}}";
     const OVERSEAS_EMPLOYER_DETAILS = "{{%staff_oveseasemployerdetails}}";

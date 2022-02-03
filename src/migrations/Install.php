@@ -369,7 +369,7 @@ class Install extends Migration
             'type' => $this->string()->notNull(),
         ]);
 
-        $this->createTable(Table::ITEM, [
+        $this->createTable(Table::ITEMS, [
             'id' => $this->primaryKey(),
             'dateCreated' => $this->dateTime()->notNull(),
             'dateUpdated' => $this->dateTime()->notNull(),
@@ -767,25 +767,48 @@ class Install extends Migration
     {
         $tables = [
             Table::ADDRESSES,
+            Table::AUTO_ENROLMENT,
+            Table::AUTO_ENROLMENT_ASSESSMENT,
+            Table::AUTO_ENROLMENT_ASSESSMENT_ACTION,
             Table::BANK_DETAILS,
+            Table::CIS_DETAILS,
+            Table::CIS_PARTNERSHIP,
+            Table::CIS_SUBCONTRACTOR,
+            Table::CIS_VERIFICATION_DETAILS,
             Table::COUNTRIES,
+            Table::DEPARTMENT,
+            Table::DIRECTORSHIP_DETAILS,
             Table::EMPLOYEES,
             Table::EMPLOYERS,
+            Table::EMPLOYMENT_DETAILS,
+            Table::FPS_FIELDS,
             Table::HISTORY,
+            Table::ITEMS,
             Table::LEAVE_SETTINGS,
+            Table::LEAVER_DETAILS,
+            Table::OVERSEAS_EMPLOYER_DETAILS,
+            Table::PAY_OPTIONS,
+            Table::PAYLINES,
             Table::PAYRUN,
             Table::PAYRUN_LOG,
             Table::PAYRUN_ENTRIES,
+            Table::PENSIONER_PAYROLL,
             Table::PERMISSIONS,
             Table::PERMISSIONS_USERS,
             Table::PERSONAL_DETAILS,
             Table::REQUESTS,
+            Table::RIGHT_TO_WORK,
+            Table::RTI_EMPLOYEE_ADDRESS,
+            Table::RTI_EMPLOYEE_NAME,
+            Table::STARTER_DETAILS,
+            Table::TAXANDNI,
             Table::USERS
         ];
 
         foreach ($tables as $table) {
             $this->_dropForeignKeyToAndFromTable($table);
         }
+        
     }
 
     /**
