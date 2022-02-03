@@ -99,6 +99,29 @@ class Install extends Migration
             'lastAssessment' => $this->integer(),
         ]);
 
+        $this->createTable(Table::AUTO_ENROLMENT_ASSESSMENT, [
+            'id' => $this->primaryKey(),
+            'dateCreated' => $this->dateTime()->notNull(),
+            'dateUpdated' => $this->dateTime()->notNull(),
+            'uid' => $this->uid(),
+            'assessmentDate' => $this->dateTime(),
+            'employeeState' => $this->enum('state', ['Automatic', 'OptOut', 'OptIn', 'VoluntaryJoiner', 'ContractualPension', 'CeasedMembership', 'Leaver', 'Excluded', 'Enrol']),
+            'age' => $this->integer(),
+            'ukWorker' => $this->enum('status', ['No', 'Yes', 'Ordinarily']),
+            'payPeriod' => $this->enum('period', ['Custom', 'Monthly', 'FourWeekly', 'Fortnightly', 'Weekly', 'Daily']),
+            'ordinal' => $this->integer(),
+            'earningsInPeriod' => $this->double(),
+            'qualifyingEarningsInPeriod' => $this->double(),
+            'aeExclusionCode' => $this->enum('code', ['NotKnown', 'NotAWorker', 'NotWorkingInUk', 'NoOrdinarilyWorkingInUk', 'OutsideOfAgeRange', 'SingleEmployee', 'CeasedActiveMembershipInPast12Mo', 'CeasedActiveMembership', 'ReceivedWulsInPast12Mo', 'ReceivedWuls', 'Leaving', 'TaxProtection', 'CisSubContractor']),
+            'status' => $this->enum('status', ['Eligible', 'NonEligible', 'Entitled', 'NoDuties']),
+            'reason' => $this->string(),
+            // Link to AeAssessmentAction Table
+            'action' => $this->integer(),
+            // Link to Item Table
+            'employee' => $this->integer(),
+            'assessmentId' => $this->uid(),
+        ]);
+
         $this->createTable(Table::BANK_DETAILS, [
             'id' => $this->primaryKey(),
             'bankName' => $this->string(),
