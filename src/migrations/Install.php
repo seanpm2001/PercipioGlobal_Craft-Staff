@@ -232,6 +232,17 @@ class Install extends Migration
             'uid' => $this->uid(),
         ]);
 
+        $this->createTable(Table::OVERSEAS_EMPLOYER_DETAILS, [
+            'id' => $this->primaryKey(),
+            'dateCreated' => $this->dateTime()->notNull(),
+            'dateUpdated' => $this->dateTime()->notNull(),
+            'uid' => $this->uid(),
+            'overseasEmployer' => $this->boolean(),
+            'overseasSecondmentStatus' => $this->enum('status', ['MoreThan183Days', 'LessThan183Days', 'BothInAndOutOfUK']),
+            'eeaCitizen' => $this->boolean(),
+            'epm6Scheme' => $this->boolean(),
+        ]);
+
         $this->createTable(Table::PAYRUN, [
             'id' => $this->primaryKey(),
             'dateCreated' => $this->dateTime()->notNull(),
