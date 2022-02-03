@@ -90,6 +90,9 @@ class Install extends Migration
             'accountNumber' => $this->string(),
             'sortCode' => $this->string(),
             'note' => $this->note(),
+            'dateCreated' => $this->dateTime()->notNull(),
+            'dateUpdated' => $this->dateTime()->notNull(),
+            'uid' => $this->uid(),
         ]);
 
         $this->createTable(Table::COUNTRIES, [
@@ -165,6 +168,13 @@ class Install extends Migration
                 'administerId' => $this->integer(),
                 'message' => $this->string(255)->notNull(),
                 'type' => $this->string()->notNull(),
+            ]
+        );
+
+        $this->createTable(Table::LEAVE_SETTINGS,
+            [
+                'id' => $this->primaryKey(),
+
             ]
         );
 
