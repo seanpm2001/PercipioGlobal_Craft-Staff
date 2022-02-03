@@ -6,6 +6,7 @@ abstract class Table
 {
     const ADDRESSES = "{{%staff_addresses}}";
     const BANK_DETAILS = "{{%staff_bankdetails}}";
+    const CIS_DETAILS = "{{%staff_cisdetails}}";
     const COUNTRIES = "{{%staff_countries}}";
     const DIRECTORSHIP_DETAILS = "{{%staff_directorshipdetails}}";
     const EMPLOYEES = "{{%staff_employees}}";

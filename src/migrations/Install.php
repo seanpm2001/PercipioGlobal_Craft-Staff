@@ -95,6 +95,24 @@ class Install extends Migration
             'uid' => $this->uid(),
         ]);
 
+        $this->createTable(Table::CIS_DETAILS, [
+            'id' => $this->primaryKey(),
+            'dateCreated' => $this->dateTime()->notNull(),
+            'dateUpdated' => $this->dateTime()->notNull(),
+            'uid' => $this->uid(),
+            'type' => $this->enum('type', ['SoleTrader', 'Partnership', 'Company', 'Trust']),
+            'utr' => $this->string(),
+            'tradingName' => $this->string(),
+            'companyUtr' => $this->string(),
+            'companyNumber' => $this->string(),
+            'vatRegistered' => $this->boolean(),
+            'vatNumber' => $this->string(),
+            'vatRate' => $this->double(),
+            'reverseChargeVAT' => $this->boolean(),
+            // CisVerificationDetails Table
+            'verification' => $this->integer(),
+        ]);
+
         $this->createTable(Table::COUNTRIES, [
             'id' => $this->primaryKey(),
             'name' => $this->string()->notNull(),
