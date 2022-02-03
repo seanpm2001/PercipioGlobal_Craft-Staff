@@ -281,6 +281,17 @@ class Install extends Migration
             'type' => $this->string()->notNull(),
         ]);
 
+        $this->createTable(Table::ITEM, [
+            'id' => $this->primaryKey(),
+            'dateCreated' => $this->dateTime()->notNull(),
+            'dateUpdated' => $this->dateTime()->notNull(),
+            'uid' => $this->uid(),
+            'itemId' => $this->string(),
+            'name' => $this->string(),
+            'metadata' => $this->longText(),
+            'url' => $this->string(),
+        ]);
+
         $this->createTable(Table::LEAVE_SETTINGS, [
             'id' => $this->primaryKey(),
             'useDefaultHolidayType' => $this->boolean(),

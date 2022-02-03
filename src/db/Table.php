@@ -15,6 +15,7 @@ abstract class Table
     const EMPLOYERS = "{{%staff_employers}}";
     const EMPLOYMENT_DETAILS = "{{%staff_employmentdetails}}";
     const HISTORY = "{{%staff_history}}";
+    const ITEM = "{{%staff_item}}";
     const LEAVE_SETTINGS = "{{%staff_leavesettings}}";
     const LEAVER_DETAILS = "{{%staff_leaverdetails}}";
     const OVERSEAS_EMPLOYER_DETAILS = "{{%staff_oveseasemployerdetails}}";
