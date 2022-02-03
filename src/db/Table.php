@@ -24,6 +24,7 @@ abstract class Table
     const LEAVE_SETTINGS = "{{%staff_leavesettings}}";
     const LEAVER_DETAILS = "{{%staff_leaverdetails}}";
     const OVERSEAS_EMPLOYER_DETAILS = "{{%staff_oveseasemployerdetails}}";
+    const PAY_OPTIONS = "{{%staff_payoptions}}";
     const PAYRUN = "{{%staff_payrun}}";
     const PAYRUN_LOG = "{{%staff_log_payrun}}";
     const PAYRUN_ENTRIES = "{{%staff_payrunentries}}";

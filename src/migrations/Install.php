@@ -288,6 +288,8 @@ class Install extends Migration
             'rightToWork' => $this->integer(),
             // @TODO: create ID to table ( FK )
             'bankDetails' => $this->integer(),
+            // @TODO: create ID to table ( FK )
+            'payOptions' => $this->integer(),
             'status' => $this->enum('status', ['Current', 'Former', 'Upcoming'])->notNull(),
             'aeNotEnroledWarning' => $this->boolean()->defaultValue(0),
             'niNumber' => $this->string(255),
@@ -425,6 +427,32 @@ class Install extends Migration
             'overseasSecondmentStatus' => $this->enum('status', ['MoreThan183Days', 'LessThan183Days', 'BothInAndOutOfUK']),
             'eeaCitizen' => $this->boolean(),
             'epm6Scheme' => $this->boolean(),
+        ]);
+
+        $this->createTable(Table::PAY_OPTIONS, [
+            'id' => $this->primaryKey(),
+            'dateCreated' => $this->dateTime()->notNull(),
+            'dateUpdated' => $this->dateTime()->notNull(),
+            'uid' => $this->uid(),
+            'period' => $this->enum('period', ['Custom', 'Monthly', 'FourWeekly', 'Fortnightly', 'Weekly', 'Daily']),
+            'ordinal' => $this->integer(),
+            'payAmount' => $this->double(),
+            'basis' => $this->enum('basis', ['Hourly', 'Daily', 'Monthly']),
+            'nationalMinimumWage' => $this->boolean(),
+            'payAmountMultiplier' => $this->double(),
+            'baseHourlyRate' => $this->double(),
+            'autoAdjustForLeave' => $this->boolean(),
+            'method' => $this->enum('method', ['Cash', 'Cheque', 'Credit', 'DirectDebit']),
+            'payCode' => $this->string(),
+            'withholdTaxRefundIfPayIsZero' => $this->boolean(),
+            'mileageVehicleType' => $this->enum('type', ['Car', 'Motorcycle', 'Cycle']),
+            'mapsMiles' => $this->integer(),
+            // Link to TaxAndNi Table
+            'taxAndNi' => $this->integer(),
+            // Link to fpsFields Table
+            'fpsFields' => $this->integer(),
+            // Link to PayLines table // could hold multiple values/integers
+            'regularPayLines' => $this->integer(),
         ]);
 
         $this->createTable(Table::PAYRUN, [
