@@ -116,17 +116,17 @@ class Install extends Migration
             'employerId' => $this->integer()->notNull(),
             'userId' => $this->integer(),
             'isDirector' => $this->boolean(),
-            // @TODO: create own table
+            // @TODO: create ID to table ( FK )
             'personalDetails' => $this->longText(),
             // @TODO: create own table
             'employmentDetails' => $this->longText(),
             // @TODO: create own table
             'autoEnrolment' => $this->longText(),
-            // @TODO: create own table
+            // @TODO: create ID to table ( FK )
             'leaveSettings' => $this->longText(),
             // @TODO: create own table
             'rightToWork' => $this->longText(),
-            // @TODO: create own table
+            // @TODO: create ID to table ( FK )
             'bankDetails' => $this->longText(),
             'status' => $this->string(255)->notNull()->defaultValue('Current'),
             'aeNotEnroledWarning' => $this->boolean()->defaultValue(0),
@@ -145,7 +145,7 @@ class Install extends Migration
             'staffologyId' => $this->string(255)->notNull(),
             'name' => $this->string(255)->notNull(),
             'crn' => $this->string(),
-            // @TODO: create own table
+            // @TODO: create ID to table ( FK )
             'address' => $this->longText(),
             // @TODO: create own table
             'hmrcDetails' => $this->longText(),
@@ -156,55 +156,81 @@ class Install extends Migration
             'defaultPayOptions' => $this->longText(),
         ]);
 
-        $this->createTable(Table::HISTORY,
-            [
-                'id' => $this->primaryKey(),
-                'dateCreated' => $this->dateTime()->notNull(),
-                'dateUpdated' => $this->dateTime()->notNull(),
-                'uid' => $this->uid(),
-                'employerId' => $this->integer()->notNull(),
-                'employeeId' => $this->integer()->notNull(),
-                // This could be null
-                'administerId' => $this->integer(),
-                'message' => $this->string(255)->notNull(),
-                'type' => $this->string()->notNull(),
-            ]
-        );
+        $this->createTable(Table::EMPLOYMENT_DETAILS, [
+            'id' => $this->primaryKey(),
+            'dateCreated' => $this->dateTime()->notNull(),
+            'dateUpdated' => $this->dateTime()->notNull(),
+            'uid' => $this->uid(),
+            'cisSubContractor' => $this->boolean(),
+            'payrollCode' => $this->string(),
+            'jobTitle' => $this->string(),
+            'onHold' => $this->boolean(),
+            'onFurlough' => $this->boolean(),
+            'furloughStart' => $this->dateTime(),
+            'furloughEnd' => $this->dateTime(),
+            'furloughCalculationBasis' => $this->enum('calculation', ['ActualPaidAmount', 'DailyReferenceAmount', 'MonthlyReferenceAmount']),
+            'furloughCalculationBasisAmount' => $this->double(),
+            'partialFurlough' => $this->boolean(),
+            'furloughHoursNormallyWorked' => $this->double(),
+            'furloughHoursOnFurlough' => $this->double(),
+            'isApprentice' => $this->boolean(),
+            'apprenticeshipStartDate' => $this->dateTime(),
+            'apprenticeshipEndDate' => $this->dateTime(),
+            'workingPattern' => $this->string(),
+            'forcePreviousPayrollCode' => $this->string(),
+            'starterDetails' => $this->integer(),
+            'directorshipDetails' => $this->integer(),
+            'leaverDetails' => $this->integer(),
+            'cis' => $this->integer(),
+            'department' => $this->integer(),
+            'posts' => $this->integer(),
+        ]);
 
-        $this->createTable(Table::LEAVE_SETTINGS,
-            [
-                'id' => $this->primaryKey(),
-                'useDefaultHolidayType' => $this->boolean(),
-                'useDefaultAllowanceResetDate' => $this->boolean(),
-                'useDefaultAllowance' => $this->boolean(),
-                'useDefaultAccruePaymentInLieu' => $this->boolean(),
-                'useDefaultAccruePaymentInLieuRate' => $this->boolean(),
-                'useDefaultAccruePaymentInLieuAllGrossPay' => $this->boolean(),
-                'useDefaultAccruePaymentInLieuPayAutomatically' => $this->boolean(),
-                'useDefaultAccrueHoursPerDay' => $this->boolean(),
-                'allowanceResetDate' => $this->dateTime(),
-                'allowance' => $this->double(),
-                'adjustment' => $this->double(),
-                'allowanceUsed' => $this->double(),
-                'allowanceUsedPreviousPeriod' => $this->double(),
-                'allowanceRemaining' => $this->double(),
-                'holidayType' => $this->enum('type', ['Days', 'Accrual_Money', 'Accrual_Days']),
-                'accrueSetAmount' => $this->boolean(),
-                'accrueHoursPerDay' => $this->double(),
-                'showAllowanceOnPayslip' => $this->boolean(),
-                'showAhpOnPayslip' => $this->boolean(),
-                'accruePaymentInLieuRate' => $this->double(),
-                'accruePaymentInLieuAllGrossPay' => $this->boolean(),
-                'accruePaymentInLieuPayAutomatically' => $this->boolean(),
-                'accruedPaymentLiability' => $this->double(),
-                'accruedPaymentAdjustment' => $this->double(),
-                'accruedPaymentPaid' => $this->double(),
-                'accruedPaymentBalance' => $this->double(),
-                'dateCreated' => $this->dateTime()->notNull(),
-                'dateUpdated' => $this->dateTime()->notNull(),
-                'uid' => $this->uid(),
-            ]
-        );
+        $this->createTable(Table::HISTORY, [
+            'id' => $this->primaryKey(),
+            'dateCreated' => $this->dateTime()->notNull(),
+            'dateUpdated' => $this->dateTime()->notNull(),
+            'uid' => $this->uid(),
+            'employerId' => $this->integer()->notNull(),
+            'employeeId' => $this->integer()->notNull(),
+            // This could be null
+            'administerId' => $this->integer(),
+            'message' => $this->string(255)->notNull(),
+            'type' => $this->string()->notNull(),
+        ]);
+
+        $this->createTable(Table::LEAVE_SETTINGS, [
+            'id' => $this->primaryKey(),
+            'useDefaultHolidayType' => $this->boolean(),
+            'useDefaultAllowanceResetDate' => $this->boolean(),
+            'useDefaultAllowance' => $this->boolean(),
+            'useDefaultAccruePaymentInLieu' => $this->boolean(),
+            'useDefaultAccruePaymentInLieuRate' => $this->boolean(),
+            'useDefaultAccruePaymentInLieuAllGrossPay' => $this->boolean(),
+            'useDefaultAccruePaymentInLieuPayAutomatically' => $this->boolean(),
+            'useDefaultAccrueHoursPerDay' => $this->boolean(),
+            'allowanceResetDate' => $this->dateTime(),
+            'allowance' => $this->double(),
+            'adjustment' => $this->double(),
+            'allowanceUsed' => $this->double(),
+            'allowanceUsedPreviousPeriod' => $this->double(),
+            'allowanceRemaining' => $this->double(),
+            'holidayType' => $this->enum('type', ['Days', 'Accrual_Money', 'Accrual_Days']),
+            'accrueSetAmount' => $this->boolean(),
+            'accrueHoursPerDay' => $this->double(),
+            'showAllowanceOnPayslip' => $this->boolean(),
+            'showAhpOnPayslip' => $this->boolean(),
+            'accruePaymentInLieuRate' => $this->double(),
+            'accruePaymentInLieuAllGrossPay' => $this->boolean(),
+            'accruePaymentInLieuPayAutomatically' => $this->boolean(),
+            'accruedPaymentLiability' => $this->double(),
+            'accruedPaymentAdjustment' => $this->double(),
+            'accruedPaymentPaid' => $this->double(),
+            'accruedPaymentBalance' => $this->double(),
+            'dateCreated' => $this->dateTime()->notNull(),
+            'dateUpdated' => $this->dateTime()->notNull(),
+            'uid' => $this->uid(),
+        ]);
 
         $this->createTable(Table::PAYRUN, [
             'id' => $this->primaryKey(),

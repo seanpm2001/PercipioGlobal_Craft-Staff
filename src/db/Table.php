@@ -9,6 +9,7 @@ abstract class Table
     const COUNTRIES = "{{%staff_countries}}";
     const EMPLOYEES = "{{%staff_employees}}";
     const EMPLOYERS = "{{%staff_employers}}";
+    const EMPLOYMENT_DETAILS = "{{%staff_employmentdetails}}"
     const HISTORY = "{{%staff_history}}";
     const LEAVE_SETTINGS = "{{%staff_leavesettings}}";
     const PAYRUN = "{{%staff_payrun}}";
