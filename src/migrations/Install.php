@@ -512,7 +512,7 @@ class Install extends Migration
                 'id' => $this->primaryKey(),
                 'employeeId' => $this->integer()->notNull(),
                 'addressId' => $this->integer()->notNull(),
-                'maritalStatus' => $this->string(255)->notNull(),
+                'maritalStatus' => $this->enum('status', ['Single', 'Married', 'Divorced', 'Widowed', 'CivilPartnership', 'Unknown'])->notNull(),
                 'title' => $this->string(255),
                 'firstName' => $this->string(255)->notNull(),
                 'middleName' => $this->string(255),
@@ -525,7 +525,7 @@ class Install extends Migration
                 'mobile' => $this->string(255),
                 'dob' => $this->dateTime()->notNull(),
                 'statePensionAge' => $this->int()->notNull(),
-                'gender' => $this->string(255)->notNull(),
+                'gender' => $this->enum('gender', ['Male', 'Female'])->notNull(),
                 'niNumber' => $this->string(255)->notNull(),
                 'passportNumber' => $this->string(255)->notNull(),
             ]
