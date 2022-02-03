@@ -431,9 +431,13 @@ class Install extends Migration
     public function dropForeignKeys()
     {
         $tables = [
+            Table::ADDRESSES,
+            Table::BANK_DETAILS,
+            Table::COUNTRIES,
             Table::EMPLOYEES,
             Table::EMPLOYERS,
             Table::HISTORY,
+            Table::LEAVE_SETTINGS,
             Table::PAYRUN,
             Table::PAYRUN_LOG,
             Table::PAYRUN_ENTRIES,
