@@ -113,6 +113,21 @@ class Install extends Migration
             'verification' => $this->integer(),
         ]);
 
+        $this->createTable(Table::CIS_VERIFICATION_DETAILS, [
+            'id' => $this->primaryKey(),
+            'dateCreated' => $this->dateTime()->notNull(),
+            'dateUpdated' => $this->dateTime()->notNull(),
+            'uid' => $this->uid(),
+            'manuallyEntered' => $this->boolean(),
+            'matchInsteadOfVerify' => $this->boolean(),
+            'number' => $this->string(),
+            'date' => $this->dateTime(),
+            'taxStatus' => $this->enum('status', ['Gross', 'NetOfStandardDeduction', 'NotOfHigherDeduction']),
+            'verificationRequest' => $this->string(),
+            // CisSubContractor Table
+            'verificationResponse' => $this->integer(),
+        ]);
+
         $this->createTable(Table::COUNTRIES, [
             'id' => $this->primaryKey(),
             'name' => $this->string()->notNull(),
