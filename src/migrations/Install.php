@@ -81,17 +81,6 @@ class Install extends Migration
             'uid' => $this->uid(),
         ]);
 
-        $this->createTable(Table::COUNTIES, [
-            'id' => $this->primaryKey(),
-            'countryId' => $this->integer()->notNull(),
-            'name' => $this->string()->notNull(),
-            'abbreviation' => $this->string(),
-            'sortOrder' => $this->integer(),
-            'dateCreated' => $this->dateTime()->notNull(),
-            'dateUpdated' => $this->dateTime()->notNull(),
-            'uid' => $this->uid(),
-        ]);
-
         $this->createTable(Table::COUNTRIES, [
             'id' => $this->primaryKey(),
             'name' => $this->string()->notNull(),
@@ -292,21 +281,13 @@ class Install extends Migration
         // staff_personal_details table
         // TODO:
         // "PersonalDetails": {
-        //      "Address": {
-        //        "Line1": "12 High Street",
-        //        "Line2": "Belsize Park",
-        //        "Line3": "London",
-        //        "Line4": null,
-        //        "Line5": null,
-        //        "PostCode": "NW3 4BU",
-        //        "Country": "England"
-        //      },
         //      "PartnerDetails": null
         //    },
         $this->createTable(Table::PERSONAL_DETAILS,
             [
                 'id' => $this->primaryKey(),
                 'employeeId' => $this->integer()->notNull(),
+                'addressId' => $this->integer()->notNull(),
                 'maritalStatus' => $this->string(255)->notNull(),
                 'title' => $this->string(255),
                 'firstName' => $this->string(255)->notNull(),
@@ -426,7 +407,6 @@ class Install extends Migration
     {
         $this->_createPermissions();
         $this->_defaultCountries();
-        $this->_defaultCounties();
     }
 
     /**
@@ -451,100 +431,6 @@ class Install extends Migration
         }
 
         $this->batchInsert(Table::COUNTRIES, ['iso', 'name', 'sortOrder'], $countries);
-    }
-
-    /**
-     * Add default counties (UK)
-     */
-    private function _defaultCounties()
-    {
-        $counties = [
-            'ENG' => [
-                'CBF' => 'Central Bedforshire',
-                'WBK' => 'Berkshire',
-                'BST' => 'Bristol',
-                'BKM' => 'Buckinghamshire',
-                'CAM' => 'Cambridgeshire',
-                'CHE' => 'Cheshire',
-                'LND' => 'City of London',
-                'CON' => 'Cornwall',
-                'CMA' => 'Cumbria',
-                'DBY' => 'Derbyshire',
-                'DEV' => 'Devon',
-                'DOR' => 'Dorset',
-                'DUR' => 'Durham',
-                'ERY' => 'East Riding of Yorkshire',
-                'ESX' => 'East Sussex',
-                'ESS' => 'Essex',
-                'GLS' => 'Gloucestershire',
-                'MAN' => 'Greater Manchester',
-                'HAM' => 'Hampshire',
-                'HEF' => 'Herefordshire',
-                'HRT' => 'Hertfordshire',
-                'IOW' => 'Isle of Wight',
-                'KEN' => 'Kent',
-                'LAN' => 'Lancashire',
-                'LEC' => 'Leicestershire',
-                'LIN' => 'Lincolnshire',
-                'NFK' => 'Norfolk',
-                'NYK' => 'North Yorkshire',
-                'NTH' => 'Northamptonshire',
-                'NBL' => 'Northumberland',
-                'NTT' => 'Nottinghamshire',
-                'OXF' => 'Oxfordshire',
-                'RUT' => 'Rutland',
-                'SHR' => 'Shropshire',
-                'SOM' => 'Somerset',
-                'STS' => 'Staffordshire',
-                'SFK' => 'Suffolk',
-                'SRY' => 'Surrey',
-                'WAR' => 'Warwickshire',
-                'WSX' => 'West Sussex',
-                'WIL' => 'Wiltshire',
-                'WOR' => 'Worcestershire'
-            ],
-            'NIR' => [
-               'ANT' => 'Antrim',
-               'ARM' => 'Armagh',
-               'DOW' => 'Down',
-               'FER' => 'Fermanagh',
-               'DGN' => 'Dungannon and South Tyrone',
-            ],
-            'SCT' => [
-                'ABE' => 'Aberdeen City',
-                'ABD' => 'Aberdeenshire',
-                'ANS' => 'Angus',
-                'AGB' => 'Argyll and Bute',
-                'CLK' => 'Clackmannanshire',
-                'DGY' => 'Dumfries and Galloway',
-                'DND' => 'Dundee City',
-                'EAY' => 'East Ayrshire',
-                'EDU' => 'East Dunbartonshire',
-                'ELN' => 'East Lothian',
-                'ERW' => 'East Renfrewshire',
-                'EDH' => 'City of Edinburgh',
-                'ELS' => 'Eilean Siar',
-                'FAL' => 'Falkirk',
-                'FIF' => 'Fife',
-                'GLG' => 'Glasgow City',
-                'HLD' => 'Highland',
-                'IVC' => 'Inverclyde',
-                'MLN' => 'Midlothian',
-                'MRY' => 'Moray',
-                'NAY' => 'North Ayrshire',
-                'NLK' => 'North Lanarkshire',
-                'ORK' => 'Orkney Islands',
-                'PKN' => 'Perth and Kinross',
-                'RFW' => 'Renfrewshire',
-                'SCB' => 'The Scottish Borders',
-                'ZET' => 'Shetland Islands',
-                'SAY' => 'South Ayrshire',
-                'SLK' => 'South Lanarkshire',
-                'STG' => 'Stirling',
-                'WDU' => 'West Dunbartonshire',
-                'WLN' => 'West Lothian',
-            ]
-        ];
     }
 
     /**
