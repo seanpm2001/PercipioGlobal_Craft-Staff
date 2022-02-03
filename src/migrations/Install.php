@@ -677,6 +677,23 @@ class Install extends Migration
             'pensionerPayroll' => $this->integer(),
         ]);
 
+        $this->createTable(Table::TAXANDNI, [
+            'id' => $this->primaryKey(),
+            'dateCreated' => $this->dateTime()->notNull(),
+            'dateUpdated' => $this->dateTime()->notNull(),
+            'uid' => $this->uid(),
+            'niTable' => $this->string(),
+            'secondaryClass1NotPayable' => $this->boolean(),
+            'postgradLoan' => $this->boolean(),
+            'postgraduateLoanStartDate' => $this->dateTime(),
+            'postgraduateLoanEndDate' => $this->dateTime(),
+            'studentLoan' => $this->boolean(),
+            'studentLoanStartDate' => $this->dateTime(),
+            'studentLoanEndDate' => $this->dateTime(),
+            'taxCode' => $this->string(),
+            'week1Month1' => $this->boolean(),
+        ]);
+
         $this->createTable(Table::USERS, [
             'id' => $this->primaryKey(),
             'dateCreated' => $this->dateTime()->notNull(),
