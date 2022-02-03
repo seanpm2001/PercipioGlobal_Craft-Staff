@@ -122,6 +122,21 @@ class Install extends Migration
             'assessmentId' => $this->uid(),
         ]);
 
+        $this->createTable(Table::AUTO_ENROLMENT_ASSESSMENT_ACTION, [
+            'id' => $this->primaryKey(),
+            'dateCreated' => $this->dateTime()->notNull(),
+            'dateUpdated' => $this->dateTime()->notNull(),
+            'uid' => $this->uid(),
+            'action' => $this->enum('status', ['NoChange', 'Enrol', 'Exit', 'Inconclusive', 'Postpone']),
+            'employeeState' => $this->enum('state', ['Automatic', 'OptOut', 'OptIn', 'VoluntaryJoiner', 'ContractualPension', 'CeasedMembership', 'Leaver', 'Excluded', 'Enrol']),
+            'actionCompleted' => $this->boolean(),
+            'actionCompletedMessage' => $this->string(),
+            'requiredLetter' => $this->enum('status', ['B1', 'B2', 'B3']),
+            'pensionSchemeId' => $this->string(),
+            'workerGroupId' => $this->string(),
+            'letterNotYetSent' => $this->boolean(),
+        ]);
+
         $this->createTable(Table::BANK_DETAILS, [
             'id' => $this->primaryKey(),
             'bankName' => $this->string(),

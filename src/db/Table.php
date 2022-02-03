@@ -7,6 +7,7 @@ abstract class Table
     const ADDRESSES = "{{%staff_addresses}}";
     const AUTO_ENROLMENT = "{{%staff_autoenrolment}}";
     const AUTO_ENROLMENT_ASSESSMENT = "{{%staff_autoenrolment_assessment}}";
+    const AUTO_ENROLMENT_ASSESSMENT_ACTION = "{{%staff_autoenrolment_assessment_action}}";
     const BANK_DETAILS = "{{%staff_bankdetails}}";
     const CIS_DETAILS = "{{%staff_cisdetails}}";
     const CIS_PARTNERSHIP = "{{%staff_cis_partnership}}";
