@@ -81,6 +81,17 @@ class Install extends Migration
             'uid' => $this->uid(),
         ]);
 
+        $this->createTable(Table::BANK_DETAILS, [
+            'id' => $this->primaryKey(),
+            'bankName' => $this->string(),
+            'bankBranch' => $this->string(),
+            'bankReference' => $this->string(),
+            'accountName' => $this->string(),
+            'accountNumber' => $this->string(),
+            'sortCode' => $this->string(),
+            'note' => $this->note(),
+        ]);
+
         $this->createTable(Table::COUNTRIES, [
             'id' => $this->primaryKey(),
             'name' => $this->string()->notNull(),
