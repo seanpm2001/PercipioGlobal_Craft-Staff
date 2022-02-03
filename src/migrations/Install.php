@@ -81,6 +81,24 @@ class Install extends Migration
             'uid' => $this->uid(),
         ]);
 
+        $this->createTable(Table::AUTO_ENROLMENT, [
+            'id' => $this->primaryKey(),
+            'dateCreated' => $this->dateTime()->notNull(),
+            'dateUpdated' => $this->dateTime()->notNull(),
+            'uid' => $this->uid(),
+            'state' => $this->enum('state', ['Automatic', 'OptOut', 'OptIn', 'VoluntaryJoiner', 'ContractualPension', 'CeasedMembership', 'Leaver', 'Excluded', 'Enrol']),
+            'stateDate' => $this->dateTime(),
+            'ukWorker' => $this->enum('status', ['No', 'Yes', 'Ordinarily']),
+            'daysToDeferAssessment' => $this->integer(),
+            'postponementData' => $this->dateTime(),
+            'deferByMonthsNotDays' => $this->boolean(),
+            'exempt' => $this->boolean(),
+            'aeExclusionCode' => $this->enum('code', ['NotKnown', 'NotAWorker', 'NotWorkingInUk', 'NoOrdinarilyWorkingInUk', 'OutsideOfAgeRange', 'SingleEmployee', 'CeasedActiveMembershipInPast12Mo', 'CeasedActiveMembership', 'ReceivedWulsInPast12Mo', 'ReceivedWuls', 'Leaving', 'TaxProtection', 'CisSubContractor']),
+            'aePostponementLetterSent' => $this->boolean(),
+            // Link to AeAssessment Table
+            'lastAssessment' => $this->integer(),
+        ]);
+
         $this->createTable(Table::BANK_DETAILS, [
             'id' => $this->primaryKey(),
             'bankName' => $this->string(),
