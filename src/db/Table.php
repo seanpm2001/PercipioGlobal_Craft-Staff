@@ -9,7 +9,7 @@ abstract class Table
     const COUNTRIES = "{{%staff_countries}}";
     const EMPLOYEES = "{{%staff_employees}}";
     const EMPLOYERS = "{{%staff_employers}}";
-    const EMPLOYMENT_DETAILS = "{{%staff_employmentdetails}}"
+    const EMPLOYMENT_DETAILS = "{{%staff_employmentdetails}}";
     const HISTORY = "{{%staff_history}}";
     const LEAVE_SETTINGS = "{{%staff_leavesettings}}";
     const PAYRUN = "{{%staff_payrun}}";
@@ -19,5 +19,6 @@ abstract class Table
     const PERMISSIONS_USERS = "{{%staff_permissions_users}}";
     const PERSONAL_DETAILS = "{{%staff_personal_details}}";
     const REQUESTS = "{{%staff_requests}}";
+    const STARTER_DETAILS = "{{%staff_starterdetails}}";
     const USERS = "{{%staff_users}}";
 }

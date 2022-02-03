@@ -386,8 +386,8 @@ class Install extends Migration
             'id' => $this->primaryKey(),
             'dateCreated' => $this->dateTime()->notNull(),
             'dateUpdated' => $this->dateTime()->notNull(),
-            'dateAdministered' => $this->dateTime()->notNull(),
             'uid' => $this->uid(),
+            'dateAdministered' => $this->dateTime()->notNull(),
             'employerId' => $this->integer()->notNull(),
             'employeeId' => $this->integer()->notNull(),
             'administerId' => $this->integer()->notNull(),
@@ -396,6 +396,17 @@ class Install extends Migration
             'element' => $this->string()->notNull(),
             'status' => $this->string()->notNull(),
             'note' => $this->string(255),
+        ]);
+
+        $this->createTable(Table::STARTER_DETAILS, [
+            'id' => $this->primaryKey(),
+            'dateCreated' => $this->dateTime()->notNull(),
+            'dateUpdated' => $this->dateTime()->notNull(),
+            'uid' => $this->uid(),
+            'startDate' => $this->dateTime(),
+            'starterDeclaration' => $this->string(),
+            'overseasEmployerDetails' => $this->integer(),
+            'pensionerPayroll' => $this->integer(),
         ]);
 
         $this->createTable(Table::USERS, [
