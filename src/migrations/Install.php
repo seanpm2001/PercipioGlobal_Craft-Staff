@@ -113,6 +113,15 @@ class Install extends Migration
             'verification' => $this->integer(),
         ]);
 
+        $this->createTable(Table::CIS_PARTNERSHIP, [
+            'id' => $this->primaryKey(),
+            'dateCreated' => $this->dateTime()->notNull(),
+            'dateUpdated' => $this->dateTime()->notNull(),
+            'uid' => $this->uid(),
+            'name' => $this->string(),
+            'utr' => $this->string(),
+        ]);
+
         $this->createTable(Table::CIS_SUBCONTRACTOR, [
             'id' => $this->primaryKey(),
             'dateCreated' => $this->dateTime()->notNull(),
@@ -522,6 +531,18 @@ class Install extends Migration
             'element' => $this->string()->notNull(),
             'status' => $this->string()->notNull(),
             'note' => $this->string(255),
+        ]);
+
+        $this->createTable(Table::RTI_EMPLOYEE_ADDRESS, [
+            'id' => $this->primaryKey(),
+            'dateCreated' => $this->dateTime()->notNull(),
+            'dateUpdated' => $this->dateTime()->notNull(),
+            'uid' => $this->uid(),
+            'line' => $this->longText(),
+            'postcode' => $this->string(),
+            'postCode' => $this->string(),
+            'ukPostcode' => $this->string(),
+            'country' => $this->string(),
         ]);
 
         $this->createTable(Table::RTI_EMPLOYEE_NAME, [

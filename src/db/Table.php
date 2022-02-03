@@ -7,6 +7,7 @@ abstract class Table
     const ADDRESSES = "{{%staff_addresses}}";
     const BANK_DETAILS = "{{%staff_bankdetails}}";
     const CIS_DETAILS = "{{%staff_cisdetails}}";
+    const CIS_PARTNERSHIP = "{{%staff_cispartnership}}";
     const CIS_SUBCONTRACTOR = "{{%staff_cissubcontractor}}";
     const CIS_VERIFICATION_DETAILS = "{{%staff_cisverificationdetails}}";
     const COUNTRIES = "{{%staff_countries}}";
@@ -27,6 +28,7 @@ abstract class Table
     const PERMISSIONS_USERS = "{{%staff_permissions_users}}";
     const PERSONAL_DETAILS = "{{%staff_personal_details}}";
     const REQUESTS = "{{%staff_requests}}";
+    const RTI_EMPLOYEE_ADDRESS = "{{%staff_rtiemployeeaddress}}";
     const RTI_EMPLOYEE_NAME = "{{%staff_rtiemployeename}}";
     const STARTER_DETAILS = "{{%staff_starterdetails}}";
     const USERS = "{{%staff_users}}";
