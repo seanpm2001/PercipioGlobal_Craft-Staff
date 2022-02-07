@@ -468,11 +468,11 @@ class Install extends Migration
             'withholdTaxRefundIfPayIsZero' => $this->boolean(),
             'mileageVehicleType' => $this->enum('type', ['Car', 'Motorcycle', 'Cycle']),
             'mapsMiles' => $this->integer(),
-            // Link to TaxAndNi Table
+            // Link to TaxAndNi Table --> create ID to table (FK)
             'taxAndNi' => $this->integer(),
-            // Link to fpsFields Table
+            // Link to fpsFields Table --> create ID to table (FK)
             'fpsFields' => $this->integer(),
-            // Link to PayLines table // could hold multiple values/integers
+            // Link to PayLines table // could hold multiple values/integers --> create ID to table (FK)
             'regularPayLines' => $this->integer(),
         ]);
 
@@ -492,8 +492,8 @@ class Install extends Migration
             'paymentDate' => $this->dateTime()->notNull(),
             'employeeCount' => $this->integer()->notNull()->defaultValue(0),
             'subContractorCount' => $this->integer()->notNull()->defaultValue(0),
-            // @TODO: create own table
-            'totals' => $this->longText()->notNull(),
+            // @TODO: create own table --> create ID to table (FK)
+            'totals' => $this->integer()->notNull(),
             'state' => $this->string(255)->notNull()->defaultValue(''),
             'isClosed' => $this->boolean()->notNull(),
             'dateClosed' => $this->dateTime(),

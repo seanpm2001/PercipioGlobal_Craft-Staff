@@ -47,7 +47,7 @@ use percipiolondon\staff\db\Table;
  * @property \DateTime $paymentDate;
  * @property int $employeeCount;
  * @property int $subContractorCount;
- * @property string $totals;
+ * @property integer $totals;
  * @property string $state;
  * @property boolean $isClosed;
  * @property \DateTime $dateClosed;
