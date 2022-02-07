@@ -60,6 +60,6 @@ class Permission extends ActiveRecord
      */
     public static function tableName()
     {
-        return Table::STAFF_PERMISSIONS;
+        return Table::PERMISSIONS;
     }
 }
