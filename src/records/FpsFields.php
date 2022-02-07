@@ -34,7 +34,6 @@ use percipiolondon\staff\db\Table;
  */
 
 /**
- * Employer record
  * @property string $offPayrollWorker;
  * @property boolean $irregularPaymentPattern;
  * @property boolean $nonIndividual;
