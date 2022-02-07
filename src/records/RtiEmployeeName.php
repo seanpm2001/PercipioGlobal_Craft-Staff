@@ -17,14 +17,13 @@ use craft\db\ActiveRecord;
 use percipiolondon\staff\db\Table;
 
 /**
- * @property string $line;
- * @property string $postcode_v1;
- * @property string $postcode_v2;
- * @property string $ukPostcode;
- * @property string $country;
+ * @property string ttl;
+ * @property string fore;
+ * @property string initials;
+ * @property string sur;
  */
 
-class RtiEmployeeAddress extends ActiveRecord
+class RtiEmployeeName extends ActiveRecord
 {
     // Public Static Methods
     // =========================================================================
@@ -43,6 +42,6 @@ class RtiEmployeeAddress extends ActiveRecord
      */
     public static function tableName()
     {
-        return Table::RTI_EMPLOYEE_ADDRESS;
+        return Table::RTI_EMPLOYEE_NAME;
     }
 }
