@@ -374,6 +374,28 @@ class Install extends Migration
             'type' => $this->string()->notNull(),
         ]);
 
+        $this->createTable(Table::HMRC_DETAILS, [
+            'id' => $this->primaryKey(),
+            'dateCreated' => $this->dateTime()->notNull(),
+            'dateUpdated' => $this->dateTime()->notNull(),
+            'uid' => $this->uid(),
+            //fields
+            'officeNumber' => $this->string(),
+            'payeReference' => $this->string(),
+            'accountsOfficeReference' => $this->string(),
+            'econ' => $this->string(),
+            'utr' => $this->string(),
+            'coTax' => $this->string(),
+            'employmentAllowance' => $this->boolean(),
+            'employmentAllowanceMaxClaim' => $this->double(),
+            'smallEmployersRelief' => $this->boolean(),
+            'apprenticeshipLevy' => $this->boolean(),
+            'apprenticeshipLevyAllowance' => $this->double(),
+            'quarterlyPaymentSchedule' => $this->boolean(),
+            'includeEmploymentAllowanceOnMonthlyJournal' => $this->boolean(),
+            'carryForwardUnpaidLiabilities' => $this->boolean(),
+        ]);
+
         $this->createTable(Table::ITEMS, [
             'id' => $this->primaryKey(),
             'dateCreated' => $this->dateTime()->notNull(),
@@ -728,10 +750,10 @@ class Install extends Migration
             'dateCreated' => $this->dateTime()->notNull(),
             'dateUpdated' => $this->dateTime()->notNull(),
             'uid' => $this->uid(),
-            // Custom columns in the table
+            //FK
+            'metadata' => $this->longText()->notNull(), // @TODO: create own table
+            // fields
             'staffologyId' => $this->string(255)->notNull(),
-            // @TODO: create own table
-            'metadata' => $this->longText()->notNull(),
         ]);
 
     }
@@ -789,6 +811,7 @@ class Install extends Migration
             Table::EMPLOYMENT_DETAILS,
             Table::FPS_FIELDS,
             Table::HISTORY,
+            Table::HMRC_DETAILS,
             Table::ITEMS,
             Table::LEAVE_SETTINGS,
             Table::LEAVER_DETAILS,
