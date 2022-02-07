@@ -10,6 +10,7 @@
 
 namespace percipiolondon\staff\elements;
 
+use craft\db\Query;
 use percipiolondon\staff\Staff;
 
 use Craft;
@@ -192,8 +193,8 @@ class Employee extends Element
     public static function statuses(): array
     {
         return [
-            self::STATUS_ENABLED => Craft::t('company-management', 'Enabled'),
-            self::STATUS_DISABLED => Craft::t('company-management', 'Disabled'),
+            self::STATUS_ENABLED => Craft::t('staff-management', 'Enabled'),
+            self::STATUS_DISABLED => Craft::t('staff-management', 'Disabled'),
         ];
     }
 
