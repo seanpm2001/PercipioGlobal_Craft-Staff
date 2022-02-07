@@ -673,11 +673,10 @@ class Install extends Migration
             'dateCreated' => $this->dateTime()->notNull(),
             'dateUpdated' => $this->dateTime()->notNull(),
             'uid' => $this->uid(),
+            //field
             'line' => $this->longText(),
-            //staffology api call --> postcode
-            'postcode_v1' => $this->string(),
-            //staffology api call --> postCode
-            'postcode_v2' => $this->string(),
+            'postcode_v1' => $this->string(), //staffology api call --> postcode
+            'postcode_v2' => $this->string(), //staffology api call --> postCode
             'ukPostcode' => $this->string(),
             'country' => $this->string(),
         ]);
