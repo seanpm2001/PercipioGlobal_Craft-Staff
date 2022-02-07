@@ -17,13 +17,13 @@ use craft\db\ActiveRecord;
 use percipiolondon\staff\db\Table;
 
 /**
- * @property string $ttl;
- * @property string $fore;
- * @property string $initials;
- * @property string $sur;
+ * @property \DateTime $startDate;
+ * @property string $starterDeclaration;
+ * @property integer $overseasEmployerDetails;
+ * @property integer $pensionerPayroll;
  */
 
-class RtiEmployeeName extends ActiveRecord
+class StarterDetails extends ActiveRecord
 {
     // Public Static Methods
     // =========================================================================
@@ -42,6 +42,6 @@ class RtiEmployeeName extends ActiveRecord
      */
     public static function tableName()
     {
-        return Table::RTI_EMPLOYEE_NAME;
+        return Table::STARTER_DETAILS;
     }
 }
