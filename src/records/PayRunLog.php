@@ -34,13 +34,12 @@ use percipiolondon\staff\db\Table;
  *
  *
  * PayRunLog record
- * @property string $siteId;
  * @property string $taxYear;
- * @property int $employeeCount;
- * @property int $lastPeriodNumber;
+ * @property integer $employeeCount;
+ * @property integer $lastPeriodNumber;
  * @property string $url
- * @property int $employerId
- * @property int $payRunId
+ * @property integer $employerId
+ * @property integer $payRunId
  */
 
 class PayRunLog extends ActiveRecord
@@ -62,6 +61,6 @@ class PayRunLog extends ActiveRecord
      */
     public static function tableName()
     {
-        return Table::STAFF_PAYRUN_LOG;
+        return Table::PAYRUN_LOG;
     }
 }
