@@ -6,19 +6,35 @@ use craft\db\ActiveRecord;
 use percipiolondon\staff\db\Table;
 
 /**
+ * @property string $employeeUniqueId;
+ * @property string $emailStatementTo;
+ * @property integer $numberOfPayments;
+ * @property integer $item;
+ * @property string $displayName;
+ * @property string $action;
  * @property string $type;
- * @property string $utr;
+ * @property integer $name;
  * @property string $tradingName;
- * @property string $companyUtr;
- * @property string $companyNumber;
- * @property boolean $vatRegistered;
- * @property string $vatNumber;
- * @property double $vatRate;
- * @property boolean $reverseChargeVAT;
- * @property integer $verification;
+ * @property string $worksRef;
+ * @property string $unmatchedRate;
+ * @property string $utr;
+ * @property string $crn;
+ * @property string $nino;
+ * @property integer $partnership;
+ * @property integer $address;
+ * @property string $telephone;
+ * @property string $totalPaymentsUnrounded;
+ * @property string $costOfMaterialsUnrounded;
+ * @property string $umbrellaFee;
+ * @property string $validationMsg;
+ * @property string $totalPayments;
+ * @property string $costOfMaterials;
+ * @property string $totalDeducted;
+ * @property string $matched;
+ * @property string $taxTreatment;
  */
 
-class CisDetails extends ActiveRecord
+class CisSubcontractor extends ActiveRecord
 {
     // Public Static Methods
     // =========================================================================
@@ -37,6 +53,6 @@ class CisDetails extends ActiveRecord
      */
     public static function tableName()
     {
-        return Table::CIS_DETAILS;
+        return Table::CIS_SUBCONTRACTOR;
     }
 }

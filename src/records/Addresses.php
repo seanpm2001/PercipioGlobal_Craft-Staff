@@ -6,7 +6,6 @@ use craft\db\ActiveRecord;
 use percipiolondon\staff\db\Table;
 
 /**
- * Addresses record
  * @property int $countryId;
  * @property int $countyId;
  * @property string $address1;

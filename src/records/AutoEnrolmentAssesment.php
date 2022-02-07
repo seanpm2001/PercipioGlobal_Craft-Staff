@@ -6,7 +6,6 @@ use craft\db\ActiveRecord;
 use percipiolondon\staff\db\Table;
 
 /**
- * Addresses record
  * @property \DateTime $assessmentDate;
  * @property string $employeeState;
  * @property integer $age;

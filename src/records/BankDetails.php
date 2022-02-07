@@ -6,7 +6,6 @@ use craft\db\ActiveRecord;
 use percipiolondon\staff\db\Table;
 
 /**
- * Addresses record
  * @property string $bankName;
  * @property string $bankBranch;
  * @property string $bankReference;

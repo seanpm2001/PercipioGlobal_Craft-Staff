@@ -6,7 +6,6 @@ use craft\db\ActiveRecord;
 use percipiolondon\staff\db\Table;
 
 /**
- * Addresses record
  * @property string $name;
  * @property string $utr;
  */
