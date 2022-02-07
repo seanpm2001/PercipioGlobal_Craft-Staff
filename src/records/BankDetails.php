@@ -7,16 +7,16 @@ use percipiolondon\staff\db\Table;
 
 /**
  * Addresses record
- * @property string $action;
- * @property string $employeeState;
- * @property boolean $actionCompleted;
- * @property string $actionCompletedMessage;
- * @property string $requiredLetter;
- * @property string $pensionSchemeId;
- * @property string $workerGroupId;
+ * @property string $bankName;
+ * @property string $bankBranch;
+ * @property string $bankReference;
+ * @property string $accountName;
+ * @property string $accountNumber;
+ * @property string $sortCode;
+ * @property string $note;
  */
 
-class AutoEnrolmentAssesmentAction extends ActiveRecord
+class BankDetails extends ActiveRecord
 {
     // Public Static Methods
     // =========================================================================
@@ -35,6 +35,6 @@ class AutoEnrolmentAssesmentAction extends ActiveRecord
      */
     public static function tableName()
     {
-        return Table::AUTO_ENROLMENT_ASSESSMENT_ACTION;
+        return Table::BANK_DETAILS;
     }
 }

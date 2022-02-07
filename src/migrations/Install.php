@@ -139,6 +139,9 @@ class Install extends Migration
 
         $this->createTable(Table::BANK_DETAILS, [
             'id' => $this->primaryKey(),
+            'dateCreated' => $this->dateTime()->notNull(),
+            'dateUpdated' => $this->dateTime()->notNull(),
+            'uid' => $this->uid(),
             'bankName' => $this->string(),
             'bankBranch' => $this->string(),
             'bankReference' => $this->string(),
@@ -146,9 +149,6 @@ class Install extends Migration
             'accountNumber' => $this->string(),
             'sortCode' => $this->string(),
             'note' => $this->string(),
-            'dateCreated' => $this->dateTime()->notNull(),
-            'dateUpdated' => $this->dateTime()->notNull(),
-            'uid' => $this->uid(),
         ]);
 
         $this->createTable(Table::CIS_DETAILS, [
