@@ -501,20 +501,6 @@ class Install extends Migration
             'employerId' => $this->integer()->notNull()->defaultValue(null),
         ]);
 
-        $this->createTable(Table::PAYRUN_LOG, [
-            'id' => $this->primaryKey(),
-            'dateCreated' => $this->dateTime()->notNull(),
-            'dateUpdated' => $this->dateTime()->notNull(),
-            'uid' => $this->uid(),
-            // Custom columns in the table
-            'employeeCount' => $this->integer()->notNull()->defaultValue(0),
-            'taxYear' => $this->string(255)->notNull()->defaultValue(''),
-            'lastPeriodNumber' => $this->integer()->notNull()->defaultValue(0),
-            'url' => $this->string(255)->notNull()->defaultValue(0),
-            'employerId' => $this->integer()->notNull()->defaultValue(0),
-            'payRunId' => $this->integer()->notNull()->defaultValue(0),
-        ]);
-
         $this->createTable(Table::PAYRUN_ENTRIES, [
             'id' => $this->primaryKey(),
             'dateCreated' => $this->dateTime()->notNull(),
@@ -526,8 +512,8 @@ class Install extends Migration
             'taxYear' => $this->string(255)->defaultValue(''),
             'startDate' => $this->dateTime(),
             'endDate' => $this->dateTime(),
-            // @TODO: create own table
-            'note' => $this->longText(),
+            // @TODO: create own table --> create ID to table (FK)
+            'note' => $this->integer(),
             'bacsSubReference' => $this->string(255)->defaultValue(''),
             'bacsHashcode' => $this->string(255)->defaultValue(''),
             'percentageOfWorkingDaysPaidAsNormal' => $this->double()->defaultValue(0),
@@ -540,37 +526,51 @@ class Install extends Migration
             'hasAttachmentOrders' => $this->boolean(),
             'paymentDate' => $this->dateTime(),
             'priorPayrollCode' => $this->string(255)->defaultValue(''),
-            // @TODO: create own table
-            'payOptions' => $this->longText(),
-            // @TODO: create own table
-            'pensionSummary' => $this->longText(),
-            // @TODO: create own table
-            'totals' => $this->longText(),
-            // @TODO: create own table
-            'periodOverrides' => $this->longText(),
-            // @TODO: create own table
-            'totalsYtd' => $this->longText(),
-            // @TODO: create own table
-            'totalsYtdOverrides' => $this->longText(),
+            // @TODO: create own table --> create ID to table (FK)
+            'payOptions' => $this->integer(),
+            // @TODO: create own table --> create ID to table (FK)
+            'pensionSummary' => $this->integer(),
+            // @TODO: create own table --> create ID to table (FK)
+            'totals' => $this->integer(),
+            // @TODO: create own table --> create ID to table (FK)
+            'periodOverrides' => $this->integer(),
+            // @TODO: create own table --> create ID to table (FK)
+            'totalsYtd' => $this->integer(),
+            // @TODO: create own table --> create ID to table (FK)
+            'totalsYtdOverrides' => $this->integer(),
             'forcedCisVatAmount' => $this->double()->defaultValue(0),
             'holidayAccrued' => $this->double()->defaultValue(0),
             'state' => $this->string(255)->defaultValue('Open'),
             'isClosed' => $this->boolean(),
             'manualNi' => $this->boolean(),
             // @TODO: create own table
-            'nationalInsuranceCalculation' => $this->longText(),
+            'nationalInsuranceCalculation' => $this->integer(),
             'payrollCodeChanged' => $this->boolean(),
             'aeNotEnroledWarning' => $this->boolean(),
             'fps' => $this->longText(),
             'receivingOffsetPay' => $this->boolean(),
             'paymentAfterLearning' => $this->boolean(),
-            // @TODO: create own table
-            'umbrellaPayment' => $this->longText(),
-            // @TODO: create own table
-            'employee' => $this->longText(),
+            // @TODO: create own table --> create ID to table (FK)
+            'umbrellaPayment' => $this->integer(),
+            // @TODO: create own table --> create ID to table (FK)
+            'employee' => $this->integer(),
             'pdf' => $this->string()->defaultValue(''),
             'employerId' => $this->integer()->notNull()->defaultValue(null),
             'employeeId' => $this->integer()->notNull()->defaultValue(null),
+        ]);
+
+        $this->createTable(Table::PAYRUN_LOG, [
+            'id' => $this->primaryKey(),
+            'dateCreated' => $this->dateTime()->notNull(),
+            'dateUpdated' => $this->dateTime()->notNull(),
+            'uid' => $this->uid(),
+            // Custom columns in the table
+            'employeeCount' => $this->integer()->notNull()->defaultValue(0),
+            'taxYear' => $this->string(255)->notNull()->defaultValue(''),
+            'lastPeriodNumber' => $this->integer()->notNull()->defaultValue(0),
+            'url' => $this->string(255)->notNull()->defaultValue(0),
+            'employerId' => $this->integer()->notNull()->defaultValue(0),
+            'payRunId' => $this->integer()->notNull()->defaultValue(0),
         ]);
 
         $this->createTable(Table::PENSIONER_PAYROLL, [

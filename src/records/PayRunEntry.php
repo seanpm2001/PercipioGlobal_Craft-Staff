@@ -55,25 +55,25 @@ use percipiolondon\staff\db\Table;
  * @property boolean $hasAttachmentOrders
  * @property \DateTime $paymentDate
  * @property string $priorPayrollCode
- * @property string $payOptions
- * @property string $pensionSummary
- * @property string $totals
- * @property string $periodOverrides
- * @property string $totalsYtd
- * @property string $totalsYtdOverrides
+ * @property integer $payOptions
+ * @property integer $pensionSummary
+ * @property integer $totals
+ * @property integer $periodOverrides
+ * @property integer $totalsYtd
+ * @property integer $totalsYtdOverrides
  * @property double $forcedCisVatAmount
  * @property double $holidayAccured
  * @property string $state
  * @property boolean $isClosed
  * @property boolean $manualNi
- * @property string $nationalInsuranceCalculation
+ * @property integer $nationalInsuranceCalculation
  * @property boolean $payrollCodeChanged
  * @property boolean $aeNotEnroledWarning
  * @property string $fps
  * @property boolean $receivingOffsetPay
  * @property boolean $paymentAfterLearning
- * @property string $umbrellaPayment
- * @property string $employee
+ * @property integer $umbrellaPayment
+ * @property integer $employee
  * @property int $employeeId
  * @property string $pdf
  */
