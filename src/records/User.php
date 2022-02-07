@@ -10,12 +10,17 @@
 
 namespace percipiolondon\staff\records;
 
+use percipiolondon\staff\db\Table;
 use percipiolondon\staff\Staff;
 
 use Craft;
 use craft\db\ActiveRecord;
 
-class HardingUser extends ActiveRecord
+/**
+ * @property string $metadata;
+ */
+
+class User extends ActiveRecord
 {
     // Public Static Methods
     // =========================================================================
@@ -34,6 +39,6 @@ class HardingUser extends ActiveRecord
      */
     public static function tableName()
     {
-        return '{{%staff_hardinguser}}';
+        return Table::USERS;
     }
 }
