@@ -304,14 +304,14 @@ class Install extends Migration
             'name' => $this->string(255)->notNull(),
             'crn' => $this->string(),
             // @TODO: create ID to table ( FK )
-            'address' => $this->longText(),
-            // @TODO: create own table
-            'hmrcDetails' => $this->longText(),
+            'address' => $this->integer(),
+            // @TODO: create own table --> create ID to table (FK)
+            'hmrcDetails' => $this->integer(),
             'startYear' => $this->string(255)->notNull(),
             'currentYear' => $this->string(255)->notNull(),
             'employeeCount' => $this->integer()->notNull()->defaultValue(0),
-            // @TODO: create own table
-            'defaultPayOptions' => $this->longText(),
+            // @TODO: create own table --> create ID to table (FK)
+            'defaultPayOptions' => $this->integer(),
         ]);
 
         $this->createTable(Table::EMPLOYMENT_DETAILS, [

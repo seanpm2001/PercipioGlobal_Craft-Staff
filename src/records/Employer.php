@@ -36,17 +36,16 @@ use percipiolondon\staff\db\Table;
 /**
  * Employer record
 * @property string $slug;
-* @property int $siteId;
 * @property string $staffologyId;
 * @property string $name;
 * @property int $logoId;
 * @property string $crn;
-* @property string $address;
-* @property string $hmrcDetails;
+* @property integer $address;
+* @property integer $hmrcDetails;
 * @property string $startYear;
 * @property string $currentYear;
 * @property int $employeeCount;
-* @property string $defaultPayOptions;
+* @property integer $defaultPayOptions;
  */
 
 class Employer extends ActiveRecord
