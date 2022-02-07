@@ -382,6 +382,9 @@ class Install extends Migration
 
         $this->createTable(Table::LEAVE_SETTINGS, [
             'id' => $this->primaryKey(),
+            'dateCreated' => $this->dateTime()->notNull(),
+            'dateUpdated' => $this->dateTime()->notNull(),
+            'uid' => $this->uid(),
             'useDefaultHolidayType' => $this->boolean(),
             'useDefaultAllowanceResetDate' => $this->boolean(),
             'useDefaultAllowance' => $this->boolean(),
@@ -408,9 +411,6 @@ class Install extends Migration
             'accruedPaymentAdjustment' => $this->double(),
             'accruedPaymentPaid' => $this->double(),
             'accruedPaymentBalance' => $this->double(),
-            'dateCreated' => $this->dateTime()->notNull(),
-            'dateUpdated' => $this->dateTime()->notNull(),
-            'uid' => $this->uid(),
         ]);
 
         $this->createTable(Table::LEAVER_DETAILS, [
