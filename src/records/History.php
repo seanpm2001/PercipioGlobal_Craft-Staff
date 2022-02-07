@@ -35,13 +35,14 @@ use percipiolondon\staff\db\Table;
 
 /**
  * Employer record
- * @property string $offPayrollWorker;
- * @property boolean $irregularPaymentPattern;
- * @property boolean $nonIndividual;
- * @property string $hoursNormallyWorked;
+ * @property string $employerId;
+ * @property boolean $employeeId;
+ * @property boolean $administerId;
+ * @property string $message;
+ * @property string $type;
  */
 
-class FpsFields extends ActiveRecord
+class History extends ActiveRecord
 {
     // Public Static Methods
     // =========================================================================
@@ -60,6 +61,6 @@ class FpsFields extends ActiveRecord
      */
     public static function tableName()
     {
-        return Table::FPS_FIELDS;
+        return Table::HISTORY;
     }
 }
