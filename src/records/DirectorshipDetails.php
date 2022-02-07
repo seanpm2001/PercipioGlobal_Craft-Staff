@@ -6,12 +6,13 @@ use craft\db\ActiveRecord;
 use percipiolondon\staff\db\Table;
 
 /**
- * @property string $name;
- * @property string $iso;
- * @property integer $sortOrder;
+ * @property boolean $isDirector;
+ * @property \DateTime $startDate;
+ * @property \DateTime $leaveDate;
+ * @property boolean $niAlternativeMethod;
  */
 
-class Countries extends ActiveRecord
+class DirectorshipDetails extends ActiveRecord
 {
     // Public Static Methods
     // =========================================================================
@@ -30,6 +31,6 @@ class Countries extends ActiveRecord
      */
     public static function tableName()
     {
-        return Table::COUNTRIES;
+        return Table::DIRECTORSHIP_DETAILS;
     }
 }

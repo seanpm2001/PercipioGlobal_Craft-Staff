@@ -6,10 +6,10 @@ use craft\db\ActiveRecord;
 use percipiolondon\staff\db\Table;
 
 /**
- * @property string code;
- * @property string title;
- * @property string color;
- * @property integer employeeCount;
+ * @property string $code;
+ * @property string $title;
+ * @property string $color;
+ * @property integer $employeeCount;
  */
 
 class Department extends ActiveRecord
