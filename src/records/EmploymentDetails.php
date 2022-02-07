@@ -10,12 +10,14 @@
 
 namespace percipiolondon\staff\records;
 
+use percipiolondon\staff\Staff;
+
 use Craft;
 use craft\db\ActiveRecord;
 use percipiolondon\staff\db\Table;
 
 /**
- * Employee Record
+ * Employer Record
  *
  * ActiveRecord is the base class for classes representing relational data in terms of objects.
  *
@@ -32,30 +34,26 @@ use percipiolondon\staff\db\Table;
  */
 
 /**
- * Employee record
+ * Employer record
+ * @property string $slug;
  * @property string $staffologyId;
- * @property int $employerId;
- * @property int $userId;
- * @property boolean $isDirector
- * @property integer $personalDetails;
- * @property integer $employmentDetails;
- * @property integer $autoEnrolment;
- * @property integer $leaveSettings;
- * @property integer $rightToWork;
- * @property integer $bankDetails;
- * @property integer $payOptions;
- * @property string $status;
- * @property boolean $aeNotEnroledWarning;
- * @property string $niNumber
- * @property string $sourceSystemId;
+ * @property string $name;
+ * @property int $logoId;
+ * @property string $crn;
+ * @property integer $address;
+ * @property integer $hmrcDetails;
+ * @property string $startYear;
+ * @property string $currentYear;
+ * @property int $employeeCount;
+ * @property integer $defaultPayOptions;
  */
 
-class Employee extends ActiveRecord
+class EmploymentDetails extends ActiveRecord
 {
     // Public Static Methods
     // =========================================================================
 
-     /**
+    /**
      * Declares the name of the database table associated with this AR class.
      * By default this method returns the class name as the table name by calling [[Inflector::camel2id()]]
      * with prefix [[Connection::tablePrefix]]. For example if [[Connection::tablePrefix]] is `tbl_`,
@@ -69,6 +67,6 @@ class Employee extends ActiveRecord
      */
     public static function tableName()
     {
-        return Table::EMPLOYEES;
+        return Table::EMPLOYMENT_DETAILS;
     }
 }

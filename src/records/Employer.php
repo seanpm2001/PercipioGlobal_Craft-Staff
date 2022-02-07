@@ -67,6 +67,6 @@ class Employer extends ActiveRecord
      */
     public static function tableName()
     {
-        return Table::STAFF_EMPLOYERS;
+        return Table::EMPLOYEES;
     }
 }
