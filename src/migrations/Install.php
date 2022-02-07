@@ -29,7 +29,7 @@ use yii\base\NotSupportedException;
  */
 class Install extends Migration
 {
-
+    public $driver;
 
     // Public Methods
     // =========================================================================
@@ -56,8 +56,8 @@ class Install extends Migration
     public function safeDown()
     {
 
-        $this->dropForeignKeys();
-        $this->removeTables();
+//        $this->dropForeignKeys();
+//        $this->dropTables();
 
         return true;
     }
@@ -145,7 +145,7 @@ class Install extends Migration
             'accountName' => $this->string(),
             'accountNumber' => $this->string(),
             'sortCode' => $this->string(),
-            'note' => $this->note(),
+            'note' => $this->string(),
             'dateCreated' => $this->dateTime()->notNull(),
             'dateUpdated' => $this->dateTime()->notNull(),
             'uid' => $this->uid(),
@@ -623,7 +623,7 @@ class Install extends Migration
                 'telephone' => $this->string(255),
                 'mobile' => $this->string(255),
                 'dob' => $this->dateTime()->notNull(),
-                'statePensionAge' => $this->int()->notNull(),
+                'statePensionAge' => $this->integer()->notNull(),
                 'gender' => $this->enum('gender', ['Male', 'Female'])->notNull(),
                 'niNumber' => $this->string(255)->notNull(),
                 'passportNumber' => $this->string(255)->notNull(),
@@ -664,8 +664,10 @@ class Install extends Migration
             'dateUpdated' => $this->dateTime()->notNull(),
             'uid' => $this->uid(),
             'line' => $this->longText(),
-            'postcode' => $this->string(),
-            'postCode' => $this->string(),
+            //staffology api call --> postcode
+            'postcode_v1' => $this->string(),
+            //staffology api call --> postCode
+            'postcode_v2' => $this->string(),
             'ukPostcode' => $this->string(),
             'country' => $this->string(),
         ]);
@@ -726,17 +728,17 @@ class Install extends Migration
      * Drop the tables
      */
     public function dropTables() {
-        $this->dropTableIfExists(Table::EMPLOYEES);
-        $this->dropTableIfExists(Table::EMPLOYERS);
-        $this->dropTableIfExists(Table::HISTORY);
-        $this->dropTableIfExists(Table::PAYRUN);
-        $this->dropTableIfExists(Table::PAYRUN_LOG);
-        $this->dropTableIfExists(Table::PAYRUN_ENTRIES);
-        $this->dropTableIfExists(Table::PERMISSIONS);
-        $this->dropTableIfExists(Table::PERMISSIONS_USERS);
-        $this->dropTableIfExists(Table::PERSONAL_DETAILS);
-        $this->dropTableIfExists(Table::REQUESTS);
-        $this->dropTableIfExists(Table::USERS);
+//        $this->dropTableIfExists(Table::EMPLOYEES);
+//        $this->dropTableIfExists(Table::EMPLOYERS);
+//        $this->dropTableIfExists(Table::HISTORY);
+//        $this->dropTableIfExists(Table::PAYRUN);
+//        $this->dropTableIfExists(Table::PAYRUN_LOG);
+//        $this->dropTableIfExists(Table::PAYRUN_ENTRIES);
+//        $this->dropTableIfExists(Table::PERMISSIONS);
+//        $this->dropTableIfExists(Table::PERMISSIONS_USERS);
+//        $this->dropTableIfExists(Table::PERSONAL_DETAILS);
+//        $this->dropTableIfExists(Table::REQUESTS);
+//        $this->dropTableIfExists(Table::USERS);
 
         return null;
     }
@@ -750,14 +752,6 @@ class Install extends Migration
         //$this->createIndex(null, Table::STAFF_EMPLOYEES, 'niNumber', false);
         //$this->createIndex(null, Table::STAFF_REQUESTS, 'element', false);
         //$this->createIndex(null, Table::STAFF_HISTORY, 'type', false);
-    }
-
-    /**
-     * Adds the foreign keys
-     */
-    public function addForeignKeys()
-    {
-
     }
 
     /**
