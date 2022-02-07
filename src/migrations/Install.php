@@ -436,6 +436,20 @@ class Install extends Migration
             'epm6Scheme' => $this->boolean(),
         ]);
 
+        $this->createTable(Table::PAYLINES, [
+            'id' => $this->primaryKey(),
+            'dateCreated' => $this->dateTime()->notNull(),
+            'dateUpdated' => $this->dateTime()->notNull(),
+            'uid' => $this->uid(),
+            'value' => $this->double(),
+            'rate' => $this->double(),
+            'multiplier' => $this->double(),
+            'description' => $this->string(),
+            'attachmentOrderId' => $this->string(),
+            'pensionId' => $this->string(),
+            'code' => $this->string(),
+        ]);
+
         $this->createTable(Table::PAY_OPTIONS, [
             'id' => $this->primaryKey(),
             'dateCreated' => $this->dateTime()->notNull(),
@@ -460,20 +474,6 @@ class Install extends Migration
             'fpsFields' => $this->integer(),
             // Link to PayLines table // could hold multiple values/integers
             'regularPayLines' => $this->integer(),
-        ]);
-
-        $this->createTable(Table::PAYLINES, [
-            'id' => $this->primaryKey(),
-            'dateCreated' => $this->dateTime()->notNull(),
-            'dateUpdated' => $this->dateTime()->notNull(),
-            'uid' => $this->uid(),
-            'value' => $this->double(),
-            'rate' => $this->double(),
-            'multiplier' => $this->double(),
-            'description' => $this->string(),
-            'attachmentOrderId' => $this->string(),
-            'pensionId' => $this->string(),
-            'code' => $this->string(),
         ]);
 
         $this->createTable(Table::PAYRUN, [
