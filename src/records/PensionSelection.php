@@ -17,28 +17,17 @@ use craft\db\ActiveRecord;
 use percipiolondon\staff\db\Table;
 
 /**
-* @property string $slug;
-*
-* @property integer $addressId;
-* @property integer $hmrcDetailsId;
-* @property integer $defaultPayOptionsId;
-* @property integer $bankDetailsId;
-*
-* @property string $staffologyId;
-* @property string $name;
-* @property int $logoId;
-* @property string $crn;
-* @property string $startYear;
-* @property string $currentYear;
-* @property int $employeeCount;
+ * @property string $pensionScheme;
+ *
+ * @property integer $workerGroupId;
  */
 
-class Employer extends ActiveRecord
+class PensionSelection extends ActiveRecord
 {
     // Public Static Methods
     // =========================================================================
 
-     /**
+    /**
      * Declares the name of the database table associated with this AR class.
      * By default this method returns the class name as the table name by calling [[Inflector::camel2id()]]
      * with prefix [[Connection::tablePrefix]]. For example if [[Connection::tablePrefix]] is `tbl_`,
@@ -52,6 +41,6 @@ class Employer extends ActiveRecord
      */
     public static function tableName()
     {
-        return Table::EMPLOYEES;
+        return Table::PENSION_SELECTION;
     }
 }

@@ -88,7 +88,7 @@ class Install extends Migration
             'dateUpdated' => $this->dateTime()->notNull(),
             'uid' => $this->uid(),
             //FK
-            'lastAssessment' => $this->integer(), // Create FK to AeAssessment Table
+            'lastAssessment' => $this->integer(), // @TODO: Create FK to AeAssessment Table
             //fields
             'state' => $this->enum('state', ['Automatic', 'OptOut', 'OptIn', 'VoluntaryJoiner', 'ContractualPension', 'CeasedMembership', 'Leaver', 'Excluded', 'Enrol']),
             'stateDate' => $this->dateTime(),
@@ -247,6 +247,16 @@ class Install extends Migration
             'sortOrder' => $this->integer(),
         ]);
 
+        $this->createTable(Table::CUSTOM_PAY_CODES, [
+            'id' => $this->primaryKey(),
+            'dateCreated' => $this->dateTime()->notNull(),
+            'dateUpdated' => $this->dateTime()->notNull(),
+            'uid' => $this->uid(),
+            //FK
+            'payCodeCode' => $this->string(),
+            'pensionSchemeId' => $this->integer(),
+        ]);
+
         $this->createTable(Table::DEPARTMENT, [
             'id' => $this->primaryKey(),
             'dateCreated' => $this->dateTime()->notNull(),
@@ -286,7 +296,7 @@ class Install extends Migration
             'autoEnrolmentId' => $this->integer(), // @TODO: create ID to table ( FK )
             'leaveSettingsId' => $this->integer(), // @TODO: create ID to table ( FK )
             'rightToWorkId' => $this->integer(), // @TODO: create ID to table ( FK )
-            'bankDetailsId' => $this->integer(), // @TODO: create ID to table ( FK )
+            'bankDetailsId' => $this->integer(), // @TODO: create ID to table ( FK: bankName )
             'payOptionsId' => $this->integer(), // @TODO: create ID to table ( FK )
             //fields
             'staffologyId' => $this->string(255)->notNull(),
@@ -304,16 +314,37 @@ class Install extends Migration
             'uid' => $this->uid(),
             'slug' => $this->string(255)->notNull(),
             //FK
-            'addressId' => $this->integer(), // @TODO: create ID to table ( FK )
-            'hmrcDetailsId' => $this->integer(), // @TODO: create own table --> create ID to table (FK)
-            'defaultPayOptionsId' => $this->integer(),// @TODO: create own table --> create ID to table (FK)
+            'addressId' => $this->integer(), // @TODO: create FK to Addresses table
+            'defaultPayOptionsId' => $this->integer(), // @TODO: create FK to PayOptions table
+            'bankDetailsId' => $this->integer(), // @TODO: create FK (bankName) to BankDetails table
+            'hmrcDetailsId' => $this->integer(), // @TODO: create FK to HmrcDetails table
+            'defaultPensionId' => $this->integer(), // @TODO: create Table --> create FK to defaultPension table
+            'rtiSubmissionSettingsId' => $this->integer(), // @TODO: create Table --> create FK to rtiSubmissionSettings table
+            'autoEnrolmentSettingsId' => $this->integer(), // @TODO: create Table --> create FK to autoEnrolmentSettings table
+            'leaveSettingsId' => $this->integer(), // @TODO: create FK to leaveSettings table
+            'settingsId' => $this->integer(), // @TODO: create Table --> create FK to employerSettings table
+            'umbrellaSettingsId' => $this->integer(), // @TODO: create Table --> create FK to umbrellaSettings table
+            'customPayCodes' => $this->integer(),  // @TODO: create CustomPayCodes Table --> create FK to umbrellaSettings table
             //fields
             'staffologyId' => $this->string(255)->notNull(),
             'name' => $this->string(255)->notNull(),
             'crn' => $this->string(),
+            'logoUrl' => $this->string(),
+            'alternativeId' => $this->string(),
+            'bankPaymentsCsvFormat' => $this->enum('status', ['StandardCsv', 'Telleroo', 'BarclaysBacs', 'SantanderBacs', 'Sif', 'Revolut', 'Standard18FasterPayments', 'Standard18Bacs', 'Bankline', 'BanklineBulk', 'StandardCsvBacs', 'LloydsMultipleStandardCsvBacs', 'LloydsV11CsvBacs', 'CoOpBulkCsvBacs', 'CoOpFasterPaymentsCsv']),
+            'bacsServiceUserNumber' => $this->string(),
+            'bacsBureauNumber' => $this->string(),
+            'rejectInvalidBankDetails' => $this->boolean(),
+            'bankPaymentsReferenceFormat' => $this->string(),
+            'useTenantRtiSubmissionSettings' => $this->boolean(),
+            'employeeCount' => $this->integer(),
+            'subcontractorCount' => $this->integer(),
             'startYear' => $this->string(255)->notNull(),
             'currentYear' => $this->string(255)->notNull(),
-            'employeeCount' => $this->integer()->notNull()->defaultValue(0),
+            'supportAccessEnabled' => $this->boolean(),
+            'archived' => $this->boolean(),
+            'canUseBureauFeatures' => $this->string(),
+            'sourceSystemId' => $this->string(),
         ]);
 
         $this->createTable(Table::EMPLOYMENT_DETAILS, [
@@ -482,15 +513,44 @@ class Install extends Migration
             'code' => $this->string(),
         ]);
 
+        $this->createTable(Table::PAY_CODES, [
+            'id' => $this->primaryKey(),
+            'dateCreated' => $this->dateTime()->notNull(),
+            'dateUpdated' => $this->dateTime()->notNull(),
+            'uid' => $this->uid(),
+            //fields
+            'title' => $this->string()->notNull(),
+            'code' => $this->string()->notNull(),
+            'defaultValue' => $this->double(),
+            'isDeduction' => $this->boolean(),
+            'isNiable' => $this->boolean(),
+            'isTaxable' => $this->boolean(),
+            'isPensionable' => $this->boolean(),
+            'isAttachable' => $this->boolean(),
+            'isRealTimeClass1aNiable' => $this->boolean(),
+            'isNotContributingToHolidayPay' => $this->boolean(),
+            'isQualifyingEarningsForAe' => $this->boolean(),
+            'isNotTierable' => $this->boolean(),
+            'isTcp_Tcls' => $this->boolean(),
+            'isTcp_Pp' => $this->boolean(),
+            'isTcp_Op' => $this->boolean(),
+            'isFlexiDd_DeathBenefit' => $this->boolean(),
+            'isFlexiDd_Pension' => $this->boolean(),
+            'calculationType' => $this->enum('type', ['FixedAmount', 'PercentageOfGross', 'PercentageOfNet', 'MultipleOfHourlyRate']),
+            'hourlyRateMultiplier' => $this->double(),
+            'isSystemCode' => $this->boolean(),
+            'isControlCode' => $this->boolean(),
+        ]);
+
         $this->createTable(Table::PAY_OPTIONS, [
             'id' => $this->primaryKey(),
             'dateCreated' => $this->dateTime()->notNull(),
             'dateUpdated' => $this->dateTime()->notNull(),
             'uid' => $this->uid(),
             //FK
-            'taxAndNiId' => $this->integer(), // Create FK to TaxAndNi Table
-            'fpsFieldsId' => $this->integer(), // Create FK to fpsFields Table
-            'regularPayLinesId' => $this->integer(),// Create FK to PayLines table // could hold multiple values/integers
+            'taxAndNiId' => $this->integer(), // @TODO: Create FK to TaxAndNi Table
+            'fpsFieldsId' => $this->integer(), // @TODO: Create FK to fpsFields Table
+            'regularPayLinesId' => $this->integer(),// @TODO: Create FK to PayLines table // could hold multiple values/integers
             //fields
             'period' => $this->enum('period', ['Custom', 'Monthly', 'FourWeekly', 'Fortnightly', 'Weekly', 'Daily']),
             'ordinal' => $this->integer(),
@@ -605,6 +665,38 @@ class Install extends Migration
             'inReceiptOfPension' => $this->boolean(),
             'bereaved' => $this->boolean(),
             'amount' => $this->double(),
+        ]);
+
+        $this->createTable(Table::PENSION_SELECTION, [
+            'id' => $this->primaryKey(),
+            'dateCreated' => $this->dateTime()->notNull(),
+            'dateUpdated' => $this->dateTime()->notNull(),
+            'uid' => $this->uid(),
+            //FK
+            'pensionScheme' => $this->integer(), // @TODO: create FK to PensionSchema table
+            //fields
+            'pensionSchemeId' => $this->string(),
+            'workerGroupId' => $this->string(),
+        ]);
+
+        $this->createTable(Table::PENSION_SCHEME, [
+            'id' => $this->primaryKey(),
+            'dateCreated' => $this->dateTime()->notNull(),
+            'dateUpdated' => $this->dateTime()->notNull(),
+            'uid' => $this->uid(),
+            //FK
+            'provider' => $this->integer(), // @TODO: create own PensionProvider table --> create ID to table (FK)
+            'administrator' => $this->integer(), // @TODO: create own PensionAdministrator table --> create ID to table (FK)
+            'bankDetails' => $this->integer(), // @TODO: create FK to BankDetails table
+            'customPayCodes' => $this->integer(), // @TODO: create own PayCodes --> create FK to PayCodes table
+            //fields
+            'name' => $this->string()->notNull(),
+            'pensionRule' => $this->enum('period', ['ReliefAtSource', 'SalarySacrifice', 'NetPayArrangement']),
+            'qualifyingScheme' => $this->boolean(),
+            'disableAeLetters' => $this->boolean(),
+            'subtractBasicRateTax' => $this->boolean(),
+            'payMethod' =>$this->enum('period', ['Cash', 'Cheque', 'Credit', 'DirectDebit']),
+            'useCustomPayCodes' => $this->boolean(),
         ]);
 
         $this->createTable(Table::PERMISSIONS, [

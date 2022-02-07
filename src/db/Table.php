@@ -14,6 +14,7 @@ abstract class Table
     const CIS_SUBCONTRACTOR = "{{%staff_cis_subcontractor}}";
     const CIS_VERIFICATION_DETAILS = "{{%staff_cis_verificationdetails}}";
     const COUNTRIES = "{{%staff_countries}}";
+    const CUSTOM_PAY_CODES = "{{%staff_custompaycodes}}";
     const DEPARTMENT = "{{%staff_department}}";
     const DIRECTORSHIP_DETAILS = "{{%staff_directorshipdetails}}";
     const EMPLOYEES = "{{%staff_employees}}";
@@ -26,11 +27,14 @@ abstract class Table
     const LEAVE_SETTINGS = "{{%staff_leavesettings}}";
     const LEAVER_DETAILS = "{{%staff_leaverdetails}}";
     const OVERSEAS_EMPLOYER_DETAILS = "{{%staff_oveseasemployerdetails}}";
+    const PAY_CODES = "{{%staff_paycodes}}";
     const PAY_OPTIONS = "{{%staff_payoptions}}";
     const PAYLINES = "{{%staff_paylines}}";
     const PAYRUN = "{{%staff_payrun}}";
     const PAYRUN_LOG = "{{%staff_log_payrun}}";
     const PAYRUN_ENTRIES = "{{%staff_payrunentries}}";
+    const PENSION_SCHEME = "{{%staff_pensionscheme}}";
+    const PENSION_SELECTION = "{{%staff_pensionselection}}";
     const PENSIONER_PAYROLL = "{{%staff_pensionerpayroll}}";
     const PERMISSIONS = "{{%staff_permissions}}";
     const PERMISSIONS_USERS = "{{%staff_permissions_users}}";

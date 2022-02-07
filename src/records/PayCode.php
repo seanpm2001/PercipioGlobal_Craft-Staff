@@ -17,28 +17,35 @@ use craft\db\ActiveRecord;
 use percipiolondon\staff\db\Table;
 
 /**
-* @property string $slug;
-*
-* @property integer $addressId;
-* @property integer $hmrcDetailsId;
-* @property integer $defaultPayOptionsId;
-* @property integer $bankDetailsId;
-*
-* @property string $staffologyId;
-* @property string $name;
-* @property int $logoId;
-* @property string $crn;
-* @property string $startYear;
-* @property string $currentYear;
-* @property int $employeeCount;
+ * @property string $title;
+ * @property integer $code;
+ * @property double $defaultValue;
+ * @property boolean $isDeduction;
+ * @property boolean $isNiable;
+ * @property boolean $isTaxable;
+ * @property boolean $isPensionable;
+ * @property boolean $isAttachable;
+ * @property boolean $isRealTimeClass1aNiable;
+ * @property boolean $isNotContributingToHolidayPay;
+ * @property boolean $isQualifyingEarningsForAe;
+ * @property boolean $isNotTierable;
+ * @property boolean $isTcp_Tcls;
+ * @property boolean $isTcp_Pp;
+ * @property boolean $isTcp_Op;
+ * @property boolean $isFlexiDd_DeathBenefit;
+ * @property boolean $isFlexiDd_Pension;
+ * @property string $calculationType;
+ * @property double $hourlyRateMultiplier;
+ * @property boolean $isSystemCode;
+ * @property boolean $isControlCode;
  */
 
-class Employer extends ActiveRecord
+class PayCode extends ActiveRecord
 {
     // Public Static Methods
     // =========================================================================
 
-     /**
+    /**
      * Declares the name of the database table associated with this AR class.
      * By default this method returns the class name as the table name by calling [[Inflector::camel2id()]]
      * with prefix [[Connection::tablePrefix]]. For example if [[Connection::tablePrefix]] is `tbl_`,
@@ -52,6 +59,6 @@ class Employer extends ActiveRecord
      */
     public static function tableName()
     {
-        return Table::EMPLOYEES;
+        return Table::PAY_CODES;
     }
 }
