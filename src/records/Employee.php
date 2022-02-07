@@ -33,21 +33,21 @@ use percipiolondon\staff\db\Table;
 
 /**
  * Employee record
- * @property int $siteId;
  * @property string $staffologyId;
  * @property int $employerId;
  * @property int $userId;
- * @property string $personalDetails;
- * @property string $employmentDetails;
- * @property string $autoEnrolment;
- * @property string $leaveSettings;
- * @property string $rightToWork;
- * @property string $bankDetails;
+ * @property boolean $isDirector
+ * @property integer $personalDetails;
+ * @property integer $employmentDetails;
+ * @property integer $autoEnrolment;
+ * @property integer $leaveSettings;
+ * @property integer $rightToWork;
+ * @property integer $bankDetails;
+ * @property integer $payOptions;
  * @property string $status;
  * @property boolean $aeNotEnroledWarning;
- * @property string $sourceSystemId;
  * @property string $niNumber
- * @property boolean $isDirector
+ * @property string $sourceSystemId;
  */
 
 class Employee extends ActiveRecord
