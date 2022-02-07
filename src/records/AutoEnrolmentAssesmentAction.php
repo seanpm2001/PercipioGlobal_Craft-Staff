@@ -7,23 +7,16 @@ use percipiolondon\staff\db\Table;
 
 /**
  * Addresses record
- * @property \DateTime $assessmentDate;
- * @property string $employeeState;
- * @property integer $age;
- * @property string $ukWorker;
- * @property string $payPeriod;
- * @property integer $ordinal;
- * @property double $earningsInPeriod;
- * @property double $qualifyingEarningsInPeriod;
- * @property string $aeExclusionCode;
- * @property string $status;
- * @property string $reason;
- * @property integer $action;
- * @property integer $employee;
- * @property string $assessmentId;
+ * @property string action;
+ * @property string employeeState;
+ * @property boolean actionCompleted;
+ * @property string actionCompletedMessage;
+ * @property string requiredLetter;
+ * @property string pensionSchemeId;
+ * @property string workerGroupId;
  */
 
-class AutoEnrolmentAssesment extends ActiveRecord
+class AutoEnrolmentAssesmentAction extends ActiveRecord
 {
     // Public Static Methods
     // =========================================================================
@@ -42,6 +35,6 @@ class AutoEnrolmentAssesment extends ActiveRecord
      */
     public static function tableName()
     {
-        return Table::AUTO_ENROLMENT_ASSESSMENT;
+        return Table::AUTO_ENROLMENT_ASSESSMENT_ACTION;
     }
 }
