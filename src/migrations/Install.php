@@ -70,15 +70,15 @@ class Install extends Migration
     {
         $this->createTable(Table::ADDRESSES, [
             'id' => $this->primaryKey(),
+            'dateCreated' => $this->dateTime()->notNull(),
+            'dateUpdated' => $this->dateTime()->notNull(),
+            'uid' => $this->uid(),
             'countryId' => $this->integer(),
             'countyId' => $this->integer(),
             'address1' => $this->string(),
             'address2' => $this->string(),
             'address3' => $this->string(),
             'zipCode' => $this->string(),
-            'dateCreated' => $this->dateTime()->notNull(),
-            'dateUpdated' => $this->dateTime()->notNull(),
-            'uid' => $this->uid(),
         ]);
 
         $this->createTable(Table::AUTO_ENROLMENT, [
