@@ -233,12 +233,12 @@ class Install extends Migration
 
         $this->createTable(Table::COUNTRIES, [
             'id' => $this->primaryKey(),
-            'name' => $this->string()->notNull(),
-            'iso' => $this->string(3)->notNull(),
-            'sortOrder' => $this->integer(),
             'dateCreated' => $this->dateTime()->notNull(),
             'dateUpdated' => $this->dateTime()->notNull(),
             'uid' => $this->uid(),
+            'name' => $this->string()->notNull(),
+            'iso' => $this->string(3)->notNull(),
+            'sortOrder' => $this->integer(),
         ]);
 
         $this->createTable(Table::DEPARTMENT, [
