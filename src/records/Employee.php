@@ -33,17 +33,18 @@ use percipiolondon\staff\db\Table;
 
 /**
  * Employee record
- * @property string $staffologyId;
  * @property int $employerId;
+ * @property integer $personalDetailsId;
+ * @property integer $employmentDetailsId;
+ * @property integer $autoEnrolmentId;
+ * @property integer $leaveSettingsId;
+ * @property integer $rightToWorkId;
+ * @property integer $bankDetailsId;
+ * @property integer $payOptionsId;
+ *
+ * @property string $staffologyId;
  * @property int $userId;
  * @property boolean $isDirector
- * @property integer $personalDetails;
- * @property integer $employmentDetails;
- * @property integer $autoEnrolment;
- * @property integer $leaveSettings;
- * @property integer $rightToWork;
- * @property integer $bankDetails;
- * @property integer $payOptions;
  * @property string $status;
  * @property boolean $aeNotEnroledWarning;
  * @property string $niNumber

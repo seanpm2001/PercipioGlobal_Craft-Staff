@@ -38,6 +38,7 @@ use percipiolondon\staff\db\Table;
  * @property string $employerId;
  * @property boolean $employeeId;
  * @property boolean $administerId;
+ *
  * @property string $message;
  * @property string $type;
  */

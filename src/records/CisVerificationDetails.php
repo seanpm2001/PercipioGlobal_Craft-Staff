@@ -6,13 +6,14 @@ use craft\db\ActiveRecord;
 use percipiolondon\staff\db\Table;
 
 /**
+ * @property integer $verificationResponse;
+ *
  * @property boolean $manuallyEntered;
  * @property boolean $matchInsteadOfVerify;
  * @property string $number;
  * @property \DateTime $date;
  * @property string $taxStatus;
  * @property string $verificationRequest;
- * @property integer $verificationResponse;
  */
 
 class CisVerificationDetails extends ActiveRecord

@@ -16,7 +16,7 @@ use Craft;
 use craft\base\Component;
 use percipiolondon\staff\records\Employee;
 use percipiolondon\staff\records\Permission as PermissionRecord;
-use percipiolondon\staff\records\UserPermission as UserPermissionRecord;
+use percipiolondon\staff\records\PermissionsUser as UserPermissionRecord;
 use percipiolondon\staff\models\UserPermission as UserPermissionModel;
 
 /**

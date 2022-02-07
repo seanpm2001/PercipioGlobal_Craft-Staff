@@ -6,6 +6,8 @@ use craft\db\ActiveRecord;
 use percipiolondon\staff\db\Table;
 
 /**
+ * @property integer $verification;
+ *
  * @property string $type;
  * @property string $utr;
  * @property string $tradingName;
@@ -15,7 +17,6 @@ use percipiolondon\staff\db\Table;
  * @property string $vatNumber;
  * @property double $vatRate;
  * @property boolean $reverseChargeVAT;
- * @property integer $verification;
  */
 
 class CisDetails extends ActiveRecord

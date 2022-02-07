@@ -34,7 +34,10 @@ use percipiolondon\staff\db\Table;
  */
 
 /**
- * Employer record
+ * @property integer $taxAndNiId;
+ * @property integer $fpsFieldsId;
+ * @property integer $regularPayLinesId;
+ *
  * @property string $period;
  * @property integer $ordinal;
  * @property double $payAmount;
@@ -48,9 +51,6 @@ use percipiolondon\staff\db\Table;
  * @property boolean $withholdTaxRefundIfPayIsZero;
  * @property string $mileageVehicleType;
  * @property integer $mapsMiles;
- * @property integer $taxAndNi;
- * @property integer $fpsFields;
- * @property integer $regularPayLines;
  */
 
 class PayOptions extends ActiveRecord

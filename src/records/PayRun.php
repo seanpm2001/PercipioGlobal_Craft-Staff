@@ -35,7 +35,9 @@ use percipiolondon\staff\db\Table;
 
 /**
  * PayRun record
- * @property int $siteId;
+ * @property integer $employerId
+ * @property integer $totalsId;
+ *
  * @property string $staffologyId;
  * @property string $taxYear;
  * @property int $taxMonth;
@@ -47,13 +49,11 @@ use percipiolondon\staff\db\Table;
  * @property \DateTime $paymentDate;
  * @property int $employeeCount;
  * @property int $subContractorCount;
- * @property integer $totals;
  * @property string $state;
  * @property boolean $isClosed;
  * @property \DateTime $dateClosed;
  * @property string $pdf
  * @property string $url
- * @property int $employerId
  */
 
 class PayRun extends ActiveRecord

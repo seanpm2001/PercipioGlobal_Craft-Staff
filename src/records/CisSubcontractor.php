@@ -6,22 +6,23 @@ use craft\db\ActiveRecord;
 use percipiolondon\staff\db\Table;
 
 /**
+ * @property integer $item;
+ * @property integer $name;
+ * @property integer $partnership;
+ * @property integer $address;
+ *
  * @property string $employeeUniqueId;
  * @property string $emailStatementTo;
  * @property integer $numberOfPayments;
- * @property integer $item;
  * @property string $displayName;
  * @property string $action;
  * @property string $type;
- * @property integer $name;
  * @property string $tradingName;
  * @property string $worksRef;
  * @property string $unmatchedRate;
  * @property string $utr;
  * @property string $crn;
  * @property string $nino;
- * @property integer $partnership;
- * @property integer $address;
  * @property string $telephone;
  * @property string $totalPaymentsUnrounded;
  * @property string $costOfMaterialsUnrounded;

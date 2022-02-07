@@ -35,46 +35,45 @@ use percipiolondon\staff\db\Table;
  *
  *
  * PayRunEntry record
- * @property string $siteId;
- * @property string $staffologyId;
- * @property int $payRunId;
- * @property int $employerId;
- * @property int $taxYear;
- * @property \DateTime $startDate;
- * @property \DateTime $endDate;
- * @property string $note
+ * @property integer $noteId;
+ * @property integer $priorPayrollCodeId;
+ * @property string $payOptionsId;
+ * @property integer $pensionSummaryId;
+ * @property integer $totalsId;
+ * @property integer $periodOverridesId;
+ * @property integer $totalsYtdId;
+ * @property integer $totalsYtdOverridesId
+ * @property integer $nationalInsuranceCalculationId
+ * @property integer $umbrellaPaymentId
+ * @property integer $employeeId
+ * @property integer $employerId
+ * @property integer $payRunId
+ *
+ * @property integer $staffologyId
+ * @property string $taxYear
+ * @property \DateTime $startDate
+ * @property \DateTime $endDate
  * @property string $bacsSubReference
  * @property string $bacsHashcode
  * @property double $percentageOfWorkingDaysPaidAsNormal
  * @property double $workingDaysNotPaidAsNormal
  * @property string $payPeriod
- * @property int $ordinal
- * @property int $period
+ * @property integer $ordinal
+ * @property integer $period
  * @property boolean $isNewStarter
  * @property boolean $unpaidAbsence
  * @property boolean $hasAttachmentOrders
  * @property \DateTime $paymentDate
- * @property string $priorPayrollCode
- * @property integer $payOptions
- * @property integer $pensionSummary
- * @property integer $totals
- * @property integer $periodOverrides
- * @property integer $totalsYtd
- * @property integer $totalsYtdOverrides
  * @property double $forcedCisVatAmount
- * @property double $holidayAccured
+ * @property double $holidayAccrued
  * @property string $state
  * @property boolean $isClosed
  * @property boolean $manualNi
- * @property integer $nationalInsuranceCalculation
  * @property boolean $payrollCodeChanged
  * @property boolean $aeNotEnroledWarning
  * @property string $fps
  * @property boolean $receivingOffsetPay
  * @property boolean $paymentAfterLearning
- * @property integer $umbrellaPayment
- * @property integer $employee
- * @property int $employeeId
  * @property string $pdf
  */
 
@@ -85,53 +84,52 @@ class PayRunEntry extends ActiveRecord
 
     public function rules()
     {
-        return [
-            [[
-                'siteId',
-                'payRunId',
-                'employerId',
-                'ordinal',
-                'period',
-            ], 'number', 'integerOnly' => true], [[
-                'percentageOfWorkingDaysPaidAsNormal',
-                'workingDaysNotPaidAsNormal',
-                'forcedCisVatAmount',
-                'holidayAccured',
-            ], 'double'],
-            [['startDate', 'endDate', 'paymentDate'], DateTimeValidator::class],
-//            ['state', 'exists', 'targetAttribute' => ['Open', 'SubmittedForProcessing', 'Processing', 'AwaitingApproval', 'Approved', 'Finalised']],
-            [[
-                'staffologyId',
-                'taxYear',
-                'note',
-                'bacsSubReference',
-                'bacsHashcode',
-                'payPeriod',
-                'priorPayrollCode',
-                'payOptions',
-                'pensionSummary',
-                'totals',
-                'periodOverrides',
-                'totalsYtd',
-                'totalsYtdOverrides',
-                'state',
-                'nationalInsuranceCalculation',
-                'fps',
-                'umbrellaPayment',
-                'pdf',
-            ], 'string'],
-            [[
-                'unpaidAbsence',
-                'unpaidAbsence',
-                'hasAttachmentOrders',
-                'isClosed',
-                'manualNi',
-                'payrollCodeChanged',
-                'aeNotEnroledWarning',
-                'receivingOffsetPay',
-                'paymentAfterLearning',
-            ], 'boolean'],
-        ];
+//        return [
+//            [[
+//                'payRunId',
+//                'employerId',
+//                'ordinal',
+//                'period',
+//            ], 'number', 'integerOnly' => true], [[
+//                'percentageOfWorkingDaysPaidAsNormal',
+//                'workingDaysNotPaidAsNormal',
+//                'forcedCisVatAmount',
+//                'holidayAccured',
+//            ], 'double'],
+//            [['startDate', 'endDate', 'paymentDate'], DateTimeValidator::class],
+////            ['state', 'exists', 'targetAttribute' => ['Open', 'SubmittedForProcessing', 'Processing', 'AwaitingApproval', 'Approved', 'Finalised']],
+//            [[
+//                'staffologyId',
+//                'taxYear',
+//                'note',
+//                'bacsSubReference',
+//                'bacsHashcode',
+//                'payPeriod',
+//                'priorPayrollCode',
+//                'payOptions',
+//                'pensionSummary',
+//                'totals',
+//                'periodOverrides',
+//                'totalsYtd',
+//                'totalsYtdOverrides',
+//                'state',
+//                'nationalInsuranceCalculation',
+//                'fps',
+//                'umbrellaPayment',
+//                'pdf',
+//            ], 'string'],
+//            [[
+//                'unpaidAbsence',
+//                'unpaidAbsence',
+//                'hasAttachmentOrders',
+//                'isClosed',
+//                'manualNi',
+//                'payrollCodeChanged',
+//                'aeNotEnroledWarning',
+//                'receivingOffsetPay',
+//                'paymentAfterLearning',
+//            ], 'boolean'],
+//        ];
     }
 
      /**
@@ -144,10 +142,10 @@ class PayRunEntry extends ActiveRecord
      * By convention, tables created by plugins should be prefixed with the plugin
      * name and an underscore.
      *
-     * @return string the table name
+     * @return string $the table name
      */
     public static function tableName()
     {
-        return Table::STAFF_PAYRUNENTRIES;
+        return Table::PAYRUN_ENTRIES;
     }
 }

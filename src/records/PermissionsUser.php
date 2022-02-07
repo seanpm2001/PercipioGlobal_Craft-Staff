@@ -43,7 +43,7 @@ use percipiolondon\staff\db\Table;
  * @property int permissionId
  *
  */
-class UserPermission extends ActiveRecord
+class PermissionsUser extends ActiveRecord
 {
     // Public Static Methods
     // =========================================================================

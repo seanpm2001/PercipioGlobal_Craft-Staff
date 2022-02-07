@@ -73,6 +73,7 @@ class Install extends Migration
             'dateCreated' => $this->dateTime()->notNull(),
             'dateUpdated' => $this->dateTime()->notNull(),
             'uid' => $this->uid(),
+            //fields
             'countryId' => $this->integer(),
             'countyId' => $this->integer(),
             'address1' => $this->string(),
@@ -86,6 +87,9 @@ class Install extends Migration
             'dateCreated' => $this->dateTime()->notNull(),
             'dateUpdated' => $this->dateTime()->notNull(),
             'uid' => $this->uid(),
+            //FK
+            'lastAssessment' => $this->integer(), // Create FK to AeAssessment Table
+            //fields
             'state' => $this->enum('state', ['Automatic', 'OptOut', 'OptIn', 'VoluntaryJoiner', 'ContractualPension', 'CeasedMembership', 'Leaver', 'Excluded', 'Enrol']),
             'stateDate' => $this->dateTime(),
             'ukWorker' => $this->enum('status', ['No', 'Yes', 'Ordinarily']),
@@ -95,8 +99,6 @@ class Install extends Migration
             'exempt' => $this->boolean(),
             'aeExclusionCode' => $this->enum('code', ['NotKnown', 'NotAWorker', 'NotWorkingInUk', 'NoOrdinarilyWorkingInUk', 'OutsideOfAgeRange', 'SingleEmployee', 'CeasedActiveMembershipInPast12Mo', 'CeasedActiveMembership', 'ReceivedWulsInPast12Mo', 'ReceivedWuls', 'Leaving', 'TaxProtection', 'CisSubContractor']),
             'aePostponementLetterSent' => $this->boolean(),
-            // Link to AeAssessment Table
-            'lastAssessment' => $this->integer(),
         ]);
 
         $this->createTable(Table::AUTO_ENROLMENT_ASSESSMENT, [
@@ -104,6 +106,10 @@ class Install extends Migration
             'dateCreated' => $this->dateTime()->notNull(),
             'dateUpdated' => $this->dateTime()->notNull(),
             'uid' => $this->uid(),
+            //FK
+            'action' => $this->integer(), // Create FK AeAssessmentAction Table
+            'employee' => $this->integer(), // Create FK Item Table
+            //fields
             'assessmentDate' => $this->dateTime(),
             'employeeState' => $this->enum('state', ['Automatic', 'OptOut', 'OptIn', 'VoluntaryJoiner', 'ContractualPension', 'CeasedMembership', 'Leaver', 'Excluded', 'Enrol']),
             'age' => $this->integer(),
@@ -115,10 +121,6 @@ class Install extends Migration
             'aeExclusionCode' => $this->enum('code', ['NotKnown', 'NotAWorker', 'NotWorkingInUk', 'NoOrdinarilyWorkingInUk', 'OutsideOfAgeRange', 'SingleEmployee', 'CeasedActiveMembershipInPast12Mo', 'CeasedActiveMembership', 'ReceivedWulsInPast12Mo', 'ReceivedWuls', 'Leaving', 'TaxProtection', 'CisSubContractor']),
             'status' => $this->enum('status', ['Eligible', 'NonEligible', 'Entitled', 'NoDuties']),
             'reason' => $this->string(),
-            // Link to AeAssessmentAction Table
-            'action' => $this->integer(),
-            // Link to Item Table
-            'employee' => $this->integer(),
             'assessmentId' => $this->uid(),
         ]);
 
@@ -127,6 +129,7 @@ class Install extends Migration
             'dateCreated' => $this->dateTime()->notNull(),
             'dateUpdated' => $this->dateTime()->notNull(),
             'uid' => $this->uid(),
+            //fields
             'action' => $this->enum('status', ['NoChange', 'Enrol', 'Exit', 'Inconclusive', 'Postpone']),
             'employeeState' => $this->enum('state', ['Automatic', 'OptOut', 'OptIn', 'VoluntaryJoiner', 'ContractualPension', 'CeasedMembership', 'Leaver', 'Excluded', 'Enrol']),
             'actionCompleted' => $this->boolean(),
@@ -142,6 +145,7 @@ class Install extends Migration
             'dateCreated' => $this->dateTime()->notNull(),
             'dateUpdated' => $this->dateTime()->notNull(),
             'uid' => $this->uid(),
+            //fields
             'bankName' => $this->string(),
             'bankBranch' => $this->string(),
             'bankReference' => $this->string(),
@@ -156,6 +160,9 @@ class Install extends Migration
             'dateCreated' => $this->dateTime()->notNull(),
             'dateUpdated' => $this->dateTime()->notNull(),
             'uid' => $this->uid(),
+            //FK
+            'verification' => $this->integer(), // Create FK CisVerificationDetails Table
+            //fields
             'type' => $this->enum('type', ['SoleTrader', 'Partnership', 'Company', 'Trust']),
             'utr' => $this->string(),
             'tradingName' => $this->string(),
@@ -165,8 +172,6 @@ class Install extends Migration
             'vatNumber' => $this->string(),
             'vatRate' => $this->double(),
             'reverseChargeVAT' => $this->boolean(),
-            // CisVerificationDetails Table
-            'verification' => $this->integer(),
         ]);
 
         $this->createTable(Table::CIS_PARTNERSHIP, [
@@ -174,6 +179,7 @@ class Install extends Migration
             'dateCreated' => $this->dateTime()->notNull(),
             'dateUpdated' => $this->dateTime()->notNull(),
             'uid' => $this->uid(),
+            //fields
             'name' => $this->string(),
             'utr' => $this->string(),
         ]);
@@ -183,26 +189,24 @@ class Install extends Migration
             'dateCreated' => $this->dateTime()->notNull(),
             'dateUpdated' => $this->dateTime()->notNull(),
             'uid' => $this->uid(),
+            //FK
+            'item' => $this->integer(), // Create FK items table
+            'name' => $this->integer(), // Create FK RTI Employee Name Table
+            'partnership' => $this->integer(), // Create FK CIS Partnership Table
+            'address' => $this->integer(), // Create FK RTI Employee Address
+            //fields
             'employeeUniqueId' => $this->string(),
             'emailStatementTo' => $this->string(),
             'numberOfPayments' => $this->integer(),
-            // Items Table
-            'item' => $this->integer(),
             'displayName' => $this->string(),
             'action' => $this->string(),
             'type'  => $this->string(),
-            // RTI Employee Name Table
-            'name' => $this->integer(),
             'tradingName' => $this->string(),
             'worksRef' => $this->string(),
             'unmatchedRate' => $this->string(),
             'utr' => $this->string(),
             'crn' => $this->string(),
             'nino' => $this->string(),
-            // CIS Partnership Table
-            'partnership' => $this->integer(),
-            // RTI Employee Address
-            'address' => $this->integer(),
             'telephone' => $this->string(),
             'totalPaymentsUnrounded' => $this->string(),
             'costOfMaterialsUnrounded' => $this->string(),
@@ -221,14 +225,15 @@ class Install extends Migration
             'dateCreated' => $this->dateTime()->notNull(),
             'dateUpdated' => $this->dateTime()->notNull(),
             'uid' => $this->uid(),
+            //FK
+            'verificationResponse' => $this->integer(), // Links to the CisSubContractor Table, as a Verification Response return a CisSubContractor Object
+            //fields
             'manuallyEntered' => $this->boolean(),
             'matchInsteadOfVerify' => $this->boolean(),
             'number' => $this->string(),
             'date' => $this->dateTime(),
             'taxStatus' => $this->enum('status', ['Gross', 'NetOfStandardDeduction', 'NotOfHigherDeduction']),
             'verificationRequest' => $this->string(),
-            // CisSubContractor Table
-            'verificationResponse' => $this->integer(),
         ]);
 
         $this->createTable(Table::COUNTRIES, [
@@ -236,6 +241,7 @@ class Install extends Migration
             'dateCreated' => $this->dateTime()->notNull(),
             'dateUpdated' => $this->dateTime()->notNull(),
             'uid' => $this->uid(),
+            //fields
             'name' => $this->string()->notNull(),
             'iso' => $this->string(3)->notNull(),
             'sortOrder' => $this->integer(),
@@ -246,6 +252,7 @@ class Install extends Migration
             'dateCreated' => $this->dateTime()->notNull(),
             'dateUpdated' => $this->dateTime()->notNull(),
             'uid' => $this->uid(),
+            //fields
             'code' => $this->string(),
             'title' => $this->string(),
             // @DISCUSS - needed? Could use better things
@@ -259,6 +266,7 @@ class Install extends Migration
             'dateCreated' => $this->dateTime()->notNull(),
             'dateUpdated' => $this->dateTime()->notNull(),
             'uid' => $this->uid(),
+            //fields
             'isDirector' => $this->boolean(),
             'startDate' => $this->dateTime(),
             'leaveDate' => $this->dateTime(),
@@ -270,24 +278,19 @@ class Install extends Migration
             'dateCreated' => $this->dateTime()->notNull(),
             'dateUpdated' => $this->dateTime()->notNull(),
             'uid' => $this->uid(),
-            'staffologyId' => $this->string(255)->notNull(),
+            //FK
             'employerId' => $this->integer()->notNull(),
             'userId' => $this->integer(),
+            'personalDetailsId' => $this->integer(), // @TODO: create ID to table ( FK )
+            'employmentDetailsId' => $this->integer(), // @TODO: create ID to table ( FK )
+            'autoEnrolmentId' => $this->integer(), // @TODO: create ID to table ( FK )
+            'leaveSettingsId' => $this->integer(), // @TODO: create ID to table ( FK )
+            'rightToWorkId' => $this->integer(), // @TODO: create ID to table ( FK )
+            'bankDetailsId' => $this->integer(), // @TODO: create ID to table ( FK )
+            'payOptionsId' => $this->integer(), // @TODO: create ID to table ( FK )
+            //fields
+            'staffologyId' => $this->string(255)->notNull(),
             'isDirector' => $this->boolean(),
-            // @TODO: create ID to table ( FK )
-            'personalDetails' => $this->integer(),
-            // @TODO: create ID to table ( FK )
-            'employmentDetails' => $this->integer(),
-            // @TODO: create ID to table ( FK )
-            'autoEnrolment' => $this->integer(),
-            // @TODO: create ID to table ( FK )
-            'leaveSettings' => $this->integer(),
-            // @TODO: create ID to table ( FK )
-            'rightToWork' => $this->integer(),
-            // @TODO: create ID to table ( FK )
-            'bankDetails' => $this->integer(),
-            // @TODO: create ID to table ( FK )
-            'payOptions' => $this->integer(),
             'status' => $this->enum('status', ['Current', 'Former', 'Upcoming'])->notNull(),
             'aeNotEnroledWarning' => $this->boolean()->defaultValue(0),
             'niNumber' => $this->string(255),
@@ -300,18 +303,17 @@ class Install extends Migration
             'dateUpdated' => $this->dateTime()->notNull(),
             'uid' => $this->uid(),
             'slug' => $this->string(255)->notNull(),
+            //FK
+            'addressId' => $this->integer(), // @TODO: create ID to table ( FK )
+            'hmrcDetailsId' => $this->integer(), // @TODO: create own table --> create ID to table (FK)
+            'defaultPayOptionsId' => $this->integer(),// @TODO: create own table --> create ID to table (FK)
+            //fields
             'staffologyId' => $this->string(255)->notNull(),
             'name' => $this->string(255)->notNull(),
             'crn' => $this->string(),
-            // @TODO: create ID to table ( FK )
-            'address' => $this->integer(),
-            // @TODO: create own table --> create ID to table (FK)
-            'hmrcDetails' => $this->integer(),
             'startYear' => $this->string(255)->notNull(),
             'currentYear' => $this->string(255)->notNull(),
             'employeeCount' => $this->integer()->notNull()->defaultValue(0),
-            // @TODO: create own table --> create ID to table (FK)
-            'defaultPayOptions' => $this->integer(),
         ]);
 
         $this->createTable(Table::EMPLOYMENT_DETAILS, [
@@ -319,6 +321,7 @@ class Install extends Migration
             'dateCreated' => $this->dateTime()->notNull(),
             'dateUpdated' => $this->dateTime()->notNull(),
             'uid' => $this->uid(),
+            //fields
             'cisSubContractor' => $this->boolean(),
             'payrollCode' => $this->string(),
             'jobTitle' => $this->string(),
@@ -350,6 +353,7 @@ class Install extends Migration
             'dateCreated' => $this->dateTime()->notNull(),
             'dateUpdated' => $this->dateTime()->notNull(),
             'uid' => $this->uid(),
+            //fields
             'offPayrollWorker' => $this->boolean(),
             'irregularPaymentPattern' => $this->boolean(),
             'nonIndividual' => $this->boolean(),
@@ -361,10 +365,11 @@ class Install extends Migration
             'dateCreated' => $this->dateTime()->notNull(),
             'dateUpdated' => $this->dateTime()->notNull(),
             'uid' => $this->uid(),
+            //FK
             'employerId' => $this->integer()->notNull(),
             'employeeId' => $this->integer()->notNull(),
-            // This could be null
-            'administerId' => $this->integer(),
+            'administerId' => $this->integer(), // This can be null
+            //fields
             'message' => $this->string(255)->notNull(),
             'type' => $this->string()->notNull(),
         ]);
@@ -374,6 +379,7 @@ class Install extends Migration
             'dateCreated' => $this->dateTime()->notNull(),
             'dateUpdated' => $this->dateTime()->notNull(),
             'uid' => $this->uid(),
+            //fields
             'itemId' => $this->string(),
             'name' => $this->string(),
             'metadata' => $this->longText(),
@@ -385,6 +391,7 @@ class Install extends Migration
             'dateCreated' => $this->dateTime()->notNull(),
             'dateUpdated' => $this->dateTime()->notNull(),
             'uid' => $this->uid(),
+            //fields
             'useDefaultHolidayType' => $this->boolean(),
             'useDefaultAllowanceResetDate' => $this->boolean(),
             'useDefaultAllowance' => $this->boolean(),
@@ -418,6 +425,7 @@ class Install extends Migration
             'dateCreated' => $this->dateTime()->notNull(),
             'dateUpdated' => $this->dateTime()->notNull(),
             'uid' => $this->uid(),
+            //fields
             'hasLeft' => $this->boolean(),
             'leaveDate' => $this->dateTime(),
             'isDeceased' => $this->boolean(),
@@ -430,6 +438,7 @@ class Install extends Migration
             'dateCreated' => $this->dateTime()->notNull(),
             'dateUpdated' => $this->dateTime()->notNull(),
             'uid' => $this->uid(),
+            //fields
             'overseasEmployer' => $this->boolean(),
             'overseasSecondmentStatus' => $this->enum('status', ['MoreThan183Days', 'LessThan183Days', 'BothInAndOutOfUK']),
             'eeaCitizen' => $this->boolean(),
@@ -441,6 +450,7 @@ class Install extends Migration
             'dateCreated' => $this->dateTime()->notNull(),
             'dateUpdated' => $this->dateTime()->notNull(),
             'uid' => $this->uid(),
+            //fields
             'value' => $this->double(),
             'rate' => $this->double(),
             'multiplier' => $this->double(),
@@ -455,6 +465,11 @@ class Install extends Migration
             'dateCreated' => $this->dateTime()->notNull(),
             'dateUpdated' => $this->dateTime()->notNull(),
             'uid' => $this->uid(),
+            //FK
+            'taxAndNiId' => $this->integer(), // Create FK to TaxAndNi Table
+            'fpsFieldsId' => $this->integer(), // Create FK to fpsFields Table
+            'regularPayLinesId' => $this->integer(),// Create FK to PayLines table // could hold multiple values/integers
+            //fields
             'period' => $this->enum('period', ['Custom', 'Monthly', 'FourWeekly', 'Fortnightly', 'Weekly', 'Daily']),
             'ordinal' => $this->integer(),
             'payAmount' => $this->double(),
@@ -468,12 +483,6 @@ class Install extends Migration
             'withholdTaxRefundIfPayIsZero' => $this->boolean(),
             'mileageVehicleType' => $this->enum('type', ['Car', 'Motorcycle', 'Cycle']),
             'mapsMiles' => $this->integer(),
-            // Link to TaxAndNi Table --> create ID to table (FK)
-            'taxAndNi' => $this->integer(),
-            // Link to fpsFields Table --> create ID to table (FK)
-            'fpsFields' => $this->integer(),
-            // Link to PayLines table // could hold multiple values/integers --> create ID to table (FK)
-            'regularPayLines' => $this->integer(),
         ]);
 
         $this->createTable(Table::PAYRUN, [
@@ -481,6 +490,10 @@ class Install extends Migration
             'dateCreated' => $this->dateTime()->notNull(),
             'dateUpdated' => $this->dateTime()->notNull(),
             'uid' => $this->uid(),
+            //FK
+            'totalsId' => $this->integer()->notNull(), // @TODO: create own table --> create ID to table (FK)
+            'employerId' => $this->integer()->notNull()->defaultValue(null),
+            //fields
             'staffologyId' => $this->string(255),
             'taxYear' => $this->string(255)->notNull()->defaultValue(''),
             'taxMonth' => $this->integer()->notNull()->defaultValue(0),
@@ -492,13 +505,10 @@ class Install extends Migration
             'paymentDate' => $this->dateTime()->notNull(),
             'employeeCount' => $this->integer()->notNull()->defaultValue(0),
             'subContractorCount' => $this->integer()->notNull()->defaultValue(0),
-            // @TODO: create own table --> create ID to table (FK)
-            'totals' => $this->integer()->notNull(),
             'state' => $this->string(255)->notNull()->defaultValue(''),
             'isClosed' => $this->boolean()->notNull(),
             'dateClosed' => $this->dateTime(),
             'url' => $this->string()->defaultValue(''),
-            'employerId' => $this->integer()->notNull()->defaultValue(null),
         ]);
 
         $this->createTable(Table::PAYRUN_ENTRIES, [
@@ -506,14 +516,25 @@ class Install extends Migration
             'dateCreated' => $this->dateTime()->notNull(),
             'dateUpdated' => $this->dateTime()->notNull(),
             'uid' => $this->uid(),
-            // Custom columns in the table
-            'staffologyId' => $this->string(255)->notNull(),
+            // FK
+            'noteId' => $this->integer(), // @TODO: create own table --> create ID to table (FK)
+            'priorPayrollCodeId' => $this->string(255)->defaultValue(''), // @TODO: create own table --> create ID to table (FK)
+            'payOptionsId' => $this->integer(), // @TODO: create own table --> create ID to table (FK)
+            'pensionSummaryId' => $this->integer(),// @TODO: create own table --> create ID to table (FK)
+            'totalsId' => $this->integer(), // @TODO: create own table --> create ID to table (FK)
+            'periodOverridesId' => $this->integer(), // @TODO: create own table --> create ID to table (FK)
+            'totalsYtdId' => $this->integer(),// @TODO: create own table --> create ID to table (FK)
+            'totalsYtdOverridesId' => $this->integer(),// @TODO: create own table --> create ID to table (FK)
+            'nationalInsuranceCalculationId' => $this->integer(), // @TODO: create own table --> create ID to table (FK)
+            'umbrellaPaymentId' => $this->integer(), // @TODO: create own table --> create ID to table (FK)
+            'employeeId' => $this->integer(), // @TODO: create own table --> create ID to table (FK)
+            'employerId' => $this->integer()->notNull()->defaultValue(null),
             'payRunId' => $this->integer()->notNull()->defaultValue(0),
+            // fields
+            'staffologyId' => $this->string(255)->notNull(),
             'taxYear' => $this->string(255)->defaultValue(''),
             'startDate' => $this->dateTime(),
             'endDate' => $this->dateTime(),
-            // @TODO: create own table --> create ID to table (FK)
-            'note' => $this->integer(),
             'bacsSubReference' => $this->string(255)->defaultValue(''),
             'bacsHashcode' => $this->string(255)->defaultValue(''),
             'percentageOfWorkingDaysPaidAsNormal' => $this->double()->defaultValue(0),
@@ -525,38 +546,17 @@ class Install extends Migration
             'unpaidAbsence' => $this->boolean(),
             'hasAttachmentOrders' => $this->boolean(),
             'paymentDate' => $this->dateTime(),
-            'priorPayrollCode' => $this->string(255)->defaultValue(''),
-            // @TODO: create own table --> create ID to table (FK)
-            'payOptions' => $this->integer(),
-            // @TODO: create own table --> create ID to table (FK)
-            'pensionSummary' => $this->integer(),
-            // @TODO: create own table --> create ID to table (FK)
-            'totals' => $this->integer(),
-            // @TODO: create own table --> create ID to table (FK)
-            'periodOverrides' => $this->integer(),
-            // @TODO: create own table --> create ID to table (FK)
-            'totalsYtd' => $this->integer(),
-            // @TODO: create own table --> create ID to table (FK)
-            'totalsYtdOverrides' => $this->integer(),
             'forcedCisVatAmount' => $this->double()->defaultValue(0),
             'holidayAccrued' => $this->double()->defaultValue(0),
             'state' => $this->string(255)->defaultValue('Open'),
             'isClosed' => $this->boolean(),
             'manualNi' => $this->boolean(),
-            // @TODO: create own table
-            'nationalInsuranceCalculation' => $this->integer(),
             'payrollCodeChanged' => $this->boolean(),
             'aeNotEnroledWarning' => $this->boolean(),
             'fps' => $this->longText(),
             'receivingOffsetPay' => $this->boolean(),
             'paymentAfterLearning' => $this->boolean(),
-            // @TODO: create own table --> create ID to table (FK)
-            'umbrellaPayment' => $this->integer(),
-            // @TODO: create own table --> create ID to table (FK)
-            'employee' => $this->integer(),
             'pdf' => $this->string()->defaultValue(''),
-            'employerId' => $this->integer()->notNull()->defaultValue(null),
-            'employeeId' => $this->integer()->notNull()->defaultValue(null),
         ]);
 
         $this->createTable(Table::PAYRUN_LOG, [
@@ -564,13 +564,14 @@ class Install extends Migration
             'dateCreated' => $this->dateTime()->notNull(),
             'dateUpdated' => $this->dateTime()->notNull(),
             'uid' => $this->uid(),
-            // Custom columns in the table
+            // FK
+            'employerId' => $this->integer()->notNull()->defaultValue(0),
+            'payRunId' => $this->integer()->notNull()->defaultValue(0),
+            // fields
             'employeeCount' => $this->integer()->notNull()->defaultValue(0),
             'taxYear' => $this->string(255)->notNull()->defaultValue(''),
             'lastPeriodNumber' => $this->integer()->notNull()->defaultValue(0),
             'url' => $this->string(255)->notNull()->defaultValue(0),
-            'employerId' => $this->integer()->notNull()->defaultValue(0),
-            'payRunId' => $this->integer()->notNull()->defaultValue(0),
         ]);
 
         $this->createTable(Table::PENSIONER_PAYROLL, [
@@ -578,6 +579,7 @@ class Install extends Migration
             'dateCreated' => $this->dateTime()->notNull(),
             'dateUpdated' => $this->dateTime()->notNull(),
             'uid' => $this->uid(),
+            //fields
             'inReceiptOfPension' => $this->boolean(),
             'bereaved' => $this->boolean(),
             'amount' => $this->double(),
@@ -588,6 +590,7 @@ class Install extends Migration
             'dateCreated' => $this->dateTime()->notNull(),
             'dateUpdated' => $this->dateTime()->notNull(),
             'uid' => $this->uid(),
+            //fields
             'name' => $this->string(255)->notNull()->defaultValue(''),
         ]);
 
@@ -596,6 +599,7 @@ class Install extends Migration
             'dateCreated' => $this->dateTime()->notNull(),
             'dateUpdated' => $this->dateTime()->notNull(),
             'uid' => $this->uid(),
+            //FK
             'permissionId' => $this->integer()->notNull()->defaultValue(0),
             'userId' => $this->integer()->defaultValue(null),
             'employeeId' => $this->integer()->notNull()->defaultValue(0),
@@ -606,39 +610,44 @@ class Install extends Migration
         // "PersonalDetails": {
         //      "PartnerDetails": null
         //    },
-        $this->createTable(Table::PERSONAL_DETAILS,
-            [
-                'id' => $this->primaryKey(),
-                'employeeId' => $this->integer()->notNull(),
-                'addressId' => $this->integer()->notNull(),
-                'maritalStatus' => $this->enum('status', ['Single', 'Married', 'Divorced', 'Widowed', 'CivilPartnership', 'Unknown'])->notNull(),
-                'title' => $this->string(255),
-                'firstName' => $this->string(255)->notNull(),
-                'middleName' => $this->string(255),
-                'lastName' => $this->string(255)->notNull(),
-                'email' => $this->string(255)->notNull(),
-                'emailPayslip' => $this->boolean()->notNull(),
-                'passwordProtectPayslip' => $this->boolean()->notNull(),
-                'pdfPassword' => $this->string(255),
-                'telephone' => $this->string(255),
-                'mobile' => $this->string(255),
-                'dob' => $this->dateTime()->notNull(),
-                'statePensionAge' => $this->integer()->notNull(),
-                'gender' => $this->enum('gender', ['Male', 'Female'])->notNull(),
-                'niNumber' => $this->string(255)->notNull(),
-                'passportNumber' => $this->string(255)->notNull(),
-            ]
-        );
+        $this->createTable(Table::PERSONAL_DETAILS, [
+            'id' => $this->primaryKey(),
+            'dateCreated' => $this->dateTime()->notNull(),
+            'dateUpdated' => $this->dateTime()->notNull(),
+            'uid' => $this->uid(),
+            //FK
+            'employeeId' => $this->integer()->notNull(),
+            'addressId' => $this->integer()->notNull(),
+            //fields
+            'maritalStatus' => $this->enum('status', ['Single', 'Married', 'Divorced', 'Widowed', 'CivilPartnership', 'Unknown'])->notNull(),
+            'title' => $this->string(255),
+            'firstName' => $this->string(255)->notNull(),
+            'middleName' => $this->string(255),
+            'lastName' => $this->string(255)->notNull(),
+            'email' => $this->string(255)->notNull(),
+            'emailPayslip' => $this->boolean()->notNull(),
+            'passwordProtectPayslip' => $this->boolean()->notNull(),
+            'pdfPassword' => $this->string(255),
+            'telephone' => $this->string(255),
+            'mobile' => $this->string(255),
+            'dob' => $this->dateTime()->notNull(),
+            'statePensionAge' => $this->integer()->notNull(),
+            'gender' => $this->enum('gender', ['Male', 'Female'])->notNull(),
+            'niNumber' => $this->string(255)->notNull(),
+            'passportNumber' => $this->string(255)->notNull(),
+        ]);
 
         $this->createTable(Table::REQUESTS, [
             'id' => $this->primaryKey(),
             'dateCreated' => $this->dateTime()->notNull(),
             'dateUpdated' => $this->dateTime()->notNull(),
             'uid' => $this->uid(),
-            'dateAdministered' => $this->dateTime()->notNull(),
+            //FK
             'employerId' => $this->integer()->notNull(),
             'employeeId' => $this->integer()->notNull(),
             'administerId' => $this->integer()->notNull(),
+            //fields
+            'dateAdministered' => $this->dateTime()->notNull(),
             'data' => $this->longText(),
             'section' => $this->string()->notNull(),
             'element' => $this->string()->notNull(),
@@ -651,6 +660,7 @@ class Install extends Migration
             'dateCreated' => $this->dateTime()->notNull(),
             'dateUpdated' => $this->dateTime()->notNull(),
             'uid' => $this->uid(),
+            //fields
             'checked' => $this->boolean(),
             'documentType' => $this->enum('type', ['Other', 'Visa', 'Passport', 'BirthCertificate', 'IdentityCard', 'Sharecode']),
             'documentRef' => $this->string(),
