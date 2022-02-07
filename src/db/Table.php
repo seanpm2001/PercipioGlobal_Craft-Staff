@@ -39,6 +39,6 @@ abstract class Table
     const RTI_EMPLOYEE_ADDRESS = "{{%staff_rti_employeeaddress}}";
     const RTI_EMPLOYEE_NAME = "{{%staff_rti_employeename}}";
     const STARTER_DETAILS = "{{%staff_starterdetails}}";
-    const TAXANDNI = "{{%staff_taxandni}}";
+    const TAX_AND_NI = "{{%staff_taxandni}}";
     const USERS = "{{%staff_users}}";
 }

@@ -705,11 +705,12 @@ class Install extends Migration
             'pensionerPayroll' => $this->integer(),
         ]);
 
-        $this->createTable(Table::TAXANDNI, [
+        $this->createTable(Table::TAX_AND_NI, [
             'id' => $this->primaryKey(),
             'dateCreated' => $this->dateTime()->notNull(),
             'dateUpdated' => $this->dateTime()->notNull(),
             'uid' => $this->uid(),
+            //fields
             'niTable' => $this->string(),
             'secondaryClass1NotPayable' => $this->boolean(),
             'postgradLoan' => $this->boolean(),
@@ -806,7 +807,7 @@ class Install extends Migration
             Table::RTI_EMPLOYEE_ADDRESS,
             Table::RTI_EMPLOYEE_NAME,
             Table::STARTER_DETAILS,
-            Table::TAXANDNI,
+            Table::TAX_AND_NI,
             Table::USERS
         ];
 
