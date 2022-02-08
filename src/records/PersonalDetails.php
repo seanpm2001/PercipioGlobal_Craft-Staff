@@ -17,8 +17,8 @@ use craft\db\ActiveRecord;
 use percipiolondon\staff\db\Table;
 
 /**
- * @property integer $employeeId;
- * @property integer $addressId;
+ * @property int $employeeId;
+ * @property int $addressId;
  * @property string $maritalStatus;
  * @property string $title;
  * @property string $firstName;
@@ -31,7 +31,7 @@ use percipiolondon\staff\db\Table;
  * @property string $telephone;
  * @property string $mobile;
  * @property \DateTime $dob;
- * @property integer $statePensionAge;
+ * @property int $statePensionAge;
  * @property string $gender;
  * @property string $niNumber;
  * @property string $passportNumber;

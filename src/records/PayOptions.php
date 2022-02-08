@@ -17,12 +17,12 @@ use craft\db\ActiveRecord;
 use percipiolondon\staff\db\Table;
 
 /**
- * @property integer $taxAndNiId;
- * @property integer $fpsFieldsId;
- * @property integer $regularPayLinesId;
+ * @property int $taxAndNiId;
+ * @property int $fpsFieldsId;
+ * @property int $regularPayLinesId;
  *
  * @property string $period;
- * @property integer $ordinal;
+ * @property int $ordinal;
  * @property double $payAmount;
  * @property string $basis;
  * @property boolean $nationalMinimumWage;
@@ -33,7 +33,7 @@ use percipiolondon\staff\db\Table;
  * @property string $payCode;
  * @property boolean $withholdTaxRefundIfPayIsZero;
  * @property string $mileageVehicleType;
- * @property integer $mapsMiles;
+ * @property int $mapsMiles;
  */
 
 class PayOptions extends ActiveRecord

@@ -19,10 +19,10 @@ use percipiolondon\staff\db\Table;
 /**
 * @property string $slug;
 *
-* @property integer $addressId;
-* @property integer $hmrcDetailsId;
-* @property integer $defaultPayOptionsId;
-* @property integer $bankDetailsId;
+* @property int $addressId;
+* @property int $hmrcDetailsId;
+* @property int $defaultPayOptionsId;
+* @property int $bankDetailsId;
 *
 * @property string $staffologyId;
 * @property string $name;

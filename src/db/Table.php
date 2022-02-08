@@ -18,6 +18,7 @@ abstract class Table
     const CUSTOM_PAY_CODES = "{{%staff_custompaycodes}}";
     const DEPARTMENT = "{{%staff_department}}";
     const DIRECTORSHIP_DETAILS = "{{%staff_directorshipdetails}}";
+    const DOCUMENTS = "{{%staff_documents}}";
     const EMPLOYEES = "{{%staff_employees}}";
     const EMPLOYERS = "{{%staff_employers}}";
     const EMPLOYER_SETTINGS = "{{%staff_employersettings}}";
@@ -28,13 +29,15 @@ abstract class Table
     const ITEMS = "{{%staff_items}}";
     const LEAVE_SETTINGS = "{{%staff_leavesettings}}";
     const LEAVER_DETAILS = "{{%staff_leaverdetails}}";
+    const NOTE = "{{%staff_notes}}";
     const OVERSEAS_EMPLOYER_DETAILS = "{{%staff_oveseasemployerdetails}}";
     const PAY_CODES = "{{%staff_paycodes}}";
     const PAY_OPTIONS = "{{%staff_payoptions}}";
     const PAYLINES = "{{%staff_paylines}}";
     const PAYRUN = "{{%staff_payrun}}";
-    const PAYRUN_LOG = "{{%staff_log_payrun}}";
     const PAYRUN_ENTRIES = "{{%staff_payrunentries}}";
+    const PAYRUN_LOG = "{{%staff_payrunlogs}}";
+    const PAYRUN_TOTALS = "{{%staff_payruntotals}}";
     const PENSION_ADMINISTRATOR = "{{%staff_pensionadministrator}}";
     const PENSION_PROVIDER = "{{%staff_pensionprovider}}";
     const PENSION_SCHEME = "{{%staff_pensionscheme}}";

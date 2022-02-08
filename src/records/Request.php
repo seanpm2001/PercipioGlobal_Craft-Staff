@@ -18,8 +18,8 @@ use percipiolondon\staff\db\Table;
 
 /**
  * @property \DateTime $dateAdministered;
- * @property integer $employerId;
- * @property integer $employeeId;
+ * @property int $employerId;
+ * @property int $employeeId;
  * @property string $administerId;
  * @property string $data;
  * @property string $section;

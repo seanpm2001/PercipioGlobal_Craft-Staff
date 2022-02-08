@@ -17,8 +17,8 @@ use craft\db\ActiveRecord;
 use percipiolondon\staff\db\Table;
 
 /**
- * @property integer $employerId
- * @property integer $totalsId;
+ * @property int $employerId
+ * @property int $totalsId;
  *
  * @property string $staffologyId;
  * @property string $taxYear;

@@ -17,7 +17,7 @@ use craft\db\ActiveRecord;
 use percipiolondon\staff\db\Table;
 
 /**
- * @property integer $address;
+ * @property int $address;
  *
  * @property string $name;
  * @property string $email;

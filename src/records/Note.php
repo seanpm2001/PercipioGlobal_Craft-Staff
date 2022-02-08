@@ -10,35 +10,26 @@
 
 namespace percipiolondon\staff\records;
 
+use percipiolondon\staff\Staff;
+
 use Craft;
 use craft\db\ActiveRecord;
 use percipiolondon\staff\db\Table;
 
 /**
- * @property int $employerId;
- * @property int $personalDetailsId;
- * @property int $employmentDetailsId;
- * @property int $autoEnrolmentId;
- * @property int $leaveSettingsId;
- * @property int $rightToWorkId;
- * @property int $bankDetailsId;
- * @property int $payOptionsId;
- *
- * @property string $staffologyId;
- * @property int $userId;
- * @property boolean $isDirector
- * @property string $status;
- * @property boolean $aeNotEnroledWarning;
- * @property string $niNumber
- * @property string $sourceSystemId;
+ * @property string noteDate;
+ * @property string noteText;
+ * @property string createdBy;
+ * @property string updatedBy;
+ * @property string type;
  */
 
-class Employee extends ActiveRecord
+class Note extends ActiveRecord
 {
     // Public Static Methods
     // =========================================================================
 
-     /**
+    /**
      * Declares the name of the database table associated with this AR class.
      * By default this method returns the class name as the table name by calling [[Inflector::camel2id()]]
      * with prefix [[Connection::tablePrefix]]. For example if [[Connection::tablePrefix]] is `tbl_`,
@@ -52,6 +43,6 @@ class Employee extends ActiveRecord
      */
     public static function tableName()
     {
-        return Table::EMPLOYEES;
+        return Table::NOTE;
     }
 }

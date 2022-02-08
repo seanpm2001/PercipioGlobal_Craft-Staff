@@ -17,12 +17,12 @@ use craft\db\ActiveRecord;
 use percipiolondon\staff\db\Table;
 
 /**
- * @property integer $employerId
- * @property integer $payRunId
+ * @property int $employerId
+ * @property int $payRunId
  *
  * @property string $taxYear;
- * @property integer $employeeCount;
- * @property integer $lastPeriodNumber;
+ * @property int $employeeCount;
+ * @property int $lastPeriodNumber;
  * @property string $url
  */
 

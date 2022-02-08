@@ -6,15 +6,15 @@ use craft\db\ActiveRecord;
 use percipiolondon\staff\db\Table;
 
 /**
- * @property integer $defaultPension;
+ * @property int $defaultPension;
  *
  * @property string $stagingDate;
  * @property string $cyclicalReenrolmentDate;
  * @property string $previousCyclicalReenrolmentDate;
  * @property boolean $pensionSameAsDefault;
- * @property integer $daysToDeferAssessment;
+ * @property int $daysToDeferAssessment;
  * @property boolean $deferByMonthsNotDays;
- * @property integer $deferEnrolmentBy;
+ * @property int $deferEnrolmentBy;
  * @property string $deferEnrolmentByPeriodType;
  * @property boolean $includeNonPensionedEmployeesInSubmission;
  */

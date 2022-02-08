@@ -19,7 +19,7 @@ use percipiolondon\staff\db\Table;
 /**
  * @property string $pensionScheme;
  *
- * @property integer $workerGroupId;
+ * @property int $workerGroupId;
  */
 
 class PensionScheme extends ActiveRecord

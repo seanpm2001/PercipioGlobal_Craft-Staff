@@ -17,7 +17,7 @@ use craft\db\ActiveRecord;
 use percipiolondon\staff\db\Table;
 
 /**
- * @property integer $address;
+ * @property int $address;
  *
  * @property string $name;
  * @property string $accountNo;
@@ -28,13 +28,13 @@ use percipiolondon\staff\db\Table;
  * @property string $papdisProviderId;
  * @property string $papdisEmployerId;
  * @property string $csvFormat;
- * @property integer $excludeNilPaidFromContributions;
+ * @property int $excludeNilPaidFromContributions;
  * @property boolean $payPeriodDateAdjustment;
  * @property boolean $miscBoolean1;
  * @property boolean $miscBoolean2;
  * @property string $miscString1;
  * @property string $miscString2;
- * @property integer $optOutWindow;
+ * @property int $optOutWindow;
  * @property boolean $optOutWindowIsMonths;
  */
 

@@ -22,12 +22,12 @@ use percipiolondon\staff\db\Table;
  * @property string $name;
  * @property int $logoId;
  * @property string $crn;
- * @property integer $address;
- * @property integer $hmrcDetails;
+ * @property int $address;
+ * @property int $hmrcDetails;
  * @property string $startYear;
  * @property string $currentYear;
  * @property int $employeeCount;
- * @property integer $defaultPayOptions;
+ * @property int $defaultPayOptions;
  */
 
 class EmploymentDetails extends ActiveRecord

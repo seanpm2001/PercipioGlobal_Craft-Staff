@@ -9,7 +9,7 @@ use percipiolondon\staff\db\Table;
  * @property string $code;
  * @property string $title;
  * @property string $color;
- * @property integer $employeeCount;
+ * @property int $employeeCount;
  */
 
 class Department extends ActiveRecord

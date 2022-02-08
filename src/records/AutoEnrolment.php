@@ -9,13 +9,13 @@ use percipiolondon\staff\db\Table;
  * @property string $state;
  * @property \DateTime $stateDate;
  * @property string $ukWorker;
- * @property integer $daysToDeferAssessment;
+ * @property int $daysToDeferAssessment;
  * @property \DateTime $postponementData;
  * @property boolean $deferByMonthsNotDays;
  * @property boolean $exempt;
  * @property string $aeExclusionCode;
  * @property boolean $aePostponementLetterSent;
- * @property integer $lastAssessment;
+ * @property int $lastAssessment;
  */
 
 class AutoEnrolment extends ActiveRecord

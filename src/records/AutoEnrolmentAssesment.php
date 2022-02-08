@@ -8,17 +8,17 @@ use percipiolondon\staff\db\Table;
 /**
  * @property \DateTime $assessmentDate;
  * @property string $employeeState;
- * @property integer $age;
+ * @property int $age;
  * @property string $ukWorker;
  * @property string $payPeriod;
- * @property integer $ordinal;
+ * @property int $ordinal;
  * @property double $earningsInPeriod;
  * @property double $qualifyingEarningsInPeriod;
  * @property string $aeExclusionCode;
  * @property string $status;
  * @property string $reason;
- * @property integer $action;
- * @property integer $employee;
+ * @property int $action;
+ * @property int $employee;
  * @property string $assessmentId;
  */
 

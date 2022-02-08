@@ -18,7 +18,7 @@ use percipiolondon\staff\db\Table;
 
 /**
  * @property string $payCodeCode;
- * @property integer $pensionId;
+ * @property int $pensionId;
  */
 
 class CustomPayCodes extends ActiveRecord

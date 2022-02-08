@@ -18,21 +18,21 @@ use craft\db\ActiveRecord;
 use percipiolondon\staff\db\Table;
 
 /**
- * @property integer $noteId;
- * @property integer $priorPayrollCodeId;
+ * @property int $noteId;
+ * @property int $priorPayrollCodeId;
  * @property string $payOptionsId;
- * @property integer $pensionSummaryId;
- * @property integer $totalsId;
- * @property integer $periodOverridesId;
- * @property integer $totalsYtdId;
- * @property integer $totalsYtdOverridesId
- * @property integer $nationalInsuranceCalculationId
- * @property integer $umbrellaPaymentId
- * @property integer $employeeId
- * @property integer $employerId
- * @property integer $payRunId
+ * @property int $pensionSummaryId;
+ * @property int $totalsId;
+ * @property int $periodOverridesId;
+ * @property int $totalsYtdId;
+ * @property int $totalsYtdOverridesId
+ * @property int $nationalInsuranceCalculationId
+ * @property int $umbrellaPaymentId
+ * @property int $employeeId
+ * @property int $employerId
+ * @property int $payRunId
  *
- * @property integer $staffologyId
+ * @property int $staffologyId
  * @property string $taxYear
  * @property \DateTime $startDate
  * @property \DateTime $endDate
@@ -41,8 +41,8 @@ use percipiolondon\staff\db\Table;
  * @property double $percentageOfWorkingDaysPaidAsNormal
  * @property double $workingDaysNotPaidAsNormal
  * @property string $payPeriod
- * @property integer $ordinal
- * @property integer $period
+ * @property int $ordinal
+ * @property int $period
  * @property boolean $isNewStarter
  * @property boolean $unpaidAbsence
  * @property boolean $hasAttachmentOrders
@@ -73,7 +73,7 @@ class PayRunEntry extends ActiveRecord
 //                'employerId',
 //                'ordinal',
 //                'period',
-//            ], 'number', 'integerOnly' => true], [[
+//            ], 'number', 'intOnly' => true], [[
 //                'percentageOfWorkingDaysPaidAsNormal',
 //                'workingDaysNotPaidAsNormal',
 //                'forcedCisVatAmount',

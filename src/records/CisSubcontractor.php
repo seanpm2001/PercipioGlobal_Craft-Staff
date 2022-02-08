@@ -6,14 +6,14 @@ use craft\db\ActiveRecord;
 use percipiolondon\staff\db\Table;
 
 /**
- * @property integer $item;
- * @property integer $name;
- * @property integer $partnership;
- * @property integer $address;
+ * @property int $item;
+ * @property int $name;
+ * @property int $partnership;
+ * @property int $address;
  *
  * @property string $employeeUniqueId;
  * @property string $emailStatementTo;
- * @property integer $numberOfPayments;
+ * @property int $numberOfPayments;
  * @property string $displayName;
  * @property string $action;
  * @property string $type;

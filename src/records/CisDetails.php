@@ -6,7 +6,7 @@ use craft\db\ActiveRecord;
 use percipiolondon\staff\db\Table;
 
 /**
- * @property integer $verification;
+ * @property int $verification;
  *
  * @property string $type;
  * @property string $utr;

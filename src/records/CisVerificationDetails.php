@@ -6,7 +6,7 @@ use craft\db\ActiveRecord;
 use percipiolondon\staff\db\Table;
 
 /**
- * @property integer $verificationResponse;
+ * @property int $verificationResponse;
  *
  * @property boolean $manuallyEntered;
  * @property boolean $matchInsteadOfVerify;

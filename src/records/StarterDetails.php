@@ -19,8 +19,8 @@ use percipiolondon\staff\db\Table;
 /**
  * @property \DateTime $startDate;
  * @property string $starterDeclaration;
- * @property integer $overseasEmployerDetails;
- * @property integer $pensionerPayroll;
+ * @property int $overseasEmployerDetails;
+ * @property int $pensionerPayroll;
  */
 
 class StarterDetails extends ActiveRecord
