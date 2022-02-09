@@ -10,35 +10,44 @@
 
 namespace percipiolondon\staff\records;
 
+use percipiolondon\staff\Staff;
+
 use Craft;
 use craft\db\ActiveRecord;
 use percipiolondon\staff\db\Table;
 
 /**
- * @property int $employerId;
- * @property int $userId;
- * @property int $personalDetailsId;
- * @property int $employmentDetailsId;
- * @property int $autoEnrolmentId;
- * @property int $leaveSettingsId;
- * @property int $rightToWorkId;
- * @property int $bankDetails;
- * @property int $payOptionsId;
+ * @property int $pensionSchemeId;
+ * @property int $workerGroupId;
+ * @property int $teachersPensionDetails;
+ * @property string $forcedTier;
  *
  * @property string $staffologyId;
- * @property boolean $isDirector
- * @property string $status;
- * @property boolean $aeNotEnroledWarning;
- * @property string $niNumber
- * @property string $sourceSystemId;
+ * @property string $contributionLevelType;
+ * @property string $startDate;
+ * @property string $memberReferenceNumber;
+ * @property boolean $overrideContributions;
+ * @property double $employeeContribution;
+ * @property boolean $employeeContributionIsPercentage;
+ * @property double $employerContribution;
+ * @property boolean $employerContributionIsPercentage;
+ * @property double $employerContributionTopUpPercentage;
+ * @property double $isAeQualifyingScheme;
+ * @property double $isTeachersPension;
+ * @property string $aeStatusAtJoining;
+ * @property double $additionalVoluntaryContribution;
+ * @property boolean $avcIsPercentage;
+ * @property boolean $exitViaProvider;
+ * @property boolean $forceEnrolment;
+ * @property boolean $autoEnrolled;
  */
 
-class Employee extends ActiveRecord
+class Pension extends ActiveRecord
 {
     // Public Static Methods
     // =========================================================================
 
-     /**
+    /**
      * Declares the name of the database table associated with this AR class.
      * By default this method returns the class name as the table name by calling [[Inflector::camel2id()]]
      * with prefix [[Connection::tablePrefix]]. For example if [[Connection::tablePrefix]] is `tbl_`,
@@ -52,6 +61,6 @@ class Employee extends ActiveRecord
      */
     public static function tableName()
     {
-        return Table::EMPLOYEES;
+        return Table::PENSION;
     }
 }

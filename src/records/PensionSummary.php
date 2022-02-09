@@ -10,35 +10,42 @@
 
 namespace percipiolondon\staff\records;
 
+use percipiolondon\staff\Staff;
+
 use Craft;
 use craft\db\ActiveRecord;
 use percipiolondon\staff\db\Table;
 
 /**
- * @property int $employerId;
- * @property int $userId;
- * @property int $personalDetailsId;
- * @property int $employmentDetailsId;
- * @property int $autoEnrolmentId;
- * @property int $leaveSettingsId;
- * @property int $rightToWorkId;
- * @property int $bankDetails;
- * @property int $payOptionsId;
- *
- * @property string $staffologyId;
- * @property boolean $isDirector
- * @property string $status;
- * @property boolean $aeNotEnroledWarning;
- * @property string $niNumber
- * @property string $sourceSystemId;
+ * @property string $title;
+ * @property int $code;
+ * @property double $defaultValue;
+ * @property boolean $isDeduction;
+ * @property boolean $isNiable;
+ * @property boolean $isTaxable;
+ * @property boolean $isPensionable;
+ * @property boolean $isAttachable;
+ * @property boolean $isRealTimeClass1aNiable;
+ * @property boolean $isNotContributingToHolidayPay;
+ * @property boolean $isQualifyingEarningsForAe;
+ * @property boolean $isNotTierable;
+ * @property boolean $isTcp_Tcls;
+ * @property boolean $isTcp_Pp;
+ * @property boolean $isTcp_Op;
+ * @property boolean $isFlexiDd_DeathBenefit;
+ * @property boolean $isFlexiDd_Pension;
+ * @property string $calculationType;
+ * @property double $hourlyRateMultiplier;
+ * @property boolean $isSystemCode;
+ * @property boolean $isControlCode;
  */
 
-class Employee extends ActiveRecord
+class PensionSummary extends ActiveRecord
 {
     // Public Static Methods
     // =========================================================================
 
-     /**
+    /**
      * Declares the name of the database table associated with this AR class.
      * By default this method returns the class name as the table name by calling [[Inflector::camel2id()]]
      * with prefix [[Connection::tablePrefix]]. For example if [[Connection::tablePrefix]] is `tbl_`,
@@ -52,6 +59,6 @@ class Employee extends ActiveRecord
      */
     public static function tableName()
     {
-        return Table::EMPLOYEES;
+        return Table::PENSION_SUMMARY;
     }
 }

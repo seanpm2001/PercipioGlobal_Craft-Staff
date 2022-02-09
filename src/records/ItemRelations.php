@@ -1,20 +1,28 @@
 <?php
+/**
+ * staff-management plugin for Craft CMS 3.x
+ *
+ * Craft Staff Management provides an HR solution for payroll and benefits
+ *
+ * @link      http://percipio.london
+ * @copyright Copyright (c) 2021 Percipio
+ */
 
 namespace percipiolondon\staff\records;
 
+use percipiolondon\staff\Staff;
+
+use Craft;
 use craft\db\ActiveRecord;
 use percipiolondon\staff\db\Table;
 
 /**
- * @property int $countryId;
- * @property int $countyId;
- * @property string $address1;
- * @property string $address2;
- * @property string $address3;
- * @property string $zipCode;
+ * @property int $itemId;
+ * @property int $noteId;
+ * @property int $employmentDetailId;
  */
 
-class Addresses extends ActiveRecord
+class ItemRelations extends ActiveRecord
 {
     // Public Static Methods
     // =========================================================================
@@ -33,6 +41,6 @@ class Addresses extends ActiveRecord
      */
     public static function tableName()
     {
-        return Table::ADDRESSES;
+        return Table::ITEM_RELATIONS;
     }
 }

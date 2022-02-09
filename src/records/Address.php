@@ -1,44 +1,25 @@
 <?php
-/**
- * staff-management plugin for Craft CMS 3.x
- *
- * Craft Staff Management provides an HR solution for payroll and benefits
- *
- * @link      http://percipio.london
- * @copyright Copyright (c) 2021 Percipio
- */
 
 namespace percipiolondon\staff\records;
 
-use Craft;
 use craft\db\ActiveRecord;
 use percipiolondon\staff\db\Table;
 
 /**
- * @property int $employerId;
- * @property int $userId;
- * @property int $personalDetailsId;
- * @property int $employmentDetailsId;
- * @property int $autoEnrolmentId;
- * @property int $leaveSettingsId;
- * @property int $rightToWorkId;
- * @property int $bankDetails;
- * @property int $payOptionsId;
- *
- * @property string $staffologyId;
- * @property boolean $isDirector
- * @property string $status;
- * @property boolean $aeNotEnroledWarning;
- * @property string $niNumber
- * @property string $sourceSystemId;
+ * @property int $countryId;
+ * @property int $countyId;
+ * @property string $address1;
+ * @property string $address2;
+ * @property string $address3;
+ * @property string $zipCode;
  */
 
-class Employee extends ActiveRecord
+class Address extends ActiveRecord
 {
     // Public Static Methods
     // =========================================================================
 
-     /**
+    /**
      * Declares the name of the database table associated with this AR class.
      * By default this method returns the class name as the table name by calling [[Inflector::camel2id()]]
      * with prefix [[Connection::tablePrefix]]. For example if [[Connection::tablePrefix]] is `tbl_`,
@@ -52,6 +33,6 @@ class Employee extends ActiveRecord
      */
     public static function tableName()
     {
-        return Table::EMPLOYEES;
+        return Table::ADDRESSES;
     }
 }

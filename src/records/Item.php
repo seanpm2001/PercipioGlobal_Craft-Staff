@@ -23,7 +23,7 @@ use percipiolondon\staff\db\Table;
  * @property string $url;
  */
 
-class Items extends ActiveRecord
+class Item extends ActiveRecord
 {
     // Public Static Methods
     // =========================================================================

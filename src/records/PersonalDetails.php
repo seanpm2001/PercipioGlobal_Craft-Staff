@@ -19,6 +19,7 @@ use percipiolondon\staff\db\Table;
 /**
  * @property int $employeeId;
  * @property int $addressId;
+ *
  * @property string $maritalStatus;
  * @property string $title;
  * @property string $firstName;

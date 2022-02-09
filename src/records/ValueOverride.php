@@ -10,35 +10,29 @@
 
 namespace percipiolondon\staff\records;
 
+use percipiolondon\staff\db\Table;
+use percipiolondon\staff\Staff;
+
 use Craft;
 use craft\db\ActiveRecord;
-use percipiolondon\staff\db\Table;
 
 /**
- * @property int $employerId;
- * @property int $userId;
- * @property int $personalDetailsId;
- * @property int $employmentDetailsId;
- * @property int $autoEnrolmentId;
- * @property int $leaveSettingsId;
- * @property int $rightToWorkId;
- * @property int $bankDetails;
- * @property int $payOptionsId;
+ * @property int payRunEntryId;
+ * @property int pensionId;
  *
- * @property string $staffologyId;
- * @property boolean $isDirector
- * @property string $status;
- * @property boolean $aeNotEnroledWarning;
- * @property string $niNumber
- * @property string $sourceSystemId;
+ * @property string type;
+ * @property double $value;
+ * @property double $originalValue;
+ * @property string $note;
+ * @property string $attachmentOrderId;
  */
 
-class Employee extends ActiveRecord
+class ValueOverride extends ActiveRecord
 {
     // Public Static Methods
     // =========================================================================
 
-     /**
+    /**
      * Declares the name of the database table associated with this AR class.
      * By default this method returns the class name as the table name by calling [[Inflector::camel2id()]]
      * with prefix [[Connection::tablePrefix]]. For example if [[Connection::tablePrefix]] is `tbl_`,
@@ -52,6 +46,6 @@ class Employee extends ActiveRecord
      */
     public static function tableName()
     {
-        return Table::EMPLOYEES;
+        return Table::VALUE_OVERRIDE;
     }
 }
