@@ -1,5 +1,7 @@
 # Database
 
+Suffixed every FK linkage with `Id` if it links to another table ID
+
 ## Table::EMPLOYEES
 ### personalDetailsId (PersonalDetails)
 Query on employeeId from within staffology call

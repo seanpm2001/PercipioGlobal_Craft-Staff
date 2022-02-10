@@ -50,7 +50,6 @@ abstract class Table
     const PERMISSIONS = "{{%staff_permissions}}";
     const PERMISSIONS_USERS = "{{%staff_permissions_users}}";
     const PERSONAL_DETAILS = "{{%staff_personal_details}}";
-    const POST = "{{%staff_post}}";
     const REQUESTS = "{{%staff_requests}}";
     const RIGHT_TO_WORK = "{{%staff_righttowork}}";
     const RTI_AGENT = "{{%staff_rti_agent}}";
@@ -64,7 +63,7 @@ abstract class Table
     const TIERED_PENSION_RATE = "{{%staff_tieredpensionrate}}";
     const UMBRELLA_PAYMENT = "{{%staff_umbrellaspayment}}";
     const UMBRELLA_SETTINGS = "{{%staff_umbrellasettings}}";
-    const USERS = "{{%staff_users}}";
+//    const USERS = "{{%staff_users}}";
     const VALUE_OVERRIDE = "{{%staff_valueoverride}}";
     const WORKER_GROUP = "{{%staff_workergroup}}";
 }
