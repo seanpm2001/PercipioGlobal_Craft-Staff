@@ -27,15 +27,14 @@ abstract class Table
     const HISTORY = "{{%staff_history}}";
     const HMRC_DETAILS = "{{%staff_hrmcdetails}}";
     const ITEMS = "{{%staff_items}}";
-    const ITEM_RELATIONS = "{{%staff_itemrelations}}";
     const LEAVE_SETTINGS = "{{%staff_leavesettings}}";
     const LEAVER_DETAILS = "{{%staff_leaverdetails}}";
     const NATIONAL_INSURANCE_CALCULATION = "{{%staff_nationalinsurancecalculations}}";
     const NOTE = "{{%staff_notes}}";
     const OVERSEAS_EMPLOYER_DETAILS = "{{%staff_oveseasemployerdetails}}";
     const PAY_CODES = "{{%staff_paycodes}}";
+    const PAY_LINES = "{{%staff_paylines}}";
     const PAY_OPTIONS = "{{%staff_payoptions}}";
-    const PAYLINES = "{{%staff_paylines}}";
     const PAYRUN = "{{%staff_payrun}}";
     const PAYRUN_ENTRIES = "{{%staff_payrunentries}}";
     const PAYRUN_LOG = "{{%staff_payrunlogs}}";
@@ -60,10 +59,9 @@ abstract class Table
     const STARTER_DETAILS = "{{%staff_starterdetails}}";
     const TAX_AND_NI = "{{%staff_taxandni}}";
     const TEACHER_PENSION_DETAILS = "{{%staff_teacherpensiondetails}}";
-    const TIERED_PENSION_RATE = "{{%staff_tieredpensionrate}}";
+    const TIER_PENSION_RATE = "{{%staff_tierpensionrate}}";
     const UMBRELLA_PAYMENT = "{{%staff_umbrellaspayment}}";
     const UMBRELLA_SETTINGS = "{{%staff_umbrellasettings}}";
-//    const USERS = "{{%staff_users}}";
     const VALUE_OVERRIDE = "{{%staff_valueoverride}}";
     const WORKER_GROUP = "{{%staff_workergroup}}";
 }

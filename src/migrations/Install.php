@@ -80,11 +80,11 @@ class Install extends Migration
             'userId' => $this->integer(),
                 //staffology
             'personalDetailsId' => $this->integer(), // @TODO: create FK to PensionSelection [id]
+            'bankDetails' => $this->string(), // @TODO: create FK to BankDetails [accountNumber]
             'employmentDetailsId' => $this->integer(), // @TODO: create FK to EmploymentDetails table [id]
             'autoEnrolmentId' => $this->integer(), // @TODO: create FK to AutoEnrolment table [id]
             'leaveSettingsId' => $this->integer(), // @TODO: create FK to LeaveSettings table [id]
             'rightToWorkId' => $this->integer(), // @TODO: create FK to RightToWork [id]
-            'bankDetails' => $this->string(), // @TODO: create FK to BankDetails [accountNumber]
             'payOptionsId' => $this->integer(), // @TODO: create FK to PayOptions table [id]
             //fields
             'staffologyId' => $this->string(255)->notNull(),
@@ -102,8 +102,8 @@ class Install extends Migration
             'uid' => $this->uid(),
             //FK
             'addressId' => $this->integer(), // @TODO: create FK to Address [id]
-            'defaultPayOptionsId' => $this->integer(), // @TODO: create FK to PayOptions [id]
             'bankDetails' => $this->string(), // @TODO: create FK to BankDetails [accountName]
+            'defaultPayOptionsId' => $this->integer(), // @TODO: create FK to PayOptions [id]
             'hmrcDetailsId' => $this->integer(), // @TODO: create FK to HmrcDetails [id]
             'defaultPensionId' => $this->integer(), // @TODO: create FK to PensionScheme [id]
             'rtiSubmissionSettingsId' => $this->integer(), // @TODO: create FK to RtiSubmissionSettings [id]
@@ -174,19 +174,19 @@ class Install extends Migration
                 //intern
             'employeeId' => $this->integer()->notNull(),
             'employerId' => $this->integer()->notNull()->defaultValue(null),
+            'payRunId' => $this->integer()->notNull()->defaultValue(0),
                 //stafology
-            'priorPayrollCodeId' => $this->string(), // @TODO: create FK to PayCode table [code]
+            'priorPayrollCode' => $this->string(), // @TODO: create FK to PayCode table [code]
             'payOptionsId' => $this->integer(), // @TODO: create FK to PayOptions table [id]
             'pensionSummaryId' => $this->integer(),// @TODO: create FK to PensionSummary table [id]
             'totalsId' => $this->integer(), // @TODO: create FK to PayRunTotals table [id]
             'totalsYtdId' => $this->integer(),// @TODO: create FK to PayRunTotals table [id]
             'nationalInsuranceCalculationId' => $this->integer(), // @TODO: create FK to NationalInsuranceCalculation table [id]
             'umbrellaPaymentId' => $this->integer(), // @TODO: create FK to UmbrellaPayment table [id]
-            'payRunId' => $this->integer()->notNull()->defaultValue(0),
             'employee' => $this->integer(), // @TODO: create FK to Item table [id]
             'fpsId' => $this->integer(), // @TODO: create FK to Item table [id]
-//            'periodOverridesId' => $this->integer(), // VALUE_OVERRIDE has a FK that links to this PAYRUN_ENTRY, `field` stores periodOverridesId
-//            'totalsYtdOverridesId' => $this->integer(),  // VALUE_OVERRIDE has a FK that links to this PAYRUN_ENTRY, `field` stores totalsYtdOverridesId
+//            'periodOverridesId' => $this->integer(), // VALUE_OVERRIDE has a FK that links to this PAYRUN_ENTRY, `field` stores periodOverrides
+//            'totalsYtdOverridesId' => $this->integer(),  // VALUE_OVERRIDE has a FK that links to this PAYRUN_ENTRY, `field` stores totalsYtdOverrides
             // fields
             'staffologyId' => $this->string(255)->notNull(), // staffology: id
             'taxYear' => $this->string(255)->defaultValue(''),
@@ -248,6 +248,22 @@ class Install extends Migration
             'exitViaProvider' => $this->boolean(),
             'forceEnrolment' => $this->boolean(),
             'autoEnrolled' => $this->boolean(),
+        ]);
+
+        $this->createTable(Table::PAYRUN_LOG, [
+            'id' => $this->primaryKey(),
+            'dateCreated' => $this->dateTime()->notNull(),
+            'dateUpdated' => $this->dateTime()->notNull(),
+            'uid' => $this->uid(),
+            // FK
+                //intern
+            'employerId' => $this->integer()->notNull()->defaultValue(0),
+            'payRunId' => $this->integer()->notNull()->defaultValue(0),
+            // fields
+            'employeeCount' => $this->integer()->notNull()->defaultValue(0),
+            'taxYear' => $this->string(255)->notNull()->defaultValue(''),
+            'lastPeriodNumber' => $this->integer()->notNull()->defaultValue(0),
+            'url' => $this->string(255)->notNull()->defaultValue(0),
         ]);
 
         $this->createTable(Table::PERMISSIONS, [
@@ -320,7 +336,6 @@ class Install extends Migration
             'employerId' => $this->integer(), // @TODO: create FK to Employer [id]
             'countryId' => $this->integer(), // @TODO: create FK to Countries [id]
             //fields
-            'countyId' => $this->integer(),
             'address1' => $this->string(),
             'address2' => $this->string(),
             'address3' => $this->string(),
@@ -355,12 +370,11 @@ class Install extends Migration
             'dateUpdated' => $this->dateTime()->notNull(),
             'uid' => $this->uid(),
             //FK
-                //intern
-            'employeeId' => $this->integer(), // @TODO: create FK to Employee [id]
                 //staffology
-            'action' => $this->integer(), // @TODO: create FK AutoEnrolmentAssesmentAction [id]
-            'employee' => $this->integer(), // @TODO: create FK Item [id]
+            'actionId' => $this->integer(), // @TODO: create FK AutoEnrolmentAssesmentAction [id]
+            'employeeItemId' => $this->integer(), // @TODO: create FK Item [id]
             //fields
+            'staffologyId' => $this->integer(),
             'assessmentDate' => $this->dateTime(),
             'employeeState' => $this->enum('state', ['Automatic', 'OptOut', 'OptIn', 'VoluntaryJoiner', 'ContractualPension', 'CeasedMembership', 'Leaver', 'Excluded', 'Enrol']),
             'age' => $this->integer(),
@@ -400,8 +414,9 @@ class Install extends Migration
                 //intern
             'employerId' => $this->integer(), //@TODO: create FK to Employer [id]
                 //staffology
-            'defaultPension' => $this->integer(), // @TODO: create FK to PensionSelection [id]
+            'defaultPensionId' => $this->integer(), // @TODO: create FK to PensionSelection [id]
             //fields
+            'staffologyId' => $this->string(),
             'stagingDate' => $this->string(),
             'cyclicalReenrolmentDate' => $this->string(),
             'previousCyclicalReenrolmentDate' => $this->string(),
@@ -418,6 +433,10 @@ class Install extends Migration
             'dateCreated' => $this->dateTime()->notNull(),
             'dateUpdated' => $this->dateTime()->notNull(),
             'uid' => $this->uid(),
+            //FK
+                //intern
+            'employerId' => $this->integer(), //@TODO create FK to Employer [id]
+            'employeeId' => $this->integer(), //@TODO create FK to Employee [id]
             //fields
             'bankName' => $this->string(),
             'bankBranch' => $this->string(),
@@ -503,7 +522,7 @@ class Install extends Migration
             'dateUpdated' => $this->dateTime()->notNull(),
             'uid' => $this->uid(),
             //FK
-            'verificationResponse' => $this->integer(), // @TODO: create FK CisSubcontractor [id] // Links to the CisSubContractor Table, as a Verification Response return a CisSubContractor Object
+                'cisSubcontractorId' => $this->integer(), // @TODO: create FK CisSubcontractor [id] // verificationResponse to the CisSubContractor Table, as a Verification Response return a CisSubContractor Object
             //fields
             'manuallyEntered' => $this->boolean(),
             'matchInsteadOfVerify' => $this->boolean(),
@@ -607,9 +626,9 @@ class Install extends Migration
                 //stafology
             'cisId' => $this->integer(), //@TODO create FK to CisDetails [id]
             'starterDetailsId' => $this->integer(), //@TODO create FK to StarterDetails [id]
-            'directorshipDetails' => $this->integer(), //@TODO create FK to DirectorshipDetails [id]
+            'directorshipDetailsId' => $this->integer(), //@TODO create FK to DirectorshipDetails [id]
             'leaverDetailsId' => $this->integer(), //@TODO create FK to LeaverDetails [id]
-            'departmentId' => $this->integer(), //@TODO create FK to Department [id]
+            'department' => $this->string(), //@TODO create FK to Department [code]
             //fields
             'cisSubContractor' => $this->boolean(),
             'payrollCode' => $this->string(),
@@ -659,9 +678,6 @@ class Install extends Migration
             'dateCreated' => $this->dateTime()->notNull(),
             'dateUpdated' => $this->dateTime()->notNull(),
             'uid' => $this->uid(),
-            //FK
-                //intern
-            'payOptionsId' => $this->integer(), //@TODO: create FK to PayOptions [id]            
             //fields
             'offPayrollWorker' => $this->boolean(),
             'irregularPaymentPattern' => $this->boolean(),
@@ -676,7 +692,7 @@ class Install extends Migration
             'uid' => $this->uid(),
             //FK
                 //internal
-            'employerId' => $this->integer()->notNull(), // @TODO: create FK from Employer [id]
+            'employerId' => $this->integer()->notNull(), // @TODO: create FK to Employer [id]
             //fields
             'officeNumber' => $this->string(),
             'payeReference' => $this->string(),
@@ -704,19 +720,6 @@ class Install extends Migration
             'name' => $this->string(),
             'metadata' => $this->longText(),
             'url' => $this->string(),
-        ]);
-
-        // Harding Hub table
-        $this->createTable(Table::ITEM_RELATIONS, [
-            'id' => $this->primaryKey(),
-            'dateCreated' => $this->dateTime()->notNull(),
-            'dateUpdated' => $this->dateTime()->notNull(),
-            'uid' => $this->uid(),
-            //FK
-                //intern
-            'itemId' => $this->integer(), //@TODO: create FK to Items [id]
-            'noteId' => $this->integer(), //@TODO: create FK to Note [id]
-            'employmentDetailsId' => $this->integer(), //@TODO: create FK to Note [id]
         ]);
 
         $this->createTable(Table::LEAVE_SETTINGS, [
@@ -822,31 +825,11 @@ class Install extends Migration
             'dateUpdated' => $this->dateTime()->notNull(),
             'uid' => $this->uid(),
             //FK
-                //intern
-            'starterDetailsId' => $this->integer(), //@TODO: create FK to StarterDetails [id]
             //fields
             'overseasEmployer' => $this->boolean(),
             'overseasSecondmentStatus' => $this->enum('status', ['MoreThan183Days', 'LessThan183Days', 'BothInAndOutOfUK']),
             'eeaCitizen' => $this->boolean(),
             'epm6Scheme' => $this->boolean(),
-        ]);
-
-        $this->createTable(Table::PAYLINES, [
-            'id' => $this->primaryKey(),
-            'dateCreated' => $this->dateTime()->notNull(),
-            'dateUpdated' => $this->dateTime()->notNull(),
-            'uid' => $this->uid(),
-            //FK
-                //intern
-            'payOptionId' => $this->integer(), //@TODO: create FK from PayOptions [id]
-            //fields
-            'value' => $this->double(),
-            'rate' => $this->double(),
-            'multiplier' => $this->double(),
-            'description' => $this->string(),
-            'attachmentOrderId' => $this->string(),
-            'pensionId' => $this->string(),
-            'code' => $this->string(),
         ]);
 
         $this->createTable(Table::PAY_CODES, [
@@ -878,6 +861,24 @@ class Install extends Migration
             'isControlCode' => $this->boolean(),
         ]);
 
+        $this->createTable(Table::PAY_LINES, [
+            'id' => $this->primaryKey(),
+            'dateCreated' => $this->dateTime()->notNull(),
+            'dateUpdated' => $this->dateTime()->notNull(),
+            'uid' => $this->uid(),
+            //FK
+                //intern
+            'payOptionsId' => $this->integer(), //@TODO: create FK to PayOptions [id]
+            //fields
+            'value' => $this->double(),
+            'rate' => $this->double(),
+            'multiplier' => $this->double(),
+            'description' => $this->string(),
+            'attachmentOrderId' => $this->string(),
+            'pensionId' => $this->string(),
+            'code' => $this->string(),
+        ]);
+
         $this->createTable(Table::PAY_OPTIONS, [
             'id' => $this->primaryKey(),
             'dateCreated' => $this->dateTime()->notNull(),
@@ -906,22 +907,6 @@ class Install extends Migration
             'withholdTaxRefundIfPayIsZero' => $this->boolean(),
             'mileageVehicleType' => $this->enum('type', ['Car', 'Motorcycle', 'Cycle']),
             'mapsMiles' => $this->integer(),
-        ]);
-
-        $this->createTable(Table::PAYRUN_LOG, [
-            'id' => $this->primaryKey(),
-            'dateCreated' => $this->dateTime()->notNull(),
-            'dateUpdated' => $this->dateTime()->notNull(),
-            'uid' => $this->uid(),
-            // FK
-                //intern
-            'employerId' => $this->integer()->notNull()->defaultValue(0),
-            'payRunId' => $this->integer()->notNull()->defaultValue(0),
-            // fields
-            'employeeCount' => $this->integer()->notNull()->defaultValue(0),
-            'taxYear' => $this->string(255)->notNull()->defaultValue(''),
-            'lastPeriodNumber' => $this->integer()->notNull()->defaultValue(0),
-            'url' => $this->string(255)->notNull()->defaultValue(0),
         ]);
 
         $this->createTable(Table::PAYRUN_TOTALS, [
@@ -999,6 +984,7 @@ class Install extends Migration
                 //staffology
             'addressId' => $this->integer(), //@TODO: create FK to Address [id]
             //fields
+            'staffologyId' => $this->string(),
             'name' => $this->string(),
             'email' => $this->string(),
             'telephone' => $this->string(),
@@ -1013,6 +999,7 @@ class Install extends Migration
                 //staffology
             'addressId' => $this->integer(), // @TODO: create FK to Address [id]
             //fields
+            'staffologyId' => $this->string(),
             'name' => $this->string()->notNull(),
             'accountNo' => $this->string(),
             'portal' => $this->string(),
@@ -1038,9 +1025,10 @@ class Install extends Migration
             'dateUpdated' => $this->dateTime()->notNull(),
             'uid' => $this->uid(),
             //FK
+                //staffology
             'providerId' => $this->integer(), // @TODO: create FK to PensionProvider [id]
             'administratorId' => $this->integer(), // @TODO: create FK to PensionAdministrator [id]
-            'bankDetails' => $this->integer(), // @TODO: create FK to BankDetails [accountName]
+            'bankDetails' => $this->string(), // @TODO: create FK to BankDetails [accountName]
 //            'customPayCodes' => $this->integer(),  // Added an internal relation table CustomPayCodes to store this [id] into
             //fields
             'staffologyId' => $this->string(),
@@ -1061,9 +1049,12 @@ class Install extends Migration
             //FK
                 //intern
             'employerId' => $this->integer(), // @TODO: create FK to Employer [id]
+            'autoEnrollmentSettingsId' => $this->integer(), // @TODO: create FK to AutoEnrollmentSettings [id]
                 //staffology
             'pensionSchemeId' => $this->integer(), // @TODO: create FK to PensionSchema [id] //refactored from Staffology to link
             'workerGroupId' => $this->string(), // @TODO: create FK to WorkerGroup [id]
+            //fields
+            'staffologyId' => $this->integer()
         ]);
 
         $this->createTable(Table::PENSION_SUMMARY, [
@@ -1078,8 +1069,6 @@ class Install extends Migration
             'pensionId' => $this->integer(), // @TODO: create FK to Pension [id]
             'pensionSchemeId' => $this->integer(), // @TODO: create FK to PensionSchema [id]
             'workerGroupId' => $this->integer(), // @TODO: create FK to WorkerGroup [id]
-            'papdisPensionProviderId' => $this->integer(), // @TODO: create FK to PensionSchema [id]
-            'papdisEmployerId' => $this->integer(), // @TODO: create FK to PensionSchema [id]
 //            'tiersId' => $this->integer(), // includes in the TieredPensionRate with pensionSummaryId
             //fields
             'name' => $this->string(),
@@ -1089,6 +1078,8 @@ class Install extends Migration
             'additionalVoluntaryContribution' => $this->double(),
             'avcIsPercentage' => $this->boolean(),
             'autoEnrolled' => $this->boolean(),
+            'papdisPensionProviderId' => $this->integer(),
+            'papdisEmployerId' => $this->integer()
         ]);
 
         $this->createTable(Table::PENSIONER_PAYROLL, [
@@ -1153,7 +1144,6 @@ class Install extends Migration
             //FK
                 //staffology
             'addressId' => $this->integer(), // @TODO: create FK to Address table [id]
-            'contactId' => $this->integer(), //@TODO: create FK to RtiContact [id]
             //fields
             'agentId' => $this->string(),
             'company' => $this->string(),
@@ -1166,9 +1156,6 @@ class Install extends Migration
             'dateCreated' => $this->dateTime()->notNull(),
             'dateUpdated' => $this->dateTime()->notNull(),
             'uid' => $this->uid(),
-            //FK
-                //intern
-            'rtiAgentId' => $this->integer(), // @TODO: create FK to RtiAgent [id]
             //fields
             'firstName' => $this->string(),
             'lastName' => $this->string(),
@@ -1197,9 +1184,6 @@ class Install extends Migration
             'dateCreated' => $this->dateTime()->notNull(),
             'dateUpdated' => $this->dateTime()->notNull(),
             'uid' => $this->uid(),
-            //FK
-                //intern
-            'employeeId' => $this->integer(), // @TODO: create FK to Employee [id]
             //fields
             'ttl' => $this->string(),
             'fore' => $this->longText(),
@@ -1236,12 +1220,12 @@ class Install extends Migration
             'dateUpdated' => $this->dateTime()->notNull(),
             'uid' => $this->uid(),
             //FK
-                //staffology
-            'pensionerPayrollId' => $this->integer(),
+                //intern
+            'overseasEmployerDetailsId' => $this->integer(), // @TODO: create FK to OverseasEmployerDetails [id]
+            'pensionerPayrollId' => $this->integer(), // @TODO: create FK to pensionerPayrollId [id]
             //fields
-            'startDate' => $this->dateTime(),
-            'starterDeclaration' => $this->enum('declaration', ['A', 'B', 'C', 'Unknown']),
-            'overseasEmployerDetails' => $this->integer(),
+            'startDate' => $this->dateTime()->notNull(),
+            'starterDeclaration' => $this->enum('declaration', ['A', 'B', 'C', 'Unknown'])->notNull(),
         ]);
 
         $this->createTable(Table::TAX_AND_NI, [
@@ -1249,9 +1233,6 @@ class Install extends Migration
             'dateCreated' => $this->dateTime()->notNull(),
             'dateUpdated' => $this->dateTime()->notNull(),
             'uid' => $this->uid(),
-            //FK
-                //intern
-            'payOptionsId' => $this->integer(), //@TODO: create FK to PayOptions [id]
             //fields
             'niTable' => $this->string()->notNull(),
             'secondaryClass1NotPayable' => $this->boolean(),
@@ -1279,14 +1260,11 @@ class Install extends Migration
             'partTimeSalaryPaid' => $this->integer(),
         ]);
 
-        $this->createTable(Table::TIERED_PENSION_RATE, [
+        $this->createTable(Table::TIER_PENSION_RATE, [
             'id' => $this->primaryKey(),
             'dateCreated' => $this->dateTime()->notNull(),
             'dateUpdated' => $this->dateTime()->notNull(),
             'uid' => $this->uid(),
-            //FK
-                //intern
-            'pensionSummaryId' => $this->integer(), //@TODO: create FK to PensionsSummary [id]
             //fields
             'name' => $this->string(),
             'description' => $this->string(),
@@ -1355,7 +1333,6 @@ class Install extends Migration
             //FK
                 //intern
             'payRunEntryId' => $this->integer(), // @TODO: create FK to PayRunEntry table (id)
-            'pensionId' => $this->integer(), //@TODO: create FK to Pension
             // fields
             'type' => $this->enum('type', ['BasicPay', 'Gross', 'GrossForTax', 'GrossForNi', 'EmployerNi', 'EmployeeNi', 'EmployerNiOffPayroll', 'RealTimeClass1ANi', 'Tax', 'NetPay', 'Adjustments', 'TakeHomePay', 'NonTaxOrNICPmt', 'ItemsSubjectToClass1NIC', 'DednsFromNetPay', 'Tcp_Tcls', 'Tcp_Pp', 'Tcp_Op', 'FlexiDd_Death', 'FlexiDd_Death_NonTax', 'FlexiDd_Pension', 'FlexiDd_Pension_NonTax', 'Smp', 'Spp', 'Sap', 'Shpp', 'Spbp', 'StudentLoanRecovered', 'PostgradLoanRecovered', 'PensionablePay', 'NonTierablePay', 'EmployeePensionContribution', 'EmployerPensionContribution', 'EmpeePenContribnsNotPaid', 'EmpeePenContribnsPaid', 'AttachmentOrderDeductions', 'CisDeduction', 'CisVat', 'CisUmbrellaFee', 'CisUmbrellaFeePostTax', 'Pbik', 'MapsMiles', 'UmbrellaFee', 'AppLevyDeduction', 'PaymentAfterLeaving', 'TaxOnPaymentAfterLeaving', 'Ssp', 'AttachmentOrderAdminFee', 'EmployeePensionNetPay', 'EmployeePensionRas', 'EmployeePensionSalSac', 'EmployeePensionContributionAvc', 'Deductions', 'Additions', 'PensionableEarnings']),
             'value' => $this->double(),
@@ -1373,7 +1350,7 @@ class Install extends Migration
             'uid' => $this->uid(),
             //FK
                 //intern
-            'pensionId' => $this->integer(), // @TODO: create FK to Pension [id]
+            'pensionSchemeId' => $this->integer(), // @TODO: create FK to PensionScheme [id]
             // fields
             'staffologyId' => $this->string(), // staffology: id
             'name' => $this->string()->notNull(),
@@ -1394,88 +1371,236 @@ class Install extends Migration
         ]);
 
 
+        return true;
     }
 
-    /**
-     * Drop the tables
-     */
-    public function dropTables() {
-//        $this->dropTableIfExists(Table::EMPLOYEES);
-//        $this->dropTableIfExists(Table::EMPLOYERS);
-//        $this->dropTableIfExists(Table::HISTORY);
-//        $this->dropTableIfExists(Table::PAYRUN);
-//        $this->dropTableIfExists(Table::PAYRUN_LOG);
-//        $this->dropTableIfExists(Table::PAYRUN_ENTRIES);
-//        $this->dropTableIfExists(Table::PERMISSIONS);
-//        $this->dropTableIfExists(Table::PERMISSIONS_USERS);
-//        $this->dropTableIfExists(Table::PERSONAL_DETAILS);
-//        $this->dropTableIfExists(Table::REQUESTS);
-//        $this->dropTableIfExists(Table::USERS);
-
-        return null;
-    }
 
     /**
      * Creates the indexes
      */
     public function createIndexes()
     {
-        //$this->createIndex(null, Table::STAFF_EMPLOYERS, 'name', false);
-        //$this->createIndex(null, Table::STAFF_EMPLOYEES, 'niNumber', false);
-        //$this->createIndex(null, Table::STAFF_REQUESTS, 'element', false);
-        //$this->createIndex(null, Table::STAFF_HISTORY, 'type', false);
+        $this->createIndex(null, Table::BANK_DETAILS, 'accountNumber', false);
+        $this->createIndex(null, Table::TIER_PENSION_RATE, 'name', false);
+        $this->createIndex(null, Table::PAY_CODES, 'code', false);
+        $this->createIndex(null, Table::DEPARTMENT, 'code', false);
     }
 
     /**
-     * Removes the foreign keys
+     * Creates the foreign keys needed for the Records used by the plugin
+     *
+     * @return void
      */
-    public function dropForeignKeys()
+    protected function addForeignKeys()
     {
-        $tables = [
-            Table::ADDRESSES,
-            Table::AUTO_ENROLMENT,
-            Table::AUTO_ENROLMENT_ASSESSMENT,
-            Table::AUTO_ENROLMENT_ASSESSMENT_ACTION,
-            Table::BANK_DETAILS,
-            Table::CIS_DETAILS,
-            Table::CIS_PARTNERSHIP,
-            Table::CIS_SUBCONTRACTOR,
-            Table::CIS_VERIFICATION_DETAILS,
-            Table::COUNTRIES,
-            Table::DEPARTMENT,
-            Table::DIRECTORSHIP_DETAILS,
-            Table::EMPLOYEES,
-            Table::EMPLOYERS,
-            Table::EMPLOYMENT_DETAILS,
-            Table::FPS_FIELDS,
-            Table::HISTORY,
-            Table::HMRC_DETAILS,
-            Table::ITEMS,
-            Table::LEAVE_SETTINGS,
-            Table::LEAVER_DETAILS,
-            Table::OVERSEAS_EMPLOYER_DETAILS,
-            Table::PAY_OPTIONS,
-            Table::PAYLINES,
-            Table::PAYRUN,
-            Table::PAYRUN_LOG,
-            Table::PAYRUN_ENTRIES,
-            Table::PENSIONER_PAYROLL,
-            Table::PERMISSIONS,
-            Table::PERMISSIONS_USERS,
-            Table::PERSONAL_DETAILS,
-            Table::REQUESTS,
-            Table::RIGHT_TO_WORK,
-            Table::RTI_EMPLOYEE_ADDRESS,
-            Table::RTI_EMPLOYEE_NAME,
-            Table::STARTER_DETAILS,
-            Table::TAX_AND_NI,
-            Table::USERS
-        ];
+        /** OWN DATABASES **/
+        //EMPLOYERS
+        $this->addForeignKey(null, Table::EMPLOYERS, ['addressId'], Table::ADDRESSES, ['id']);
+        $this->addForeignKey(null, Table::EMPLOYERS, ['bankDetails'], Table::BANK_DETAILS, ['accountNumber']);
+        $this->addForeignKey(null, Table::EMPLOYERS, ['defaultPayOptionsId'], Table::PAY_OPTIONS, ['id']);
+        $this->addForeignKey(null, Table::EMPLOYERS, ['hmrcDetailsId'], Table::HMRC_DETAILS, ['id']);
+        $this->addForeignKey(null, Table::EMPLOYERS, ['defaultPensionId'], Table::PENSION_SCHEME, ['id']);
+        $this->addForeignKey(null, Table::EMPLOYERS, ['rtiSubmissionSettingsId'], Table::RTI_SUBMISSION_SETTINGS, ['id']);
+        $this->addForeignKey(null, Table::EMPLOYERS, ['autoEnrolmentSettingsId'], Table::AUTO_ENROLMENT_SETTINGS, ['id']);
+        $this->addForeignKey(null, Table::EMPLOYERS, ['leaveSettingsId'], Table::LEAVE_SETTINGS, ['id']);
+        $this->addForeignKey(null, Table::EMPLOYERS, ['settingsId'], Table::EMPLOYER_SETTINGS, ['id']);
+        $this->addForeignKey(null, Table::EMPLOYERS, ['umbrellaSettingsId'], Table::UMBRELLA_SETTINGS, ['id']);
 
-        foreach ($tables as $table) {
-            $this->_dropForeignKeyToAndFromTable($table);
-        }
-        
+        //EMPLOYEES
+        $this->addForeignKey(null, Table::EMPLOYEES, ['employerId'], Table::EMPLOYERS, ['id'], 'CASCADE');
+        $this->addForeignKey(null, Table::EMPLOYEES, ['userId'], \craft\db\Table::USERS, ['id']);
+        $this->addForeignKey(null, Table::EMPLOYEES, ['personalDetailsId'], Table::PERSONAL_DETAILS, ['id']);
+        $this->addForeignKey(null, Table::EMPLOYEES, ['bankDetails'], Table::BANK_DETAILS, ['accountNumber']);
+        $this->addForeignKey(null, Table::EMPLOYEES, ['employmentDetailsId'], Table::EMPLOYMENT_DETAILS, ['id']);
+        $this->addForeignKey(null, Table::EMPLOYEES, ['autoEnrolmentId'], Table::AUTO_ENROLMENT, ['id']);
+        $this->addForeignKey(null, Table::EMPLOYEES, ['leaveSettingsId'], Table::LEAVE_SETTINGS, ['id']);
+        $this->addForeignKey(null, Table::EMPLOYEES, ['rightToWorkId'], Table::RIGHT_TO_WORK, ['id']);
+        $this->addForeignKey(null, Table::EMPLOYEES, ['payOptionsId'], Table::PAY_OPTIONS, ['id']);
+
+        //PENSION
+        $this->addForeignKey(null, Table::PENSION, ['employeeId'], Table::EMPLOYEES, ['id'], 'CASCADE');
+        $this->addForeignKey(null, Table::PENSION, ['pensionSchemeId'], Table::PENSION_SCHEME, ['id']);
+        $this->addForeignKey(null, Table::PENSION, ['workerGroupId'], Table::WORKER_GROUP, ['id']);
+        $this->addForeignKey(null, Table::PENSION, ['teachersPensionDetailsId'], Table::TEACHER_PENSION_DETAILS, ['id']);
+        $this->addForeignKey(null, Table::PENSION, ['forcedTier'], Table::TIER_PENSION_RATE, ['name']);
+
+        //PAYRUN
+        $this->addForeignKey(null, Table::PAYRUN, ['employerId'], Table::EMPLOYERS, ['id'], 'CASCADE');
+        $this->addForeignKey(null, Table::PAYRUN, ['totalsId'], Table::PAYRUN_TOTALS, ['id']);
+
+        //PAYRUN_ENTRIES
+        $this->addForeignKey(null, Table::PAYRUN_ENTRIES, ['employeeId'], Table::EMPLOYEES, ['id'], 'CASCADE');
+        $this->addForeignKey(null, Table::PAYRUN_ENTRIES, ['employerId'], Table::EMPLOYERS, ['id'], 'CASCADE');
+        $this->addForeignKey(null, Table::PAYRUN_ENTRIES, ['payRunId'], Table::PAYRUN, ['id'], 'CASCADE');
+        $this->addForeignKey(null, Table::PAYRUN_ENTRIES, ['priorPayrollCode'], Table::PAY_CODES, ['code']);
+        $this->addForeignKey(null, Table::PAYRUN_ENTRIES, ['payOptionsId'], Table::PAY_OPTIONS, ['id']);
+        $this->addForeignKey(null, Table::PAYRUN_ENTRIES, ['pensionSummaryId'], Table::PENSION_SUMMARY, ['id']);
+        $this->addForeignKey(null, Table::PAYRUN_ENTRIES, ['totalsId'], Table::PAYRUN_TOTALS, ['id']);
+        $this->addForeignKey(null, Table::PAYRUN_ENTRIES, ['totalsYtdId'], Table::PAYRUN_TOTALS, ['id']);
+        $this->addForeignKey(null, Table::PAYRUN_ENTRIES, ['nationalInsuranceCalculationId'], Table::NATIONAL_INSURANCE_CALCULATION, ['id']);
+        $this->addForeignKey(null, Table::PAYRUN_ENTRIES, ['umbrellaPaymentId'], Table::UMBRELLA_PAYMENT, ['id']);
+        $this->addForeignKey(null, Table::PAYRUN_ENTRIES, ['employee'], Table::ITEMS, ['id']);
+        $this->addForeignKey(null, Table::PAYRUN_ENTRIES, ['fpsId'], Table::ITEMS, ['id']);
+
+        //PAYRUN_LOG
+        $this->addForeignKey(null, Table::PAYRUN_ENTRIES, ['employerId'], Table::EMPLOYERS, ['id'], 'CASCADE');
+        $this->addForeignKey(null, Table::PAYRUN_ENTRIES, ['payRunId'], Table::PAYRUN, ['id'], 'CASCADE');
+
+        //PERMISSIONS_USERS
+        $this->addForeignKey(null, Table::PERMISSIONS_USERS, ['permissionId'], Table::PERMISSIONS, ['id'], 'CASCADE');
+        $this->addForeignKey(null, Table::PERMISSIONS_USERS, ['userId'], \craft\db\Table::USERS, ['id']);
+        $this->addForeignKey(null, Table::PERMISSIONS_USERS, ['employeeId'], Table::EMPLOYEES, ['id'], 'CASCADE');
+
+        //REQUESTS
+        $this->addForeignKey(null, Table::REQUESTS, ['employeeId'], Table::EMPLOYEES, ['id'], 'CASCADE');
+        $this->addForeignKey(null, Table::REQUESTS, ['employerId'], Table::EMPLOYERS, ['id'], 'CASCADE');
+        $this->addForeignKey(null, Table::REQUESTS, ['administerId'], \craft\db\Table::USERS, ['id']);
+
+        //HISTORY
+        $this->addForeignKey(null, Table::HISTORY, ['employeeId'], Table::EMPLOYEES, ['id'], 'CASCADE');
+        $this->addForeignKey(null, Table::HISTORY, ['employerId'], Table::EMPLOYERS, ['id'], 'CASCADE');
+        $this->addForeignKey(null, Table::HISTORY, ['administerId'], \craft\db\Table::USERS, ['id']);
+
+
+
+        /** STAFFOLOGY LINKED DATABASES **/
+        //ADDRESSES
+        $this->addForeignKey(null, Table::ADDRESSES, ['employeeId'], Table::EMPLOYEES, ['id'], 'CASCADE');
+        $this->addForeignKey(null, Table::ADDRESSES, ['employerId'], Table::EMPLOYERS, ['id'], 'CASCADE');
+        $this->addForeignKey(null, Table::ADDRESSES, ['countryId'], Table::COUNTRIES, ['id']);
+
+        //AUTO_ENROLMENT
+        $this->addForeignKey(null, Table::AUTO_ENROLMENT, ['employeeId'], Table::EMPLOYEES, ['id'], 'CASCADE');
+        $this->addForeignKey(null, Table::AUTO_ENROLMENT, ['lastAssessment'], Table::AUTO_ENROLMENT_ASSESSMENT, ['id']);
+
+        //AUTO_ENROLMENT_ASSESSMENT
+        $this->addForeignKey(null, Table::AUTO_ENROLMENT_ASSESSMENT, ['actionId'], Table::AUTO_ENROLMENT_ASSESSMENT_ACTION, ['id']);
+        $this->addForeignKey(null, Table::AUTO_ENROLMENT_ASSESSMENT, ['employeeItemId'], Table::ITEMS, ['id']);
+
+        //AUTO_ENROLMENT_SETTINGS
+        $this->addForeignKey(null, Table::AUTO_ENROLMENT_SETTINGS, ['employerId'], Table::EMPLOYERS, ['id'], 'CASCADE');
+        $this->addForeignKey(null, Table::AUTO_ENROLMENT_SETTINGS, ['defaultPensionId'], Table::PENSION_SELECTION, ['id']);
+
+        //BANK_DETAILS
+        $this->addForeignKey(null, Table::ADDRESSES, ['employeeId'], Table::EMPLOYEES, ['id'], 'CASCADE');
+        $this->addForeignKey(null, Table::ADDRESSES, ['employerId'], Table::EMPLOYERS, ['id'], 'CASCADE');
+
+        //CIS_DETAILS
+        $this->addForeignKey(null, Table::CIS_DETAILS, ['employmentDetailsId'], Table::EMPLOYMENT_DETAILS, ['id']);
+        $this->addForeignKey(null, Table::CIS_DETAILS, ['verificationId'], Table::CIS_VERIFICATION_DETAILS, ['id']);
+
+        //CIS_SUBCONTRACTOR
+        $this->addForeignKey(null, Table::CIS_SUBCONTRACTOR, ['itemId'], Table::ITEMS, ['id']);
+        $this->addForeignKey(null, Table::CIS_SUBCONTRACTOR, ['nameId'], Table::RTI_EMPLOYEE_NAME, ['id']);
+        $this->addForeignKey(null, Table::CIS_SUBCONTRACTOR, ['partnershipId'], Table::CIS_PARTNERSHIP, ['id']);
+        $this->addForeignKey(null, Table::CIS_SUBCONTRACTOR, ['addressId'], Table::RTI_EMPLOYEE_ADDRESS, ['id']);
+
+        //CIS_VERIFICATION_DETAILS
+        $this->addForeignKey(null, Table::CIS_VERIFICATION_DETAILS, ['cisSubcontractorId'], Table::CIS_SUBCONTRACTOR, ['id']);
+
+        //CUSTOM_PAY_CODES
+        $this->addForeignKey(null, Table::CUSTOM_PAY_CODES, ['employerId'], Table::EMPLOYERS, ['id'], 'CASCADE');
+        $this->addForeignKey(null, Table::CUSTOM_PAY_CODES, ['payRunEntryId'], Table::PAYRUN_ENTRIES, ['id'], 'CASCADE');
+
+        //EMPLOYER_SETTINGS
+        $this->addForeignKey(null, Table::EMPLOYER_SETTINGS, ['employerId'], Table::EMPLOYERS, ['id'], 'CASCADE');
+
+        //EMPLOYMENT_DETAILS
+        $this->addForeignKey(null, Table::EMPLOYMENT_DETAILS, ['employeeId'], Table::EMPLOYEES, ['id'], 'CASCADE');
+        $this->addForeignKey(null, Table::EMPLOYMENT_DETAILS, ['cisId'], Table::CIS_DETAILS, ['id']);
+        $this->addForeignKey(null, Table::EMPLOYMENT_DETAILS, ['starterDetailsId'], Table::STARTER_DETAILS, ['id']);
+        $this->addForeignKey(null, Table::EMPLOYMENT_DETAILS, ['directorshipDetailsId'], Table::DIRECTORSHIP_DETAILS, ['id']);
+        $this->addForeignKey(null, Table::EMPLOYMENT_DETAILS, ['department'], Table::DEPARTMENT, ['code']);
+
+        //FAMILY_DETAILS
+        $this->addForeignKey(null, Table::FAMILY_DETAILS, ['employeeId'], Table::EMPLOYEES, ['id'], 'CASCADE');
+
+        //HMRC_DETAILS
+        $this->addForeignKey(null, Table::HMRC_DETAILS, ['employerId'], Table::EMPLOYERS, ['id'], 'CASCADE');
+
+        //LEAVE_SETTINGS
+        $this->addForeignKey(null, Table::LEAVE_SETTINGS, ['employeeId'], Table::EMPLOYEES, ['id'], 'CASCADE');
+        $this->addForeignKey(null, Table::LEAVE_SETTINGS, ['employerId'], Table::EMPLOYERS, ['id'], 'CASCADE');
+
+        //LEAVER_DETAILS
+        $this->addForeignKey(null, Table::LEAVER_DETAILS, ['employmentDetailsId'], Table::EMPLOYMENT_DETAILS, ['id']);
+
+        //NATIONAL_INSURANCE_CALCULATION
+        $this->addForeignKey(null, Table::NATIONAL_INSURANCE_CALCULATION, ['payRunEntryId'], Table::PAYRUN_ENTRIES, ['id']);
+
+        //NOTE
+        $this->addForeignKey(null, Table::NOTE, ['employeeId'], Table::EMPLOYEES, ['id'], 'CASCADE');
+
+        //PAY_LINES
+        $this->addForeignKey(null, Table::PAY_LINES, ['payOptionsId'], Table::PAY_OPTIONS, ['id']);
+
+        //PAY_OPTIONS
+        $this->addForeignKey(null, Table::PAY_OPTIONS, ['employeeId'], Table::EMPLOYEES, ['id'], 'CASCADE');
+        $this->addForeignKey(null, Table::PAY_OPTIONS, ['employerId'], Table::EMPLOYERS, ['id'], 'CASCADE');
+        $this->addForeignKey(null, Table::PAY_OPTIONS, ['payRunEntryId'], Table::PAYRUN_ENTRIES, ['id'], 'CASCADE');
+
+        //PAYRUN_TOTALS
+        $this->addForeignKey(null, Table::PAYRUN_TOTALS, ['payRunId'], Table::PAYRUN, ['id'], 'CASCADE');
+
+        //PENSION_ADMINISTRATOR
+        $this->addForeignKey(null, Table::PENSION_ADMINISTRATOR, ['addressId'], Table::ADDRESSES, ['id'], 'CASCADE');
+
+        //PENSION_PROVIDER
+        $this->addForeignKey(null, Table::PENSION_PROVIDER, ['addressId'], Table::ADDRESSES, ['id'], 'CASCADE');
+
+        //PENSION_SCHEME
+        $this->addForeignKey(null, Table::PENSION_SCHEME, ['providerId'], Table::PENSION_PROVIDER, ['id'], 'CASCADE');
+        $this->addForeignKey(null, Table::PENSION_SCHEME, ['administratorId'], Table::PENSION_ADMINISTRATOR, ['id'], 'CASCADE');
+        $this->addForeignKey(null, Table::PENSION_SCHEME, ['bankDetails'], Table::BANK_DETAILS, ['accountNumber'], 'CASCADE');
+
+        //PENSION_SELECTION
+        $this->addForeignKey(null, Table::PENSION_SELECTION, ['employerId'], Table::EMPLOYERS, ['id'], 'CASCADE');
+        $this->addForeignKey(null, Table::PENSION_SELECTION, ['autoEnrollmentSettingsId'], Table::AUTO_ENROLMENT_SETTINGS, ['id']);
+        $this->addForeignKey(null, Table::PENSION_SELECTION, ['pensionSchemeId'], Table::PENSION_SCHEME, ['id']);
+        $this->addForeignKey(null, Table::PENSION_SELECTION, ['pensionSchemeId'], Table::WORKER_GROUP, ['id']);
+
+        //PENSION_SUMMARY
+        $this->addForeignKey(null, Table::PENSION_SUMMARY, ['payRunEntryId'], Table::PAYRUN_ENTRIES, ['id'], 'CASCADE');
+        $this->addForeignKey(null, Table::PENSION_SUMMARY, ['pensionId'], Table::PENSION, ['id']);
+        $this->addForeignKey(null, Table::PENSION_SUMMARY, ['pensionSchemeId'], Table::PENSION_SCHEME, ['id']);
+        $this->addForeignKey(null, Table::PENSION_SUMMARY, ['workerGroupId'], Table::WORKER_GROUP, ['id']);
+
+        //PERSONAL_DETAILS
+        $this->addForeignKey(null, Table::PERSONAL_DETAILS, ['employeeId'], Table::EMPLOYEES, ['id'], 'CASCADE');
+        $this->addForeignKey(null, Table::PERSONAL_DETAILS, ['addressId'], Table::ADDRESSES, ['id'], 'CASCADE');
+
+        //RIGHT_TO_WORK
+        $this->addForeignKey(null, Table::RIGHT_TO_WORK, ['employeeId'], Table::EMPLOYEES, ['id'], 'CASCADE');
+
+        //RTI_AGENT
+        $this->addForeignKey(null, Table::RTI_AGENT, ['addressId'], Table::ADDRESSES, ['id'], 'CASCADE');
+
+        //RTI_EMPLOYEE_ADDRESS
+        $this->addForeignKey(null, Table::RTI_EMPLOYEE_ADDRESS, ['employeeId'], Table::EMPLOYEES, ['id'], 'CASCADE');
+
+        //RTI_SUBMISSION_SETTINGS
+        $this->addForeignKey(null, Table::RTI_SUBMISSION_SETTINGS, ['employerId'], Table::EMPLOYERS, ['id'], 'CASCADE');
+        $this->addForeignKey(null, Table::RTI_SUBMISSION_SETTINGS, ['contactId'], Table::RTI_CONTACT, ['id']);
+        $this->addForeignKey(null, Table::RTI_SUBMISSION_SETTINGS, ['agentId'], Table::RTI_AGENT, ['id']);
+
+        //STARTER_DETAILS
+        $this->addForeignKey(null, Table::STARTER_DETAILS, ['overseasEmployerDetailsId'], Table::OVERSEAS_EMPLOYER_DETAILS, ['id']);
+        $this->addForeignKey(null, Table::STARTER_DETAILS, ['pensionerPayrollId'], Table::OVERSEAS_EMPLOYER_DETAILS, ['id']);
+
+        //TEACHER_PENSION_DETAILS
+        $this->addForeignKey(null, Table::TEACHER_PENSION_DETAILS, ['pensionId'], Table::PENSION, ['id']);
+
+        //UMBRELLA_PAYMENT
+        $this->addForeignKey(null, Table::UMBRELLA_PAYMENT, ['payRunEntryId'], Table::PAYRUN_ENTRIES, ['id'], 'CASCADE');
+
+        //UMBRELLA_SETTINGS
+        $this->addForeignKey(null, Table::UMBRELLA_SETTINGS, ['employerId'], Table::EMPLOYERS, ['id'], 'CASCADE');
+
+        //VALUE_OVERRIDE
+        $this->addForeignKey(null, Table::VALUE_OVERRIDE, ['payRunEntryId'], Table::PAYRUN_ENTRIES, ['id'], 'CASCADE');
+
+        //WORKER_GROUP
+        $this->addForeignKey(null, Table::WORKER_GROUP, ['pensionSchemeId'], Table::PENSION_SCHEME, ['id']);
     }
 
     /**
@@ -1512,295 +1637,6 @@ class Install extends Migration
     }
 
     /**
-     * Creates the foreign keys needed for the Records used by the plugin
-     *
-     * @return void
-     */
-    protected function addForeignKeys()
-    {
-        // staff_employer table
-        $this->addForeignKey(
-            $this->db->getForeignKeyName(Table::STAFF_EMPLOYERS, 'id'),
-            Table::STAFF_EMPLOYERS,
-            'id',
-            \craft\db\Table::ELEMENTS,
-            'id',
-            'CASCADE',
-            'CASCADE'
-        );
-
-        $this->addForeignKey(
-            $this->db->getForeignKeyName(Table::STAFF_EMPLOYERS, 'siteId'),
-            Table::STAFF_EMPLOYERS,
-            'siteId',
-            \craft\db\Table::SITES,
-            'id',
-            'CASCADE',
-            'CASCADE'
-        );
-
-        // staff_employee table
-        $this->addForeignKey(
-            $this->db->getForeignKeyName(Table::STAFF_EMPLOYEES, 'id'),
-            Table::STAFF_EMPLOYEES,
-            'id',
-            \craft\db\Table::ELEMENTS,
-            'id',
-            'CASCADE',
-            'CASCADE'
-        );
-
-        $this->addForeignKey(
-            $this->db->getForeignKeyName(Table::STAFF_EMPLOYEES, 'siteId'),
-            Table::STAFF_EMPLOYEES,
-            'siteId',
-            \craft\db\Table::SITES,
-            'id',
-            'CASCADE',
-            'CASCADE'
-        );
-
-        $this->addForeignKey(
-            $this->db->getForeignKeyName(Table::STAFF_EMPLOYEES, 'userId'),
-            Table::STAFF_EMPLOYEES,
-            'userId',
-            \craft\db\Table::USERS,
-            'id',
-            'CASCADE',
-            'CASCADE'
-        );
-
-        $this->addForeignKey(
-            $this->db->getForeignKeyName(Table::STAFF_EMPLOYEES, 'employerId'),
-            Table::STAFF_EMPLOYEES,
-            'employerId',
-            Table::STAFF_EMPLOYERS,
-            'id',
-            'CASCADE',
-            'CASCADE'
-        );
-
-        // staff_payrun_log table
-        $this->addForeignKey(
-            $this->db->getForeignKeyName(Table::STAFF_PAYRUN_LOG, 'siteId'),
-            Table::STAFF_PAYRUN_LOG,
-            'siteId',
-            \craft\db\Table::SITES,
-            'id',
-            'CASCADE',
-            'CASCADE'
-        );
-
-        $this->addForeignKey(
-            $this->db->getForeignKeyName(Table::STAFF_PAYRUN_LOG, 'employerId'),
-            Table::STAFF_PAYRUN_LOG,
-            'employerId',
-            Table::STAFF_EMPLOYERS,
-            'id',
-            'CASCADE',
-            'CASCADE'
-        );
-
-        $this->addForeignKey(
-            $this->db->getForeignKeyName(Table::STAFF_PAYRUN_LOG, 'payRunId'),
-            Table::STAFF_PAYRUN_LOG,
-            'payRunId',
-            Table::STAFF_PAYRUN,
-            'id',
-            'CASCADE',
-            'CASCADE'
-        );
-
-        // staff_payrun table
-        $this->addForeignKey(
-            $this->db->getForeignKeyName(Table::STAFF_PAYRUN, 'id'),
-            Table::STAFF_PAYRUN,
-            'id',
-            \craft\db\Table::ELEMENTS,
-            'id',
-            'CASCADE',
-            'CASCADE'
-        );
-
-        $this->addForeignKey(
-            $this->db->getForeignKeyName(Table::STAFF_PAYRUN, 'siteId'),
-            Table::STAFF_PAYRUN,
-            'siteId',
-            \craft\db\Table::SITES,
-            'id',
-            'CASCADE',
-            'CASCADE'
-        );
-
-        $this->addForeignKey(
-            $this->db->getForeignKeyName(Table::STAFF_PAYRUN, 'employerId'),
-            Table::STAFF_PAYRUN,
-            'employerId',
-            Table::STAFF_EMPLOYERS,
-            'id',
-            'CASCADE',
-            'CASCADE'
-        );
-
-        // staff_payrunentries table
-        $this->addForeignKey(
-            $this->db->getForeignKeyName(Table::STAFF_PAYRUNENTRIES, 'id'),
-            Table::STAFF_PAYRUNENTRIES,
-            'id',
-            \craft\db\Table::ELEMENTS,
-            'id',
-            'CASCADE',
-            'CASCADE'
-        );
-
-        $this->addForeignKey(
-            $this->db->getForeignKeyName(Table::STAFF_PAYRUNENTRIES, 'siteId'),
-            Table::STAFF_PAYRUNENTRIES,
-            'siteId',
-            \craft\db\Table::SITES,
-            'id',
-            'CASCADE',
-            'CASCADE'
-        );
-
-        $this->addForeignKey(
-            $this->db->getForeignKeyName(Table::STAFF_PAYRUNENTRIES, 'payRunId'),
-            Table::STAFF_PAYRUNENTRIES,
-            'payRunId',
-            Table::STAFF_PAYRUN,
-            'id',
-            'CASCADE',
-            'CASCADE'
-        );
-
-        $this->addForeignKey(
-            $this->db->getForeignKeyName(Table::STAFF_PAYRUNENTRIES, 'employerId'),
-            Table::STAFF_PAYRUNENTRIES,
-            'employerId',
-            Table::STAFF_EMPLOYERS,
-            'id',
-            'CASCADE',
-            'CASCADE'
-        );
-
-        $this->addForeignKey(
-            $this->db->getForeignKeyName(Table::STAFF_PAYRUNENTRIES, 'employeeId'),
-            Table::STAFF_PAYRUNENTRIES,
-            'employeeId',
-            Table::STAFF_EMPLOYEES,
-            'id',
-            'CASCADE',
-            'CASCADE'
-        );
-
-        // staff_permissions_users
-        $this->addForeignKey(
-            $this->db->getForeignKeyName(Table::STAFF_PERMISSIONS_USERS, 'userId'),
-            Table::STAFF_PERMISSIONS_USERS,
-            'userId',
-            \craft\db\Table::USERS,
-            'id',
-            'CASCADE',
-            'CASCADE'
-        );
-
-        $this->addForeignKey(
-            $this->db->getForeignKeyName(Table::STAFF_PERMISSIONS_USERS, 'employeeId'),
-            Table::STAFF_PERMISSIONS_USERS,
-            'employeeId',
-            Table::STAFF_EMPLOYEES,
-            'id',
-            'CASCADE',
-            'CASCADE'
-        );
-
-        // staff_personal_detail
-        $this->addForeignKey(
-            $this->db-getForeignKeyName(Table::STAFF_PERSONAL_DETAILS, 'employeeId'),
-            Table::STAFF_PERSONAL_DETAILS,
-            'employeeId',
-            Table::STAFF_EMPLOYEES,
-            'id',
-            'CASCADE',
-            'CASCADE'
-        );
-
-        // staff_requests
-        $this->addForeignKey(
-            $this->db->getForeignKeyName(Table::STAFF_REQUESTS, 'employerId'),
-            Table::STAFF_REQUESTS,
-            'id',
-            Table::STAFF_EMPLOYERS,
-            'id',
-            'CASCADE',
-            'CASCADE'
-        );
-
-        $this->addForeignKey(
-            $this->db->getForeignKeyName(Table::STAFF_REQUESTS, 'employeeId'),
-            Table::STAFF_REQUESTS,
-            'id',
-            Table::STAFF_EMPLOYEES,
-            'id',
-            'CASCADE',
-            'CASCADE'
-        );
-
-        // staff_user table
-        $this->addForeignKey(
-            $this->db->getForeignKeyName(Table::STAFF_USERS, 'siteId'),
-            Table::STAFF_USERS,
-            'siteId',
-            \craft\db\Table::SITES,
-            'id',
-            'CASCADE',
-            'CASCADE'
-        );
-
-        // staff_request table
-        $this->addForeignKey(
-            $this->db->getForeignKeyName(Table::STAFF_REQUESTS, 'employerId'),
-            Table::STAFF_REQUESTS,
-            'id',
-            Table::STAFF_EMPLOYERS,
-            'id',
-            'CASCADE',
-            'CASCADE'
-        );
-
-        $this->addForeignKey(
-            $this->db->getForeignKeyName(Table::STAFF_REQUESTS, 'employeeId'),
-            Table::STAFF_REQUESTS,
-            'id',
-            Table::STAFF_EMPLOYEES,
-            'id',
-            'CASCADE',
-            'CASCADE'
-        );
-
-        // staff_history table
-        $this->addForeignKey(
-            $this->db->getForeignKeyName(Table::STAFF_HISTORY, 'employerId'),
-            Table::STAFF_HISTORY,
-            'id',
-            Table::STAFF_EMPLOYERS,
-            'id',
-            'CASCADE',
-            'CASCADE'
-        );
-
-        $this->addForeignKey(
-            $this->db->getForeignKeyName(Table::STAFF_HISTORY, 'employeeId'),
-            Table::STAFF_HISTORY,
-            'id',
-            Table::STAFF_EMPLOYEES,
-            'id',
-            'CASCADE',
-            'CASCADE'
-        );
-    }
-
-    /**
      * Create the permissions for the Company Users
      */
     private function _createPermissions()
@@ -1818,35 +1654,6 @@ class Install extends Migration
         $rows[] = ['purchase:groupbenefits'];
         $rows[] = ['purchase:voluntarybenefits'];
 
-        $this->batchInsert(Table::STAFF_PERMISSIONS, ['name'], $rows);
-    }
-    /**
-     * Returns if the table exists.
-     *
-     * @param string $tableName
-     * @param \yii\db\Migration|null $migration
-     * @return bool If the table exists.
-     * @throws NotSupportedException
-     */
-    private function _tableExists(string $tableName): bool
-    {
-        $schema = $this->db->getSchema();
-        $schema->refresh();
-        $rawTableName = $schema->getRawTableName($tableName);
-        $table = $schema->getTableSchema($rawTableName);
-
-        return (bool)$table;
-    }
-
-    /**
-     * @param string $tableName
-     * @throws NotSupportedException
-     */
-    private function _dropForeignKeyToAndFromTable(string $tableName)
-    {
-        if ($this->_tableExists($tableName)) {
-            MigrationHelper::dropAllForeignKeysToTable($tableName, $this);
-            MigrationHelper::dropAllForeignKeysOnTable($tableName, $this);
-        }
+        $this->batchInsert(Table::PERMISSIONS, ['name'], $rows);
     }
 }
