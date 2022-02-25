@@ -39,7 +39,7 @@ abstract class Table
     const PAYRUN_ENTRIES = "{{%staff_payrunentries}}";
     const PAYRUN_LOG = "{{%staff_payrunlogs}}";
     const PAYRUN_TOTALS = "{{%staff_payruntotals}}";
-    const PENSION = "{{%staff_pension}}";
+    const PENSIONS = "{{%staff_pension}}";
     const PENSION_ADMINISTRATOR = "{{%staff_pensionadministrator}}";
     const PENSION_PROVIDER = "{{%staff_pensionprovider}}";
     const PENSION_SCHEME = "{{%staff_pensionscheme}}";

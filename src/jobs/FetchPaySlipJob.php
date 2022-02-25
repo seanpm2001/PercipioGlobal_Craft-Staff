@@ -10,7 +10,7 @@ use percipiolondon\staff\records\PayRunEntry as PayRunEntryRecord;
 use percipiolondon\staff\elements\PayRunEntry;
 use yii\db\Exception;
 
-class FetchPaySlip extends Basejob
+class FetchPaySlipJob extends Basejob
 {
     public $headers;
     public $payPeriod;

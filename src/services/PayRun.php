@@ -10,18 +10,15 @@
 
 namespace percipiolondon\staff\services;
 
-use craft\helpers\Queue;
+use craft\helpers\App;
+use craft\helpers\Json;
 use percipiolondon\staff\Staff;
+use percipiolondon\staff\helpers\Logger;
+use percipiolondon\staff\jobs\FetchPayCodesListJob;
+use percipiolondon\staff\jobs\CreatePayCodeJob;
 
 use Craft;
 use craft\base\Component;
-use percipiolondon\staff\jobs\CreatePayRunJob;
-use percipiolondon\staff\jobs\FetchPaySlip;
-use percipiolondon\staff\records\Employer;
-use percipiolondon\staff\records\PayRunLog as PayRunLogRecord;
-use percipiolondon\staff\records\PayRun as PayRunRecord;
-use percipiolondon\staff\records\PayRunEntry as PayRunEntryRecord;
-use yii\base\BaseObject;
 
 /**
  * PayRun Service
@@ -40,98 +37,137 @@ class PayRun extends Component
 {
     // Public Methods
     // =========================================================================
-
-    /**
-     * This function can literally be anything you want, and you can have as many service
-     * functions as you want
-     *
-     * From any other plugin file, call it like this:
-     *
-     *     Staff::$plugin->payRun->exampleService()
-     *
-     * @return mixed
-     */
-    public function fetch()
+    public function fetchPay(array $employer)
     {
-        $api = Craft::parseEnv(Staff::$plugin->getSettings()->staffologyApiKey);
-        $credentials = base64_encode('staff:'.$api);
-        $headers = [
-            'headers' => [
-                'Authorization' => 'Basic ' . $credentials,
-            ],
-        ];
-        $client = new \GuzzleHttp\Client();
-
-        if ($api) {
-            // GET EMPLOYERS
-            $employers = Employer::find()->all();
-
-            foreach($employers as $employer) {
-                $base_url = "https://api.staffology.co.uk/employers/{$employer->staffologyId}/schedules/{$employer->currentYear}";
-
-                //GET LIST OF PAYSCHEDULES
-                try {
-
-                    $response = $client->get($base_url, $headers);
-                    $paySchedules = json_decode($response->getBody()->getContents(), true);
-
-                    Queue::push(new CreatePayRunJob([
-                        'headers' => $headers,
-                        'paySchedules' => $paySchedules,
-                        'employerId' => $employer->id,
-                    ]));
-
-                } catch (\Throwable $e) {
-                    echo "---- error -----\n";
-                    var_dump($e->getMessage());
-                    Craft::error($e->getMessage(), __METHOD__);
-//                    Craft::dd($e);
-                    echo "\n---- end error ----";
-                }
-            }
-        }
-
-        return "success";
+        $this->fetchPayRun($employer);
     }
 
-    public function fetchPayslips()
+    public function fetchPayCodesList(array $employers)
     {
-        $api = Craft::parseEnv(Staff::$plugin->getSettings()->staffologyApiKey);
-        $credentials = base64_encode('staff:'.$api);
-        $headers = [
-            'headers' => [
-                'Authorization' => 'Basic ' . $credentials,
-                'Accept' => 'application/pdf'
-            ],
-        ];
-
-        if ($api) {
-            // GET EMPLOYERS
-            $payRunEntries = PayRunEntryRecord::find()->all();
-
-            foreach($payRunEntries as $payRunEntry) {
-
-                try {
-
-                    Queue::push(new FetchPaySlip([
-                        'headers' => $headers,
-                        'employerId' => $payRunEntry->employerId ?? null,
-                        'payPeriod' => $payRunEntry->payPeriod ?? null,
-                        'periodNumber' => $payRunEntry->period ?? null,
-                        'taxYear' => $payRunEntry->taxYear ?? null,
-                        'payRunEntry' => $payRunEntry ?? null
-                    ]));
-
-                } catch (\Throwable $e) {
-                    echo "---- error -----\n";
-                    var_dump($e->getMessage());
-                    Craft::error($e->getMessage(), __METHOD__);
-//                    Craft::dd($e);
-                    echo "\n---- end error ----";
-                }
-            }
-        }
-
-        return "success";
+        $queue = Craft::$app->getQueue();
+        $queue->push(new FetchPayCodesListJob([
+            'description' => 'Fetch pay codes',
+            'criteria' => [
+                'employers' => $employers
+            ]
+        ]));
     }
+
+    public function fetchPayCodes(array $payCodes)
+    {
+        $queue = Craft::$app->getQueue();
+        $queue->push(new CreatePayCodeJob([
+            'description' => 'Save pay codes',
+            'criteria' => [
+                'payCodes' => $payCodes,
+            ]
+        ]));
+    }
+
+    public function savePayCode(array $payCode, string $progress = "")
+    {
+        $logger = new Logger();
+        $logger->stdout($progress."✓ Save pension ...", $logger::RESET);
+        $logger->stdout(" done" . PHP_EOL, $logger::FG_GREEN);
+    }
+
+    public function fetchPayRun(array $employer)
+    {
+
+    }
+
+
+//    /**
+//     * This function can literally be anything you want, and you can have as many service
+//     * functions as you want
+//     *
+//     * From any other plugin file, call it like this:
+//     *
+//     *     Staff::$plugin->payRun->exampleService()
+//     *
+//     * @return mixed
+//     */
+//    public function fetch()
+//    {
+//        $api = Craft::parseEnv(Staff::$plugin->getSettings()->staffologyApiKey);
+//        $credentials = base64_encode('staff:'.$api);
+//        $headers = [
+//            'headers' => [
+//                'Authorization' => 'Basic ' . $credentials,
+//            ],
+//        ];
+//        $client = new \GuzzleHttp\Client();
+//
+//        if ($api) {
+//            // GET EMPLOYERS
+//            $employers = Employer::find()->all();
+//
+//            foreach($employers as $employer) {
+//                $base_url = "https://api.staffology.co.uk/employers/{$employer->staffologyId}/schedules/{$employer->currentYear}";
+//
+//                //GET LIST OF PAYSCHEDULES
+//                try {
+//
+//                    $response = $client->get($base_url, $headers);
+//                    $paySchedules = json_decode($response->getBody()->getContents(), true);
+//
+//                    Queue::push(new CreatePayRunJob([
+//                        'headers' => $headers,
+//                        'paySchedules' => $paySchedules,
+//                        'employerId' => $employer->id,
+//                    ]));
+//
+//                } catch (\Throwable $e) {
+//                    echo "---- error -----\n";
+//                    var_dump($e->getMessage());
+//                    Craft::error($e->getMessage(), __METHOD__);
+////                    Craft::dd($e);
+//                    echo "\n---- end error ----";
+//                }
+//            }
+//        }
+//
+//        return "success";
+//    }
+//
+//    public function fetchPayslips()
+//    {
+//        $api = Craft::parseEnv(Staff::$plugin->getSettings()->staffologyApiKey);
+//        $credentials = base64_encode('staff:'.$api);
+//        $headers = [
+//            'headers' => [
+//                'Authorization' => 'Basic ' . $credentials,
+//                'Accept' => 'application/pdf'
+//            ],
+//        ];
+//
+//        if ($api) {
+//            // GET EMPLOYERS
+//            $payRunEntries = PayRunEntryRecord::find()->all();
+//
+//            foreach($payRunEntries as $payRunEntry) {
+//
+//                try {
+//
+//                    Queue::push(new FetchPaySlip([
+//                        'headers' => $headers,
+//                        'employerId' => $payRunEntry->employerId ?? null,
+//                        'payPeriod' => $payRunEntry->payPeriod ?? null,
+//                        'periodNumber' => $payRunEntry->period ?? null,
+//                        'taxYear' => $payRunEntry->taxYear ?? null,
+//                        'payRunEntry' => $payRunEntry ?? null
+//                    ]));
+//
+//                } catch (\Throwable $e) {
+//                    echo "---- error -----\n";
+//                    var_dump($e->getMessage());
+//                    Craft::error($e->getMessage(), __METHOD__);
+////                    Craft::dd($e);
+//                    echo "\n---- end error ----";
+//                }
+//            }
+//        }
+//
+//        return "success";
+//    }
 }
