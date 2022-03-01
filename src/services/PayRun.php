@@ -15,10 +15,13 @@ use craft\helpers\Json;
 use percipiolondon\staff\Staff;
 use percipiolondon\staff\helpers\Logger;
 use percipiolondon\staff\jobs\FetchPayCodesListJob;
+use percipiolondon\staff\jobs\FetchPaySchedulesJob;
 use percipiolondon\staff\jobs\CreatePayCodeJob;
+use percipiolondon\staff\jobs\CreatePayRunJob;
 
 use Craft;
 use craft\base\Component;
+use yii\base\BaseObject;
 
 /**
  * PayRun Service
@@ -37,11 +40,6 @@ class PayRun extends Component
 {
     // Public Methods
     // =========================================================================
-    public function fetchPay(array $employer)
-    {
-        $this->fetchPayRun($employer);
-    }
-
     public function fetchPayCodesList(array $employers)
     {
         $queue = Craft::$app->getQueue();
@@ -71,9 +69,27 @@ class PayRun extends Component
         $logger->stdout(" done" . PHP_EOL, $logger::FG_GREEN);
     }
 
-    public function fetchPayRun(array $employer)
+    public function fetchPayRunSchedule(array $employer)
     {
+        $queue = Craft::$app->getQueue();
+        $queue->push(new FetchPaySchedulesJob([
+            'description' => 'Fetch pay schedules',
+            'criteria' => [
+                'employer' => $employer,
+            ]
+        ]));
+    }
 
+    public function fetchPayRun(array $paySchedules, array $employer)
+    {
+        $queue = Craft::$app->getQueue();
+        $queue->push(new CreatePayRunJob([
+            'description' => 'Fetch pay runs',
+            'criteria' => [
+                'paySchedules' => $paySchedules,
+                'employer' => $employer,
+            ]
+        ]));
     }
 
 

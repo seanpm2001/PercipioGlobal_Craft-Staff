@@ -17,7 +17,7 @@ class FetchEmployeesListJob extends BaseJob
     {
         $logger = new Logger();
 
-        $logger->stdout($this->criteria['progress']."↧ Fetching employees of " . $this->criteria['employer']['name'] . '...', $logger::RESET);
+        $logger->stdout($this->criteria['progress']['label']."↧ Fetching employees of " . $this->criteria['employer']['name'] . '...', $logger::RESET);
 
         // connection props
         $api = App::parseEnv(Staff::$plugin->getSettings()->staffologyApiKey);
@@ -46,7 +46,16 @@ class FetchEmployeesListJob extends BaseJob
                 Staff::$plugin->employees->fetchEmployee($employee, $progress);
                 Staff::$plugin->pensions->fetchPension($employee, $this->criteria['employer']['id'], $progress);
 
+                if(
+                    $this->criteria['progress']['current'] === $this->criteria['progress']['total'] &&
+                    $currentEmployee === $totalEmployees
+                ){
+                    Staff::$plugin->payRun->fetchPayRunSchedule($this->criteria['employer']);
+                }
+
                 $this->setProgress($queue, $currentEmployee / $totalEmployees);
+
+
             }
 
         } catch (\Exception $e) {

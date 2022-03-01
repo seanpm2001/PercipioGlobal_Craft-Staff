@@ -31,7 +31,7 @@ class FetchPayCodesListJob extends BaseJob
 
         foreach($this->criteria['employers'] as $employer) {
 
-            $logger->stdout("Fetching pay codes of " . $employer['name'] . '...', $logger::RESET);
+            $logger->stdout("↧ Fetching pay codes of " . $employer['name'] . '...', $logger::RESET);
 
             try {
                 $response = $client->get($base_url.'employers/'.$employer['id'].'/paycodes', $headers);

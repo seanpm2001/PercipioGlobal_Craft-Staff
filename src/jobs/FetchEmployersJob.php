@@ -34,16 +34,20 @@ class FetchEmployersJob extends BaseJob
         foreach($this->criteria['employers'] as $employer) {
 
             $currentEmployer++;
+            $progress = "[".$currentEmployer."/".$totalEmployers."] ";
 
-            $logger->stdout("[".$currentEmployer."/".$totalEmployers."] ↧ Fetch employer info from ".$employer['name']." (".$employer['id'].")", $logger::RESET);
+            $logger->stdout($progress."↧ Fetch employer info from ".$employer['name']." (".$employer['id'].")", $logger::RESET);
 
             try {
                 $response = $client->get($employer['url'], $headers);
                 $result = Json::decodeIfJson($response->getBody()->getContents(), true);
 
                 Staff::$plugin->employers->saveEmployer($result);
-                Staff::$plugin->employees->fetchEmployeesByEmployer($employer, "[".$currentEmployer."/".$totalEmployers."] ");
-                Staff::$plugin->payRun->fetchPay($employer);
+                Staff::$plugin->employees->fetchEmployeesByEmployer($employer, [
+                    "label" => $progress,
+                    "current" => $currentEmployer,
+                    "total" => $totalEmployers
+                ]);
 
             } catch (\Exception $e) {
 

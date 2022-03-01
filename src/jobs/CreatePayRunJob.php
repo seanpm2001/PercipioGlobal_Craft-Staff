@@ -12,9 +12,7 @@ use percipiolondon\staff\jobs\CreatePayRunEntryJob;
 
 class CreatePayRunJob extends BaseJob
 {
-    public $paySchedules;
-    public $headers;
-    public $employerId;
+    public $criteria;
 
     public function execute($queue): void
     {
@@ -36,7 +34,7 @@ class CreatePayRunJob extends BaseJob
                             $response =  $client->get($payRun['url'], $this->headers);
                             $payRunData = json_decode($response->getBody()->getContents(), true);
 
-                            $this->_savePayRun($payRunData, $payRun['url']);
+//                            $this->_savePayRun($payRunData, $payRun['url']);
                         }
 
                     }

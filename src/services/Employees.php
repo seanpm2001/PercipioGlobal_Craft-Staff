@@ -38,7 +38,7 @@ class Employees extends Component
 {
     // Public Methods
     // =========================================================================
-    public function fetchEmployeesByEmployer(array $employer, string $progress = "")
+    public function fetchEmployeesByEmployer(array $employer, array $progress = [])
     {
         $queue = Craft::$app->getQueue();
         $queue->push(new FetchEmployeesListJob([
