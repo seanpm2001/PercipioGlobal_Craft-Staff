@@ -14,29 +14,20 @@ use percipiolondon\staff\Staff;
 
 use Craft;
 use craft\db\ActiveRecord;
+use percipiolondon\staff\db\Table;
 
 /**
- * HardingUser Record
- *
- * ActiveRecord is the base class for classes representing relational data in terms of objects.
- *
- * Active Record implements the [Active Record design pattern](http://en.wikipedia.org/wiki/Active_record).
- * The premise behind Active Record is that an individual [[ActiveRecord]] object is associated with a specific
- * row in a database table. The object's attributes are mapped to the columns of the corresponding table.
- * Referencing an Active Record attribute is equivalent to accessing the corresponding table column for that record.
- *
- * http://www.yiiframework.com/doc-2.0/guide-db-active-record.html
- *
- * @author    Percipio
- * @package   Staff
- * @since     1.0.0-alpha.1
+ * @property int $itemId;
+ * @property int $noteId;
+ * @property int $employmentDetailId;
  */
-class HardingUser extends ActiveRecord
+
+class ItemRelations extends ActiveRecord
 {
     // Public Static Methods
     // =========================================================================
 
-     /**
+    /**
      * Declares the name of the database table associated with this AR class.
      * By default this method returns the class name as the table name by calling [[Inflector::camel2id()]]
      * with prefix [[Connection::tablePrefix]]. For example if [[Connection::tablePrefix]] is `tbl_`,
@@ -50,6 +41,6 @@ class HardingUser extends ActiveRecord
      */
     public static function tableName()
     {
-        return '{{%staff_hardinguser}}';
+        return Table::ITEM_RELATIONS;
     }
 }

@@ -18,31 +18,24 @@ use craft\db\ActiveRecord;
 use percipiolondon\staff\db\Table;
 
 /**
- * PayRunEntry Record
+ * @property int $noteId;
+ * @property int $priorPayrollCodeId;
+ * @property string $payOptionsId;
+ * @property int $pensionSummaryId;
+ * @property int $totalsId;
+ * @property int $periodOverridesId;
+ * @property int $totalsYtdId;
+ * @property int $totalsYtdOverridesId
+ * @property int $nationalInsuranceCalculationId
+ * @property int $umbrellaPaymentId
+ * @property int $employeeId
+ * @property int $employerId
+ * @property int $payRunId
  *
- * ActiveRecord is the base class for classes representing relational data in terms of objects.
- *
- * Active Record implements the [Active Record design pattern](http://en.wikipedia.org/wiki/Active_record).
- * The premise behind Active Record is that an individual [[ActiveRecord]] object is associated with a specific
- * row in a database table. The object's attributes are mapped to the columns of the corresponding table.
- * Referencing an Active Record attribute is equivalent to accessing the corresponding table column for that record.
- *
- * http://www.yiiframework.com/doc-2.0/guide-db-active-record.html
- *
- * @author    Percipio
- * @package   Staff
- * @since     1.0.0-alpha.1
- *
- *
- * PayRunEntry record
- * @property string $siteId;
- * @property string $staffologyId;
- * @property int $payRunId;
- * @property int $employerId;
- * @property int $taxYear;
- * @property \DateTime $startDate;
- * @property \DateTime $endDate;
- * @property string $note
+ * @property int $staffologyId
+ * @property string $taxYear
+ * @property \DateTime $startDate
+ * @property \DateTime $endDate
  * @property string $bacsSubReference
  * @property string $bacsHashcode
  * @property double $percentageOfWorkingDaysPaidAsNormal
@@ -54,27 +47,16 @@ use percipiolondon\staff\db\Table;
  * @property boolean $unpaidAbsence
  * @property boolean $hasAttachmentOrders
  * @property \DateTime $paymentDate
- * @property string $priorPayrollCode
- * @property string $payOptions
- * @property string $pensionSummary
- * @property string $totals
- * @property string $periodOverrides
- * @property string $totalsYtd
- * @property string $totalsYtdOverrides
  * @property double $forcedCisVatAmount
- * @property double $holidayAccured
+ * @property double $holidayAccrued
  * @property string $state
  * @property boolean $isClosed
  * @property boolean $manualNi
- * @property string $nationalInsuranceCalculation
  * @property boolean $payrollCodeChanged
  * @property boolean $aeNotEnroledWarning
  * @property string $fps
  * @property boolean $receivingOffsetPay
  * @property boolean $paymentAfterLearning
- * @property string $umbrellaPayment
- * @property string $employee
- * @property int $employeeId
  * @property string $pdf
  */
 
@@ -85,53 +67,52 @@ class PayRunEntry extends ActiveRecord
 
     public function rules()
     {
-        return [
-            [[
-                'siteId',
-                'payRunId',
-                'employerId',
-                'ordinal',
-                'period',
-            ], 'number', 'integerOnly' => true], [[
-                'percentageOfWorkingDaysPaidAsNormal',
-                'workingDaysNotPaidAsNormal',
-                'forcedCisVatAmount',
-                'holidayAccured',
-            ], 'double'],
-            [['startDate', 'endDate', 'paymentDate'], DateTimeValidator::class],
-//            ['state', 'exists', 'targetAttribute' => ['Open', 'SubmittedForProcessing', 'Processing', 'AwaitingApproval', 'Approved', 'Finalised']],
-            [[
-                'staffologyId',
-                'taxYear',
-                'note',
-                'bacsSubReference',
-                'bacsHashcode',
-                'payPeriod',
-                'priorPayrollCode',
-                'payOptions',
-                'pensionSummary',
-                'totals',
-                'periodOverrides',
-                'totalsYtd',
-                'totalsYtdOverrides',
-                'state',
-                'nationalInsuranceCalculation',
-                'fps',
-                'umbrellaPayment',
-                'pdf',
-            ], 'string'],
-            [[
-                'unpaidAbsence',
-                'unpaidAbsence',
-                'hasAttachmentOrders',
-                'isClosed',
-                'manualNi',
-                'payrollCodeChanged',
-                'aeNotEnroledWarning',
-                'receivingOffsetPay',
-                'paymentAfterLearning',
-            ], 'boolean'],
-        ];
+//        return [
+//            [[
+//                'payRunId',
+//                'employerId',
+//                'ordinal',
+//                'period',
+//            ], 'number', 'intOnly' => true], [[
+//                'percentageOfWorkingDaysPaidAsNormal',
+//                'workingDaysNotPaidAsNormal',
+//                'forcedCisVatAmount',
+//                'holidayAccured',
+//            ], 'double'],
+//            [['startDate', 'endDate', 'paymentDate'], DateTimeValidator::class],
+////            ['state', 'exists', 'targetAttribute' => ['Open', 'SubmittedForProcessing', 'Processing', 'AwaitingApproval', 'Approved', 'Finalised']],
+//            [[
+//                'staffologyId',
+//                'taxYear',
+//                'note',
+//                'bacsSubReference',
+//                'bacsHashcode',
+//                'payPeriod',
+//                'priorPayrollCode',
+//                'payOptions',
+//                'pensionSummary',
+//                'totals',
+//                'periodOverrides',
+//                'totalsYtd',
+//                'totalsYtdOverrides',
+//                'state',
+//                'nationalInsuranceCalculation',
+//                'fps',
+//                'umbrellaPayment',
+//                'pdf',
+//            ], 'string'],
+//            [[
+//                'unpaidAbsence',
+//                'unpaidAbsence',
+//                'hasAttachmentOrders',
+//                'isClosed',
+//                'manualNi',
+//                'payrollCodeChanged',
+//                'aeNotEnroledWarning',
+//                'receivingOffsetPay',
+//                'paymentAfterLearning',
+//            ], 'boolean'],
+//        ];
     }
 
      /**
@@ -144,10 +125,10 @@ class PayRunEntry extends ActiveRecord
      * By convention, tables created by plugins should be prefixed with the plugin
      * name and an underscore.
      *
-     * @return string the table name
+     * @return string $the table name
      */
     public static function tableName()
     {
-        return Table::STAFF_PAYRUNENTRIES;
+        return Table::PAYRUN_ENTRIES;
     }
 }

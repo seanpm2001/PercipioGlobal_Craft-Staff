@@ -10,6 +10,7 @@
 
 namespace percipiolondon\staff\elements;
 
+use craft\db\Query;
 use percipiolondon\staff\Staff;
 
 use Craft;

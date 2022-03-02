@@ -10,40 +10,29 @@
 
 namespace percipiolondon\staff\records;
 
+use percipiolondon\staff\db\Table;
 use percipiolondon\staff\Staff;
 
 use Craft;
 use craft\db\ActiveRecord;
-use percipiolondon\staff\db\Table;
 
 /**
- * @property int $employerId
- * @property int $totalsId;
+ * @property int payRunEntryId;
+ * @property int pensionId;
  *
- * @property string $staffologyId;
- * @property string $taxYear;
- * @property int $taxMonth;
- * @property string $payPeriod;
- * @property int $ordinal;
- * @property int $period;
- * @property \DateTime $startDate;
- * @property \DateTime $endDate;
- * @property \DateTime $paymentDate;
- * @property int $employeeCount;
- * @property int $subContractorCount;
- * @property string $state;
- * @property boolean $isClosed;
- * @property \DateTime $dateClosed;
- * @property string $pdf
- * @property string $url
+ * @property string type;
+ * @property double $value;
+ * @property double $originalValue;
+ * @property string $note;
+ * @property string $attachmentOrderId;
  */
 
-class PayRun extends ActiveRecord
+class ValueOverride extends ActiveRecord
 {
     // Public Static Methods
     // =========================================================================
 
-     /**
+    /**
      * Declares the name of the database table associated with this AR class.
      * By default this method returns the class name as the table name by calling [[Inflector::camel2id()]]
      * with prefix [[Connection::tablePrefix]]. For example if [[Connection::tablePrefix]] is `tbl_`,
@@ -57,6 +46,6 @@ class PayRun extends ActiveRecord
      */
     public static function tableName()
     {
-        return Table::STAFF_PAYRUN;
+        return Table::VALUE_OVERRIDE;
     }
 }

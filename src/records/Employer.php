@@ -17,36 +17,20 @@ use craft\db\ActiveRecord;
 use percipiolondon\staff\db\Table;
 
 /**
- * Employer Record
- *
- * ActiveRecord is the base class for classes representing relational data in terms of objects.
- *
- * Active Record implements the [Active Record design pattern](http://en.wikipedia.org/wiki/Active_record).
- * The premise behind Active Record is that an individual [[ActiveRecord]] object is associated with a specific
- * row in a database table. The object's attributes are mapped to the columns of the corresponding table.
- * Referencing an Active Record attribute is equivalent to accessing the corresponding table column for that record.
- *
- * http://www.yiiframework.com/doc-2.0/guide-db-active-record.html
- *
- * @author    Percipio
- * @package   Staff
- * @since     1.0.0-alpha.1
- */
-
-/**
- * Employer record
 * @property string $slug;
-* @property int $siteId;
+*
+* @property int $addressId;
+* @property int $hmrcDetailsId;
+* @property int $defaultPayOptionsId;
+* @property int $bankDetailsId;
+*
 * @property string $staffologyId;
 * @property string $name;
 * @property int $logoId;
 * @property string $crn;
-* @property string $address;
-* @property string $hmrcDetails;
 * @property string $startYear;
 * @property string $currentYear;
 * @property int $employeeCount;
-* @property string $defaultPayOptions;
  */
 
 class Employer extends ActiveRecord
@@ -68,6 +52,6 @@ class Employer extends ActiveRecord
      */
     public static function tableName()
     {
-        return Table::STAFF_EMPLOYERS;
+        return Table::EMPLOYEES;
     }
 }

@@ -10,35 +10,17 @@
 
 namespace percipiolondon\staff\records;
 
+use percipiolondon\staff\db\Table;
 use percipiolondon\staff\Staff;
 
 use Craft;
 use craft\db\ActiveRecord;
-use percipiolondon\staff\db\Table;
 
 /**
- * @property int $employerId
- * @property int $totalsId;
- *
- * @property string $staffologyId;
- * @property string $taxYear;
- * @property int $taxMonth;
- * @property string $payPeriod;
- * @property int $ordinal;
- * @property int $period;
- * @property \DateTime $startDate;
- * @property \DateTime $endDate;
- * @property \DateTime $paymentDate;
- * @property int $employeeCount;
- * @property int $subContractorCount;
- * @property string $state;
- * @property boolean $isClosed;
- * @property \DateTime $dateClosed;
- * @property string $pdf
- * @property string $url
+ * @property string $metadata;
  */
 
-class PayRun extends ActiveRecord
+class User extends ActiveRecord
 {
     // Public Static Methods
     // =========================================================================
@@ -57,6 +39,6 @@ class PayRun extends ActiveRecord
      */
     public static function tableName()
     {
-        return Table::STAFF_PAYRUN;
+        return Table::USERS;
     }
 }

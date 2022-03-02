@@ -189,8 +189,8 @@ class Employer extends Element
     public static function statuses(): array
     {
         return [
-            self::STATUS_ENABLED => Craft::t('company-management', 'Enabled'),
-            self::STATUS_DISABLED => Craft::t('company-management', 'Disabled'),
+            self::STATUS_ENABLED => Craft::t('staff-management', 'Enabled'),
+            self::STATUS_DISABLED => Craft::t('staff-management', 'Disabled'),
         ];
     }
 

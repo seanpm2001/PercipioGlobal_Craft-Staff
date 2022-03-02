@@ -15,39 +15,22 @@ use craft\db\ActiveRecord;
 use percipiolondon\staff\db\Table;
 
 /**
- * Employee Record
- *
- * ActiveRecord is the base class for classes representing relational data in terms of objects.
- *
- * Active Record implements the [Active Record design pattern](http://en.wikipedia.org/wiki/Active_record).
- * The premise behind Active Record is that an individual [[ActiveRecord]] object is associated with a specific
- * row in a database table. The object's attributes are mapped to the columns of the corresponding table.
- * Referencing an Active Record attribute is equivalent to accessing the corresponding table column for that record.
- *
- * http://www.yiiframework.com/doc-2.0/guide-db-active-record.html
- *
- * @author    Percipio
- * @package   Staff
- * @since     1.0.0-alpha.1
- */
-
-/**
- * Employee record
- * @property int $siteId;
- * @property string $staffologyId;
  * @property int $employerId;
  * @property int $userId;
- * @property string $personalDetails;
- * @property string $employmentDetails;
- * @property string $autoEnrolment;
- * @property string $leaveSettings;
- * @property string $rightToWork;
- * @property string $bankDetails;
+ * @property int $personalDetailsId;
+ * @property int $employmentDetailsId;
+ * @property int $autoEnrolmentId;
+ * @property int $leaveSettingsId;
+ * @property int $rightToWorkId;
+ * @property int $bankDetails;
+ * @property int $payOptionsId;
+ *
+ * @property string $staffologyId;
+ * @property boolean $isDirector
  * @property string $status;
  * @property boolean $aeNotEnroledWarning;
- * @property string $sourceSystemId;
  * @property string $niNumber
- * @property boolean $isDirector
+ * @property string $sourceSystemId;
  */
 
 class Employee extends ActiveRecord
@@ -69,6 +52,6 @@ class Employee extends ActiveRecord
      */
     public static function tableName()
     {
-        return Table::STAFF_EMPLOYEES;
+        return Table::EMPLOYEES;
     }
 }

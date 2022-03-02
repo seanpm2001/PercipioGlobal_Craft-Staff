@@ -21,7 +21,7 @@ use percipiolondon\staff\jobs\CreateEmployeeJob;
 use percipiolondon\staff\records\Employee;
 use percipiolondon\staff\records\Employer;
 use percipiolondon\staff\records\Permission;
-use percipiolondon\staff\records\UserPermission;
+use percipiolondon\staff\records\PermissionsUser;
 
 use yii\base\BaseObject;
 use yii\db\Exception;
