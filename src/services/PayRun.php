@@ -71,34 +71,44 @@ class PayRun extends Component
 
     public function fetchPayRunSchedule(array $employer)
     {
-        $queue = Craft::$app->getQueue();
-        $queue->push(new FetchPaySchedulesJob([
-            'description' => 'Fetch pay schedules',
-            'criteria' => [
-                'employer' => $employer,
-            ]
-        ]));
+        $payRuns = $employer['metadata']['payruns'] ?? [];
+        $this->fetchPayRun($payRuns, $employer);
+//        $queue = Craft::$app->getQueue();
+//        $queue->push(new FetchPaySchedulesJob([
+//            'description' => 'Fetch pay schedules',
+//            'criteria' => [
+//                'employer' => $employer,
+//            ]
+//        ]));
     }
 
-    public function fetchPayRun(array $paySchedules, array $employer)
+    public function fetchPayRun(array $payRuns, array $employer)
     {
         $queue = Craft::$app->getQueue();
         $queue->push(new CreatePayRunJob([
             'description' => 'Fetch pay runs',
             'criteria' => [
-                'paySchedules' => $paySchedules,
+                'payRuns' => $payRuns,
                 'employer' => $employer,
             ]
         ]));
     }
 
-    public function savePayRun(array $payRun, string $payRunUrl, $employer)
+    public function savePayRun(array $payRun, string $payRunUrl, array $employer, string $progress): void
     {
         $logger = new Logger();
-        $logger->stdout($progress."✓ Save pay run " .$employeeName . '...', $logger::RESET);
+        $logger->stdout($progress."✓ Save pay run of " .$employer['name'] . $payRun['taxYear'] .  ' / ' . $payRun['taxMonth'] . '...' . PHP_EOL, $logger::RESET);
         $logger->stdout(" done" . PHP_EOL, $logger::FG_GREEN);
 
         $payRunRecord = PayRunRecord::findOne(['url' => $url]);
+
+        //temporarly
+        Queue::push(new CreatePayRunEntryJob([
+            'criteria' => [
+                'payRunEntries' => $payRun['entries'],
+                'employer' => $employer,
+            ]
+        ]));
 
         // CREATE PAYRUN IF NOT EXISTS
         if(!$payRunRecord) {

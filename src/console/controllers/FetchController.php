@@ -23,8 +23,8 @@ class FetchController extends Controller
 
         //Fetch all the standalone calls needed for Employer / Employee / Pay Run
         $this->stdout("" . PHP_EOL, Console::RESET);
-        Staff::$plugin->pensions->fetchPensionSchemes($employers);
         Staff::$plugin->payRun->fetchPayCodesList($employers);
+        Staff::$plugin->pensions->fetchPensionSchemes($employers);
 
         // Fetch Employer / Employee
         $this->stdout("" . PHP_EOL, Console::RESET);

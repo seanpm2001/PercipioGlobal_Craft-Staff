@@ -46,6 +46,8 @@ class CreatePayRunEntryJob extends Basejob
                 // SET PAY RUN ENTRY IF IT DOESN'T EXIST
                 if (!$payRunEntry) {
 
+                    $logger->stdout(" done" . PHP_EOL, $logger::FG_GREEN);
+
                     $base_url = "https://api.staffology.co.uk/" . $payRunEntryData['url'];
                     $response = $client->get($base_url, $this->headers);
                     $payRunEntryData = json_decode($response->getBody()->getContents(), true);
