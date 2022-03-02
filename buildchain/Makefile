@@ -1,44 +1,34 @@
 TAG?=16-alpine
 CONTAINER?=$(shell basename $(dir $(CURDIR)))-buildchain
 DOCKERRUN=docker container run \
-         --name ${CONTAINER} \
-         --rm \
-         -t \
-         --network craft-plugin-playground_default \
-         -p 3050:3050 \
-         -e CPPFLAGS="-DPNG_ARM_NEON_OPT=0" \
-         -v `pwd`/../:/app \
-         ${CONTAINER}:${TAG}
+	--name ${CONTAINER} \
+	--rm \
+	-t \
+	--network craft-plugin-playground_default \
+	-p 3050:3050 \
+	-v "${CURDIR}"/../:/app \
+	${CONTAINER}:${TAG}
 
-.PHONY: build dev docker install update update-clean npm
+.PHONY: build dev docker install npm
 
 build: docker install
-    ${DOCKERRUN} \
-        run build
+	${DOCKERRUN} \
+		run build
 dev: docker install
-    ${DOCKERRUN} \
-        run dev
+	${DOCKERRUN} \
+		run dev
 docker:
-    docker build \
-        . \
-        -t ${CONTAINER}:${TAG} \
-        --build-arg TAG=${TAG} \
-        --no-cache
+	docker build \
+		. \
+		-t ${CONTAINER}:${TAG} \
+		--build-arg TAG=${TAG} \
+		--no-cache
 install: docker
-    ${DOCKERRUN} \
-        install
-update: docker
-    rm -f buildchain/package-lock.json
-    ${DOCKERRUN} \
-        install
-update-clean: docker
-    rm -f buildchain/package-lock.json
-    rm -rf buildchain/node_modules/
-    ${DOCKERRUN} \
-        install
+	${DOCKERRUN} \
+		install --ignore-scripts
 npm: docker
-    ${DOCKERRUN} \
-        $(filter-out $@,$(MAKECMDGOALS))
+	${DOCKERRUN} \
+		$(filter-out $@,$(MAKECMDGOALS))
 %:
-    @:
+	@:
 # ref: https://stackoverflow.com/questions/6273608/how-to-pass-argument-to-makefile-from-command-line
