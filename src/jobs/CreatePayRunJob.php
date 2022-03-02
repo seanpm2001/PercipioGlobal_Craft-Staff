@@ -34,32 +34,25 @@ class CreatePayRunJob extends BaseJob
         // FETCH DETAILED EMPLOYEE
         try {
 
-            foreach($this->criteria['paySchedules'] as $schedule) {
+            $current = 0;
+            $total = count($this->criteria['payRuns']);
 
-                if(count($schedule['payRuns']) > 0) {
+            foreach($this->criteria['payRuns'] as $payRun) {
 
-                    $current = 0;
-                    $total = count($schedule['payRuns']);
+                $current++;
+                $progress = "[".$current."/".$total."] ";
 
-                    foreach($schedule['payRuns'] as $payRun) {
+                $payRunLog = PayRunLogRecord::findOne(['url' => $payRun['url']]);
 
-                        $current++;
-                        $progress = "[".$current."/".$total."] ";
+                // SET PAYRUN IF IT HASN'T ALREADY BEEN FETCHED IN PAYRUNLOG
+                if(!$payRunLog) {
 
-                        $payRunLog = PayRunLogRecord::findOne(['url' => $payRun['url']]);
+                    $logger->stdout($progress."↧ Fetching pay run info of " . $payRun['metadata']['taxYear'] . ' / ' . $payRun['metadata']['taxYear'] . '...', $logger::RESET);
 
-                        // SET PAYRUN IF IT HASN'T ALREADY BEEN FETCHED IN PAYRUNLOG
-                        if(!$payRunLog) {
-
-                            $logger->stdout($progress."↧ Fetching pay run info of " . $payRun['taxYear'] . ' / ' . $payRun['taxYear'] . '...', $logger::RESET);
-
-                            $response =  $client->get($payRun['url'], $headers);
-                            $payRunData = json_decode($response->getBody()->getContents(), true);
-                            Staff::getInstance()->payRun->savePayRun($payRunData, $payRun['url'], $this->criteria['employer']);
+                    $response =  $client->get("https://api.staffology.co.uk/" . $payRun['url'], $headers);
+                    $payRunData = json_decode($response->getBody()->getContents(), true);
+                    Staff::getInstance()->payRun->savePayRun($payRunData, $payRun['url'], $this->criteria['employer'], $progress);
 //                            $this->_savePayRun($payRunData, $payRun['url']);
-                        }
-
-                    }
                 }
 
             }
