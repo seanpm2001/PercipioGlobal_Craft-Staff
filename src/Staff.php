@@ -20,6 +20,7 @@ use craft\events\RegisterGqlTypesEvent;
 use craft\services\Elements;
 use craft\services\Gql;
 
+use nystudio107\pluginvite\services\VitePluginService;
 
 use percipiolondon\staff\services\Employers as EmployersService;
 use percipiolondon\staff\services\Employees as EmployeesService;
@@ -27,6 +28,7 @@ use percipiolondon\staff\services\PayRun as PayRunService;
 use percipiolondon\staff\services\PayRunEntries as PayRunEntriesService;
 use percipiolondon\staff\services\Pensions as PensionsService;
 
+use percipiolondon\staff\assetbundles\staff\StaffCsvAsset;
 use percipiolondon\staff\models\Settings;
 use percipiolondon\staff\elements\Employer as EmployerElement;
 use percipiolondon\staff\elements\Employee as EmployeeElement;
@@ -42,6 +44,7 @@ use percipiolondon\staff\gql\interfaces\elements\Employee as EmployeeInterface;
 use percipiolondon\staff\gql\interfaces\elements\PayRun as PayRunInterface;
 use percipiolondon\staff\gql\interfaces\elements\PayRunEntry as PayRunEntryInterface;
 use percipiolondon\staff\plugin\Services as StaffServices;
+use percipiolondon\staff\variables\StaffVariable;
 
 use yii\base\Event;
 
@@ -59,13 +62,14 @@ use yii\base\Event;
  * @package   Staff
  * @since     0.2.0
  *
- * @property  EmployersService $employers
- * @property  EmployeesService $employees
- * @property  PayRunService $payRun
- * @property  PayRunEntriesService $payRunEntries
- * @property  PensionsService $pensions
- * @property  Settings $settings
- * @method    Settings getSettings()
+ * @property  EmployersService      $employers
+ * @property  EmployeesService      $employees
+ * @property  PayRunService         $payRun
+ * @property  PayRunEntriesService  $payRunEntries
+ * @property  PensionsService       $pensions
+ * @property  Settings              $settings
+ * @property  VitePluginService     $vite
+ * @method    Settings              getSettings()
  */
 class Staff extends Plugin
 {
@@ -81,6 +85,31 @@ class Staff extends Plugin
      * @var Staff
      */
     public static $plugin;
+
+    // Static Methods
+    // =========================================================================
+
+    /**
+     * @inheritdoc
+     */
+    public function __construct($id, $parent = null, array $config = [])
+    {
+        $config['components'] = [
+            // Register the vite service
+            'vite' => [
+                'class' => VitePluginService::class,
+                'assetClass' => StaffCsvAsset::class,
+                'useDevServer' => true,
+                'devServerPublic' => 'http://localhost:3050',
+                'serverPublic' => 'http://localhost:8001',
+                'errorEntry' => 'src/js/csv.ts',
+                'devServerInternal' => 'http://craft-staff-buildchain:3050',
+                'checkDevServer' => true,
+            ]
+        ];
+
+        parent::__construct($id, $parent, $config);
+    }
 
     // Public Properties
     // =========================================================================
@@ -132,6 +161,8 @@ class Staff extends Plugin
         $this->_registerGqlQueries();
         $this->_registerElementTypes();
         $this->_registerControllers();
+
+        $this->installEventListeners();
 
         // Do something after we're installed
 //        Event::on(
@@ -198,6 +229,34 @@ class Staff extends Plugin
             [
                 'settings' => $this->getSettings()
             ]
+        );
+    }
+
+    /**
+     * Install our event listeners.
+     */
+    protected function installEventListeners()
+    {
+        $this->installGlobalEventListeners();
+    }
+
+    /**
+     * Install global event listeners for all request types
+     */
+    protected function installGlobalEventListeners()
+    {
+        // Handler: CraftVariable::EVENT_INIT
+        Event::on(
+            CraftVariable::class,
+            CraftVariable::EVENT_INIT,
+            function ( Event $event ) {
+               /** @var CraftVariable $variable */
+               $variable = $event->sender;
+               $variable->set('staff', [
+                   'class' => ViteVariable::class,
+                   'viteService' => $this->vite,
+               ]);
+            }
         );
     }
 

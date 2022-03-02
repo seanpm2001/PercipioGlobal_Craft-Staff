@@ -11,18 +11,20 @@
         "craft-staff"
     ],
     "support": {
-        "docs": "https://github.com/Craft Staff Management/craft-staff/blob/master/README.md",
-        "issues": "https://github.com/Craft Staff Management/craft-staff/issues"
+        "docs": "https://github.com/craft-staff/craft-staff/blob/master/README.md",
+        "issues": "https://github.com/craft-staff/craft-staff/issues"
     },
-    "license": "MIT",
+    "license": "proprietary",
     "authors": [
         {
             "name": "Percipio",
-            "homepage": "http://percipio.london"
+            "homepage": "https://percipio.london"
         }
     ],
     "require": {
-        "craftcms/cms": "^3.7.0"
+        "craftcms/cms": "^3.7.35",
+        "league/csv": "^9.0.0",
+        "nystudio107/craft-plugin-vite": "^1.0.0"
     },
     "require-dev": {
         "roave/security-advisories": "dev-latest",

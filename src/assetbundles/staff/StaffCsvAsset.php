@@ -13,6 +13,7 @@ namespace percipiolondon\staff\assetbundles\staff;
 use Craft;
 use craft\web\AssetBundle;
 use craft\web\assets\cp\CpAsset;
+use craft\web\assets\vue\VueAsset;
 
 /**
  * StaffAsset AssetBundle
@@ -30,34 +31,33 @@ use craft\web\assets\cp\CpAsset;
  *
  * @author    Percipio
  * @package   Staff
- * @since     1.0.0-alpha.1
+ * @since     1.0.0
  */
-class StaffAsset extends AssetBundle
+class StaffCsvAsset extends AssetBundle
 {
     // Public Methods
     // =========================================================================
 
     /**
-     * Initializes the bundle.
+     * @inheritdoc
      */
     public function init()
     {
         // define the path that your publishable resources live
-        $this->sourcePath = "@percipiolondon/staff/assetbundles/staff/dist";
+        $this->sourcePath = "@percipiolondon/staff/web/assets/dist";
 
         // define the dependencies
         $this->depends = [
             CpAsset::class,
+            VueAsset::class,
         ];
 
         // define the relative path to CSS/JS files that should be registered with the page
         // when this asset bundle is registered
         $this->js = [
-            'js/Staff.js',
         ];
 
         $this->css = [
-            'css/Staff.css',
         ];
 
         parent::init();
