@@ -1383,7 +1383,7 @@ class Install extends Migration
     /**
      * Creates the indexes
      */
-    public function createIndexes()
+    public function createIndexes():void
     {
         /** LEVEL 1 TABLES **/
         $this->createIndex(null, Table::EMPLOYERS, "addressId", true);
@@ -1773,7 +1773,7 @@ class Install extends Migration
     /**
      * Insert the default data.
      */
-    public function insertDefaultData()
+    public function insertDefaultData():void
     {
         $this->_createPermissions();
         $this->_defaultCountries();
@@ -1782,7 +1782,7 @@ class Install extends Migration
     /**
      * Insert default countries data.
      */
-    private function _defaultCountries()
+    private function _defaultCountries():void
     {
         $countries = [
             ['ENG', 'England'],
@@ -1806,7 +1806,7 @@ class Install extends Migration
     /**
      * Create the permissions for the Company Users
      */
-    private function _createPermissions()
+    private function _createPermissions():void
     {
         $rows = [];
 

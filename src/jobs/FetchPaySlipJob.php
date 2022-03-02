@@ -3,49 +3,49 @@
 namespace percipiolondon\staff\jobs;
 
 use Craft;
+use craft\helpers\App;
 use craft\helpers\Json;
 use craft\queue\BaseJob;
+use percipiolondon\staff\helpers\Logger;
 use percipiolondon\staff\records\Employer as EmployerRecord;
 use percipiolondon\staff\records\PayRunEntry as PayRunEntryRecord;
 use percipiolondon\staff\elements\PayRunEntry;
+use percipiolondon\staff\Staff;
 use yii\db\Exception;
 
 class FetchPaySlipJob extends Basejob
 {
-    public $headers;
-    public $payPeriod;
-    public $periodNumber;
-    public $taxYear;
-    public $employerId;
-    public $payRunEntry;
+    public $criteria;
 
     public function execute($queue): void
     {
+        $logger = new Logger();
+
+        // connection props
+        $api = App::parseEnv(Staff::$plugin->getSettings()->staffologyApiKey);
+        $base_url = 'https://api.staffology.co.uk/';
+        $credentials = base64_encode('staff:'.$api);
+        $headers = [
+            'headers' => [
+                'Authorization' => 'Basic ' . $credentials,
+            ],
+        ];
         $client = new \GuzzleHttp\Client();
 
         try {
-            $employer = EmployerRecord::findOne(['id' =>$this->employerId]);
-            $empoyerId = $employer->staffologyId ?? null;
+            $employer = EmployerRecord::findOne(['id' => $this->criteria['employer']['id']]);
+            $empoyerId = $this->criteria['employer']['id'] ?? null;
 
-            $base_url = "https://api.staffology.co.uk/employers/{$empoyerId}/reports/{$this->taxYear}/{$this->payPeriod}/{$this->periodNumber}/{$this->payRunEntry->staffologyId}/payslip";
-            $response = $client->get($base_url, $this->headers);
+            $base_url = "https://api.staffology.co.uk/employers/{$empoyerId}/reports/{$this->criteria['taxYear']}/{$this->criteria['payPeriod']}/{$this->criteria['periodNumber']}/{$this->criteria['payRunEntry']['staffologyId']}/payslip";
+            $response = $client->get($base_url, $headers);
 
             $payslip = $response->getBody()->getContents();
 
             if( $payslip ) {
-                $payslip = Json::decodeIfJson($payslip, false);
+                $payslip = Json::decodeIfJson($payslip, $this->criteria['payRunEntry'], true);
 
-                if($payslip->content) {
-                   $this->payRunEntry->pdf = $payslip->content ?? null;
-
-                   $success = $this->payRunEntry->save(false);
-
-                    if(!$success){
-                        throw new Exception("The payslip couldn't be created");
-                    }
-                }
+                Staff::$plugin->payRun->savePaySlip($payslip, $this->criteria['employer']);
             }
-
 
 //            $payslips = $response->getBody()->getContents();
 //
@@ -56,9 +56,11 @@ class FetchPaySlipJob extends Basejob
 //            }
 
         } catch (\Exception $e) {
-            Craft::error("Something went wrong: {$e->getMessage()}", __METHOD__);
-        } catch (\Throwable $e) {
-            Craft::error("Something went wrong: {$e->getMessage()}", __METHOD__);
+
+            $logger->stdout(PHP_EOL, $logger::RESET);
+            $logger->stdout($e->getMessage() . PHP_EOL, $logger::FG_RED);
+            Craft::error($e->getMessage(), __METHOD__);
+
         }
     }
 

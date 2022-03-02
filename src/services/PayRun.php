@@ -92,6 +92,164 @@ class PayRun extends Component
         ]));
     }
 
+    public function savePayRun(array $payRun, string $payRunUrl, $employer)
+    {
+        $logger = new Logger();
+        $logger->stdout($progress."✓ Save pay run " .$employeeName . '...', $logger::RESET);
+        $logger->stdout(" done" . PHP_EOL, $logger::FG_GREEN);
+
+        $payRunRecord = PayRunRecord::findOne(['url' => $url]);
+
+        // CREATE PAYRUN IF NOT EXISTS
+        if(!$payRunRecord) {
+//            $payRunRecord = new PayRun();
+//
+//            $payRunRecord->siteId = Craft::$app->getSites()->currentSite->id;
+//            $payRunRecord->staffologyId = "";
+//            $payRunRecord->employerId = $this->employerId;
+//            $payRunRecord->taxYear = $payRun['taxYear'] ?? '';
+//            $payRunRecord->taxMonth = $payRun['taxMonth'] ?? null;
+//            $payRunRecord->payPeriod = $payRun['payPeriod'] ?? '';
+//            $payRunRecord->ordinal = $payRun['ordinal'] ?? null;
+//            $payRunRecord->period = $payRun['period'] ?? null;
+//            $payRunRecord->startDate = $payRun['startDate'] ?? null;
+//            $payRunRecord->endDate = $payRun['endDate'] ?? null;
+//            $payRunRecord->paymentDate = $payRun['paymentDate'] ?? null;
+//            $payRunRecord->employeeCount = $payRun['employeeCount'] ?? null;
+//            $payRunRecord->subContractorCount = $payRun['subContractorCount'] ?? null;
+//            $payRunRecord->totals = $payRun['totals'] ?? '';
+//            $payRunRecord->state = $payRun['state'] ?? '';
+//            $payRunRecord->isClosed = $payRun['isClosed'] ?? '';
+//            $payRunRecord->dateClosed = $payRun['dateClosed'] ?? null;
+//            $payRunRecord->url = $url ?? '';
+//
+//            $elementsService = Craft::$app->getElements();
+//            $success = $elementsService->saveElement($payRunRecord);
+
+            if($success) {
+                Craft::info("Saving pay run entries and log");
+
+                $this->savePayRunLog($payRun, $url, $payRunRecord->id);
+
+                // GET PAYRUNENTRY FROM PAYRUN
+                Queue::push(new CreatePayRunEntryJob([
+                    'criteria' => [
+                        'payRunEntries' => $payRun['entries'],
+                        'payRunId' => $payRunRecord->id,
+                        'employer' => $employer,
+                    ]
+                ]));
+            }else{
+                Craft::error($payRunRecord->errors);
+            }
+        }
+    }
+
+    public function fetchPaySlip(array $payRunEntry, array $employer)
+    {
+        Queue::push(new FetchPaySlipJob([
+            'criteria' => [
+                'employer' => $employer,
+                'payPeriod' => $payRunEntry['payPeriod'] ?? null,
+                'periodNumber' => $payRunEntry['period'] ?? null,
+                'taxYear' => $payRunEntry['taxYear'] ?? null,
+                'payRunEntry' => $payRunEntry ?? null
+            ]
+        ]));
+    }
+
+    public function savePaySlip(array $paySlip, array $payRunEntry, array $employer)
+    {
+        if($payslip->content) {
+            $this->criteria['payRunEntry']['pdf'] = $paySlip['content'] ?? null;
+
+            $success = $payRunEntry->save(false);
+
+            if(!$success){
+                $logger->stdout(PHP_EOL, $logger::RESET);
+                $logger->stdout("The payslip couldn't be created" . PHP_EOL, $logger::FG_RED);
+                Craft::error("The payslip couldn't be created", __METHOD__);
+            }
+        }
+    }
+
+    public function savePayRunLog(array $payRun, string $url, string $payRunId)
+    {
+        $logger = new Logger();
+        $logger->stdout($progress."✓ Save pay run log " .$employeeName . '...', $logger::RESET);
+        $logger->stdout(" done" . PHP_EOL, $logger::FG_GREEN);
+//        $payRunLog = new PayRunLogRecord();
+//
+//        $payRunLog->siteId = Craft::$app->getSites()->currentSite->id;
+//        $payRunLog->taxYear = $payRun['taxYear'] ?? '';
+//        $payRunLog->employeeCount = $payRun['employeeCount'] ?? null;
+//        $payRunLog->lastPeriodNumber = $payRun['employeeCount'] ?? null;
+//        $payRunLog->url = $url ?? '';
+//        $payRunLog->employerId = $this->employerId;
+//        $payRunLog->payRunId = $payRunId;
+//
+//        $payRunLog->save(true);
+    }
+
+    public function savePayRunEntry(array $payRunEntryData, array $employer)
+    {
+        $logger = new Logger();
+        $logger->stdout($progress."✓ Save pay run entry " . $payRunEntryData['taxYear'] . ' / ' . $payRunEntryData['taxYear'] . '...', $logger::RESET);
+        $logger->stdout(" done" . PHP_EOL, $logger::FG_GREEN);
+
+//        $payRunEntry = new PayRunEntry();
+//
+//        $employee = Employee::findOne(['staffologyId' => $payRunEntryData['employee']['id']]);
+//
+//        $payRunEntry->siteId = Craft::$app->getSites()->currentSite->id;
+//        $payRunEntry->employerId = $this->employerId;
+//        $payRunEntry->employeeId = $employee->id ?? null;
+//        $payRunEntry->payRunId = $this->payRunId;
+//        $payRunEntry->staffologyId = $payRunEntryData['id'] ?? null;
+//        $payRunEntry->taxYear = $payRunEntryData['taxYear'] ?? null;
+//        $payRunEntry->startDate = $payRunEntryData['startDate'] ?? null;
+//        $payRunEntry->endDate = $payRunEntryData['endDate'] ?? null;
+//        $payRunEntry->note = $payRunEntryData['note'] ?? '';
+//        $payRunEntry->bacsSubReference = $payRunEntryData['bacsSubReference'] ?? '';
+//        $payRunEntry->bacsHashcode = $payRunEntryData['bacsHashcode'] ?? '';
+//        $payRunEntry->percentageOfWorkingDaysPaidAsNormal = $payRunEntryData['percentageOfWorkingDaysPaidAsNormal'] ?? null;
+//        $payRunEntry->workingDaysNotPaidAsNormal = $payRunEntryData['workingDaysNotPaidAsNormal'] ?? null;
+//        $payRunEntry->payPeriod = $payRunEntryData['payPeriod'] ?? null;
+//        $payRunEntry->ordinal = $payRunEntryData['ordinal'] ?? null;
+//        $payRunEntry->period = $payRunEntryData['period'] ?? null;
+//        $payRunEntry->isNewStarter = $payRunEntryData['isNewStarter'] ?? null;
+//        $payRunEntry->unpaidAbsence = $payRunEntryData['unpaidAbsence'] ?? null;
+//        $payRunEntry->hasAttachmentOrders = $payRunEntryData['hasAttachmentOrders'];
+//        $payRunEntry->paymentDate = $payRunEntryData['paymentDate'] ?? null;
+//        $payRunEntry->priorPayrollCode = $payRunEntryData['priorPayrollCode'] ?? '';
+//        $payRunEntry->payOptions = $payRunEntryData['payOptions'] ?? '';
+//        $payRunEntry->pensionSummary = $payRunEntryData['pensionSummary'] ?? '';
+//        $payRunEntry->totals = $payRunEntryData['totals'] ?? '';
+//        $payRunEntry->periodOverrides = $payRunEntryData['periodOverrides'] ?? '';
+//        $payRunEntry->totalsYtd = $payRunEntryData['totalsYtd'] ?? '';
+//        $payRunEntry->totalsYtdOverrides = $payRunEntryData['totalsYtdOverrides'] ?? '';
+//        $payRunEntry->forcedCisVatAmount = $payRunEntryData['forcedCisVatAmount'] ?? null;
+//        $payRunEntry->holidayAccured = $payRunEntryData['holidayAccured'] ?? null;
+//        $payRunEntry->state = $payRunEntryData['state'] ?? '';
+//        $payRunEntry->isClosed = $payRunEntryData['isClosed'] ?? null;
+//        $payRunEntry->manualNi = $payRunEntryData['manualNi'] ?? null;
+//        $payRunEntry->nationalInsuranceCalculation = $payRunEntryData['nationalInsuranceCalculation'] ?? '';
+//        $payRunEntry->aeNotEnroledWarning = $payRunEntryData['aeNotEnroledWarning'] ?? null;
+//        $payRunEntry->fps = $payRunEntryData['fps'] ?? '';
+//        $payRunEntry->receivingOffsetPay = $payRunEntryData['receivingOffsetPay'] ?? null;
+//        $payRunEntry->paymentAfterLearning = $payRunEntryData['paymentAfterLearning'] ?? null;
+//        $payRunEntry->umbrellaPayment = $payRunEntryData['umbrellaPayment'] ?? '';
+//        $payRunEntry->employee = $payRunEntryData['employee'] ?? '';
+////        $payRunEntry->pdf = $payRunEntryData['pdf'];
+//
+//        $elementsService = Craft::$app->getElements();
+//        $success = $elementsService->saveElement($payRunEntry);
+//
+//        if(!$success){
+//            Craft::error($payRunEntry->errors);
+//        }
+    }
+
 
 //    /**
 //     * This function can literally be anything you want, and you can have as many service
