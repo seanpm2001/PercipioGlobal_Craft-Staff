@@ -46,15 +46,11 @@ class FetchEmployeesListJob extends BaseJob
                 Staff::$plugin->employees->fetchEmployee($employee, $progress);
                 Staff::$plugin->pensions->fetchPension($employee, $this->criteria['employer']['id'], $progress);
 
-                if(
-                    $this->criteria['progress']['current'] === $this->criteria['progress']['total'] &&
-                    $currentEmployee === $totalEmployees
-                ){
+                if($currentEmployee === $totalEmployees){
                     Staff::$plugin->payRun->fetchPayRunSchedule($this->criteria['employer']);
                 }
 
                 $this->setProgress($queue, $currentEmployee / $totalEmployees);
-
 
             }
 
@@ -68,8 +64,5 @@ class FetchEmployeesListJob extends BaseJob
 
         $logger->stdout(" done" . PHP_EOL, $logger::FG_GREEN);
 
-//        $logger->stdout("" . PHP_EOL, $logger::RESET);
-//        $logger->stdout("--------- Employees ---------" . PHP_EOL, $logger::RESET);
-//        Staff::$plugin->employees->fetchEmployees($employees);
     }
 }

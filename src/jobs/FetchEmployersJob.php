@@ -43,6 +43,7 @@ class FetchEmployersJob extends BaseJob
                 $result = Json::decodeIfJson($response->getBody()->getContents(), true);
 
                 Staff::$plugin->employers->saveEmployer($result);
+
                 Staff::$plugin->employees->fetchEmployeesByEmployer($employer, [
                     "label" => $progress,
                     "current" => $currentEmployer,
