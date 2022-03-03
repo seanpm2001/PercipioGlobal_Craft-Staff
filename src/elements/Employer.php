@@ -10,6 +10,7 @@
 
 namespace percipiolondon\staff\elements;
 
+use percipiolondon\staff\helpers\Logger;
 use percipiolondon\staff\Staff;
 
 use Craft;
@@ -18,8 +19,10 @@ use craft\elements\db\ElementQuery;
 use craft\elements\db\ElementQueryInterface;
 use percipiolondon\staff\elements\db\EmployerQuery;
 use yii\base\InvalidConfigException;
+use yii\db\Exception;
 use yii\db\Query;
 use percipiolondon\staff\records\Employer as EmployerRecord;
+use percipiolondon\staff\records\Address as AddressRecord;
 
 /**
  * Employer Element
@@ -74,14 +77,12 @@ class Employer extends Element
     public $siteId;
     public $staffologyId;
     public $name;
-    public $logoId;
+    public $logoUrl;
     public $crn;
     public $address;
-    public $hmrcDetails;
     public $startYear;
     public $currentYear;
     public $employeeCount;
-    public $defaultPayOptions;
 
     // Static Methods
     // =========================================================================
@@ -512,37 +513,39 @@ class Employer extends Element
         try {
             if (!$isNew) {
 
-                $record = EmployerRecord::findOne($this->id);
+                $employer = EmployerRecord::findOne($this->id);
+                $address = AddressRecord::findOne($this->id);
 
-                if (!$record) {
+                if (!$employer) {
                     throw new Exception('Invalid employer ID: ' . $this->id);
                 }
 
             } else {
-                $record = new EmployerRecord();
-                $record->id = (int)$this->id;
+                $employer = new EmployerRecord();
+                $employer->id = (int)$this->id;
+
+                $address = new AddressRecord();
             }
 
-            $record->slug = strtolower(trim(preg_replace('/[^A-Za-z0-9-]+/', '-', $this->name), '-'));
-            $record->siteId = $this->siteId;
-            $record->staffologyId = $this->staffologyId;
-            $record->name = $this->name;
-            $record->crn = $this->crn;
-            $record->address = $this->address;
-            $record->hmrcDetails = $this->hmrcDetails;
-            $record->startYear = $this->startYear;
-            $record->currentYear = $this->currentYear;
-            $record->employeeCount = $this->employeeCount;
-            $record->defaultPayOptions = $this->defaultPayOptions;
+            $address->
 
-            $success = $record->save(false);
+            $employer->slug = strtolower(trim(preg_replace('/[^A-Za-z0-9-]+/', '-', $this->name), '-'));
+            $employer->staffologyId = $this->staffologyId;
+            $employer->name = Craft::$app->getSecurity()->hashData($this->name);
+            $employer->crn = $this->crn;
+//            $record->address = $this->address;
+            $employer->startYear = $this->startYear;
+            $employer->currentYear = $this->currentYear;
+            $employer->employeeCount = $this->employeeCount;
+
+            $success = $employer->save(false);
 
         } catch (\Exception $e) {
 
-            echo "---- error -----\n";
-            var_dump($e->getMessage());
+            $logger = new Logger();
+            $logger->stdout(PHP_EOL, $logger::RESET);
+            $logger->stdout($e->getMessage() . PHP_EOL, $logger::FG_RED);
             Craft::error($e->getMessage(), __METHOD__);
-            echo "\n---- end error ----";
         }
 
     }

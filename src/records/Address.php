@@ -7,7 +7,6 @@ use percipiolondon\staff\db\Table;
 
 /**
  * @property int $countryId;
- * @property int $countyId;
  * @property string $address1;
  * @property string $address2;
  * @property string $address3;
