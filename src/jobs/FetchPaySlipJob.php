@@ -33,7 +33,7 @@ class FetchPaySlipJob extends Basejob
         ];
         $client = new \GuzzleHttp\Client();
 
-        $logger->stdout("↧ Fetching pay slip of " . $this->criteria['payRunEntry']['personalDetails']['firstName'] . " " . $this->criteria['payRunEntry']['personalDetails']['lastName'] . '...', $logger::RESET);
+        $logger->stdout('↧ Fetching pay slip...', $logger::RESET);
 
         try {
             $base_url = "https://api.staffology.co.uk/employers/{$this->criteria['employer']['id']}/reports/{$this->criteria['payRunEntry']['taxYear']}/{$this->criteria['payRunEntry']['payPeriod']}/{$this->criteria['payRunEntry']['period']}/{$this->criteria['payRunEntry']['id']}/payslip";
@@ -45,7 +45,7 @@ class FetchPaySlipJob extends Basejob
             $logger->stdout(" done" . PHP_EOL, $logger::FG_GREEN);
 
             if( $paySlip ) {
-                $paySlip = Json::decodeIfJson($paySlip, $this->criteria['payRunEntry'], true);
+                $paySlip = Json::decodeIfJson($paySlip, true);
 
                 Staff::$plugin->payRun->savePaySlip($paySlip, $this->criteria['payRunEntry'], $this->criteria['employer']);
             }

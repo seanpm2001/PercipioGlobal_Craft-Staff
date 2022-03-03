@@ -42,6 +42,8 @@ class FetchEmployersJob extends BaseJob
                 $response = $client->get($employer['url'], $headers);
                 $result = Json::decodeIfJson($response->getBody()->getContents(), true);
 
+                $logger->stdout(" done" . PHP_EOL, $logger::FG_GREEN);
+
                 Staff::$plugin->employers->saveEmployer($result);
 
                 Staff::$plugin->employees->fetchEmployeesByEmployer($employer);

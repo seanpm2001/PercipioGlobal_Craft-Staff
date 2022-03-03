@@ -7,9 +7,13 @@ use percipiolondon\staff\db\Table;
 
 /**
  * @property int $countryId;
+ * @property string $employerId;
+ * @property string $employeeId;
  * @property string $address1;
  * @property string $address2;
  * @property string $address3;
+ * @property string $address4;
+ * @property string $address5;
  * @property string $zipCode;
  */
 

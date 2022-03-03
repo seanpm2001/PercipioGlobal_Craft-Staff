@@ -38,6 +38,8 @@ class FetchEmployeesListJob extends BaseJob
             $currentEmployee = 0;
             $totalEmployees = count($employees);
 
+            $logger->stdout(" done" . PHP_EOL, $logger::FG_GREEN);
+
             foreach($employees as $employee) {
 
                 $currentEmployee++;
@@ -60,8 +62,6 @@ class FetchEmployeesListJob extends BaseJob
             Craft::error($e->getMessage(), __METHOD__);
 
         }
-
-        $logger->stdout(" done" . PHP_EOL, $logger::FG_GREEN);
 
     }
 }

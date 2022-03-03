@@ -130,6 +130,7 @@ class Staff extends Plugin
         $this->_registerGqlSchemaComponents();
 
         $this->_registerGqlQueries();
+        $this->_registerElementTypes();
         $this->_registerControllers();
 
         // Do something after we're installed
@@ -295,6 +296,22 @@ class Staff extends Plugin
                     PayRunQueries::getQueries(),
                     PayRunEntryQueries::getQueries(),
                 );
+            }
+        );
+    }
+
+    private function _registerElementTypes()
+    {
+        // Register our elements
+        Event::on(
+            Elements::class,
+            Elements::EVENT_REGISTER_ELEMENT_TYPES,
+            function (RegisterComponentTypesEvent $event) {
+                $event->types[] = EmployerElement::class;
+                $event->types[] = EmployeeElement::class;
+                $event->types[] = PayRunElement::class;
+                $event->types[] = PayRunEntryElement::class;
+                $event->types[] = HardingUserElement::class;
             }
         );
     }

@@ -98,6 +98,7 @@ class PayRun extends Component
         //temporarly
         $queue = Craft::$app->getQueue();
         $queue->push(new CreatePayRunEntryJob([
+            'description' => 'Fetch pay run entry',
             'criteria' => [
                 'payRunEntries' => $payRun['entries'],
                 'employer' => $employer,
@@ -153,6 +154,7 @@ class PayRun extends Component
     {
         $queue = Craft::$app->getQueue();
         $queue->push(new FetchPaySlipJob([
+            'description' => 'Fetch Pay Slips',
             'criteria' => [
                 'employer' => $employer,
                 'payPeriod' => $payRunEntry['payPeriod'] ?? null,
@@ -165,7 +167,9 @@ class PayRun extends Component
 
     public function savePaySlip(array $paySlip, array $payRunEntry, array $employer)
     {
-        $logger->stdout("✓ Save pay slip of " . $this->criteria['payRunEntry']['personalDetails']['firstName'] . " " . $this->criteria['payRunEntry']['personalDetails']['lastName'] . '...', $logger::RESET);
+        $logger = new Logger();
+
+        $logger->stdout("✓ Save pay slip...", $logger::RESET);
         $logger->stdout(" done" . PHP_EOL, $logger::FG_GREEN);
 
 //        if($payslip->content) {
@@ -184,7 +188,7 @@ class PayRun extends Component
     public function savePayRunLog(array $payRun, string $url, string $payRunId)
     {
         $logger = new Logger();
-        $logger->stdout("✓ Save pay run log " .$employeeName . '...', $logger::RESET);
+        $logger->stdout('✓ Save pay run log ...', $logger::RESET);
         $logger->stdout(" done" . PHP_EOL, $logger::FG_GREEN);
 //        $payRunLog = new PayRunLogRecord();
 //
