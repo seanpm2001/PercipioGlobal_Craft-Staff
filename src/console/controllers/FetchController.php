@@ -21,10 +21,10 @@ class FetchController extends Controller
         //Fetch a list of all employers from Staffology
         $employers = Staff::$plugin->employers->fetchEmployerList();
 
-        //Fetch all the standalone calls needed for Employer / Employee / Pay Run
-        $this->stdout("" . PHP_EOL, Console::RESET);
-        Staff::$plugin->payRun->fetchPayCodesList($employers);
-        Staff::$plugin->pensions->fetchPensionSchemes($employers);
+        //Fetch all the standalone calls needed before fetching Employer / Employee / Pay Run
+//        $this->stdout("" . PHP_EOL, Console::RESET);
+//        Staff::$plugin->payRun->fetchPayCodesList($employers);
+//        Staff::$plugin->pensions->fetchPensionSchemes($employers);
 
         // Fetch Employer / Employee
         $this->stdout("" . PHP_EOL, Console::RESET);
