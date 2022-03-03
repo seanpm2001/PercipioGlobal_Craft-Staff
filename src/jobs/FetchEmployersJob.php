@@ -44,11 +44,7 @@ class FetchEmployersJob extends BaseJob
 
                 Staff::$plugin->employers->saveEmployer($result);
 
-                Staff::$plugin->employees->fetchEmployeesByEmployer($employer, [
-                    "label" => $progress,
-                    "current" => $currentEmployer,
-                    "total" => $totalEmployers
-                ]);
+                Staff::$plugin->employees->fetchEmployeesByEmployer($employer);
 
             } catch (\Exception $e) {
 

@@ -66,28 +66,17 @@ class PayRun extends Component
         ]));
     }
 
-    public function savePayCode(array $payCode, string $progress = "")
+    public function savePayCode(array $payCode)
     {
         $logger = new Logger();
-        $logger->stdout($progress."✓ Save pension ...", $logger::RESET);
+        $logger->stdout("✓ Save pay code " . $payCode['code'] . "...", $logger::RESET);
         $logger->stdout(" done" . PHP_EOL, $logger::FG_GREEN);
     }
 
-    public function fetchPayRunSchedule(array $employer)
+    public function fetchPayRun(array $employer)
     {
         $payRuns = $employer['metadata']['payruns'] ?? [];
-        $this->fetchPayRun($payRuns, $employer);
-//        $queue = Craft::$app->getQueue();
-//        $queue->push(new FetchPaySchedulesJob([
-//            'description' => 'Fetch pay schedules',
-//            'criteria' => [
-//                'employer' => $employer,
-//            ]
-//        ]));
-    }
 
-    public function fetchPayRun(array $payRuns, array $employer)
-    {
         $queue = Craft::$app->getQueue();
         $queue->push(new CreatePayRunJob([
             'description' => 'Fetch pay runs',
@@ -98,10 +87,10 @@ class PayRun extends Component
         ]));
     }
 
-    public function savePayRun(array $payRun, string $payRunUrl, array $employer, string $progress): void
+    public function savePayRun(array $payRun, string $payRunUrl, array $employer): void
     {
         $logger = new Logger();
-        $logger->stdout($progress."✓ Save pay run of " .$employer['name'] . ' ' . $payRun['taxYear'] .  ' / ' . $payRun['taxMonth'] . '...', $logger::RESET);
+        $logger->stdout("✓ Save pay run of " .$employer['name'] . ' ' . $payRun['taxYear'] .  ' / ' . $payRun['taxMonth'] . '...', $logger::RESET);
         $logger->stdout(" done" . PHP_EOL, $logger::FG_GREEN);
 
 //        $payRunRecord = PayRunRecord::findOne(['url' => $url]);
@@ -195,7 +184,7 @@ class PayRun extends Component
     public function savePayRunLog(array $payRun, string $url, string $payRunId)
     {
         $logger = new Logger();
-        $logger->stdout($progress."✓ Save pay run log " .$employeeName . '...', $logger::RESET);
+        $logger->stdout("✓ Save pay run log " .$employeeName . '...', $logger::RESET);
         $logger->stdout(" done" . PHP_EOL, $logger::FG_GREEN);
 //        $payRunLog = new PayRunLogRecord();
 //
@@ -210,11 +199,11 @@ class PayRun extends Component
 //        $payRunLog->save(true);
     }
 
-    public function savePayRunEntry(array $payRunEntryData, string $employee, array $employer, string $progress)
+    public function savePayRunEntry(array $payRunEntryData, string $employee, array $employer)
     {
         $logger = new Logger();
 
-        $logger->stdout($progress."✓ Save pay run entry for " . $employee . '...', $logger::RESET);
+        $logger->stdout("✓ Save pay run entry for " . $employee . '...', $logger::RESET);
         $logger->stdout(" done" . PHP_EOL, $logger::FG_GREEN);
 
 //        $payRunEntry = new PayRunEntry();

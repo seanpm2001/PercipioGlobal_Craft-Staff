@@ -20,13 +20,10 @@ use percipiolondon\staff\db\Table;
 * @property string $slug;
 *
 * @property int $addressId;
-* @property int $hmrcDetailsId;
-* @property int $defaultPayOptionsId;
-* @property int $bankDetailsId;
 *
 * @property string $staffologyId;
 * @property string $name;
-* @property int $logoId;
+* @property string $logoUrl;
 * @property string $crn;
 * @property string $startYear;
 * @property string $currentYear;

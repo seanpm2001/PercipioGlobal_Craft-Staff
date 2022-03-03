@@ -29,7 +29,7 @@ class CreatePensionJob extends BaseJob
 
         $client = new \GuzzleHttp\Client();
 
-        $logger->stdout($this->criteria['progress']."↧ Fetching pension info of " . $this->criteria['employee']['name'] . '...', $logger::RESET);
+        $logger->stdout("↧ Fetching pension info of " . $this->criteria['employee']['name'] . '...', $logger::RESET);
 
         try {
             $logger->stdout(" done" . PHP_EOL, $logger::FG_GREEN);
@@ -37,7 +37,7 @@ class CreatePensionJob extends BaseJob
             $response = $client->get($base_url.'employers/'.$this->criteria['employer'].'/employees/'.$this->criteria['employee']['id'].'/pension', $headers);
             $results = Json::decodeIfJson($response->getBody()->getContents(), true);
 
-            Staff::$plugin->pensions->savePension($results, $this->criteria['progress']);
+            Staff::$plugin->pensions->savePension($results);
 
         } catch (\Exception $e) {
 
