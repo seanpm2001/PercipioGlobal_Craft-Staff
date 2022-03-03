@@ -542,10 +542,6 @@ class Employer extends Element
 
             $success = $record->save(false);
 
-            if($success) {
-                $address->employerId = $this->id;
-            }
-
         } catch (\Exception $e) {
 
             $logger = new Logger();
@@ -564,21 +560,13 @@ class Employer extends Element
             ->where(['name' => $countryName])
             ->one();
 
-        $record = AddressRecord::find()
-            ->where(['employerId' => $this->id])
-            ->one();
-
-        if($record){
-            $address = $record;
-        }
-
         $address->countryId = $country->id ?? null;
-        $address->address1 = $this->address['line1'] ?? null;
-        $address->address2 = $this->address['line2'] ?? null;
-        $address->address3 = $this->address['line3'] ?? null;
-        $address->address4 = $this->address['line4'] ?? null;
-        $address->address5 = $this->address['line5'] ?? null;
-        $address->zipCode = $this->address['postCode'] ?? null;
+        $address->address1 = Craft::$app->getSecurity()->hashData($this->address['line1'] ?? null);
+        $address->address2 = Craft::$app->getSecurity()->hashData($this->address['line2'] ?? null);
+        $address->address3 = Craft::$app->getSecurity()->hashData($this->address['line3'] ?? null);
+        $address->address4 = Craft::$app->getSecurity()->hashData($this->address['line4'] ?? null);
+        $address->address5 = Craft::$app->getSecurity()->hashData($this->address['line5'] ?? null);
+        $address->zipCode = Craft::$app->getSecurity()->hashData($this->address['postCode'] ?? null);
 
         $address->save();
 
