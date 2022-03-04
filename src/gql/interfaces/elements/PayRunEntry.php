@@ -47,7 +47,7 @@ class PayRunEntry extends Element
         $type = GqlEntityRegistry::createEntity(self::getName(), new InterfaceType([
             'name' => static::getName(),
             'fields' => self::class . '::getFieldDefinitions',
-            'description' => 'This is the interface implemented for all payrun entries.',
+            'description' => 'This is the interface implemented for all payruns entries.',
             'resolveType' => self::class . '::resolveElementTypeName',
         ]));
 
@@ -74,12 +74,12 @@ class PayRunEntry extends Element
             'staffologyId' => [
                 'name' => 'staffologyId',
                 'type' => Type::string(),
-                'description' => 'The payrun id from staffology, needed for API calls.'
+                'description' => 'The payruns id from staffology, needed for API calls.'
             ],
             'employerId' => [
                 'name' => 'employerId',
                 'type' => Type::int(),
-                'description' => 'The id of the employer this payrun is for.',
+                'description' => 'The id of the employer this payruns is for.',
             ],
             // TODO CREATE ENUM ??
             'taxYear' => [
@@ -204,7 +204,7 @@ class PayRunEntry extends Element
             'state' => [
                 'name' => 'state',
                 'type' => Type::string(),
-                'description' => 'The state of the payrun. You would set this value when updating a payrun to finalise or re-open it.'
+                'description' => 'The state of the payruns. You would set this value when updating a payruns to finalise or re-open it.'
             ],
             'isClosed' => [
                 'name' => 'isClosed',

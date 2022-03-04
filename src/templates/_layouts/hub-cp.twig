@@ -1,0 +1,15 @@
+{%- extends '_layouts/cp' -%}
+
+{%- block head -%}
+
+    {{- parent() -}}
+
+    {%- set tagOptions = {
+        'depends': [
+            'percipiolondon\\typesense\\assetbundles\\typesense\\TypesenseAsset'
+        ]
+    } -%}
+
+    {{- craft.staff.register('src/js/app.ts', false, tagOptions, tagOptions) -}}
+
+{%- endblock -%}

@@ -108,7 +108,7 @@ class PayRun extends Element
      */
     public static function lowerDisplayName(): string
     {
-        return Craft::t('staff-management', 'payrun');
+        return Craft::t('staff-management', 'payruns');
     }
 
     /**
