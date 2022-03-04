@@ -1,15 +1,15 @@
-import { defineConfig } from 'vite'
+import { defineConfig } from 'vite';
 import vue from '@vitejs/plugin-vue'
-import ViteRestart from 'vite-plugin-restart'
-import viteCompression from 'vite-plugin-compression'
-import manifestSRI from 'vite-plugin-manifest-sri'
-import { visualizer } from 'rollup-plugin-visualizer'
-import eslintPlugin from 'vite-plugin-eslint'
-import { nodeResolve } from '@rollup/plugin-node-resolve'
-import * as path from 'path'
+import ViteRestart from 'vite-plugin-restart';
+import viteCompression from 'vite-plugin-compression';
+import manifestSRI from 'vite-plugin-manifest-sri';
+import { visualizer } from 'rollup-plugin-visualizer';
+import eslintPlugin from 'vite-plugin-eslint';
+import { nodeResolve } from '@rollup/plugin-node-resolve';
+import * as path from 'path';
 
-// https://vitejs.dev/config
-export default defineConfig( ({ command }) => ({
+// https://vitejs.dev/config/
+export default defineConfig(({command}) => ({
   base: command === 'serve' ? '' : '/dist/',
   build: {
     emptyOutDir: true,
@@ -17,24 +17,24 @@ export default defineConfig( ({ command }) => ({
     outDir: '../src/web/assets/dist',
     rollupOptions: {
       input: {
-        app: 'src/js/app.ts',
-        csv: 'src/js/csv.ts',
+        payrun: 'src/js/payrun.ts',
+        staff: 'src/js/staff.ts',
       },
       output: {
         sourcemap: true
-      }
+      },
     }
   },
   plugins: [
     nodeResolve({
       moduleDirectories: [
         path.resolve('./node_modules'),
-      ]
+      ],
     }),
     ViteRestart({
       reload: [
         './src/templates/**/*',
-      ]
+      ],
     }),
     vue(),
     viteCompression({
@@ -42,13 +42,13 @@ export default defineConfig( ({ command }) => ({
     }),
     manifestSRI(),
     visualizer({
-      filename: '../src/web/assets/dist/stats/html',
+      filename: '../src/web/assets/dist/stats.html',
       template: 'treemap',
       sourcemap: true,
     }),
     eslintPlugin({
       cache: false,
-    })
+    }),
   ],
   publicDir: '../src/web/assets/public',
   resolve: {
@@ -60,11 +60,11 @@ export default defineConfig( ({ command }) => ({
   },
   server: {
     fs: {
-      strict: false,
+      strict: false
     },
     host: '0.0.0.0',
-    origin: 'http://localhost:3050',
+    origin: 'http://localhost:3050/',
     port: 3050,
     strictPort: true,
   }
-}))
+}));
