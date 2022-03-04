@@ -14,7 +14,7 @@ use craft\elements\Entry;
 use craft\helpers\UrlHelper;
 use craft\web\Controller;
 
-use yii\base\NotFoundHttpException;
+use yii\web\NotFoundHttpException;
 use yii\web\Response;
 
 use percipiolondon\staff\Staff;
@@ -63,7 +63,7 @@ class SettingsController extends Controller
         $variables = [];
 
         $pluginName = Staff::$settings->pluginName;
-        $templateTitle = Craft::t('staff-management', 'Payruns');
+        $templateTitle = Craft::t('staff-management', 'Pay Runs');
 
         $variables['controllerHandle'] = 'payruns';
         $variables['pluginName'] = Staff::$settings->pluginName;
@@ -117,12 +117,15 @@ class SettingsController extends Controller
     public function actionSavePluginSettings() {
         $this->requirePostRequest();
         $pluginHandle = Craft::$app->getRequest()->getRequiredBodyParam('pluginHandle');
-        $settings = Craft::$app->getRequest()->getBodyParam('settings', []);
         $plugin = Craft::$app->getPlugins()->getPlugin($pluginHandle);
 
         if ( $plugin === null ) {
-            throw new NotFoundHttpException('Plugin not found');
+            throw new NotFoundHttpExceptio('Plugin not found');
         }
+
+        $settings = [
+            'apiKeyStaffology' => Craft::$app->getRequest()->getBodyParam('apiKeyStaffology')
+        ];
 
         if (!Craft::$app->getPlugins()->savePluginSettings($plugin, $settings)) {
             Craft::$app->getSession()->setError(Craft::t('app', "Couldn't save plugin settings."));
