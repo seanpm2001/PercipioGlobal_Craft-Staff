@@ -10,6 +10,8 @@
 
 namespace percipiolondon\staff\elements;
 
+use percipiolondon\staff\helpers\Logger;
+use percipiolondon\staff\records\Countries;
 use percipiolondon\staff\Staff;
 
 use Craft;
@@ -18,8 +20,10 @@ use craft\elements\db\ElementQuery;
 use craft\elements\db\ElementQueryInterface;
 use percipiolondon\staff\elements\db\EmployerQuery;
 use yii\base\InvalidConfigException;
+use yii\db\Exception;
 use yii\db\Query;
 use percipiolondon\staff\records\Employer as EmployerRecord;
+use percipiolondon\staff\records\Address as AddressRecord;
 
 /**
  * Employer Element
@@ -74,14 +78,12 @@ class Employer extends Element
     public $siteId;
     public $staffologyId;
     public $name;
-    public $logoId;
+    public $logoUrl;
     public $crn;
     public $address;
-    public $hmrcDetails;
     public $startYear;
     public $currentYear;
     public $employeeCount;
-    public $defaultPayOptions;
 
     // Static Methods
     // =========================================================================
@@ -410,6 +412,7 @@ class Employer extends Element
      */
     public function afterSave(bool $isNew)
     {
+
         if (!$this->propagating) {
 
             $this->_saveRecord($isNew);
@@ -513,6 +516,7 @@ class Employer extends Element
             if (!$isNew) {
 
                 $record = EmployerRecord::findOne($this->id);
+                $address = AddressRecord::findOne($this->id);
 
                 if (!$record) {
                     throw new Exception('Invalid employer ID: ' . $this->id);
@@ -521,29 +525,51 @@ class Employer extends Element
             } else {
                 $record = new EmployerRecord();
                 $record->id = (int)$this->id;
+
+                $address = new AddressRecord();
             }
 
+            $address = $this->_saveAddress($address);
+
             $record->slug = strtolower(trim(preg_replace('/[^A-Za-z0-9-]+/', '-', $this->name), '-'));
-            $record->siteId = $this->siteId;
             $record->staffologyId = $this->staffologyId;
-            $record->name = $this->name;
+            $record->name = Craft::$app->getSecurity()->hashData($this->name);
             $record->crn = $this->crn;
-            $record->address = $this->address;
-            $record->hmrcDetails = $this->hmrcDetails;
+            $record->addressId = $address->id ?? null;
             $record->startYear = $this->startYear;
             $record->currentYear = $this->currentYear;
             $record->employeeCount = $this->employeeCount;
-            $record->defaultPayOptions = $this->defaultPayOptions;
 
             $success = $record->save(false);
 
         } catch (\Exception $e) {
 
-            echo "---- error -----\n";
-            var_dump($e->getMessage());
+            $logger = new Logger();
+            $logger->stdout(PHP_EOL, $logger::RESET);
+            $logger->stdout($e->getMessage() . PHP_EOL, $logger::FG_RED);
             Craft::error($e->getMessage(), __METHOD__);
-            echo "\n---- end error ----";
         }
 
+    }
+
+    private function _saveAddress(AddressRecord $address): AddressRecord {
+
+        $countryName = $this->address['country'] ?? 'England';
+
+        $country = Countries::find()
+            ->where(['name' => $countryName])
+            ->one();
+
+        $address->countryId = $country->id ?? null;
+        $address->address1 = Craft::$app->getSecurity()->hashData($this->address['line1'] ?? null);
+        $address->address2 = Craft::$app->getSecurity()->hashData($this->address['line2'] ?? null);
+        $address->address3 = Craft::$app->getSecurity()->hashData($this->address['line3'] ?? null);
+        $address->address4 = Craft::$app->getSecurity()->hashData($this->address['line4'] ?? null);
+        $address->address5 = Craft::$app->getSecurity()->hashData($this->address['line5'] ?? null);
+        $address->zipCode = Craft::$app->getSecurity()->hashData($this->address['postCode'] ?? null);
+
+        $address->save();
+
+        return $address;
     }
 }

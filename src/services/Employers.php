@@ -12,6 +12,7 @@ namespace percipiolondon\staff\services;
 
 use craft\helpers\App;
 use percipiolondon\staff\console\controllers\FetchController;
+use percipiolondon\staff\elements\Employee;
 use percipiolondon\staff\helpers\Logger;
 use percipiolondon\staff\Staff;
 use percipiolondon\staff\records\Employer as EmployerRecord;
@@ -109,29 +110,37 @@ class Employers extends Component
 
     public function saveEmployer(array $employer){
         $logger = new Logger();
-        $logger->stdout(" done" . PHP_EOL, $logger::FG_GREEN);
-//        $employerRecord = EmployerRecord::findOne(['staffologyId' => $employer->id]);
-//
-//        if (!$employerRecord) {
-//
-//            $employerRecord = new Employer();
-//
-//            $employerRecord->slug = strtolower(trim(preg_replace('/[^A-Za-z0-9-]+/', '-', $employer->name), '-'));
-//            $employerRecord->siteId = Craft::$app->getSites()->currentSite->id;
-//            $employerRecord->staffologyId = $employer->id;
-//            $employerRecord->name = $employer->name ?? null;
-//            //TODO: logo --> AssetHelper::fetchRemoteImage($employer->logoUrl)
-//            $employerRecord->crn = $employer->crn ?? null;
-//            $employerRecord->address = Json::encode($employer->address);
-//            $employerRecord->hmrcDetails = Json::encode($employer->hmrcDetails);
-//            $employerRecord->startYear = $employer->startYear ?? null;
-//            $employerRecord->currentYear = $employer->currentYear ?? null;
-//            $employerRecord->employeeCount = $employer->employeeCount ?? 0;
-//            $employerRecord->defaultPayOptions = Json::encode($employer->defaultPayOptions);
-//
-//            $elementsService = Craft::$app->getElements();
-//            $elementsService->saveElement($employerRecord);
-//        }
+
+        $employerRecord = EmployerRecord::findOne(['staffologyId' => $employer['id']]);
+
+        if (!$employerRecord) {
+
+            $logger->stdout("✓ Save employer " . $employer['name'] ?? null . '...', $logger::RESET);
+
+            $emp = new Employer();
+
+            $emp->siteId = Craft::$app->getSites()->currentSite->id;
+            $emp->staffologyId = $employer['id'];
+            $emp->name = $employer['name'] ?? null;
+            $emp->title = $employer['name'] ?? null;
+            $emp->logoUrl = $employer['logoUrl'] ?? null;
+            $emp->crn = $employer['crn'] ?? null;
+            $emp->address = $employer['address'] ?? null;
+            $emp->startYear = $employer['startYear'] ?? null;
+            $emp->currentYear = $employer['currentYear'] ?? null;
+            $emp->employeeCount = $employer['employeeCount'] ?? null;
+
+            $elementsService = Craft::$app->getElements();
+            $success = $elementsService->saveElement($emp);
+
+            if($success){
+                $logger->stdout(" done" . PHP_EOL, $logger::FG_GREEN);
+            }else{
+                $logger->stdout(" failed" . PHP_EOL, $logger::FG_RED);
+            }
+        }
+
+
     }
 
 }

@@ -45,7 +45,7 @@ class CreatePayCodeJob extends BaseJob
 
                 $logger->stdout(" done" . PHP_EOL, $logger::FG_GREEN);
 
-                Staff::$plugin->payRun->savePayCode($result, $progress);
+                Staff::$plugin->payRun->savePayCode($result);
 
             } catch (\Exception $e) {
 

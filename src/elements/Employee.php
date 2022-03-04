@@ -11,6 +11,7 @@
 namespace percipiolondon\staff\elements;
 
 use craft\db\Query;
+use percipiolondon\staff\helpers\Logger;
 use percipiolondon\staff\Staff;
 
 use Craft;
@@ -530,10 +531,10 @@ class Employee extends Element
 
         } catch (\Exception $e) {
 
-            echo "---- error -----\n";
-            var_dump($e->getMessage());
+            $logger = new Logger();
+            $logger->stdout(PHP_EOL, $logger::RESET);
+            $logger->stdout($e->getMessage() . PHP_EOL, $logger::FG_RED);
             Craft::error($e->getMessage(), __METHOD__);
-            echo "\n---- end error ----";
         }
 
     }

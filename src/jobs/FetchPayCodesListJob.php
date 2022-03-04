@@ -29,9 +29,15 @@ class FetchPayCodesListJob extends BaseJob
 
         $client = new \GuzzleHttp\Client();
 
+        $current = 0;
+        $total = count($this->criteria['employers']);
+
         foreach($this->criteria['employers'] as $employer) {
 
-            $logger->stdout("↧ Fetching pay codes of " . $employer['name'] . '...', $logger::RESET);
+            $current++;
+            $progress = "[".$current."/".$total."] ";
+
+            $logger->stdout($progress."↧ Fetching pay codes of " . $employer['name'] . '...', $logger::RESET);
 
             try {
                 $response = $client->get($base_url.'employers/'.$employer['id'].'/paycodes', $headers);
@@ -48,6 +54,7 @@ class FetchPayCodesListJob extends BaseJob
 
             }
 
+            $this->setProgress($queue, $current / $total);
         }
     }
 }
