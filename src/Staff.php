@@ -19,6 +19,7 @@ use craft\events\RegisterGqlQueriesEvent;
 use craft\events\RegisterGqlTypesEvent;
 use craft\services\Elements;
 use craft\services\Gql;
+use craft\web\twig\variables\CraftVariable;
 
 use nystudio107\pluginvite\services\VitePluginService;
 
@@ -253,7 +254,7 @@ class Staff extends Plugin
                /** @var CraftVariable $variable */
                $variable = $event->sender;
                $variable->set('staff', [
-                   'class' => ViteVariable::class,
+                   'class' => StaffVariable::class,
                    'viteService' => $this->vite,
                ]);
             }
