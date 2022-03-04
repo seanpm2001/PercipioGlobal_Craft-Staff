@@ -13,6 +13,7 @@ namespace percipiolondon\staff\elements;
 use percipiolondon\staff\helpers\Logger;
 use percipiolondon\staff\records\Countries;
 use percipiolondon\staff\Staff;
+use percipiolondon\staff\helpers\Security as SecurityHelper;
 
 use Craft;
 use craft\base\Element;
@@ -531,10 +532,10 @@ class Employer extends Element
 
             $address = $this->_saveAddress($address);
 
-            $record->slug = strtolower(trim(preg_replace('/[^A-Za-z0-9-]+/', '-', $this->name), '-'));
+            $record->slug = SecurityHelper::encrypt((strtolower(trim(preg_replace('/[^A-Za-z0-9-]+/', '-', $this->name ?? ''), '-'))));
             $record->staffologyId = $this->staffologyId;
-            $record->name = Craft::$app->getSecurity()->hashData($this->name);
-            $record->crn = $this->crn;
+            $record->name = SecurityHelper::encrypt($this->name ?? '');
+            $record->crn = SecurityHelper::encrypt($this->crn ?? '');
             $record->addressId = $address->id ?? null;
             $record->startYear = $this->startYear;
             $record->currentYear = $this->currentYear;
@@ -561,12 +562,12 @@ class Employer extends Element
             ->one();
 
         $address->countryId = $country->id ?? null;
-        $address->address1 = Craft::$app->getSecurity()->hashData($this->address['line1'] ?? null);
-        $address->address2 = Craft::$app->getSecurity()->hashData($this->address['line2'] ?? null);
-        $address->address3 = Craft::$app->getSecurity()->hashData($this->address['line3'] ?? null);
-        $address->address4 = Craft::$app->getSecurity()->hashData($this->address['line4'] ?? null);
-        $address->address5 = Craft::$app->getSecurity()->hashData($this->address['line5'] ?? null);
-        $address->zipCode = Craft::$app->getSecurity()->hashData($this->address['postCode'] ?? null);
+        $address->address1 = SecurityHelper::encrypt($this->address['line1'] ?? '');
+        $address->address2 = SecurityHelper::encrypt($this->address['line2'] ?? '');
+        $address->address3 = SecurityHelper::encrypt($this->address['line3'] ?? '');
+        $address->address4 = SecurityHelper::encrypt($this->address['line4'] ?? '');
+        $address->address5 = SecurityHelper::encrypt($this->address['line5'] ?? '');
+        $address->zipCode = SecurityHelper::encrypt($this->address['postCode'] ?? '');
 
         $address->save();
 
