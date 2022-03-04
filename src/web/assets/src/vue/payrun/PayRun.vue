@@ -1,4 +1,9 @@
 <script setup lang="ts">
+  import { defaultClient } from '~/js/composables/useApolloClient'
+  import { DefaultApolloClient } from '@vue/apollo-composable'
+  import { provide } from 'vue'
+
+  provide(DefaultApolloClient, apolloClient)
 
 </script>
 
