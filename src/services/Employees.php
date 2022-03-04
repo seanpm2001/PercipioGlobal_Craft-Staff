@@ -38,35 +38,33 @@ class Employees extends Component
 {
     // Public Methods
     // =========================================================================
-    public function fetchEmployeesByEmployer(array $employer, array $progress = [])
+    public function fetchEmployeesByEmployer(array $employer)
     {
         $queue = Craft::$app->getQueue();
         $queue->push(new FetchEmployeesListJob([
             'description' => 'Fetch the employees',
             'criteria' => [
-                'employer' => $employer,
-                'progress' => $progress
+                'employer' => $employer
             ]
         ]));
 
     }
 
-    public function fetchEmployee(array $employee, string $progress = "")
+    public function fetchEmployee(array $employee)
     {
         $queue = Craft::$app->getQueue();
         $queue->push(new CreateEmployeeJob([
             'description' => 'Save employees',
             'criteria' => [
-                'employee' => $employee,
-                'progress' => $progress
+                'employee' => $employee
             ]
         ]));
     }
 
-    public function saveEmployee(array $employee, string $employeeName, string $progress = "")
+    public function saveEmployee(array $employee, string $employeeName)
     {
         $logger = new Logger();
-        $logger->stdout($progress."✓ Save employee " .$employeeName . '...', $logger::RESET);
+        $logger->stdout("✓ Save employee " .$employeeName . '...', $logger::RESET);
         $logger->stdout(" done" . PHP_EOL, $logger::FG_GREEN);
 
         //@TODO save

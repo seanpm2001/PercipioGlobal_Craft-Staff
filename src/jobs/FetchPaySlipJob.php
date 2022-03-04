@@ -28,23 +28,26 @@ class FetchPaySlipJob extends Basejob
         $headers = [
             'headers' => [
                 'Authorization' => 'Basic ' . $credentials,
+                'Accept' => 'application/pdf'
             ],
         ];
         $client = new \GuzzleHttp\Client();
 
-        try {
-            $employer = EmployerRecord::findOne(['id' => $this->criteria['employer']['id']]);
-            $empoyerId = $this->criteria['employer']['id'] ?? null;
+        $logger->stdout('↧ Fetching pay slip...', $logger::RESET);
 
-            $base_url = "https://api.staffology.co.uk/employers/{$empoyerId}/reports/{$this->criteria['taxYear']}/{$this->criteria['payPeriod']}/{$this->criteria['periodNumber']}/{$this->criteria['payRunEntry']['staffologyId']}/payslip";
+        try {
+            $base_url = "https://api.staffology.co.uk/employers/{$this->criteria['employer']['id']}/reports/{$this->criteria['payRunEntry']['taxYear']}/{$this->criteria['payRunEntry']['payPeriod']}/{$this->criteria['payRunEntry']['period']}/{$this->criteria['payRunEntry']['id']}/payslip";
+            // /employers/{employerId}/reports/{taxYear}/{payPeriod}/{periodNumber}/{id}/payslip
             $response = $client->get($base_url, $headers);
 
-            $payslip = $response->getBody()->getContents();
+            $paySlip = $response->getBody()->getContents();
 
-            if( $payslip ) {
-                $payslip = Json::decodeIfJson($payslip, $this->criteria['payRunEntry'], true);
+            $logger->stdout(" done" . PHP_EOL, $logger::FG_GREEN);
 
-                Staff::$plugin->payRun->savePaySlip($payslip, $this->criteria['employer']);
+            if( $paySlip ) {
+                $paySlip = Json::decodeIfJson($paySlip, true);
+
+                Staff::$plugin->payRun->savePaySlip($paySlip, $this->criteria['payRunEntry'], $this->criteria['employer']);
             }
 
 //            $payslips = $response->getBody()->getContents();

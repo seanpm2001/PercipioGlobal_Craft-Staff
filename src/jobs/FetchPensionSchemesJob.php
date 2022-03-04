@@ -44,7 +44,7 @@ class FetchPensionSchemesJob extends BaseJob
             $results = Json::decodeIfJson($response->getBody()->getContents(), true);
 
             //@TODO: save
-            Staff::$plugin->pensions->savePensionScheme($results, $progress);
+            Staff::$plugin->pensions->savePensionScheme($results);
 
             $this->setProgress($queue, $currentPensionScheme / $totalPensionScheme);
         }

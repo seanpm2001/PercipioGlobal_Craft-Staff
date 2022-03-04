@@ -16,8 +16,12 @@ use percipiolondon\staff\Staff;
 use percipiolondon\staff\helpers\Logger;
 use percipiolondon\staff\jobs\FetchPayCodesListJob;
 use percipiolondon\staff\jobs\FetchPaySchedulesJob;
+use percipiolondon\staff\jobs\FetchPaySlipJob;
 use percipiolondon\staff\jobs\CreatePayCodeJob;
 use percipiolondon\staff\jobs\CreatePayRunJob;
+use percipiolondon\staff\jobs\CreatePayRunEntryJob;
+
+use percipiolondon\staff\records\PayRun as PayRunRecord;
 
 use Craft;
 use craft\base\Component;
@@ -62,28 +66,17 @@ class PayRun extends Component
         ]));
     }
 
-    public function savePayCode(array $payCode, string $progress = "")
+    public function savePayCode(array $payCode)
     {
         $logger = new Logger();
-        $logger->stdout($progress."✓ Save pension ...", $logger::RESET);
+        $logger->stdout("✓ Save pay code " . $payCode['code'] . "...", $logger::RESET);
         $logger->stdout(" done" . PHP_EOL, $logger::FG_GREEN);
     }
 
-    public function fetchPayRunSchedule(array $employer)
+    public function fetchPayRun(array $employer)
     {
         $payRuns = $employer['metadata']['payruns'] ?? [];
-        $this->fetchPayRun($payRuns, $employer);
-//        $queue = Craft::$app->getQueue();
-//        $queue->push(new FetchPaySchedulesJob([
-//            'description' => 'Fetch pay schedules',
-//            'criteria' => [
-//                'employer' => $employer,
-//            ]
-//        ]));
-    }
 
-    public function fetchPayRun(array $payRuns, array $employer)
-    {
         $queue = Craft::$app->getQueue();
         $queue->push(new CreatePayRunJob([
             'description' => 'Fetch pay runs',
@@ -94,16 +87,18 @@ class PayRun extends Component
         ]));
     }
 
-    public function savePayRun(array $payRun, string $payRunUrl, array $employer, string $progress): void
+    public function savePayRun(array $payRun, string $payRunUrl, array $employer): void
     {
         $logger = new Logger();
-        $logger->stdout($progress."✓ Save pay run of " .$employer['name'] . $payRun['taxYear'] .  ' / ' . $payRun['taxMonth'] . '...' . PHP_EOL, $logger::RESET);
+        $logger->stdout("✓ Save pay run of " .$employer['name'] . ' ' . $payRun['taxYear'] .  ' / ' . $payRun['taxMonth'] . '...', $logger::RESET);
         $logger->stdout(" done" . PHP_EOL, $logger::FG_GREEN);
 
-        $payRunRecord = PayRunRecord::findOne(['url' => $url]);
+//        $payRunRecord = PayRunRecord::findOne(['url' => $url]);
 
         //temporarly
-        Queue::push(new CreatePayRunEntryJob([
+        $queue = Craft::$app->getQueue();
+        $queue->push(new CreatePayRunEntryJob([
+            'description' => 'Fetch pay run entry',
             'criteria' => [
                 'payRunEntries' => $payRun['entries'],
                 'employer' => $employer,
@@ -111,7 +106,7 @@ class PayRun extends Component
         ]));
 
         // CREATE PAYRUN IF NOT EXISTS
-        if(!$payRunRecord) {
+//        if(!$payRunRecord) {
 //            $payRunRecord = new PayRun();
 //
 //            $payRunRecord->siteId = Craft::$app->getSites()->currentSite->id;
@@ -136,28 +131,30 @@ class PayRun extends Component
 //            $elementsService = Craft::$app->getElements();
 //            $success = $elementsService->saveElement($payRunRecord);
 
-            if($success) {
-                Craft::info("Saving pay run entries and log");
-
-                $this->savePayRunLog($payRun, $url, $payRunRecord->id);
-
-                // GET PAYRUNENTRY FROM PAYRUN
-                Queue::push(new CreatePayRunEntryJob([
-                    'criteria' => [
-                        'payRunEntries' => $payRun['entries'],
-                        'payRunId' => $payRunRecord->id,
-                        'employer' => $employer,
-                    ]
-                ]));
-            }else{
-                Craft::error($payRunRecord->errors);
-            }
-        }
+//            if($success) {
+//                Craft::info("Saving pay run entries and log");
+//
+//                $this->savePayRunLog($payRun, $url, $payRunRecord->id);
+//
+//                // GET PAYRUNENTRY FROM PAYRUN
+//                Queue::push(new CreatePayRunEntryJob([
+//                    'criteria' => [
+//                        'payRunEntries' => $payRun['entries'],
+//                        'payRunId' => $payRunRecord->id,
+//                        'employer' => $employer,
+//                    ]
+//                ]));
+//            }else{
+//                Craft::error($payRunRecord->errors);
+//            }
+//        }
     }
 
     public function fetchPaySlip(array $payRunEntry, array $employer)
     {
-        Queue::push(new FetchPaySlipJob([
+        $queue = Craft::$app->getQueue();
+        $queue->push(new FetchPaySlipJob([
+            'description' => 'Fetch Pay Slips',
             'criteria' => [
                 'employer' => $employer,
                 'payPeriod' => $payRunEntry['payPeriod'] ?? null,
@@ -170,23 +167,28 @@ class PayRun extends Component
 
     public function savePaySlip(array $paySlip, array $payRunEntry, array $employer)
     {
-        if($payslip->content) {
-            $this->criteria['payRunEntry']['pdf'] = $paySlip['content'] ?? null;
+        $logger = new Logger();
 
-            $success = $payRunEntry->save(false);
+        $logger->stdout("✓ Save pay slip...", $logger::RESET);
+        $logger->stdout(" done" . PHP_EOL, $logger::FG_GREEN);
 
-            if(!$success){
-                $logger->stdout(PHP_EOL, $logger::RESET);
-                $logger->stdout("The payslip couldn't be created" . PHP_EOL, $logger::FG_RED);
-                Craft::error("The payslip couldn't be created", __METHOD__);
-            }
-        }
+//        if($payslip->content) {
+//            $this->criteria['payRunEntry']['pdf'] = $paySlip['content'] ?? null;
+//
+//            $success = $payRunEntry->save(false);
+//
+//            if(!$success){
+//                $logger->stdout(PHP_EOL, $logger::RESET);
+//                $logger->stdout("The payslip couldn't be created" . PHP_EOL, $logger::FG_RED);
+//                Craft::error("The payslip couldn't be created", __METHOD__);
+//            }
+//        }
     }
 
     public function savePayRunLog(array $payRun, string $url, string $payRunId)
     {
         $logger = new Logger();
-        $logger->stdout($progress."✓ Save pay run log " .$employeeName . '...', $logger::RESET);
+        $logger->stdout('✓ Save pay run log ...', $logger::RESET);
         $logger->stdout(" done" . PHP_EOL, $logger::FG_GREEN);
 //        $payRunLog = new PayRunLogRecord();
 //
@@ -201,10 +203,11 @@ class PayRun extends Component
 //        $payRunLog->save(true);
     }
 
-    public function savePayRunEntry(array $payRunEntryData, array $employer)
+    public function savePayRunEntry(array $payRunEntryData, string $employee, array $employer)
     {
         $logger = new Logger();
-        $logger->stdout($progress."✓ Save pay run entry " . $payRunEntryData['taxYear'] . ' / ' . $payRunEntryData['taxYear'] . '...', $logger::RESET);
+
+        $logger->stdout("✓ Save pay run entry for " . $employee . '...', $logger::RESET);
         $logger->stdout(" done" . PHP_EOL, $logger::FG_GREEN);
 
 //        $payRunEntry = new PayRunEntry();

@@ -47,11 +47,14 @@ class CreatePayRunJob extends BaseJob
                 // SET PAYRUN IF IT HASN'T ALREADY BEEN FETCHED IN PAYRUNLOG
                 if(!$payRunLog) {
 
-                    $logger->stdout($progress."↧ Fetching pay run info of " . $payRun['metadata']['taxYear'] . ' / ' . $payRun['metadata']['taxYear'] . '...', $logger::RESET);
+                    $logger->stdout($progress."↧ Fetching pay run info of " . $payRun['metadata']['taxYear'] . ' / ' . $payRun['name'] . '...', $logger::RESET);
 
                     $response =  $client->get("https://api.staffology.co.uk/" . $payRun['url'], $headers);
                     $payRunData = json_decode($response->getBody()->getContents(), true);
-                    Staff::getInstance()->payRun->savePayRun($payRunData, $payRun['url'], $this->criteria['employer'], $progress);
+
+                    $logger->stdout(" done" . PHP_EOL, $logger::FG_GREEN);
+
+                    Staff::getInstance()->payRun->savePayRun($payRunData, $payRun['url'], $this->criteria['employer']);
 //                            $this->_savePayRun($payRunData, $payRun['url']);
                 }
 

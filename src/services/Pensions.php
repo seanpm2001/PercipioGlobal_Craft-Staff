@@ -10,23 +10,22 @@ use Craft;
 
 class Pensions extends Component
 {
-    public function fetchPension(array $employee, string $employer, string $progress = "")
+    public function fetchPension(array $employee, string $employer)
     {
         $queue = Craft::$app->getQueue();
         $queue->push(new CreatePensionJob([
             'description' => 'Fetch pension schemes',
             'criteria' => [
                 'employee' => $employee,
-                'employer' => $employer,
-                'progress' => $progress,
+                'employer' => $employer
             ]
         ]));
     }
 
-    public function savePension(array $pension, string $progress = "")
+    public function savePension(array $pension)
     {
         $logger = new Logger();
-        $logger->stdout($progress."✓ Save pension ...", $logger::RESET);
+        $logger->stdout("✓ Save pension ...", $logger::RESET);
         $logger->stdout(" done" . PHP_EOL, $logger::FG_GREEN);
     }
 
@@ -41,10 +40,10 @@ class Pensions extends Component
         ]));
     }
 
-    public function savePensionScheme(array $pensionScheme, string $progress = "")
+    public function savePensionScheme(array $pensionScheme)
     {
         $logger = new Logger();
-        $logger->stdout($progress."✓ Save pension scheme ...", $logger::RESET);
+        $logger->stdout("✓ Save pension scheme ...", $logger::RESET);
         $logger->stdout(" done" . PHP_EOL, $logger::FG_GREEN);
     }
 }

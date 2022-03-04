@@ -29,40 +29,40 @@ class CreatePayRunEntryJob extends Basejob
         ];
         $client = new \GuzzleHttp\Client();
 
-        try {
+        $current = 0;
+        $total = count($this->criteria['payRunEntries']);
 
-            $current = 0;
-            $total = count($this->criteria['payRunEntries']);
+        foreach($this->criteria['payRunEntries'] as $payRunEntryData) {
 
-            foreach($this->criteria['payRunEntries'] as $payRunEntryData) {
+            $current++;
+            $progress = "[".$current."/".$total."] ";
 
-                $current++;
-                $progress = "[".$current."/".$total."] ";
+            $logger->stdout($progress."↧ Fetching pay run entry of " . $payRunEntryData['name'] . '...', $logger::RESET);
 
-                $logger->stdout($progress."↧ Fetching pay run entry of " . $payRunEntryData['taxYear'] . ' / ' . $payRunEntryData['taxYear'] . '...', $logger::RESET);
+            $payRunEntry = PayRunEntryRecord::findOne(['staffologyId' => $payRunEntryData['id']]);
 
-                $payRunEntry = PayRunEntryRecord::findOne(['staffologyId' => $payRunEntryData['id']]);
+            // SET PAY RUN ENTRY IF IT DOESN'T EXIST
+            if (!$payRunEntry) {
 
-                // SET PAY RUN ENTRY IF IT DOESN'T EXIST
-                if (!$payRunEntry) {
+                $logger->stdout(" done" . PHP_EOL, $logger::FG_GREEN);
 
-                    $logger->stdout(" done" . PHP_EOL, $logger::FG_GREEN);
+                $base_url = "https://api.staffology.co.uk/" . $payRunEntryData['url'];
 
-                    $base_url = "https://api.staffology.co.uk/" . $payRunEntryData['url'];
-                    $response = $client->get($base_url, $this->headers);
-                    $payRunEntryData = json_decode($response->getBody()->getContents(), true);
+                try {
+                    $response = $client->get($base_url, $headers);
+                    $result = json_decode($response->getBody()->getContents(), true);
 
-                    Staff::getInstance()->payRun->savePayRunEntry($payRunEntryData, $this->criteria['employer']);
-                    Staff::getInstance()->payRun->fetchPaySlip($payRunEntryData, $this->criteria['employer']);
+                    Staff::getInstance()->payRun->savePayRunEntry($result, $payRunEntryData['name'], $this->criteria['employer']);
+                    Staff::getInstance()->payRun->fetchPaySlip($result, $this->criteria['employer']);
 //                    $this->_savePayRunEntry($payRunEntryData);
+                } catch (\Exception $e) {
+
+                    $logger->stdout(PHP_EOL, $logger::RESET);
+                    $logger->stdout($e->getMessage() . PHP_EOL, $logger::FG_RED);
+                    Craft::error($e->getMessage(), __METHOD__);
+
                 }
             }
-        } catch (\Exception $e) {
-
-            $logger->stdout(PHP_EOL, $logger::RESET);
-            $logger->stdout($e->getMessage() . PHP_EOL, $logger::FG_RED);
-            Craft::error($e->getMessage(), __METHOD__);
-
         }
     }
 

@@ -333,13 +333,13 @@ class Install extends Migration
                 'uid' => $this->uid(),
                 //FK
                 //intern
-                'employeeId' => $this->integer(), // create FK to Employee [id]
-                'employerId' => $this->integer(), // create FK to Employer [id]
                 'countryId' => $this->integer(), // create FK to Countries [id]
                 //fields
                 'address1' => $this->string(),
                 'address2' => $this->string(),
                 'address3' => $this->string(),
+                'address4' => $this->string(),
+                'address5' => $this->string(),
                 'zipCode' => $this->string(),
             ]);
 
@@ -1442,8 +1442,6 @@ class Install extends Migration
         $this->createIndex(null, Table::HISTORY, "administerId", false);
 
         /** LEVEL 1+ TABLES **/
-        $this->createIndex(null, Table::ADDRESSES, "employeeId", false);
-        $this->createIndex(null, Table::ADDRESSES, "employerId", true);
         $this->createIndex(null, Table::ADDRESSES, "countryId", false);
 
         $this->createIndex(null, Table::AUTO_ENROLMENT, "employeeId", false);
@@ -1632,8 +1630,6 @@ class Install extends Migration
 
         /** > LEVEL 1 TABLES **/
         //ADDRESSES
-        $this->addForeignKey(null, Table::ADDRESSES, ['employeeId'], Table::EMPLOYEES, ['id'], 'CASCADE', 'CASCADE');
-        $this->addForeignKey(null, Table::ADDRESSES, ['employerId'], Table::EMPLOYERS, ['id'], 'CASCADE', 'CASCADE');
         $this->addForeignKey(null, Table::ADDRESSES, ['countryId'], Table::COUNTRIES, ['id'], 'CASCADE', 'CASCADE');
 
         //AUTO_ENROLMENT
@@ -1649,8 +1645,8 @@ class Install extends Migration
         $this->addForeignKey(null, Table::AUTO_ENROLMENT_SETTINGS, ['defaultPensionId'], Table::PENSION_SELECTION, ['id']);
 
         //BANK_DETAILS
-        $this->addForeignKey(null, Table::ADDRESSES, ['employeeId'], Table::EMPLOYEES, ['id'], 'CASCADE', 'CASCADE');
-        $this->addForeignKey(null, Table::ADDRESSES, ['employerId'], Table::EMPLOYERS, ['id'], 'CASCADE', 'CASCADE');
+        $this->addForeignKey(null, Table::BANK_DETAILS, ['employeeId'], Table::EMPLOYEES, ['id'], 'CASCADE', 'CASCADE');
+        $this->addForeignKey(null, Table::BANK_DETAILS, ['employerId'], Table::EMPLOYERS, ['id'], 'CASCADE', 'CASCADE');
 
         //CIS_DETAILS
         $this->addForeignKey(null, Table::CIS_DETAILS, ['employmentDetailsId'], Table::EMPLOYMENT_DETAILS, ['id']);

@@ -28,7 +28,7 @@ class CreateEmployeeJob extends BaseJob
 
         $client = new \GuzzleHttp\Client();
 
-        $logger->stdout($this->criteria['progress']."↧ Fetch employee info from ".$this->criteria['employee']['name'], $logger::RESET);
+        $logger->stdout("↧ Fetch employee info from ".$this->criteria['employee']['name'], $logger::RESET);
 
         try {
 
@@ -37,7 +37,7 @@ class CreateEmployeeJob extends BaseJob
 
             $logger->stdout(" done" . PHP_EOL, $logger::FG_GREEN);
 
-            Staff::$plugin->employees->saveEmployee($employee, $this->criteria['employee']['name'], $this->criteria['progress']);
+            Staff::$plugin->employees->saveEmployee($employee, $this->criteria['employee']['name']);
 
         } catch (\Exception $e) {
 
