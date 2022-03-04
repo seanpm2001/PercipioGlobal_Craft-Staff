@@ -46,9 +46,6 @@ export default defineConfig(({command}) => ({
       template: 'treemap',
       sourcemap: true,
     }),
-    eslintPlugin({
-      cache: false,
-    }),
   ],
   publicDir: '../src/web/assets/public',
   resolve: {
