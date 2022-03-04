@@ -6,10 +6,10 @@
 
     {%- set tagOptions = {
         'depends': [
-            'percipiolondon\\typesense\\assetbundles\\typesense\\TypesenseAsset'
+            'percipiolondon\\staff\\assetbundles\\staff\\StaffAsset'
         ]
     } -%}
 
-    {{- craft.staff.register('src/js/app.ts', false, tagOptions, tagOptions) -}}
+    {{- craft.staff.register('src/js/staff.ts', false, tagOptions, tagOptions) -}}
 
 {%- endblock -%}

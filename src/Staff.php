@@ -35,7 +35,7 @@ use percipiolondon\staff\services\PayRun as PayRunService;
 use percipiolondon\staff\services\PayRunEntries as PayRunEntriesService;
 use percipiolondon\staff\services\Pensions as PensionsService;
 
-use percipiolondon\staff\assetbundles\staff\StaffCsvAsset;
+use percipiolondon\staff\assetbundles\staff\StaffAsset;
 use percipiolondon\staff\models\Settings;
 use percipiolondon\staff\elements\Employer as EmployerElement;
 use percipiolondon\staff\elements\Employee as EmployeeElement;
@@ -141,11 +141,11 @@ class Staff extends Plugin
             // Register the vite service
             'vite' => [
                 'class' => VitePluginService::class,
-                'assetClass' => StaffCsvAsset::class,
+                'assetClass' => StaffAsset::class,
                 'useDevServer' => true,
                 'devServerPublic' => 'http://localhost:3050',
                 'serverPublic' => 'http://localhost:8001',
-                'errorEntry' => 'src/js/csv.ts',
+                'errorEntry' => 'src/js/payrun.ts',
                 'devServerInternal' => 'http://craft-staff-buildchain:3050',
                 'checkDevServer' => true,
             ]

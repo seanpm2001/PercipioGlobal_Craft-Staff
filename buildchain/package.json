@@ -1,5 +1,4 @@
 {
-  "name": "the-hub-buildchain",
   "description": "Drop-in buildchain for using Vite in The Hub Plugin",
   "author": {
     "email": "support@percipio.london",

@@ -7,7 +7,7 @@ DOCKERRUN=docker container run \
 	--network craft-plugin-playground_default \
 	-p 3050:3050 \
 	-v "${CURDIR}"/../:/app \
-	${CONTAINER}:${TAG}
+    ${CONTAINER}:${TAG}
 
 .PHONY: build dev docker install npm
 
@@ -25,7 +25,10 @@ docker:
 		--no-cache
 install: docker
 	${DOCKERRUN} \
-		install --ignore-scripts
+		install
+clean:
+	rm -rf node_modules/
+	rm -f package-lock.json
 npm: docker
 	${DOCKERRUN} \
 		$(filter-out $@,$(MAKECMDGOALS))
