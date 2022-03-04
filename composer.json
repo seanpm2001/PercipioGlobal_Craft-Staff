@@ -45,8 +45,7 @@
             "employers": "percipiolondon\\staff\\services\\Employers",
             "employees": "percipiolondon\\staff\\services\\Employees",
             "payRun": "percipiolondon\\staff\\services\\PayRun",
-            "payRunEntries": "percipiolondon\\staff\\services\\PayRunEntries",
-            "hardingUsers": "percipiolondon\\staff\\services\\HardingUsers"
+            "pensions": "percipiolondon\\staff\\services\\Pensions"
         },
         "class": "percipiolondon\\staff\\Staff"
     }

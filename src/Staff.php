@@ -20,15 +20,13 @@ use craft\events\RegisterGqlTypesEvent;
 use craft\services\Elements;
 use craft\services\Gql;
 
-use GraphQL\Type\Definition\ObjectType;
-use GraphQL\Type\Definition\Type;
 
-use percipiolondon\staff\elements\db\PayRunEntryQuery;
 use percipiolondon\staff\services\Employers as EmployersService;
 use percipiolondon\staff\services\Employees as EmployeesService;
 use percipiolondon\staff\services\PayRun as PayRunService;
 use percipiolondon\staff\services\PayRunEntries as PayRunEntriesService;
-use percipiolondon\staff\services\HardingUsers as HardingUsersService;
+use percipiolondon\staff\services\Pensions as PensionsService;
+
 use percipiolondon\staff\models\Settings;
 use percipiolondon\staff\elements\Employer as EmployerElement;
 use percipiolondon\staff\elements\Employee as EmployeeElement;
@@ -65,7 +63,7 @@ use yii\base\Event;
  * @property  EmployeesService $employees
  * @property  PayRunService $payRun
  * @property  PayRunEntriesService $payRunEntries
- * @property  HardingUsersService $hardingUsers
+ * @property  PensionsService $pensions
  * @property  Settings $settings
  * @method    Settings getSettings()
  */
