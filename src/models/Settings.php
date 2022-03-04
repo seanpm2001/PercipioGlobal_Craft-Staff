@@ -65,7 +65,7 @@ class Settings extends Model
     {
         return [
             [['pluginName', 'apiKeyStaffology'] , 'string'],
-            [['apiKey'] , 'required'],
+            [['apiKeyStaffology'] , 'required'],
             ['pluginName', 'default', 'value' => 'The Hub'],
         ];
     }
