@@ -14,6 +14,10 @@ use percipiolondon\staff\Staff;
 
 use Craft;
 use craft\base\Model;
+use craft\behaviors\EnvAttributeParserBehavior;
+use craft\validators\ArrayValidator;
+
+use yii\behaviors\AttributeTypecastBehavior;
 
 /**
  * Staff Settings Model
@@ -27,7 +31,7 @@ use craft\base\Model;
  *
  * @author    Percipio
  * @package   Staff
- * @since     1.0.0-alpha.1
+ * @since     1.0.0
  */
 class Settings extends Model
 {
@@ -35,11 +39,14 @@ class Settings extends Model
     // =========================================================================
 
     /**
-     * Some field model attribute
-     *
-     * @var string
+     * @var string The public-facing name of the plugin
      */
-    public $staffologyApiKey = '';
+    public $pluginName = 'The Hub';
+
+    /**
+     * @var string The Staffology API key.
+     */
+    public $apiKeyStaffology = '';
 
     // Public Methods
     // =========================================================================
@@ -57,8 +64,22 @@ class Settings extends Model
     public function rules()
     {
         return [
-            ['staffologyApiKey', 'string'],
-            ['staffologyApiKey', 'default', 'value' => ''],
+            [['pluginName', 'apiKeyStaffology'] , 'string'],
+            [['apiKeyStaffology'] , 'required'],
+            ['pluginName', 'default', 'value' => 'The Hub'],
+        ];
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public function behaviors(): array
+    {
+        return [
+            'parser' => [
+                'class' => EnvAttributeParserBehavior::class,
+                'attributes' => ['apiKeyStaffology'],
+            ]
         ];
     }
 }

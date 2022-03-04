@@ -13,12 +13,18 @@ namespace percipiolondon\staff;
 use Craft;
 use craft\base\Plugin;
 use craft\console\Application as ConsoleApplication;
-use craft\events\RegisterGqlSchemaComponentsEvent;
 use craft\events\RegisterComponentTypesEvent;
 use craft\events\RegisterGqlQueriesEvent;
+use craft\events\RegisterGqlSchemaComponentsEvent;
 use craft\events\RegisterGqlTypesEvent;
+use craft\events\RegisterUrlRulesEvent;
+use craft\events\RegisterUserPermissionsEvent;
+use craft\helpers\UrlHelper;
 use craft\services\Elements;
 use craft\services\Gql;
+use craft\services\Plugins;
+use craft\services\UserPermissions;
+use craft\web\UrlManager;
 use craft\web\twig\variables\CraftVariable;
 
 use nystudio107\pluginvite\services\VitePluginService;
@@ -87,6 +93,42 @@ class Staff extends Plugin
      */
     public static $plugin;
 
+    /**
+     * @var Settings
+     */
+    public static $settings;
+
+    /**
+     * @var View
+     */
+    public static $view;
+
+    // Public Properties
+    // =========================================================================
+
+    /**
+     * To execute your plugin’s migrations, you’ll need to increase its schema version.
+     *
+     * @var string
+     */
+    public $schemaVersion = '1.0.0';
+
+    /**
+     * Set to `true` if the plugin should have its own section (main nav item) in the control panel.
+     *
+     * @var bool
+     */
+    public $hasCpSection = true;
+
+    /**
+     * Set to `true` if the plugin should have a settings view in the control panel.
+     *
+     * @var bool
+     */
+    public $hasCpSettings = true;
+
+
+
     // Static Methods
     // =========================================================================
 
@@ -112,29 +154,7 @@ class Staff extends Plugin
         parent::__construct($id, $parent, $config);
     }
 
-    // Public Properties
-    // =========================================================================
 
-    /**
-     * To execute your plugin’s migrations, you’ll need to increase its schema version.
-     *
-     * @var string
-     */
-    public $schemaVersion = '0.2.0';
-
-    /**
-     * Set to `true` if the plugin should have a settings view in the control panel.
-     *
-     * @var bool
-     */
-    public $hasCpSettings = true;
-
-    /**
-     * Set to `true` if the plugin should have its own section (main nav item) in the control panel.
-     *
-     * @var bool
-     */
-    public $hasCpSection = true;
 
     // Public Methods
     // =========================================================================
@@ -154,6 +174,18 @@ class Staff extends Plugin
     {
         parent::init();
         self::$plugin = $this;
+
+        // Add in our console commands
+        if (Craft::$app instanceof ConsoleApplication) {
+            $this->controllerNamespace = 'percipiolondon\staff\console\controllers';
+        }
+
+        // Initialize properties
+        self::$settings = self::$plugin->getSettings();
+        self::$view = Craft::$app->getView();
+
+        $this->name = self::$settings->pluginName;
+
         $this->_setPluginComponents();
 
         $this->_registerGqlInterfaces();
@@ -165,16 +197,6 @@ class Staff extends Plugin
 
         $this->installEventListeners();
 
-        // Do something after we're installed
-//        Event::on(
-//            Plugins::class,
-//            Plugins::EVENT_AFTER_INSTALL_PLUGIN,
-//            function (PluginEvent $event) {
-//                if ($event->plugin === $this) {
-//                    // We were just installed
-//                }
-//            }
-//        );
 
         /**
          * Logging in Craft involves using one of the following methods:
@@ -204,8 +226,120 @@ class Staff extends Plugin
         );
     }
 
+    /**
+     * @inheritdoc
+     */
+    public function getSettings()
+    {
+        return parent::getSettings();;
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public function getSettingsResponse()
+    {
+        // redirect to plugin settings page
+        Craft::$app->getResponse()->redirect(UrlHelper::cpUrl('hub/plugin'));
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public function getCpNavItem(): array
+    {
+        $subNavs = [];
+        $navItem = parent::getCpNavItem();
+        /** @var User $currentUser */
+        $request = Craft::$app->getRequest();
+        $currentUser = Craft::$app->getUser()->getIdentity();
+        // Only show sub navigation the user has permissions to view
+        if ($currentUser->can('hub:dashboard')) {
+            $subNavs['dashboard'] = [
+                'label' => Craft::t('staff-management', 'Dashboard'),
+                'url' => 'staff-management/dashboard'
+            ];
+        }
+        if ($currentUser->can('hub:payruns')) {
+            $subNavs['payruns'] = [
+                'label' => Craft::t('staff-management', 'Payruns'),
+                'url' => 'staff-management/payruns'
+            ];
+        }
+
+        $editableSettings = true;
+        // Check against allowAdminChanges
+        if ( !Craft::$app->getConfig()->getGeneral()->allowAdminChanges ) {
+            $editableSettings = false;
+        }
+
+        if ($currentUser->can('hub:plugin-settings') && $editableSettings) {
+            $subNavs['plugin'] = [
+                'label' => Craft::t('staff-management', 'Plugin settings'),
+                'url' => 'staff-management/plugin',
+            ];
+        }
+
+        $navItem = array_merge($navItem, [
+            'subnav' => $subNavs,
+        ]);
+
+        return $navItem;
+    }
+
     // Protected Methods
     // =========================================================================
+
+    /**
+     * Install our event listeners.
+     */
+    protected function installEventListeners()
+    {
+        $request = Craft::$app->getRequest();
+        $this->installGlobalEventListeners();
+        // Install our event listeners
+        if ($request->getIsCpRequest() && !$request->getIsConsoleRequest()) {
+            $this->installCpEventListeners();
+        }
+    }
+
+    /**
+     * Install site event listeners for Control Panel requests only
+     */
+    protected function installCpEventListeners()
+    {
+
+        // Handler: UrlManager::EVENT_REGISTER_CP_URL_RULES
+        Event::on(
+            UrlManager::class,
+            UrlManager::EVENT_REGISTER_CP_URL_RULES,
+            function (RegisterUrlRulesEvent $event) {
+                Craft::debug(
+                    'UrlManager::EVENT_REGISTER_CP_URL_RULES',
+                    __METHOD__
+                );
+                // Register our Control Panel routes
+                $event->rules = array_merge(
+                    $event->rules,
+                    $this->customAdminCpRoutes()
+                );
+            }
+        );
+
+        // Handler: UserPermissions::EVENT_REGISTER_PERMISSIONS
+        Event::on(
+            UserPermissions::class,
+            UserPermissions::EVENT_REGISTER_PERMISSIONS,
+            function (RegisterUserPermissionsEvent $event) {
+                Craft::debug(
+                    'UserPermissions::EVENT_REGISTER_PERMISSIONS',
+                    __METHOD__
+                );
+                // Register our custom permissions
+                $event->permissions[Craft::t('staff-management', 'Staff')] = $this->customAdminCpPermissions();
+            }
+        );
+    }
 
     /**
      * Creates and returns the model used to store the plugin’s settings.
@@ -218,27 +352,38 @@ class Staff extends Plugin
     }
 
     /**
-     * Returns the rendered settings HTML, which will be inserted into the content
-     * block on the settings page.
+     * Return the custom Control Panel routes
      *
-     * @return string The rendered settings HTML
+     * @return array
      */
-    protected function settingsHtml(): string
+    protected function customAdminCpRoutes(): array
     {
-        return Craft::$app->view->renderTemplate(
-            'staff-management/settings',
-            [
-                'settings' => $this->getSettings()
-            ]
-        );
+        return [
+            'staff-management' => 'staff-management/settings/dashboard',
+            'staff-management/dashboard' => 'staff-management/settings/dashboard',
+            'staff-management/payruns' => 'staff-management/settings/payruns',
+            'staff-management/plugin' => 'staff-management/settings/plugin',
+        ];
     }
 
     /**
-     * Install our event listeners.
+     * Return the custom Control Panel user permissions.
+     *
+     * @return array
      */
-    protected function installEventListeners()
+    protected function customAdminCpPermissions(): array
     {
-        $this->installGlobalEventListeners();
+        return [
+            'hub:dashboard' => [
+                'label' => Craft::t('staff-management', 'Dashboard'),
+            ],
+            'hub:payruns' => [
+                'label' => Craft::t('staff-management', 'Payruns'),
+            ],
+            'hub:plugin-settings' => [
+                'label' => Craft::t('staff-management', 'Edit Plugin Settings'),
+            ]
+        ];
     }
 
     /**
@@ -265,39 +410,7 @@ class Staff extends Plugin
     // Public Methods
     // =========================================================================
 
-    /**
-     * @inheritdoc
-     */
-    public function getCpNavItem(): array
-    {
-        $nav = parent::getCpNavItem();
 
-        $nav['label'] = Craft::t('staff-management', 'Staff Management');
-
-        $nav['subnav']['dashboard'] = [
-            'label' => Craft::t('staff-management', 'Dashboard'),
-            'url' => 'staff-management'
-        ];
-
-        if (Craft::$app->getUser()->checkPermission('companies-manageCompanies')) {
-            $nav['subnav']['employers'] = [
-                'label' => Craft::t('staff-management', 'Employers'),
-                'url' => 'staff-management/employers'
-            ];
-
-            $nav['subnav']['employees'] = [
-                'label' => Craft::t('staff-management', 'Employees'),
-                'url' => 'staff-management/employees'
-            ];
-
-            $nav['subnav']['payrun'] = [
-                'label' => Craft::t('staff-management', 'Pay Run'),
-                'url' => 'staff-management/payrun'
-            ];
-        }
-
-        return $nav;
-    }
 
 
     // Private Methods
@@ -334,7 +447,7 @@ class Staff extends Plugin
                         'payruns:read' => ['label' => Craft::t('staff-management', 'View Payruns')]
                     ],
                     'PayrunEntries' => [
-                        // payrun entries component with read action, labelled “View Payruns” in UI
+                        // payruns entries component with read action, labelled “View Payruns” in UI
                         'payrunentries:read' => ['label' => Craft::t('staff-management', 'View Payrun Entries')]
                     ],
                 ]);

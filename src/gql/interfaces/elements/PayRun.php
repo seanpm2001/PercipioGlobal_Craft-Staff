@@ -68,12 +68,12 @@ class PayRun extends Element
             'staffologyId' => [
                 'name' => 'staffologyId',
                 'type' => Type::string(),
-                'description' => 'The payrun id from staffology, needed for API calls.'
+                'description' => 'The payruns id from staffology, needed for API calls.'
             ],
             'employerId' => [
                 'name' => 'employerId',
                 'type' => Type::int(),
-                'description' => 'The id of the employer this payrun is for.',
+                'description' => 'The id of the employer this payruns is for.',
             ],
             // TODO CREATE ENUM ??
             'taxYear' => [
@@ -134,7 +134,7 @@ class PayRun extends Element
             'state' => [
                 'name' => 'state',
                 'type' => Type::string(),
-                'description' => 'The state of the payrun. You would set this value when updating a payrun to finalise or re-open it.',
+                'description' => 'The state of the payruns. You would set this value when updating a payruns to finalise or re-open it.',
             ],
             'isClosed' => [
                 'name' => 'isClosed',

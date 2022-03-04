@@ -24,11 +24,11 @@ class PayRun extends Query
                     'description' => 'This query is used to query for all the payruns.',
                     'complexity' => GqlHelper::relatedArgumentComplexity(),
                 ],
-                'payrun' => [
+                'payruns' => [
                     'type' => PayRunInterface::getType(),
                     'args' => PayRunArguments::getArguments(),
                     'resolve' => PayRunResolver::class . '::resolveOne',
-                    'description' => 'This query is used to query for a single payrun.',
+                    'description' => 'This query is used to query for a single payruns.',
                     'complexity' => GqlHelper::relatedArgumentComplexity(),
                 ]
             ];

@@ -18,22 +18,22 @@ class PayRun extends ElementArguments
             'employerId' => [
                 'name' => 'employerId',
                 'type' => Type::listOf(Type::int()),
-                'description' => 'Narrows the query results based on the payrun’ employers.',
+                'description' => 'Narrows the query results based on the payruns’ employers.',
             ],
             'staffologyId' => [
                 'name' => 'staffologyId',
                 'type' => Type::listOf(Type::string()),
-                'description' => 'Narrows the query results based on the payrun’ staffology ID.',
+                'description' => 'Narrows the query results based on the payruns’ staffology ID.',
             ],
             'isClosed' => [
                 'name' => 'isClosed',
                 'type' => Type::boolean(),
-                'description' => 'Narrows the query results based if the payrun is closed.',
+                'description' => 'Narrows the query results based if the payruns is closed.',
             ],
             'state' => [
                 'name' => 'state',
                 'type' => Type::listOf(Type::string()),
-                'description' => 'Narrows the query results based on the payrun state.',
+                'description' => 'Narrows the query results based on the payruns state.',
             ],
         ]);
     }
