@@ -44,7 +44,7 @@ class Employers extends Component
     public function fetchEmployerList(): array
     {
         $logger = new Logger();
-        $api = App::parseEnv(Staff::$plugin->getSettings()->staffologyApiKey);
+        $api = App::parseEnv(Staff::$plugin->getSettings()->apiKeyStaffology);
 
         if(!$api) {
 

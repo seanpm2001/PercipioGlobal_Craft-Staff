@@ -20,7 +20,7 @@ class FetchEmployeesListJob extends BaseJob
         $logger->stdout("↧ Fetching employees of " . $this->criteria['employer']['name'] . '...', $logger::RESET);
 
         // connection props
-        $api = App::parseEnv(Staff::$plugin->getSettings()->staffologyApiKey);
+        $api = App::parseEnv(Staff::$plugin->getSettings()->apiKeyStaffology);
         $base_url = 'https://api.staffology.co.uk/';
         $credentials = base64_encode('staff:' . $api);
         $headers = [

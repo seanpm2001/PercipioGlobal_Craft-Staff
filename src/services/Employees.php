@@ -110,7 +110,7 @@ class Employees extends Component
 //     */
 //    public function fetch2()
 //    {
-//        $apiKey = \Craft::parseEnv(Staff::$plugin->getSettings()->staffologyApiKey);
+//        $apiKey = \Craft::parseEnv(Staff::$plugin->getSettings()->apiKeyStaffology);
 //
 //        if ($apiKey) {
 //

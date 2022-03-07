@@ -276,7 +276,7 @@ class PayRun extends Component
 //     */
 //    public function fetch()
 //    {
-//        $api = Craft::parseEnv(Staff::$plugin->getSettings()->staffologyApiKey);
+//        $api = Craft::parseEnv(Staff::$plugin->getSettings()->apiKeyStaffology);
 //        $credentials = base64_encode('staff:'.$api);
 //        $headers = [
 //            'headers' => [
@@ -319,7 +319,7 @@ class PayRun extends Component
 //
 //    public function fetchPayslips()
 //    {
-//        $api = Craft::parseEnv(Staff::$plugin->getSettings()->staffologyApiKey);
+//        $api = Craft::parseEnv(Staff::$plugin->getSettings()->apiKeyStaffology);
 //        $credentials = base64_encode('staff:'.$api);
 //        $headers = [
 //            'headers' => [
