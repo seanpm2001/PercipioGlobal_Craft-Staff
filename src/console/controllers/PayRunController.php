@@ -16,7 +16,7 @@ use Craft;
 use craft\console\Controller;
 
 /**
- * EmployerController Controller
+ * PayRunController Controller
  *
  * Generally speaking, controllers are the middlemen between the front end of
  * the CP/website and your plugin’s services. They contain action methods which
@@ -35,17 +35,22 @@ use craft\console\Controller;
  * @package   Staff
  * @since     1.0.0-alpha.1
  */
-class EmployerControllerController extends Controller
+class PayRunController extends Controller
 {
 
     /**
-     * Fetch all the employers from staffology
-     * e.g.: actions/staff-management/employer-controller/fetch
+     * Fetch all pay run from staffology
+     * e.g.: actions/staff-management/pay-run-controller/do-something
      *
      * @return mixed
      */
     public function actionFetch()
     {
-        return  Staff::$plugin->employers->fetch();
+        return  Staff::$plugin->payRun->fetch();
+    }
+
+    public function actionFetchPayslips()
+    {
+        return  Staff::$plugin->payRun->fetchPayslips();
     }
 }
