@@ -43,12 +43,6 @@
         "developerUrl": "http://percipio.london",
         "documentationUrl": "https://github.com/percipioglobal/craft-staff/blob/master/README.md",
         "changelogUrl": "https://raw.githubusercontent.com/percipioglobal/craft-staff/master/CHANGELOG.md",
-        "components": {
-            "employers": "percipiolondon\\staff\\services\\Employers",
-            "employees": "percipiolondon\\staff\\services\\Employees",
-            "payRun": "percipiolondon\\staff\\services\\PayRun",
-            "pensions": "percipiolondon\\staff\\services\\Pensions"
-        },
         "class": "percipiolondon\\staff\\Staff"
     }
 }
