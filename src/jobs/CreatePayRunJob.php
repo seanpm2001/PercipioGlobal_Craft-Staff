@@ -21,7 +21,7 @@ class CreatePayRunJob extends BaseJob
     {
         $logger = new Logger();
 
-        $api = App::parseEnv(Staff::$plugin->getSettings()->staffologyApiKey);
+        $api = App::parseEnv(Staff::$plugin->getSettings()->apiKeyStaffology);
         $credentials = base64_encode('staff:'.$api);
         $headers = [
             'headers' => [

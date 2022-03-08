@@ -21,7 +21,7 @@ class FetchEmployersJob extends BaseJob
         $totalEmployers = count($this->criteria['employers']);
 
         // connection props
-        $api = App::parseEnv(Staff::$plugin->getSettings()->staffologyApiKey);
+        $api = App::parseEnv(Staff::$plugin->getSettings()->apiKeyStaffology);
         $credentials = base64_encode('staff:'.$api);
         $headers = [
             'headers' => [

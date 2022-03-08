@@ -12,6 +12,10 @@ namespace percipiolondon\staff\elements;
 
 use craft\db\Query;
 use percipiolondon\staff\helpers\Logger;
+use percipiolondon\staff\helpers\Security as SecurityHelper;
+use percipiolondon\staff\records\EmploymentDetails;
+use percipiolondon\staff\records\LeaverDetails;
+use percipiolondon\staff\records\PersonalDetails;
 use percipiolondon\staff\Staff;
 
 use Craft;
@@ -22,6 +26,8 @@ use craft\elements\db\ElementQueryInterface;
 use percipiolondon\staff\elements\db\EmployeeQuery;
 use percipiolondon\staff\records\Employee as EmployeeRecord;
 use percipiolondon\staff\records\Permission;
+use percipiolondon\staff\records\Employer;
+use yii\db\Exception;
 
 /**
  * Employee Element
@@ -72,7 +78,6 @@ class Employee extends Element
     // Public Properties
     // =========================================================================
 
-    public $siteId;
     public $staffologyId;
     public $employerId;
     public $userId;
@@ -151,7 +156,7 @@ class Employee extends Element
      */
     public static function hasTitles(): bool
     {
-        return true;
+        return false;
     }
 
     /**
@@ -465,11 +470,21 @@ class Employee extends Element
                     throw new Exception('Invalid employee ID: ' . $this->id);
                 }
 
+                //foreign keys
+                $personalDetailsId = $record->personalDetailsId;
+                $employmentDetailsId = $record->employmentDetailsId;
+
             } else {
                 $record = new EmployeeRecord();
                 $record->id = (int)$this->id;
+
+                //foreign keys
+                $personalDetailsId = null;
+                $employmentDetailsId = null;
             }
 
+
+            // user creation
             if($this->personalDetails && array_key_exists('email', $this->personalDetails)) {
                 $user = User::findOne(['email' => $this->personalDetails['email']]);
 
@@ -500,23 +515,22 @@ class Employee extends Element
                 $this->userId = $user->id;
             }
 
-            $record->employerId = $this->employerId;
+            //foreign keys
+            $personalDetails = Staff::$plugin->employees->savePersonalDetails($this->personalDetails, $personalDetailsId);
+            $employmentDetails = Staff::$plugin->employees->saveEmploymentDetails($this->employmentDetails, $employmentDetailsId);
+            $employerId = Employer::findOne(['staffologyId' => $this->employerId]);
+
+            $record->employerId = $employerId->id ?? null;
             $record->staffologyId = $this->staffologyId;
-            $record->siteId = $this->siteId;
-            $record->personalDetails = $this->personalDetails;
-            $record->employmentDetails = $this->employmentDetails;
-            $record->autoEnrolment = $this->autoEnrolment;
-            $record->leaveSettings = $this->leaveSettings;
-            $record->rightToWork = $this->rightToWork;
-            $record->bankDetails = $this->bankDetails;
+            $record->personalDetailsId = $personalDetails->id;
+            $record->employmentDetailsId = $employmentDetails->id;
             $record->status = $this->status;
-            $record->aeNotEnroledWarning = $this->aeNotEnroledWarning;
             $record->sourceSystemId = $this->sourceSystemId;
-            $record->niNumber = $this->niNumber;
+            $record->niNumber = SecurityHelper::encrypt($this->niNumber ?? '');
             $record->userId = $this->userId;
             $record->isDirector = $this->isDirector;
 
-            $success = $record->save(false);
+            $record->save();
 
             if($isNew) {
                 //assign permissions to employee
@@ -536,6 +550,5 @@ class Employee extends Element
             $logger->stdout($e->getMessage() . PHP_EOL, $logger::FG_RED);
             Craft::error($e->getMessage(), __METHOD__);
         }
-
     }
 }

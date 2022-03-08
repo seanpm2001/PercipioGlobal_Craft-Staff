@@ -20,7 +20,7 @@ class FetchEmployeesListJob extends BaseJob
         $logger->stdout("↧ Fetching employees of " . $this->criteria['employer']['name'] . '...', $logger::RESET);
 
         // connection props
-        $api = App::parseEnv(Staff::$plugin->getSettings()->staffologyApiKey);
+        $api = App::parseEnv(Staff::$plugin->getSettings()->apiKeyStaffology);
         $base_url = 'https://api.staffology.co.uk/';
         $credentials = base64_encode('staff:' . $api);
         $headers = [
@@ -44,11 +44,11 @@ class FetchEmployeesListJob extends BaseJob
 
                 $currentEmployee++;
 
-                Staff::$plugin->employees->fetchEmployee($employee);
+                Staff::$plugin->employees->fetchEmployee($employee, $this->criteria['employer']);
 //                Staff::$plugin->pensions->fetchPension($employee, $this->criteria['employer']['id']);
 
                 if($currentEmployee === $totalEmployees){
-                    Staff::$plugin->payRun->fetchPayRun($this->criteria['employer']);
+                    Staff::$plugin->payRuns->fetchPayRun($this->criteria['employer']);
                 }
 
                 $this->setProgress($queue, $currentEmployee / $totalEmployees);
