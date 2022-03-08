@@ -18,7 +18,7 @@ class CreateEmployeeJob extends BaseJob
         $logger = new Logger();
 
         // connection props
-        $api = App::parseEnv(Staff::$plugin->getSettings()->staffologyApiKey);
+        $api = App::parseEnv(Staff::$plugin->getSettings()->apiKeyStaffology);
         $credentials = base64_encode('staff:'.$api);
         $headers = [
             'headers' => [
@@ -37,7 +37,7 @@ class CreateEmployeeJob extends BaseJob
 
             $logger->stdout(" done" . PHP_EOL, $logger::FG_GREEN);
 
-            Staff::$plugin->employees->saveEmployee($employee, $this->criteria['employee']['name']);
+            Staff::$plugin->employees->saveEmployee($employee, $this->criteria['employee']['name'], $this->criteria['employer']);
 
         } catch (\Exception $e) {
 

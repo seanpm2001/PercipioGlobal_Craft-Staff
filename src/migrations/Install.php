@@ -84,7 +84,7 @@ class Install extends Migration
                 'userId' => $this->integer(),
                 //staffology
                 'personalDetailsId' => $this->integer(), // create FK to PensionSelection [id]
-                'bankDetails' => $this->string(), // create FK to BankDetails [accountNumber]
+                'bankDetailsId' => $this->string(), // create FK to BankDetailsId [id]
                 'employmentDetailsId' => $this->integer(), // create FK to EmploymentDetails table [id]
                 'autoEnrolmentId' => $this->integer(), // create FK to AutoEnrolment table [id]
                 'leaveSettingsId' => $this->integer(), // create FK to LeaveSettings table [id]
@@ -106,7 +106,7 @@ class Install extends Migration
                 'uid' => $this->uid(),
                 //FK
                 'addressId' => $this->integer(), // create FK to Address [id]
-                'bankDetails' => $this->string(), // create FK to BankDetails [accountName]
+                'bankDetailsId' => $this->string(), // create FK to BankDetailsId [id]
                 'defaultPayOptionsId' => $this->integer(), // create FK to PayOptions [id]
                 'hmrcDetailsId' => $this->integer(), // create FK to HmrcDetails [id]
                 'defaultPensionId' => $this->integer(), // create FK to PensionScheme [id]
@@ -1029,7 +1029,7 @@ class Install extends Migration
                 //staffology
                 'providerId' => $this->integer(), // create FK to PensionProvider [id]
                 'administratorId' => $this->integer(), // create FK to PensionAdministrator [id]
-                'bankDetails' => $this->string(), // create FK to BankDetails [accountName]
+                'bankDetailsId' => $this->string(), // create FK to BankDetailsId [id]
                 //            'customPayCodes' => $this->integer(),  // Added an internal relation table CustomPayCodes to store this [id] into
                 //fields
                 "staffologyId" => $this->string(),
@@ -1387,7 +1387,7 @@ class Install extends Migration
     {
         /** LEVEL 1 TABLES **/
         $this->createIndex(null, Table::EMPLOYERS, "addressId", true);
-        $this->createIndex(null, Table::EMPLOYERS, "bankDetails", false);
+        $this->createIndex(null, Table::EMPLOYERS, "bankDetailsId", false);
         $this->createIndex(null, Table::EMPLOYERS, "defaultPayOptionsId", true);
         $this->createIndex(null, Table::EMPLOYERS, "hmrcDetailsId", true);
         $this->createIndex(null, Table::EMPLOYERS, "defaultPensionId", true);
@@ -1400,7 +1400,7 @@ class Install extends Migration
         $this->createIndex(null, Table::EMPLOYEES, "employerId", false);
         $this->createIndex(null, Table::EMPLOYEES, "userId", false);
         $this->createIndex(null, Table::EMPLOYEES, "personalDetailsId", true);
-        $this->createIndex(null, Table::EMPLOYEES, "bankDetails", false);
+        $this->createIndex(null, Table::EMPLOYEES, "bankDetailsId", false);
         $this->createIndex(null, Table::EMPLOYEES, "employmentDetailsId", true);
         $this->createIndex(null, Table::EMPLOYEES, "autoEnrolmentId", true);
         $this->createIndex(null, Table::EMPLOYEES, "leaveSettingsId", true);
@@ -1508,7 +1508,7 @@ class Install extends Migration
         $this->createIndex(null, Table::PENSION_SCHEME, "staffologyId", true);
         $this->createIndex(null, Table::PENSION_SCHEME, "providerId", false);
         $this->createIndex(null, Table::PENSION_SCHEME, "administratorId", false);
-        $this->createIndex(null, Table::PENSION_SCHEME, "bankDetails", false);
+        $this->createIndex(null, Table::PENSION_SCHEME, "bankDetailsId", false);
 
         $this->createIndex(null, Table::PENSION_SELECTION, "employerId", false);
         $this->createIndex(null, Table::PENSION_SELECTION, "autoEnrollmentSettingsId", false);
@@ -1561,7 +1561,7 @@ class Install extends Migration
         /** LEVEL 1 TABLES **/
         //EMPLOYERS
         $this->addForeignKey(null, Table::EMPLOYERS, ['addressId'], Table::ADDRESSES, ['id']);
-        $this->addForeignKey(null, Table::EMPLOYERS, ['bankDetails'], Table::BANK_DETAILS, ['accountNumber']);
+        $this->addForeignKey(null, Table::EMPLOYERS, ['bankDetailsId'], Table::BANK_DETAILS, ['id']);
         $this->addForeignKey(null, Table::EMPLOYERS, ['defaultPayOptionsId'], Table::PAY_OPTIONS, ['id']);
         $this->addForeignKey(null, Table::EMPLOYERS, ['hmrcDetailsId'], Table::HMRC_DETAILS, ['id']);
         $this->addForeignKey(null, Table::EMPLOYERS, ['defaultPensionId'], Table::PENSION_SCHEME, ['id']);
@@ -1575,7 +1575,7 @@ class Install extends Migration
         $this->addForeignKey(null, Table::EMPLOYEES, ['employerId'], Table::EMPLOYERS, ['id'], 'CASCADE', 'CASCADE');
         $this->addForeignKey(null, Table::EMPLOYEES, ['userId'], \craft\db\Table::USERS, ['id']);
         $this->addForeignKey(null, Table::EMPLOYEES, ['personalDetailsId'], Table::PERSONAL_DETAILS, ['id']);
-        $this->addForeignKey(null, Table::EMPLOYEES, ['bankDetails'], Table::BANK_DETAILS, ['accountNumber']);
+        $this->addForeignKey(null, Table::EMPLOYEES, ['bankDetailsId'], Table::BANK_DETAILS, ['id']);
         $this->addForeignKey(null, Table::EMPLOYEES, ['employmentDetailsId'], Table::EMPLOYMENT_DETAILS, ['id']);
         $this->addForeignKey(null, Table::EMPLOYEES, ['autoEnrolmentId'], Table::AUTO_ENROLMENT, ['id']);
         $this->addForeignKey(null, Table::EMPLOYEES, ['leaveSettingsId'], Table::LEAVE_SETTINGS, ['id']);
@@ -1714,7 +1714,7 @@ class Install extends Migration
         //PENSION_SCHEME
         $this->addForeignKey(null, Table::PENSION_SCHEME, ['providerId'], Table::PENSION_PROVIDER, ['id'], 'CASCADE', 'CASCADE');
         $this->addForeignKey(null, Table::PENSION_SCHEME, ['administratorId'], Table::PENSION_ADMINISTRATOR, ['id'], 'CASCADE', 'CASCADE');
-        $this->addForeignKey(null, Table::PENSION_SCHEME, ['bankDetails'], Table::BANK_DETAILS, ['accountNumber'], 'CASCADE', 'CASCADE');
+        $this->addForeignKey(null, Table::PENSION_SCHEME, ['bankDetailsId'], Table::BANK_DETAILS, ['id'], 'CASCADE', 'CASCADE');
 
         //PENSION_SELECTION
         $this->addForeignKey(null, Table::PENSION_SELECTION, ['employerId'], Table::EMPLOYERS, ['id'], 'CASCADE', 'CASCADE');

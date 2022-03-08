@@ -240,7 +240,7 @@ class Staff extends Plugin
     public function getSettingsResponse()
     {
         // redirect to plugin settings page
-        Craft::$app->getResponse()->redirect(UrlHelper::cpUrl('hub/plugin'));
+        Craft::$app->getResponse()->redirect(UrlHelper::cpUrl('staff-management/plugin'));
     }
 
     /**
@@ -262,7 +262,7 @@ class Staff extends Plugin
         }
         if ($currentUser->can('hub:payruns')) {
             $subNavs['payruns'] = [
-                'label' => Craft::t('staff-management', 'Payruns'),
+                'label' => Craft::t('staff-management', 'Pay Runs'),
                 'url' => 'staff-management/payruns'
             ];
         }

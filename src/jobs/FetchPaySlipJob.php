@@ -22,7 +22,7 @@ class FetchPaySlipJob extends Basejob
         $logger = new Logger();
 
         // connection props
-        $api = App::parseEnv(Staff::$plugin->getSettings()->staffologyApiKey);
+        $api = App::parseEnv(Staff::$plugin->getSettings()->apiKeyStaffology);
         $base_url = 'https://api.staffology.co.uk/';
         $credentials = base64_encode('staff:'.$api);
         $headers = [

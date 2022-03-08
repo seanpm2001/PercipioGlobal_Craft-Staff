@@ -35,7 +35,7 @@ use craft\console\Controller;
  * @package   Staff
  * @since     1.0.0-alpha.1
  */
-class EmployerControllerController extends Controller
+class EmployerController extends Controller
 {
 
     /**

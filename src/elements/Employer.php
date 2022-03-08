@@ -13,6 +13,7 @@ namespace percipiolondon\staff\elements;
 use percipiolondon\staff\helpers\Logger;
 use percipiolondon\staff\records\Countries;
 use percipiolondon\staff\Staff;
+use percipiolondon\staff\helpers\Security as SecurityHelper;
 
 use Craft;
 use craft\base\Element;
@@ -516,25 +517,27 @@ class Employer extends Element
             if (!$isNew) {
 
                 $record = EmployerRecord::findOne($this->id);
-                $address = AddressRecord::findOne($this->id);
 
                 if (!$record) {
                     throw new Exception('Invalid employer ID: ' . $this->id);
                 }
 
+                $addressId = $record->addressId;
+
             } else {
                 $record = new EmployerRecord();
                 $record->id = (int)$this->id;
 
-                $address = new AddressRecord();
+                $addressId = null;
             }
 
-            $address = $this->_saveAddress($address);
+            // Attach the foreign keys
+            $address = Staff::$plugin->addresses->saveAddress($this->address, $addressId);
 
-            $record->slug = strtolower(trim(preg_replace('/[^A-Za-z0-9-]+/', '-', $this->name), '-'));
+            $record->slug = SecurityHelper::encrypt((strtolower(trim(preg_replace('/[^A-Za-z0-9-]+/', '-', $this->name ?? ''), '-'))));
             $record->staffologyId = $this->staffologyId;
-            $record->name = Craft::$app->getSecurity()->hashData($this->name);
-            $record->crn = $this->crn;
+            $record->name = SecurityHelper::encrypt($this->name ?? '');
+            $record->crn = SecurityHelper::encrypt($this->crn ?? '');
             $record->addressId = $address->id ?? null;
             $record->startYear = $this->startYear;
             $record->currentYear = $this->currentYear;
@@ -550,26 +553,5 @@ class Employer extends Element
             Craft::error($e->getMessage(), __METHOD__);
         }
 
-    }
-
-    private function _saveAddress(AddressRecord $address): AddressRecord {
-
-        $countryName = $this->address['country'] ?? 'England';
-
-        $country = Countries::find()
-            ->where(['name' => $countryName])
-            ->one();
-
-        $address->countryId = $country->id ?? null;
-        $address->address1 = Craft::$app->getSecurity()->hashData($this->address['line1'] ?? null);
-        $address->address2 = Craft::$app->getSecurity()->hashData($this->address['line2'] ?? null);
-        $address->address3 = Craft::$app->getSecurity()->hashData($this->address['line3'] ?? null);
-        $address->address4 = Craft::$app->getSecurity()->hashData($this->address['line4'] ?? null);
-        $address->address5 = Craft::$app->getSecurity()->hashData($this->address['line5'] ?? null);
-        $address->zipCode = Craft::$app->getSecurity()->hashData($this->address['postCode'] ?? null);
-
-        $address->save();
-
-        return $address;
     }
 }
