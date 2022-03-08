@@ -6,21 +6,21 @@ use craft\db\ActiveRecord;
 use percipiolondon\staff\db\Table;
 
 /**
- * @property double $basicPay;
- * @property double $gross;
- * @property double $grossForNi;
- * @property double $grossNotSubjectToEmployersNi;
- * @property double $grossForTax;
- * @property double $employerNi;
- * @property double $employeeNi;
+ * @property string $basicPay;
+ * @property string $gross;
+ * @property string $grossForNi;
+ * @property string $grossNotSubjectToEmployersNi;
+ * @property string $grossForTax;
+ * @property string $employerNi;
+ * @property string $employeeNi;
  * @property double $employerNiOffPayroll;
  * @property double $realTimeClass1ANi;
- * @property double $tax;
- * @property double $netPay;
- * @property double $adjustments;
- * @property double $additions;
- * @property double $takeHomePay;
- * @property double $nonTaxOrNICPmt;
+ * @property string $tax;
+ * @property string $netPay;
+ * @property string $adjustments;
+ * @property string $additions;
+ * @property string $takeHomePay;
+ * @property string $nonTaxOrNICPmt;
  * @property double $itemsSubjectToClass1NIC;
  * @property double $dednsFromNetPay;
  * @property double $tcp_Tcls;
@@ -36,31 +36,31 @@ use percipiolondon\staff\db\Table;
  * @property double $shpp;
  * @property double $spbp;
  * @property double $ssp;
- * @property double $studentLoanRecovered;
- * @property double $postgradLoanRecovered;
- * @property double $pensionableEarnings;
- * @property double $pensionablePay;
- * @property double $nonTierablePay;
- * @property double $employeePensionContribution;
- * @property double $employeePensionContributionAvc;
- * @property double $employerPensionContribution;
- * @property double $empeePenContribnsNotPaid;
- * @property double $empeePenContribnsPaid;
- * @property double $attachmentOrderDeductions;
- * @property double $cisDeduction;
- * @property double $cisVat;
- * @property double $cisUmbrellaFee;
- * @property double $cisUmbrellaFeePostTax;
+ * @property string $studentLoanRecovered;
+ * @property string $postgradLoanRecovered;
+ * @property string $pensionableEarnings;
+ * @property string $pensionablePay;
+ * @property string $nonTierablePay;
+ * @property string $employeePensionContribution;
+ * @property string $employeePensionContributionAvc;
+ * @property string $employerPensionContribution;
+ * @property string $empeePenContribnsNotPaid;
+ * @property string $empeePenContribnsPaid;
+ * @property string $attachmentOrderDeductions;
+ * @property string $cisDeduction;
+ * @property string $cisVat;
+ * @property string $cisUmbrellaFee;
+ * @property string $cisUmbrellaFeePostTax;
  * @property double $pbik;
  * @property int $mapsMiles;
- * @property double $umbrellaFee;
+ * @property string $umbrellaFee;
  * @property double $appLevyDeduction;
  * @property double $paymentAfterLeaving;
  * @property double $taxOnPaymentAfterLeaving;
  * @property int $nilPaid;
  * @property int $leavers;
  * @property int $starters;
- * @property double $totalCost;
+ * @property string $totalCost;
  */
 
 class PayRunTotals extends ActiveRecord
@@ -82,6 +82,6 @@ class PayRunTotals extends ActiveRecord
      */
     public static function tableName()
     {
-        return Table::UMBRELLA_SETTINGS;
+        return Table::PAYRUN_TOTALS;
     }
 }

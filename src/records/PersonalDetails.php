@@ -31,7 +31,7 @@ use percipiolondon\staff\db\Table;
  * @property string $pdfPassword;
  * @property string $telephone;
  * @property string $mobile;
- * @property \DateTime $dob;
+ * @property \DateTime dateOfBirth;
  * @property int $statePensionAge;
  * @property string $gender;
  * @property string $niNumber;
