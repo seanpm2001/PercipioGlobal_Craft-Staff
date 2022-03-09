@@ -517,20 +517,22 @@ class Employer extends Element
             if (!$isNew) {
 
                 $record = EmployerRecord::findOne($this->id);
-                $address = AddressRecord::findOne($this->id);
 
                 if (!$record) {
                     throw new Exception('Invalid employer ID: ' . $this->id);
                 }
 
+                $addressId = $record->addressId;
+
             } else {
                 $record = new EmployerRecord();
                 $record->id = (int)$this->id;
 
-                $address = new AddressRecord();
+                $addressId = null;
             }
 
-            $address = $this->_saveAddress($address);
+            // Attach the foreign keys
+            $address = Staff::$plugin->addresses->saveAddress($this->address, $addressId);
 
             $record->slug = SecurityHelper::encrypt((strtolower(trim(preg_replace('/[^A-Za-z0-9-]+/', '-', $this->name ?? ''), '-'))));
             $record->staffologyId = $this->staffologyId;
@@ -551,26 +553,5 @@ class Employer extends Element
             Craft::error($e->getMessage(), __METHOD__);
         }
 
-    }
-
-    private function _saveAddress(AddressRecord $address): AddressRecord {
-
-        $countryName = $this->address['country'] ?? 'England';
-
-        $country = Countries::find()
-            ->where(['name' => $countryName])
-            ->one();
-
-        $address->countryId = $country->id ?? null;
-        $address->address1 = SecurityHelper::encrypt($this->address['line1'] ?? '');
-        $address->address2 = SecurityHelper::encrypt($this->address['line2'] ?? '');
-        $address->address3 = SecurityHelper::encrypt($this->address['line3'] ?? '');
-        $address->address4 = SecurityHelper::encrypt($this->address['line4'] ?? '');
-        $address->address5 = SecurityHelper::encrypt($this->address['line5'] ?? '');
-        $address->zipCode = SecurityHelper::encrypt($this->address['postCode'] ?? '');
-
-        $address->save();
-
-        return $address;
     }
 }

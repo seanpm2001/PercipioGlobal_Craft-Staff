@@ -37,7 +37,7 @@ class CreateEmployeeJob extends BaseJob
 
             $logger->stdout(" done" . PHP_EOL, $logger::FG_GREEN);
 
-            Staff::$plugin->employees->saveEmployee($employee, $this->criteria['employee']['name']);
+            Staff::$plugin->employees->saveEmployee($employee, $this->criteria['employee']['name'], $this->criteria['employer']);
 
         } catch (\Exception $e) {
 

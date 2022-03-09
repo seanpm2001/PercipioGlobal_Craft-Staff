@@ -108,13 +108,13 @@ class Employers extends Component
         ]));
     }
 
-    public function saveEmployer(array $employer){
-        $logger = new Logger();
-
+    public function saveEmployer(array $employer)
+    {
         $employerRecord = EmployerRecord::findOne(['staffologyId' => $employer['id']]);
 
         if (!$employerRecord) {
 
+            $logger = new Logger();
             $logger->stdout("✓ Save employer " . $employer['name'] ?? null . '...', $logger::RESET);
 
             $emp = new Employer();
@@ -137,6 +137,15 @@ class Employers extends Component
                 $logger->stdout(" done" . PHP_EOL, $logger::FG_GREEN);
             }else{
                 $logger->stdout(" failed" . PHP_EOL, $logger::FG_RED);
+
+                $errors = "";
+
+                foreach($emp->errors as $err) {
+                    $errors .= implode(',', $err);
+                }
+
+                $logger->stdout($errors . PHP_EOL, $logger::FG_RED);
+                Craft::error($emp->errors, __METHOD__);
             }
         }
 
