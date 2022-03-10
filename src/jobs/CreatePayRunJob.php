@@ -43,11 +43,11 @@ class CreatePayRunJob extends BaseJob
                 $progress = "[".$current."/".$total."] ";
 
                 $url = strpos($payRun['url'], 'api.staffology') > 0 ? str_replace("https://api.staffology.co.uk/", "", $payRun['url']) : $payRun['url'];
-
-                $payRunLog = PayRunLogRecord::findOne(['url' => $url]);
-
-                // SET PAYRUN IF IT HASN'T ALREADY BEEN FETCHED IN PAYRUNLOG
-                if(!$payRunLog) {
+//
+//                $payRunLog = PayRunLogRecord::findOne(['url' => $url]);
+//
+//                // SET PAYRUN IF IT HASN'T ALREADY BEEN FETCHED IN PAYRUNLOG
+//                if(!$payRunLog) {
 
                     $logger->stdout($progress."↧ Fetching pay run info of " . $payRun['metadata']['taxYear'] . ' / ' . $payRun['name'] . '...', $logger::RESET);
 
@@ -57,7 +57,7 @@ class CreatePayRunJob extends BaseJob
                     $logger->stdout(" done" . PHP_EOL, $logger::FG_GREEN);
 
                     Staff::$plugin->payRuns->savePayRun($payRunData, $url, $this->criteria['employer']);
-                }
+//                }
 
             }
         } catch (\Exception $e) {

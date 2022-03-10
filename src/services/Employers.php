@@ -11,6 +11,7 @@
 namespace percipiolondon\staff\services;
 
 use craft\helpers\App;
+use percipiolondon\attendees\helpers\Log;
 use percipiolondon\staff\db\Table;
 use percipiolondon\staff\helpers\Logger;
 use percipiolondon\staff\helpers\Security as SecurityHelper;
@@ -22,6 +23,7 @@ use percipiolondon\staff\jobs\FetchEmployersJob;
 use Craft;
 use craft\base\Component;
 use craft\helpers\Json;
+use yii\db\Exception;
 use yii\db\Query;
 
 /**
@@ -173,51 +175,67 @@ class Employers extends Component
     {
         $employerRecord = EmployerRecord::findOne(['staffologyId' => $employer['id']]);
 
-        if (!$employerRecord) {
+        $logger = new Logger();
+        $logger->stdout("✓ Save employer " . $employer['name'] ?? null . '...', $logger::RESET);
 
-            $logger = new Logger();
-            $logger->stdout("✓ Save employer " . $employer['name'] ?? null . '...', $logger::RESET);
+        try {
 
-            $emp = new Employer();
+            if (!$employerRecord) {
+                $employerRecord = new EmployerRecord();
+            }
 
-            $emp->siteId = Craft::$app->getSites()->currentSite->id;
-            $emp->staffologyId = $employer['id'];
-            $emp->name = $employer['name'] ?? null;
-            $emp->title = $employer['name'] ?? null;
-            $emp->logoUrl = $employer['logoUrl'] ?? null;
-            $emp->crn = $employer['crn'] ?? null;
-            $emp->address = $employer['address'] ?? null;
-            $emp->startYear = $employer['startYear'] ?? null;
-            $emp->currentYear = $employer['currentYear'] ?? null;
-            $emp->employeeCount = $employer['employeeCount'] ?? null;
-            $emp->defaultPayOptions = $employer['defaultPayOptions'] ?? null;
+            //foreign keys
+            $addressId = $employerRecord->addressId ?? null;
+            $defaultPayOptionsId = $employerRecord->defaultPayOptionsId ?? null;
 
-            $elementsService = Craft::$app->getElements();
-            $success = $elementsService->saveElement($emp);
+            // Attach the foreign keys
+            $address = $employer['address'] ? Staff::$plugin->addresses->saveAddress($employer['address'], $addressId) : null;
+            $payOptions = $employer['defaultPayOptions'] ? Staff::$plugin->payRuns->savePayOptions($employer['defaultPayOptions'], $defaultPayOptionsId) : null;
+
+            //save
+            $employerRecord->defaultPayOptionsId = $payOptions->id ?? null;
+            $employerRecord->addressId = $address->id ?? null;
+            $employerRecord->slug = SecurityHelper::encrypt((strtolower(trim(preg_replace('/[^A-Za-z0-9-]+/', '-', $this->name ?? ''), '-'))));
+            $employerRecord->staffologyId = $employer['id'] ?? null;
+            $employerRecord->name = SecurityHelper::encrypt($employer['name'] ?? '');
+            $employerRecord->crn = SecurityHelper::encrypt($employer['crn'] ?? '');
+            $employerRecord->logoUrl = SecurityHelper::encrypt($employer['logoUrl'] ?? '');
+            $employerRecord->startYear = $employer['startYear'] ?? null;
+            $employerRecord->currentYear = $employer['currentYear'] ?? null;
+            $employerRecord->employeeCount = $employer['employeeCount'] ?? null;
+
+            $success = $employerRecord->save(false);
 
             if($success){
                 $logger->stdout(" done" . PHP_EOL, $logger::FG_GREEN);
+
+                $this->saveEmployerElement($employer);
             }else{
                 $logger->stdout(" failed" . PHP_EOL, $logger::FG_RED);
 
                 $errors = "";
 
-                foreach($emp->errors as $err) {
+                foreach($employerRecord->errors as $err) {
                     $errors .= implode(',', $err);
                 }
 
                 $logger->stdout($errors . PHP_EOL, $logger::FG_RED);
-                Craft::error($emp->errors, __METHOD__);
+                Craft::error($employerRecord->errors, __METHOD__);
             }
-        }
 
+        } catch (\Exception $e) {
+            $logger->stdout(" failed" . PHP_EOL, $logger::FG_RED);
+
+            $logger->stdout(PHP_EOL, $logger::RESET);
+            $logger->stdout($e->getMessage() . PHP_EOL, $logger::FG_RED);
+            Craft::error($e->getMessage(), __METHOD__);
+        }
 
     }
 
 
 
-    // Private Methods
-    // =========================================================================
+
 
     /* PARSE SECURITY VALUES */
     private function _parseEmployer(array $employer) :array
@@ -228,5 +246,18 @@ class Employers extends Component
         $employer['logoUrl'] = SecurityHelper::decrypt($employer['logoUrl'] ?? '');
 
         return $employer;
+    }
+
+
+
+
+
+    /* SAVES ELEMENTS */
+    public function saveEmployerElement(array $employer): bool
+    {
+        $emp = new Employer();
+        $elementsService = Craft::$app->getElements();
+        return $elementsService->saveElement($emp);
+
     }
 }

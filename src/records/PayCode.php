@@ -19,6 +19,7 @@ use percipiolondon\staff\db\Table;
 /**
  * @property string $title;
  * @property int $code;
+ * @property int $employerId;
  * @property string $defaultValue;
  * @property boolean $isDeduction;
  * @property boolean $isNiable;

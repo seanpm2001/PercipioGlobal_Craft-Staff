@@ -420,10 +420,10 @@ class PayRunEntry extends Element
      */
     public function afterSave(bool $isNew)
     {
-        if (!$this->propagating) {
-
-            $this->_saveRecord($isNew);
-        }
+//        if (!$this->propagating) {
+//
+//            $this->_saveRecord($isNew);
+//        }
 
         return parent::afterSave($isNew);
     }
@@ -502,17 +502,6 @@ class PayRunEntry extends Element
             $record->payOptionsId = $payOptions->id ?? null;
             $record->totalsId = $totals->id ?? null;
             $record->totalsYtdId = $totalsYtd->id ?? null;
-            
-//            $record->priorPayrollCode = $this->priorPayrollCode;
-//            $record->pensionSummary = $this->pensionSummary;
-//            $record->nationalInsuranceCalculation = $this->nationalInsuranceCalculation;
-//            $record->fps = $this->fps;
-//            $record->umbrellaPayment = $this->umbrellaPayment;
-//            $record->employee = $this->employee;
-            
-//            $record->periodOverrides = $this->periodOverrides;
-//            $record->totalsYtdOverrides = $this->totalsYtdOverrides;
-            
             $record->staffologyId = $this->staffologyId;
             $record->taxYear = $this->taxYear;
             $record->startDate = $this->startDate;

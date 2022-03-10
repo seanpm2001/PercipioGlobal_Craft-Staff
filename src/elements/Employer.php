@@ -86,6 +86,7 @@ class Employer extends Element
     public $startYear;
     public $currentYear;
     public $employeeCount;
+    public $employer;
 
     // Static Methods
     // =========================================================================
@@ -415,10 +416,9 @@ class Employer extends Element
     public function afterSave(bool $isNew)
     {
 
-        if (!$this->propagating) {
-
-            $this->_saveRecord($isNew);
-        }
+//        if (!$this->propagating) {
+//            Staff::$plugin->employers->saveEmployerActiveRecord($this->employer);
+//        }
 
         return parent::afterSave($isNew);
     }
@@ -510,54 +510,5 @@ class Employer extends Element
         }
 
         return $employerIds;
-    }
-
-    private function _saveRecord($isNew)
-    {
-        try {
-            if (!$isNew) {
-
-                $record = EmployerRecord::findOne($this->id);
-
-                if (!$record) {
-                    throw new Exception('Invalid employer ID: ' . $this->id);
-                }
-
-                $addressId = $record->addressId;
-                $defaultPayOptionsId = $record->defaultPayOptionsId;
-
-            } else {
-                $record = new EmployerRecord();
-                $record->id = (int)$this->id;
-
-                $addressId = null;
-                $defaultPayOptionsId = null;
-            }
-
-            // Attach the foreign keys
-            $address = $this->address ? Staff::$plugin->addresses->saveAddress($this->address, $addressId) : null;
-            $payOptions = $this->defaultPayOptions ? Staff::$plugin->payRuns->savePayOptions($this->defaultPayOptions, $defaultPayOptionsId) : null;
-
-            $record->slug = SecurityHelper::encrypt((strtolower(trim(preg_replace('/[^A-Za-z0-9-]+/', '-', $this->name ?? ''), '-'))));
-            $record->staffologyId = $this->staffologyId;
-            $record->name = SecurityHelper::encrypt($this->name ?? '');
-            $record->crn = SecurityHelper::encrypt($this->crn ?? '');
-            $record->logoUrl = SecurityHelper::encrypt($this->logoUrl ?? '');
-            $record->addressId = $address->id ?? null;
-            $record->startYear = $this->startYear;
-            $record->currentYear = $this->currentYear;
-            $record->employeeCount = $this->employeeCount;
-            $record->defaultPayOptionsId = $payOptions->id ?? null;
-
-            $success = $record->save(false);
-
-        } catch (\Exception $e) {
-
-            $logger = new Logger();
-            $logger->stdout(PHP_EOL, $logger::RESET);
-            $logger->stdout($e->getMessage() . PHP_EOL, $logger::FG_RED);
-            Craft::error($e->getMessage(), __METHOD__);
-        }
-
     }
 }

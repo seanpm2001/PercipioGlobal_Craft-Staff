@@ -13,12 +13,17 @@ namespace percipiolondon\staff\services;
 use Craft;
 use craft\base\Component;
 
+use craft\elements\User;
 use percipiolondon\staff\helpers\Security as SecurityHelper;
 use percipiolondon\staff\elements\Employee;
-use percipiolondon\staff\records\Employee as EmployeeRecord;
 use percipiolondon\staff\jobs\CreateEmployeeJob;
+
 use percipiolondon\staff\records\EmploymentDetails;
+use percipiolondon\staff\records\Permission;
 use percipiolondon\staff\records\PersonalDetails;
+use percipiolondon\staff\records\Employee as EmployeeRecord;
+use percipiolondon\staff\records\Employer as EmployerRecord;
+
 use percipiolondon\staff\Staff;
 use percipiolondon\staff\jobs\FetchEmployeesListJob;
 use percipiolondon\staff\helpers\Logger;
@@ -42,6 +47,13 @@ class Employees extends Component
 {
     // Public Methods
     // =========================================================================
+
+
+    /* GETTERS */
+
+
+
+    /* FETCHES */
     public function fetchEmployeesByEmployer(array $employer)
     {
         $queue = Craft::$app->getQueue();
@@ -66,35 +78,95 @@ class Employees extends Component
         ]));
     }
 
+
+
+
+
+
+    /* SAVES */
     public function saveEmployee(array $employee, string $employeeName, array $employer)
     {
+        $logger = new Logger();
+        $logger->stdout("✓ Save employee " .$employeeName . '...', $logger::RESET);
+
         $employeeRecord = EmployeeRecord::findOne(['staffologyId' => $employee['id']]);
+        $isNew = false;
+        $user = null;
 
-        // check if employee doesn't exist
-        if (!$employeeRecord) {
+        try {
 
-            $logger = new Logger();
-            $logger->stdout("✓ Save employee " .$employeeName . '...', $logger::RESET);
+            if (!$employeeRecord) {
+                $employeeRecord = new EmployeeRecord();
+                $isNew = true;
+            }
 
-            $employeeRecord = new Employee();
+            //foreign keys
+            $personalDetailsId = $employeeRecord->personalDetailsId ?? null;
+            $employmentDetailsId = $employeeRecord->employmentDetailsId ?? null;
 
-            $employeeRecord->employerId = $employer['id'];
-            $employeeRecord->staffologyId = $employee['id'];
-            $employeeRecord->siteId = Craft::$app->getSites()->currentSite->id;
-            $employeeRecord->personalDetails = $employee['personalDetails'] ?? null;
-            $employeeRecord->employmentDetails = $employee['employmentDetails'] ?? null;
-            $employeeRecord->leaveSettings = $employee['leaveSettings'] ?? null;
-            $employeeRecord->status = $employee['status'] ?? '';
-            $employeeRecord->niNumber = $employee['personalDetails']['niNumber'] ?? null;
-            $employeeRecord->userId = null;
-            $employeeRecord->isDirector = $this->isDirector ?? false;
 
-            // save new employee
-            $elementsService = Craft::$app->getElements();
-            $success = $elementsService->saveElement($employeeRecord);
+            // user creation
+            if($employee['personalDetails'] && array_key_exists('email', $employee['personalDetails'])) {
+                $user = User::findOne(['email' => $employee['personalDetails']['email']]);
+
+                // check if user exists, if so, skip this step
+                if(!$user) {
+
+                    //create user
+                    $user = new User();
+                    $user->firstName = $employee['personalDetails']['firstName'];
+                    $user->lastName = $employee['personalDetails']['lastName'];
+                    $user->username = $employee['personalDetails']['email'];
+                    $user->email = $employee['personalDetails']['email'];
+
+                    $success = Craft::$app->elements->saveElement($user, true);
+
+                    if(!$success){
+                        throw new Exception("The user couldn't be created");
+                    }
+
+                    Craft::info("Staff: new user creation: ".$user->id);
+
+                    // assign user to group
+                    $group = Craft::$app->getUserGroups()->getGroupByHandle('hardingUsers');
+                    if($group){
+                        Craft::$app->getUsers()->assignUserToGroups($user->id, [$group->id]);
+                    }
+                }
+            }
+
+            //foreign keys
+            $personalDetails = Staff::$plugin->employees->savePersonalDetails($employee['personalDetails'], $personalDetailsId);
+            $employmentDetails = Staff::$plugin->employees->saveEmploymentDetails($employee['employmentDetails'], $employmentDetailsId);
+            $employerId = EmployerRecord::findOne(['staffologyId' => $employer['id']]);
+
+            $employeeRecord->employerId = $employerId->id ?? null;
+            $employeeRecord->userId = $user->id ?? null;
+            $employeeRecord->personalDetailsId = $personalDetails->id ?? null;
+            $employeeRecord->employmentDetailsId = $employmentDetails->id ?? null;
+            $employeeRecord->staffologyId = $employee['id'] ?? null;
+            $employeeRecord->status = $employee['status'] ?? null;
+            $employeeRecord->sourceSystemId = $employee['sourceSystemId'] ?? null;
+            $employeeRecord->niNumber = SecurityHelper::encrypt($employee['niNumber'] ?? '');
+            $employeeRecord->isDirector = $employee['employmentDetails']['directorshipDetails']['isDirector'] ?? null;
+
+            $success = $employeeRecord->save();
+
+            if($isNew && $user) {
+                //assign permissions to employee
+                if($employeeRecord->isDirector) {
+                    $permissions = Permission::find()->all();
+                } else {
+                    $permissions = [Permission::findOne(['name' => 'access:employer'])];
+                }
+
+                Staff::$plugin->userPermissions->createPermissions($permissions, $user->id, $employeeRecord->id);
+            }
 
             if($success){
                 $logger->stdout(" done" . PHP_EOL, $logger::FG_GREEN);
+
+                $this->saveEmployeeElement();
             }else{
                 $logger->stdout(" failed" . PHP_EOL, $logger::FG_RED);
 
@@ -107,10 +179,18 @@ class Employees extends Component
                 $logger->stdout($errors . PHP_EOL, $logger::FG_RED);
                 Craft::error($employeeRecord->errors, __METHOD__);
             }
+
+        } catch (\Exception $e) {
+
+            $logger = new Logger();
+            $logger->stdout(PHP_EOL, $logger::RESET);
+            $logger->stdout($e->getMessage() . PHP_EOL, $logger::FG_RED);
+            Craft::error($e->getMessage(), __METHOD__);
         }
+
     }
 
-    public function saveEmploymentdetails(array $employmentDetails, int $employmentDetailsId = null): EmploymentDetails
+    public function saveEmploymentDetails(array $employmentDetails, int $employmentDetailsId = null): EmploymentDetails
     {
         if($employmentDetailsId) {
             $record = EmploymentDetails::findOne($employmentDetailsId);
@@ -192,62 +272,17 @@ class Employees extends Component
         return $record;
     }
 
-//    /**
-//     * This function can literally be anything you want, and you can have as many service
-//     * functions as you want
-//     *
-//     * From any other plugin file, call it like this:
-//     *
-//     *     Staff::$plugin->employees->exampleService()
-//     *
-//     * @return mixed
-//     */
-//    public function fetch2()
-//    {
-//        $apiKey = \Craft::parseEnv(Staff::$plugin->getSettings()->apiKeyStaffology);
-//
-//        if ($apiKey) {
-//
-//            $credentials = base64_encode('staff:' . $apiKey);
-//            $headers = [
-//                'headers' => [
-//                    'Authorization' => 'Basic ' . $credentials,
-//                ],
-//            ];
-//
-//            // GET EMPLOYERS
-//            $employers = Employer::find()->all();
-//
-//            foreach($employers as $employer) {
-//
-//                $base_url = 'https://api.staffology.co.uk/employers/' . $employer->staffologyId . '/employees';
-//                $client = new \GuzzleHttp\Client();
-//
-//                //GET LIST OF EMPLOYEES INSIDE OF EMPLOYER
-//                try {
-//
-//                    $response = $client->get($base_url, $headers);
-//                    $results = Json::decodeIfJson($response->getBody()->getContents(), true);
-//
-//                    // LOOP THROUGH LIST WITH COMPANIES
-//                    foreach ($results as $result) {
-//
-//                        echo "test";
-//
-//                        Queue::push(new CreateEmployeeJob([
-//                            'headers' => $headers,
-//                            'employer' => $employer,
-//                            'isDirector' => $result['metadata']['isDirector'] ?? false,
-//                            'endpoint' => $result['url'],
-//                        ]));
-//
-//                    }
-//                } catch (\Throwable $e) {
-//                    echo "---- error -----\n";
-//                    var_dump($e->getMessage());
-//                    echo "\n---- end error ----";
-//                }
-//            }
-//        }
-//    }
+
+
+
+
+
+    /* SAVES ELEMENTS */
+    public function saveEmployeeElement(): bool
+    {
+        $employeeRecord = new Employee();
+        $elementsService = Craft::$app->getElements();
+        return $elementsService->saveElement($employeeRecord);
+
+    }
 }
