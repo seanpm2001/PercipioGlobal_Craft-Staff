@@ -11,9 +11,9 @@
 namespace percipiolondon\staff\services;
 
 use craft\helpers\App;
-use percipiolondon\staff\console\controllers\FetchController;
-use percipiolondon\staff\elements\Employee;
+use percipiolondon\staff\db\Table;
 use percipiolondon\staff\helpers\Logger;
+use percipiolondon\staff\helpers\Security as SecurityHelper;
 use percipiolondon\staff\Staff;
 use percipiolondon\staff\records\Employer as EmployerRecord;
 use percipiolondon\staff\elements\Employer;
@@ -22,7 +22,7 @@ use percipiolondon\staff\jobs\FetchEmployersJob;
 use Craft;
 use craft\base\Component;
 use craft\helpers\Json;
-use yii\helpers\Console;
+use yii\db\Query;
 
 /**
  * Employers Service
@@ -41,6 +41,49 @@ class Employers extends Component
 {
     // Public Methods
     // =========================================================================
+
+
+    /* GETTERS */
+    public function getEmployers(): array
+    {
+        $query = new Query();
+        $query->from(Table::EMPLOYERS)
+            ->all();
+        $command = $query->createCommand();
+        $employersQuery = $command->queryAll();
+
+        $employers = [];
+
+        if (!$employersQuery) {
+            return [];
+        }
+
+        foreach ($employersQuery as $employer) {
+            $employers[] = $this->_parseEmployer($employer);
+        }
+
+        return $employers;
+    }
+
+    public function getEmployerById(int $employerId): array
+    {
+        $query = new Query();
+        $query->from(Table::EMPLOYERS)
+            ->where('id = '.$employerId)
+            ->one();
+        $command = $query->createCommand();
+        $employerQuery = $command->queryOne();
+
+        if (!$employerQuery) {
+            return [];
+        }
+
+        return $this->_parseEmployer($employerQuery);
+    }
+
+
+
+    /* FETCHES */
     public function fetchEmployerList(): array
     {
         $logger = new Logger();
@@ -108,6 +151,11 @@ class Employers extends Component
         ]));
     }
 
+
+
+
+
+    /* SAVES */
     public function saveEmployer(array $employer)
     {
         $employerRecord = EmployerRecord::findOne(['staffologyId' => $employer['id']]);
@@ -152,4 +200,19 @@ class Employers extends Component
 
     }
 
+
+
+    // Private Methods
+    // =========================================================================
+
+    /* PARSE SECURITY VALUES */
+    private function _parseEmployer(array $employer) :array
+    {
+        $employer['name'] = SecurityHelper::decrypt($employer['name'] ?? '');
+        $employer['crn'] = SecurityHelper::decrypt($employer['crn'] ?? '');
+        $employer['slug'] = SecurityHelper::decrypt($employer['slug'] ?? '');
+        $employer['logoUrl'] = SecurityHelper::decrypt($employer['logoUrl'] ?? '');
+
+        return $employer;
+    }
 }
