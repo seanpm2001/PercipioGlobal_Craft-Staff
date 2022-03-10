@@ -115,6 +115,8 @@ class PayRuns extends Component
             $command = $query->createCommand();
             $payRunEntries = $command->queryAll();
 
+            $payRun['entries'] = [];
+
             foreach($payRunEntries as $entry) {
 
                 //pdf
@@ -166,17 +168,18 @@ class PayRuns extends Component
                     $entry['payOptions']['regularPayLines'][] = $this->_parsePayLines($payLine);
                 }
 
-                Craft::dd($entry);
+                $payRun['entries'][] = $entry;
             }
-
-
 
             $payRuns[] = $payRun;
         }
 
-        Craft::dd($payRuns);
-
         return $payRuns;
+    }
+
+    public function getCsvTemplate(int $payRunId)
+    {
+
     }
 
 
