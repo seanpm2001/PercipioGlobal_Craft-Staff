@@ -18,7 +18,6 @@ use craft\db\ActiveRecord;
 use percipiolondon\staff\db\Table;
 
 /**
- * @property int $noteId;
  * @property int $priorPayrollCodeId;
  * @property string $payOptionsId;
  * @property int $pensionSummaryId;
@@ -36,6 +35,7 @@ use percipiolondon\staff\db\Table;
  * @property string $taxYear
  * @property \DateTime $startDate
  * @property \DateTime $endDate
+ * @property string $note
  * @property string $bacsSubReference
  * @property string $bacsHashcode
  * @property double $percentageOfWorkingDaysPaidAsNormal
@@ -54,7 +54,6 @@ use percipiolondon\staff\db\Table;
  * @property boolean $manualNi
  * @property boolean $payrollCodeChanged
  * @property boolean $aeNotEnroledWarning
- * @property string $fps
  * @property boolean $receivingOffsetPay
  * @property boolean $paymentAfterLearning
  * @property string $pdf

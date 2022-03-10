@@ -52,9 +52,8 @@ class CreatePayRunEntryJob extends Basejob
                     $response = $client->get($base_url, $headers);
                     $result = json_decode($response->getBody()->getContents(), true);
 
-                    Staff::$plugin->payRuns->savePayRunEntry($result, $payRunEntryData['name'], $this->criteria['employer']);
+                    Staff::$plugin->payRuns->savePayRunEntry($result, $this->criteria['employer'], $this->criteria['payRun']);
                     Staff::$plugin->payRuns->fetchPaySlip($result, $this->criteria['employer']);
-//                    $this->_savePayRunEntry($payRunEntryData);
                 } catch (\Exception $e) {
 
                     $logger->stdout(PHP_EOL, $logger::RESET);
@@ -65,61 +64,6 @@ class CreatePayRunEntryJob extends Basejob
             }
         }
     }
-
-//    private function _savePayRunEntry($payRunEntryData)
-//    {
-//        $payRunEntry = new PayRunEntry();
-//
-//        $employee = Employee::findOne(['staffologyId' => $payRunEntryData['employee']['id']]);
-//
-//        $payRunEntry->siteId = Craft::$app->getSites()->currentSite->id;
-//        $payRunEntry->employerId = $this->employerId;
-//        $payRunEntry->employeeId = $employee->id ?? null;
-//        $payRunEntry->payRunId = $this->payRunId;
-//        $payRunEntry->staffologyId = $payRunEntryData['id'] ?? null;
-//        $payRunEntry->taxYear = $payRunEntryData['taxYear'] ?? null;
-//        $payRunEntry->startDate = $payRunEntryData['startDate'] ?? null;
-//        $payRunEntry->endDate = $payRunEntryData['endDate'] ?? null;
-//        $payRunEntry->note = $payRunEntryData['note'] ?? '';
-//        $payRunEntry->bacsSubReference = $payRunEntryData['bacsSubReference'] ?? '';
-//        $payRunEntry->bacsHashcode = $payRunEntryData['bacsHashcode'] ?? '';
-//        $payRunEntry->percentageOfWorkingDaysPaidAsNormal = $payRunEntryData['percentageOfWorkingDaysPaidAsNormal'] ?? null;
-//        $payRunEntry->workingDaysNotPaidAsNormal = $payRunEntryData['workingDaysNotPaidAsNormal'] ?? null;
-//        $payRunEntry->payPeriod = $payRunEntryData['payPeriod'] ?? null;
-//        $payRunEntry->ordinal = $payRunEntryData['ordinal'] ?? null;
-//        $payRunEntry->period = $payRunEntryData['period'] ?? null;
-//        $payRunEntry->isNewStarter = $payRunEntryData['isNewStarter'] ?? null;
-//        $payRunEntry->unpaidAbsence = $payRunEntryData['unpaidAbsence'] ?? null;
-//        $payRunEntry->hasAttachmentOrders = $payRunEntryData['hasAttachmentOrders'];
-//        $payRunEntry->paymentDate = $payRunEntryData['paymentDate'] ?? null;
-//        $payRunEntry->priorPayrollCode = $payRunEntryData['priorPayrollCode'] ?? '';
-//        $payRunEntry->payOptions = $payRunEntryData['payOptions'] ?? '';
-//        $payRunEntry->pensionSummary = $payRunEntryData['pensionSummary'] ?? '';
-//        $payRunEntry->totals = $payRunEntryData['totals'] ?? '';
-//        $payRunEntry->periodOverrides = $payRunEntryData['periodOverrides'] ?? '';
-//        $payRunEntry->totalsYtd = $payRunEntryData['totalsYtd'] ?? '';
-//        $payRunEntry->totalsYtdOverrides = $payRunEntryData['totalsYtdOverrides'] ?? '';
-//        $payRunEntry->forcedCisVatAmount = $payRunEntryData['forcedCisVatAmount'] ?? null;
-//        $payRunEntry->holidayAccured = $payRunEntryData['holidayAccured'] ?? null;
-//        $payRunEntry->state = $payRunEntryData['state'] ?? '';
-//        $payRunEntry->isClosed = $payRunEntryData['isClosed'] ?? null;
-//        $payRunEntry->manualNi = $payRunEntryData['manualNi'] ?? null;
-//        $payRunEntry->nationalInsuranceCalculation = $payRunEntryData['nationalInsuranceCalculation'] ?? '';
-//        $payRunEntry->aeNotEnroledWarning = $payRunEntryData['aeNotEnroledWarning'] ?? null;
-//        $payRunEntry->fps = $payRunEntryData['fps'] ?? '';
-//        $payRunEntry->receivingOffsetPay = $payRunEntryData['receivingOffsetPay'] ?? null;
-//        $payRunEntry->paymentAfterLearning = $payRunEntryData['paymentAfterLearning'] ?? null;
-//        $payRunEntry->umbrellaPayment = $payRunEntryData['umbrellaPayment'] ?? '';
-//        $payRunEntry->employee = $payRunEntryData['employee'] ?? '';
-////        $payRunEntry->pdf = $payRunEntryData['pdf'];
-//
-//        $elementsService = Craft::$app->getElements();
-//        $success = $elementsService->saveElement($payRunEntry);
-//
-//        if(!$success){
-//            Craft::error($payRunEntry->errors);
-//        }
-//    }
 
     protected function defaultDescription(): string
     {

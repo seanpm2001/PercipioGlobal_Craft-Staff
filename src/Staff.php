@@ -186,6 +186,7 @@ class Staff extends Plugin
 
         $this->installEventListeners();
 
+        Craft::dd(Staff::$plugin->payRuns->getPayRunById(1808));
 
         /**
          * Logging in Craft involves using one of the following methods:
@@ -473,7 +474,6 @@ class Staff extends Plugin
                 $event->types[] = EmployeeElement::class;
                 $event->types[] = PayRunElement::class;
                 $event->types[] = PayRunEntryElement::class;
-                $event->types[] = HardingUserElement::class;
             }
         );
     }

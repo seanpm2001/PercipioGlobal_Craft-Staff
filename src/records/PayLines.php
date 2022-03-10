@@ -17,7 +17,9 @@ use craft\db\ActiveRecord;
 use percipiolondon\staff\db\Table;
 
 /**
- * @property double $value;
+ * @property int $payOptionsId;
+ *
+ * @property string $value;
  * @property double $rate;
  * @property double $multiplier;
  * @property string $description;
@@ -45,6 +47,6 @@ class PayLines extends ActiveRecord
      */
     public static function tableName()
     {
-        return Table::PAYLINES;
+        return Table::PAY_LINES;
     }
 }
