@@ -64,8 +64,8 @@ class PayRunEntry extends ActiveRecord
     // Public Static Methods
     // =========================================================================
 
-    public function rules()
-    {
+//    public function rules()
+//    {
 //        return [
 //            [[
 //                'payRunId',
@@ -112,7 +112,7 @@ class PayRunEntry extends ActiveRecord
 //                'paymentAfterLearning',
 //            ], 'boolean'],
 //        ];
-    }
+//    }
 
      /**
      * Declares the name of the database table associated with this AR class.

@@ -12,7 +12,6 @@ use yii\db\Connection;
 
 class PayRunQuery extends ElementQuery
 {
-    public $siteId;
     public $staffologyId;
     public $taxYear;
     public $taxMonth;
@@ -24,19 +23,13 @@ class PayRunQuery extends ElementQuery
     public $paymentDate;
     public $employeeCount;
     public $subContractorCount;
-    public $totals;
+    public $totalsId;
     public $state;
     public $isClosed;
     public $dateClosed;
     public $pdf;
     public $url;
     public $employerId;
-
-    public function siteId($value)
-    {
-        $this->siteId = $value;
-        return $this;
-    }
 
     public function staffologyId($value)
     {
@@ -104,9 +97,9 @@ class PayRunQuery extends ElementQuery
         return $this;
     }
 
-    public function totals($value)
+    public function totalsId($value)
     {
-        $this->totals = $value;
+        $this->totalsId = $value;
         return $this;
     }
 
@@ -152,7 +145,6 @@ class PayRunQuery extends ElementQuery
         $this->joinElementTable('staff_payrun');
 
         $this->query->select([
-            'staff_payrun.siteId',
             'staff_payrun.staffologyId',
             'staff_payrun.taxYear',
             'staff_payrun.taxMonth',
@@ -164,7 +156,7 @@ class PayRunQuery extends ElementQuery
             'staff_payrun.paymentDate',
             'staff_payrun.employeeCount',
             'staff_payrun.subContractorCount',
-            'staff_payrun.totals',
+            'staff_payrun.totalsId',
             'staff_payrun.state',
             'staff_payrun.isClosed',
             'staff_payrun.dateClosed',

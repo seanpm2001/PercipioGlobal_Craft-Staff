@@ -115,7 +115,6 @@ class EmployeeQuery extends ElementQuery
 
         $this->query->select([
             'staff_employees.personalDetails',
-            'staff_employees.siteId',
             'staff_employees.staffologyId',
             'staff_employees.employerId',
             'staff_employees.userId',
