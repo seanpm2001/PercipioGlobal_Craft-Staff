@@ -22,10 +22,11 @@ use percipiolondon\staff\jobs\CreatePayCodeJob;
 use percipiolondon\staff\jobs\CreatePayRunJob;
 use percipiolondon\staff\jobs\CreatePayRunEntryJob;
 
-use percipiolondon\staff\records\Employer;
-use percipiolondon\staff\records\PayLines;
-use percipiolondon\staff\records\PayOptions;
+use percipiolondon\staff\records\Employer as EmployerRecord;
+use percipiolondon\staff\records\PayLine as PayLineRecord;
+use percipiolondon\staff\records\PayOption as PayOptionRecord;
 use percipiolondon\staff\records\PayRun as PayRunRecord;
+use percipiolondon\staff\records\PayRunEntry as PayRunEntryRecord;
 
 use Craft;
 use craft\base\Component;
@@ -114,6 +115,10 @@ class PayRuns extends Component
             $payRunEntries = $command->queryAll();
 
             foreach($payRunEntries as $entry) {
+
+                //pdf
+                $entry['pdf'] = SecurityHelper::decrypt($entry['pdf'] ?? '');
+
                 //totals
                 $query = new Query();
                 $query->from(Table::PAYRUN_TOTALS)
@@ -307,33 +312,13 @@ class PayRuns extends Component
         }
     }
 
-    public function savePaySlip(array $paySlip, array $payRunEntry, array $employer)
-    {
-        $logger = new Logger();
-
-        $logger->stdout("✓ Save pay slip...", $logger::RESET);
-        $logger->stdout(" done" . PHP_EOL, $logger::FG_GREEN);
-
-//        if($payslip->content) {
-//            $this->criteria['payRunEntry']['pdf'] = $paySlip['content'] ?? null;
-//
-//            $success = $payRunEntry->save(false);
-//
-//            if(!$success){
-//                $logger->stdout(PHP_EOL, $logger::RESET);
-//                $logger->stdout("The payslip couldn't be created" . PHP_EOL, $logger::FG_RED);
-//                Craft::error("The payslip couldn't be created", __METHOD__);
-//            }
-//        }
-    }
-
     public function savePayRunLog(array $payRun, string $url, string $payRunId, string $employerId)
     {
         $logger = new Logger();
         $logger->stdout('✓ Save pay run log ...', $logger::RESET);
 
         $payRunLog = new PayRunLog();
-        $employer = Employer::findOne(['staffologyId' => $employerId]);
+        $employer = EmployerRecord::findOne(['staffologyId' => $employerId]);
 
         $payRunLog->employerId = $employer->id ?? null;
 
@@ -435,6 +420,29 @@ class PayRuns extends Component
             Craft::error($payRunEntry->errors, __METHOD__);
         }
     }
+
+    public function savePaySlip(array $paySlip, array $payRunEntry)
+    {
+        $logger = new Logger();
+        $logger->stdout("✓ Save pay slip of ". $payRunEntry['employee']['name'] ?? '' ."...", $logger::RESET);
+
+        $record = PayRunEntryRecord::findOne(['staffologyId' => $payRunEntry['id']]);
+
+        if($paySlip['content'] ?? null && $record)
+        {
+            $record->pdf = SecurityHelper::encrypt($paySlip['content'] ?? '');
+
+            $success = $record->save();
+
+            if($success) {
+                $logger->stdout(" done" . PHP_EOL, $logger::FG_GREEN);
+            } else {
+                $logger->stdout(PHP_EOL, $logger::RESET);
+                $logger->stdout("The payslip couldn't be created for ". $payRunEntry['employee']['name'] ?? '' . PHP_EOL, $logger::FG_RED);
+                Craft::error("The payslip couldn't be created for ". $payRunEntry['employee']['name'] ?? '', __METHOD__);
+            }
+        }
+    }
     
     public function saveTotals(array $totals, int $totalsId = null): PayRunTotals
     {
@@ -523,17 +531,17 @@ class PayRuns extends Component
 
     }
 
-    public function savePayOptions(array $payOptions, int $payOptionsId = null): PayOptions
+    public function savePayOptions(array $payOptions, int $payOptionsId = null): PayOptionRecord
     {
         if($payOptionsId) {
-            $record = PayOptions::findOne($payOptionsId);
+            $record = PayOptionRecord::findOne($payOptionsId);
 
             if (!$record) {
                 throw new Exception('Invalid pay options ID: ' . $payOptionsId);
             }
 
         }else{
-            $record = new PayOptions();
+            $record = new PayOptionRecord();
         }
 
         $record->period = $payOptions['period'] ?? null;
@@ -574,7 +582,7 @@ class PayRuns extends Component
 
     public function savePayLines(array $payLine, int $payOptionsId): void
     {
-        $record = new PayLines();
+        $record = new PayLineRecord();
 
         $record->payOptionsId = $payOptionsId ?? null;
         $record->value = SecurityHelper::encrypt($payLine['value'] ?? '');

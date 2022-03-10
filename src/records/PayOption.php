@@ -17,18 +17,25 @@ use craft\db\ActiveRecord;
 use percipiolondon\staff\db\Table;
 
 /**
- * @property int $payOptionsId;
+ * @property int $taxAndNiId;
+ * @property int $fpsFieldsId;
  *
- * @property string $value;
- * @property double $rate;
- * @property double $multiplier;
- * @property string $description;
- * @property string $attachmentOrderId;
- * @property string $pensionId;
- * @property string $code;
+ * @property string $period;
+ * @property int $ordinal;
+ * @property double $payAmount;
+ * @property string $basis;
+ * @property boolean $nationalMinimumWage;
+ * @property double $payAmountMultiplier;
+ * @property double $baseHourlyRate;
+ * @property boolean $autoAdjustForLeave;
+ * @property string $method;
+ * @property string $payCode;
+ * @property boolean $withholdTaxRefundIfPayIsZero;
+ * @property string $mileageVehicleType;
+ * @property int $mapsMiles;
  */
 
-class PayLines extends ActiveRecord
+class PayOption extends ActiveRecord
 {
     // Public Static Methods
     // =========================================================================
@@ -47,6 +54,6 @@ class PayLines extends ActiveRecord
      */
     public static function tableName()
     {
-        return Table::PAY_LINES;
+        return Table::PAY_OPTIONS;
     }
 }

@@ -216,7 +216,7 @@ class Install extends Migration
                 'aeNotEnroledWarning' => $this->boolean(),
                 'receivingOffsetPay' => $this->boolean(),
                 'paymentAfterLearning' => $this->boolean(),
-                'pdf' => $this->string()->defaultValue(''),
+                'pdf' => $this->mediumText()->defaultValue(''),
             ]);
 
             $this->createTable(Table::PAYRUN_LOG, [
