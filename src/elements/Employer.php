@@ -81,6 +81,7 @@ class Employer extends Element
     public $name;
     public $logoUrl;
     public $crn;
+    public $defaultPayOptions;
     public $address;
     public $startYear;
     public $currentYear;
@@ -523,16 +524,19 @@ class Employer extends Element
                 }
 
                 $addressId = $record->addressId;
+                $defaultPayOptionsId = $record->defaultPayOptionsId;
 
             } else {
                 $record = new EmployerRecord();
                 $record->id = (int)$this->id;
 
                 $addressId = null;
+                $defaultPayOptionsId = null;
             }
 
             // Attach the foreign keys
-            $address = Staff::$plugin->addresses->saveAddress($this->address, $addressId);
+            $address = $this->address ? Staff::$plugin->addresses->saveAddress($this->address, $addressId) : null;
+            $payOptions = $this->defaultPayOptions ? Staff::$plugin->payRuns->savePayOptions($this->defaultPayOptions, $defaultPayOptionsId) : null;
 
             $record->slug = SecurityHelper::encrypt((strtolower(trim(preg_replace('/[^A-Za-z0-9-]+/', '-', $this->name ?? ''), '-'))));
             $record->staffologyId = $this->staffologyId;
@@ -543,6 +547,7 @@ class Employer extends Element
             $record->startYear = $this->startYear;
             $record->currentYear = $this->currentYear;
             $record->employeeCount = $this->employeeCount;
+            $record->defaultPayOptionsId = $payOptions->id ?? null;
 
             $success = $record->save(false);
 

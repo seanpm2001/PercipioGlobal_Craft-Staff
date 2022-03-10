@@ -78,7 +78,20 @@ class Employers extends Component
             return [];
         }
 
-        return $this->_parseEmployer($employerQuery);
+        $employer = $this->_parseEmployer($employerQuery);
+
+        $query = new Query();
+        $query->from(Table::PAY_OPTIONS)
+            ->where('id = '.$employer['defaultPayOptionsId'])
+            ->one();
+        $command = $query->createCommand();
+        $payOptions = $command->queryOne();
+
+        if($payOptions){
+            $employer['defaultPayOptions'] = Staff::$plugin->payRuns->parsePayOptions($payOptions);
+        }
+
+        return $employer;
     }
 
 
@@ -177,6 +190,7 @@ class Employers extends Component
             $emp->startYear = $employer['startYear'] ?? null;
             $emp->currentYear = $employer['currentYear'] ?? null;
             $emp->employeeCount = $employer['employeeCount'] ?? null;
+            $emp->defaultPayOptions = $employer['defaultPayOptions'] ?? null;
 
             $elementsService = Craft::$app->getElements();
             $success = $elementsService->saveElement($emp);

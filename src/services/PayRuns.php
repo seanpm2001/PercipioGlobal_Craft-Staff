@@ -152,7 +152,7 @@ class PayRuns extends Component
                 $command = $query->createCommand();
                 $payOptions = $command->queryOne();
 
-                $entry['payOptions'] = $this->_parsePayOptions($payOptions);
+                $entry['payOptions'] = $this->parsePayOptions($payOptions);
 
                 //payLines
                 $query = new Query();
@@ -188,7 +188,7 @@ class PayRuns extends Component
 
 
     /* FETCHES */
-    public function fetchPayCodesList(array $employers)
+    public function fetchPayCodesList(array $employers): void
     {
         $queue = Craft::$app->getQueue();
         $queue->push(new FetchPayCodesListJob([
@@ -199,7 +199,7 @@ class PayRuns extends Component
         ]));
     }
 
-    public function fetchPayCodes(array $payCodes, array $employer)
+    public function fetchPayCodes(array $payCodes, array $employer): void
     {
         $queue = Craft::$app->getQueue();
         $queue->push(new CreatePayCodeJob([
@@ -211,7 +211,21 @@ class PayRuns extends Component
         ]));
     }
 
-    public function fetchPayRun(array $employer)
+    public function fetchPayRuns(array $payRuns, array $employer): void
+    {
+        $employer['id'] = $employer['staffologyId'];
+
+        $queue = Craft::$app->getQueue();
+        $queue->push(new CreatePayRunJob([
+            'description' => 'Fetch pay runs',
+            'criteria' => [
+                'payRuns' => $payRuns,
+                'employer' => $employer,
+            ]
+        ]));
+    }
+
+    public function fetchPayRunByEmployer(array $employer): void
     {
         $payRuns = $employer['metadata']['payruns'] ?? [];
 
@@ -225,7 +239,7 @@ class PayRuns extends Component
         ]));
     }
 
-    public function fetchPaySlip(array $payRunEntry, array $employer)
+    public function fetchPaySlip(array $payRunEntry, array $employer): void
     {
         $queue = Craft::$app->getQueue();
         $queue->push(new FetchPaySlipJob([
@@ -245,7 +259,7 @@ class PayRuns extends Component
 
 
     /* SAVES */
-    public function savePayCode(array $payCode, array $employer)
+    public function savePayCode(array $payCode, array $employer): void
     {
         $logger = new Logger();
         $logger->stdout("✓ Save pay code " . $payCode['code'] . "...", $logger::RESET);
@@ -343,7 +357,7 @@ class PayRuns extends Component
         }
     }
 
-    public function savePayRunLog(array $payRun, string $url, string $payRunId, string $employerId)
+    public function savePayRunLog(array $payRun, string $url, string $payRunId, string $employerId): void
     {
         $logger = new Logger();
         $logger->stdout('✓ Save pay run log ...', $logger::RESET);
@@ -379,7 +393,7 @@ class PayRuns extends Component
         }
     }
 
-    public function savePayRunEntry(array $payRunEntryData, array $employer, PayRun $payRun)
+    public function savePayRunEntry(array $payRunEntryData, array $employer, PayRun $payRun): void
     {
         $logger = new Logger();
 
@@ -452,14 +466,14 @@ class PayRuns extends Component
         }
     }
 
-    public function savePaySlip(array $paySlip, array $payRunEntry)
+    public function savePaySlip(array $paySlip, array $payRunEntry): void
     {
         $logger = new Logger();
         $logger->stdout("✓ Save pay slip of ". $payRunEntry['employee']['name'] ?? '' ."...", $logger::RESET);
 
         $record = PayRunEntryRecord::findOne(['staffologyId' => $payRunEntry['id']]);
 
-        if($paySlip['content'] ?? null && $record)
+        if($paySlip['content'] && $record)
         {
             $record->pdf = SecurityHelper::encrypt($paySlip['content'] ?? '');
 
@@ -562,7 +576,7 @@ class PayRuns extends Component
 
     }
 
-    public function savePayOptions(array $payOptions, int $payRunEntryId, int $payOptionsId = null): PayOptionRecord
+    public function savePayOptions(array $payOptions, int $payOptionsId = null): PayOptionRecord
     {
         if($payOptionsId) {
             $record = PayOptionRecord::findOne($payOptionsId);
@@ -669,7 +683,7 @@ class PayRuns extends Component
         return $totals;
     }
 
-    private function _parsePayOptions(array $payOptions): array
+    public function parsePayOptions(array $payOptions): array
     {
         $payOptions['payAmount'] = SecurityHelper::decrypt($payOptions['payAmount'] ?? '');
         $payOptions['baseHourlyRate'] = SecurityHelper::decrypt($payOptions['baseHourlyRate'] ?? '');

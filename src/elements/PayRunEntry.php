@@ -492,7 +492,7 @@ class PayRunEntry extends Element
             //foreign keys
             $totals = Staff::$plugin->payRuns->saveTotals($this->totals, $totalsId);
             $totalsYtd = Staff::$plugin->payRuns->saveTotals($this->totalsYtd, $totalsYtdId);
-            $payOptions = Staff::$plugin->payRuns->savePayOptions($this->payOptions, $record->id, $payOptionsId);
+            $payOptions = Staff::$plugin->payRuns->savePayOptions($this->payOptions, $payOptionsId);
             $employee = Employee::findOne(['staffologyId' => $this->employeeId]);
             $employer = Employer::findOne(['staffologyId' => $this->employerId]);
 
