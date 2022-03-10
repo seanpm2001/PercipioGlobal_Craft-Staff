@@ -57,6 +57,6 @@ class PayRun extends ActiveRecord
      */
     public static function tableName()
     {
-        return Table::STAFF_PAYRUN;
+        return Table::PAYRUN;
     }
 }

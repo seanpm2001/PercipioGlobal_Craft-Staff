@@ -54,7 +54,7 @@ class CreatePayRunJob extends BaseJob
 
                     $logger->stdout(" done" . PHP_EOL, $logger::FG_GREEN);
 
-                    Staff::getInstance()->payRun->savePayRun($payRunData, $payRun['url'], $this->criteria['employer']);
+                    Staff::$plugin->payRuns->savePayRun($payRunData, $payRun['url'], $this->criteria['employer']);
 //                            $this->_savePayRun($payRunData, $payRun['url']);
                 }
 

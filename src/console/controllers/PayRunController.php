@@ -46,11 +46,11 @@ class PayRunController extends Controller
      */
     public function actionFetch()
     {
-        return  Staff::$plugin->payRun->fetch();
+        return  Staff::$plugin->payRuns->fetch();
     }
 
     public function actionFetchPayslips()
     {
-        return  Staff::$plugin->payRun->fetchPayslips();
+        return  Staff::$plugin->payRuns->fetchPayslips();
     }
 }

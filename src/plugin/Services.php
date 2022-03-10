@@ -2,9 +2,10 @@
 
 namespace percipiolondon\staff\plugin;
 
+use percipiolondon\staff\services\Addresses;
 use percipiolondon\staff\services\Employees;
 use percipiolondon\staff\services\Employers;
-use percipiolondon\staff\services\PayRun;
+use percipiolondon\staff\services\PayRuns;
 use percipiolondon\staff\services\UserPermissions;
 
 trait Services
@@ -12,6 +13,9 @@ trait Services
     private function _setPluginComponents()
     {
         $this->setComponents([
+            'addresses' => [
+                'class' => Addresses::class,
+            ],
             'employers' => [
                 'class' => Employers::class,
             ],
@@ -21,8 +25,8 @@ trait Services
             'userPermissions' => [
                 'class' => UserPermissions::class,
             ],
-            'payRun' => [
-                'class' => PayRun::class,
+            'payRuns' => [
+                'class' => PayRuns::class,
             ],
         ]);
     }

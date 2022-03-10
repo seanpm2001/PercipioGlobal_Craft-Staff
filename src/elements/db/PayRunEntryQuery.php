@@ -12,7 +12,6 @@ use yii\db\Connection;
 
 class PayRunEntryQuery extends ElementQuery
 {
-    public $siteId;
     public $staffologyId;
     public $payRunId;
     public $employerId;
@@ -54,12 +53,6 @@ class PayRunEntryQuery extends ElementQuery
     public $employee;
     public $pdf;
 
-    public function siteId($value)
-    {
-        $this->siteId = $value;
-        return $this;
-    }
-
     public function staffologyId($value)
     {
         $this->staffologyId = $value;
@@ -72,9 +65,56 @@ class PayRunEntryQuery extends ElementQuery
         return $this;
     }
 
+    public function employeeId($value)
+    {
+        $this->employeeId = $value;
+        return $this;
+    }
+
     public function employerId($value)
     {
         $this->employerId = $value;
+        return $this;
+    }
+    public function payOptionsId($value)
+    {
+        $this->payOptions = $value;
+        return $this;
+    }
+
+    public function pensionSummaryId($value)
+    {
+        $this->pensionSummary = $value;
+        return $this;
+    }
+
+    public function totalsId($value)
+    {
+        $this->totals = $value;
+        return $this;
+    }
+
+    public function priorPayrollCode($value)
+    {
+        $this->priorPayrollCode = $value;
+        return $this;
+    }
+
+    public function totalsYtdId($value)
+    {
+        $this->totalsYtd = $value;
+        return $this;
+    }
+
+    public function totalsYtdOverridesId($value)
+    {
+        $this->totalsYtdOverrides = $value;
+        return $this;
+    }
+
+    public function nationalInsuranceCalculationId($value)
+    {
+        $this->nationalInsuranceCalculation = $value;
         return $this;
     }
 
@@ -168,45 +208,9 @@ class PayRunEntryQuery extends ElementQuery
         return $this;
     }
 
-    public function priorPayrollCode($value)
-    {
-        $this->priorPayrollCode = $value;
-        return $this;
-    }
-
-    public function payOptions($value)
-    {
-        $this->payOptions = $value;
-        return $this;
-    }
-
-    public function pensionSummary($value)
-    {
-        $this->pensionSummary = $value;
-        return $this;
-    }
-
-    public function totals($value)
-    {
-        $this->totals = $value;
-        return $this;
-    }
-
     public function periodOverrides($value)
     {
         $this->periodOverrides = $value;
-        return $this;
-    }
-
-    public function totalsYtd($value)
-    {
-        $this->totalsYtd = $value;
-        return $this;
-    }
-
-    public function totalsYtdOverrides($value)
-    {
-        $this->totalsYtdOverrides = $value;
         return $this;
     }
 
@@ -237,12 +241,6 @@ class PayRunEntryQuery extends ElementQuery
     public function manualNi($value)
     {
         $this->manualNi = $value;
-        return $this;
-    }
-
-    public function nationalInsuranceCalculation($value)
-    {
-        $this->nationalInsuranceCalculation = $value;
         return $this;
     }
 
@@ -294,22 +292,24 @@ class PayRunEntryQuery extends ElementQuery
         return $this;
     }
 
-    public function employeeId($value)
-    {
-        $this->employeeId = $value;
-        return $this;
-    }
-
     protected function beforePrepare(): bool
     {
         $this->joinElementTable('staff_payrunentries');
 
         $this->query->select([
-            'staff_payrunentries.siteId',
-            'staff_payrunentries.staffologyId',
             'staff_payrunentries.payRunId',
             'staff_payrunentries.employerId',
             'staff_payrunentries.employeeId',
+            'staff_payrunentries.payOptionsId',
+            'staff_payrunentries.priorPayrollCode',
+            'staff_payrunentries.totalsYtdId',
+            'staff_payrunentries.totalsYtdOverridesId',
+            'staff_payrunentries.umbrellaPaymentId',
+            'staff_payrunentries.nationalInsuranceCalculationId',
+            'staff_payrunentries.pensionSummaryId',
+            'staff_payrunentries.employee',
+            'staff_payrunentries.fpsId',
+            'staff_payrunentries.staffologyId',
             'staff_payrunentries.taxYear',
             'staff_payrunentries.startDate',
             'staff_payrunentries.endDate',
@@ -325,26 +325,17 @@ class PayRunEntryQuery extends ElementQuery
             'staff_payrunentries.unpaidAbsence',
             'staff_payrunentries.hasAttachmentOrders',
             'staff_payrunentries.paymentDate',
-            'staff_payrunentries.priorPayrollCode',
-            'staff_payrunentries.payOptions',
-            'staff_payrunentries.pensionSummary',
             'staff_payrunentries.totals',
             'staff_payrunentries.periodOverrides',
-            'staff_payrunentries.totalsYtd',
-            'staff_payrunentries.totalsYtdOverrides',
             'staff_payrunentries.forcedCisVatAmount',
             'staff_payrunentries.holidayAccured',
             'staff_payrunentries.state',
             'staff_payrunentries.isClosed',
             'staff_payrunentries.manualNi',
-            'staff_payrunentries.nationalInsuranceCalculation',
             'staff_payrunentries.payrollCodeChanged',
             'staff_payrunentries.aeNotEnroledWarning',
-            'staff_payrunentries.fps',
             'staff_payrunentries.receivingOffsetPay',
             'staff_payrunentries.paymentAfterLearning',
-            'staff_payrunentries.umbrellaPayment',
-            'staff_payrunentries.employee',
             'staff_payrunentries.pdf',
 
         ]);

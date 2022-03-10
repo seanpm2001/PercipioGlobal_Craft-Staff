@@ -11,6 +11,9 @@
 namespace percipiolondon\staff\elements;
 
 use craft\validators\DateTimeValidator;
+use percipiolondon\staff\helpers\Logger;
+use percipiolondon\staff\records\Employee;
+use percipiolondon\staff\records\Employer;
 use percipiolondon\staff\Staff;
 
 use Craft;
@@ -70,7 +73,6 @@ class PayRunEntry extends Element
     // Public Properties
     // =========================================================================
 
-    public $siteId;
     public $staffologyId;
     public $payRunId;
     public $employerId;
@@ -98,7 +100,7 @@ class PayRunEntry extends Element
     public $totalsYtd;
     public $totalsYtdOverrides;
     public $forcedCisVatAmount;
-    public $holidayAccured;
+    public $holidayAccrued;
     public $state;
     public $isClosed;
     public $manualNi;
@@ -175,7 +177,7 @@ class PayRunEntry extends Element
      */
     public static function hasTitles(): bool
     {
-        return true;
+        return false;
     }
 
     /**
@@ -471,15 +473,46 @@ class PayRunEntry extends Element
                 if (!$record) {
                     throw new Exception('Invalid pay run entry ID: ' . $this->id);
                 }
+
+                //foreign keys
+                $totalsId = $record->totalsId;
+                $totalsYtdId = $record->totalsYtdId;
+                $payOptionsId = $record->payOptionsId;
+
             } else {
                 $record = new PayRunEntryRecord();
                 $record->id = (int)$this->id;
+
+                //foreign keys
+                $totalsId = null;
+                $totalsYtdId = null;
+                $payOptionsId = null;
             }
 
-            $record->siteId = $this->siteId;
-            $record->employerId = $this->employerId;
-            $record->employeeId = $this->employeeId;
-            $record->payRunId = $this->payRunId;
+            //foreign keys
+            $totals = Staff::$plugin->payRuns->saveTotals($this->totals, $totalsId);
+            $totalsYtd = Staff::$plugin->payRuns->saveTotals($this->totalsYtd, $totalsYtdId);
+            $payOptions = Staff::$plugin->payRuns->savePayOptions($this->payOptions, $payOptionsId);
+            $employee = Employee::findOne(['staffologyId' => $this->employeeId]);
+            $employer = Employer::findOne(['staffologyId' => $this->employerId]);
+
+            $record->employerId = $employer->id ?? null;
+            $record->employeeId = $employee->id ?? null;
+            $record->payRunId = $this->payRunId ?? null;
+            $record->payOptionsId = $payOptions->id ?? null;
+            $record->totalsId = $totals->id ?? null;
+            $record->totalsYtdId = $totalsYtd->id ?? null;
+            
+//            $record->priorPayrollCode = $this->priorPayrollCode;
+//            $record->pensionSummary = $this->pensionSummary;
+//            $record->nationalInsuranceCalculation = $this->nationalInsuranceCalculation;
+//            $record->fps = $this->fps;
+//            $record->umbrellaPayment = $this->umbrellaPayment;
+//            $record->employee = $this->employee;
+            
+//            $record->periodOverrides = $this->periodOverrides;
+//            $record->totalsYtdOverrides = $this->totalsYtdOverrides;
+            
             $record->staffologyId = $this->staffologyId;
             $record->taxYear = $this->taxYear;
             $record->startDate = $this->startDate;
@@ -496,36 +529,25 @@ class PayRunEntry extends Element
             $record->unpaidAbsence = $this->unpaidAbsence;
             $record->hasAttachmentOrders = $this->hasAttachmentOrders;
             $record->paymentDate = $this->paymentDate;
-            $record->priorPayrollCode = $this->priorPayrollCode;
-            $record->payOptions = $this->payOptions;
-            $record->pensionSummary = $this->pensionSummary;
-            $record->totals = $this->totals;
-            $record->periodOverrides = $this->periodOverrides;
-            $record->totalsYtd = $this->totalsYtd;
-            $record->totalsYtdOverrides = $this->totalsYtdOverrides;
             $record->forcedCisVatAmount = $this->forcedCisVatAmount;
-            $record->holidayAccured = $this->holidayAccured;
+            $record->holidayAccrued = $this->holidayAccrued;
             $record->state = $this->state;
             $record->isClosed = $this->isClosed;
             $record->manualNi = $this->manualNi;
-            $record->nationalInsuranceCalculation = $this->nationalInsuranceCalculation;
             $record->payrollCodeChanged = $this->payrollCodeChanged;
             $record->aeNotEnroledWarning = $this->aeNotEnroledWarning;
-            $record->fps = $this->fps;
             $record->receivingOffsetPay = $this->receivingOffsetPay;
             $record->paymentAfterLearning = $this->paymentAfterLearning;
-            $record->umbrellaPayment = $this->umbrellaPayment;
-            $record->employee = $this->employee;
             $record->pdf = $this->pdf;
 
             $success = $record->save(false);
 
         } catch (\Exception $e) {
 
-            echo "---- error -----\n";
-            var_dump($e->getMessage());
+            $logger = new Logger();
+            $logger->stdout(PHP_EOL, $logger::RESET);
+            $logger->stdout($e->getMessage() . PHP_EOL, $logger::FG_RED);
             Craft::error($e->getMessage(), __METHOD__);
-            echo "\n---- end error ----";
         }
     }
 }

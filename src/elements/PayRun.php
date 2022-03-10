@@ -11,6 +11,8 @@
 namespace percipiolondon\staff\elements;
 
 use craft\db\Query;
+use percipiolondon\staff\helpers\Logger;
+use percipiolondon\staff\records\Employer;
 use percipiolondon\staff\Staff;
 
 use Craft;
@@ -70,7 +72,6 @@ class PayRun extends Element
     // Public Properties
     // =========================================================================
 
-    public $siteId;
     public $staffologyId;
     public $taxYear;
     public $taxMonth;
@@ -153,7 +154,7 @@ class PayRun extends Element
      */
     public static function hasTitles(): bool
     {
-        return true;
+        return false;
     }
 
     /**
@@ -448,14 +449,23 @@ class PayRun extends Element
                 if (!$record) {
                     throw new Exception('Invalid pay run ID: ' . $this->id);
                 }
+
+                //foreign keys
+                $totalsId = $record->totalsId;
             } else {
                 $record = new PayRunRecord();
                 $record->id = (int)$this->id;
+
+                //foreign keys
+                $totalsId = null;
             }
 
-            $record->siteId = $this->siteId;
-            $record->staffologyId = $this->staffologyId;
-            $record->employerId = $this->employerId;
+            //foreign keys
+            $totals = Staff::$plugin->payRuns->saveTotals($this->totals, $totalsId);
+            $employer = Employer::findOne(['staffologyId' => $this->employerId]);
+
+            $record->employerId = $employer->id ?? null;
+
             $record->taxYear = $this->taxYear;
             $record->taxMonth = $this->taxMonth;
             $record->payPeriod = $this->payPeriod;
@@ -466,7 +476,7 @@ class PayRun extends Element
             $record->paymentDate = $this->paymentDate;
             $record->employeeCount = $this->employeeCount;
             $record->subContractorCount = $this->subContractorCount;
-            $record->totals = $this->totals;
+            $record->totalsId = $totals->id;
             $record->state = $this->state;
             $record->isClosed = $this->isClosed;
             $record->dateClosed = $this->dateClosed;
@@ -476,10 +486,10 @@ class PayRun extends Element
 
         } catch (\Exception $e) {
 
-            echo "---- error -----\n";
-            var_dump($e->getMessage());
+            $logger = new Logger();
+            $logger->stdout(PHP_EOL, $logger::RESET);
+            $logger->stdout($e->getMessage() . PHP_EOL, $logger::FG_RED);
             Craft::error($e->getMessage(), __METHOD__);
-            echo "\n---- end error ----";
         }
     }
 }

@@ -538,6 +538,7 @@ class Employer extends Element
             $record->staffologyId = $this->staffologyId;
             $record->name = SecurityHelper::encrypt($this->name ?? '');
             $record->crn = SecurityHelper::encrypt($this->crn ?? '');
+            $record->logoUrl = SecurityHelper::encrypt($this->logoUrl ?? '');
             $record->addressId = $address->id ?? null;
             $record->startYear = $this->startYear;
             $record->currentYear = $this->currentYear;

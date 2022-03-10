@@ -29,12 +29,6 @@ use craft\web\twig\variables\CraftVariable;
 
 use nystudio107\pluginvite\services\VitePluginService;
 
-use percipiolondon\staff\services\Employers as EmployersService;
-use percipiolondon\staff\services\Employees as EmployeesService;
-use percipiolondon\staff\services\PayRun as PayRunService;
-use percipiolondon\staff\services\PayRunEntries as PayRunEntriesService;
-use percipiolondon\staff\services\Pensions as PensionsService;
-
 use percipiolondon\staff\assetbundles\staff\StaffAsset;
 use percipiolondon\staff\models\Settings;
 use percipiolondon\staff\elements\Employer as EmployerElement;
@@ -69,11 +63,6 @@ use yii\base\Event;
  * @package   Staff
  * @since     0.2.0
  *
- * @property  EmployersService      $employers
- * @property  EmployeesService      $employees
- * @property  PayRunService         $payRun
- * @property  PayRunEntriesService  $payRunEntries
- * @property  PensionsService       $pensions
  * @property  Settings              $settings
  * @property  VitePluginService     $vite
  * @method    Settings              getSettings()
@@ -196,7 +185,6 @@ class Staff extends Plugin
         $this->_registerControllers();
 
         $this->installEventListeners();
-
 
         /**
          * Logging in Craft involves using one of the following methods:
@@ -484,7 +472,6 @@ class Staff extends Plugin
                 $event->types[] = EmployeeElement::class;
                 $event->types[] = PayRunElement::class;
                 $event->types[] = PayRunEntryElement::class;
-                $event->types[] = HardingUserElement::class;
             }
         );
     }

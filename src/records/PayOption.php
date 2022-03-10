@@ -19,7 +19,6 @@ use percipiolondon\staff\db\Table;
 /**
  * @property int $taxAndNiId;
  * @property int $fpsFieldsId;
- * @property int $regularPayLinesId;
  *
  * @property string $period;
  * @property int $ordinal;
@@ -36,7 +35,7 @@ use percipiolondon\staff\db\Table;
  * @property int $mapsMiles;
  */
 
-class PayOptions extends ActiveRecord
+class PayOption extends ActiveRecord
 {
     // Public Static Methods
     // =========================================================================
