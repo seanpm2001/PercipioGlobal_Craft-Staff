@@ -19,7 +19,7 @@ use percipiolondon\staff\db\Table;
 /**
  * @property string $title;
  * @property int $code;
- * @property double $defaultValue;
+ * @property string $defaultValue;
  * @property boolean $isDeduction;
  * @property boolean $isNiable;
  * @property boolean $isTaxable;

@@ -23,6 +23,7 @@ use percipiolondon\staff\jobs\CreatePayRunJob;
 use percipiolondon\staff\jobs\CreatePayRunEntryJob;
 
 use percipiolondon\staff\records\Employer as EmployerRecord;
+use percipiolondon\staff\records\PayCode as PayCodeRecord;
 use percipiolondon\staff\records\PayLine as PayLineRecord;
 use percipiolondon\staff\records\PayOption as PayOptionRecord;
 use percipiolondon\staff\records\PayRun as PayRunRecord;
@@ -114,6 +115,8 @@ class PayRuns extends Component
             $command = $query->createCommand();
             $payRunEntries = $command->queryAll();
 
+            $payRun['entries'] = [];
+
             foreach($payRunEntries as $entry) {
 
                 //pdf
@@ -165,17 +168,18 @@ class PayRuns extends Component
                     $entry['payOptions']['regularPayLines'][] = $this->_parsePayLines($payLine);
                 }
 
-                Craft::dd($entry);
+                $payRun['entries'][] = $entry;
             }
-
-
 
             $payRuns[] = $payRun;
         }
 
-        Craft::dd($payRuns);
-
         return $payRuns;
+    }
+
+    public function getCsvTemplate(int $payRunId)
+    {
+
     }
 
 
@@ -195,13 +199,14 @@ class PayRuns extends Component
         ]));
     }
 
-    public function fetchPayCodes(array $payCodes)
+    public function fetchPayCodes(array $payCodes, array $employer)
     {
         $queue = Craft::$app->getQueue();
         $queue->push(new CreatePayCodeJob([
             'description' => 'Save pay codes',
             'criteria' => [
                 'payCodes' => $payCodes,
+                'employer' => $employer
             ]
         ]));
     }
@@ -239,13 +244,39 @@ class PayRuns extends Component
 
 
 
-
     /* SAVES */
-    public function savePayCode(array $payCode)
+    public function savePayCode(array $payCode, array $employer)
     {
         $logger = new Logger();
         $logger->stdout("✓ Save pay code " . $payCode['code'] . "...", $logger::RESET);
-        $logger->stdout(" done" . PHP_EOL, $logger::FG_GREEN);
+
+        $payCodeRecord = PayCodeRecord::findOne(['code' => $payCode['code'], 'employerId' => $employer['id']]);
+
+        if(!$payCodeRecord){
+            $payCodeRecord = new PayCodeRecord();
+        }
+
+        $payCodeRecord->title = $payCode['title'] ?? null;
+        $payCodeRecord->code = $payCode['code'] ?? null;
+        $payCodeRecord->defaultValue = SecurityHelper::encrypt($payCode['defaultValue'] ?? '');
+        $success = $payCodeRecord->save();
+
+        if($success) {
+
+            $logger->stdout(" done" . PHP_EOL, $logger::FG_GREEN);
+
+        }else{
+            $logger->stdout(" failed" . PHP_EOL, $logger::FG_RED);
+
+            $errors = "";
+
+            foreach($payCodeRecord->errors as $err) {
+                $errors .= implode(',', $err);
+            }
+
+            $logger->stdout($errors . PHP_EOL, $logger::FG_RED);
+            Craft::error($payCodeRecord->errors, __METHOD__);
+        }
     }
 
     public function savePayRun(array $payRun, string $payRunUrl, array $employer): void
@@ -531,7 +562,7 @@ class PayRuns extends Component
 
     }
 
-    public function savePayOptions(array $payOptions, int $payOptionsId = null): PayOptionRecord
+    public function savePayOptions(array $payOptions, int $payRunEntryId, int $payOptionsId = null): PayOptionRecord
     {
         if($payOptionsId) {
             $record = PayOptionRecord::findOne($payOptionsId);
