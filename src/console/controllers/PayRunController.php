@@ -44,13 +44,16 @@ class PayRunController extends Controller
      *
      * @return mixed
      */
-    public function actionFetch()
-    {
-        return  Staff::$plugin->payRuns->fetch();
-    }
+    public function actionFetchPayCodes(string $taxYear, string $payPeriod, int $payNumber) {
 
-    public function actionFetchPayslips()
-    {
-        return  Staff::$plugin->payRuns->fetchPayslips();
     }
+//    public function actionFetch()
+//    {
+//        return  Staff::$plugin->payRuns->fetch();
+//    }
+//
+//    public function actionFetchPayslips()
+//    {
+//        return  Staff::$plugin->payRuns->fetchPayslips();
+//    }
 }
