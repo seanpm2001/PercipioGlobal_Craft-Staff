@@ -89,7 +89,6 @@ class Install extends Migration
                 'autoEnrolmentId' => $this->integer(), // create FK to AutoEnrolment table [id]
                 'leaveSettingsId' => $this->integer(), // create FK to LeaveSettings table [id]
                 'rightToWorkId' => $this->integer(), // create FK to RightToWork [id]
-                'payOptionsId' => $this->integer(), // create FK to PayOptions table [id]
                 //fields
                 "staffologyId" => $this->string(255)->notNull(),
                 'isDirector' => $this->boolean(),
@@ -179,7 +178,7 @@ class Install extends Migration
                 'employerId' => $this->integer()->notNull()->defaultValue(null),
                 'payRunId' => $this->integer()->notNull()->defaultValue(0),
                 //stafology
-                'priorPayrollCode' => $this->string(), // create FK to PayCode table [code]
+                'priorPayrollCodeId' => $this->integer(), // create FK to PayCode table [id]
                 'payOptionsId' => $this->integer(), // create FK to PayOptions table [id]
                 'pensionSummaryId' => $this->integer(),// create FK to PensionSummary table [id]
                 'totalsId' => $this->integer(), // create FK to PayRunTotals table [id]
@@ -216,7 +215,7 @@ class Install extends Migration
                 'aeNotEnroledWarning' => $this->boolean(),
                 'receivingOffsetPay' => $this->boolean(),
                 'paymentAfterLearning' => $this->boolean(),
-                'pdf' => $this->mediumText()->defaultValue(''),
+                'pdf' => $this->mediumText(),
             ]);
 
             $this->createTable(Table::PAYRUN_LOG, [
@@ -555,7 +554,7 @@ class Install extends Migration
                 //fields
                 'title' => $this->string()->notNull(),
                 'code' => $this->string()->notNull(),
-                'defaultValue' => $this->double(),
+                'defaultValue' => $this->string(),
                 'isDeduction' => $this->boolean(),
                 'isNiable' => $this->boolean(),
                 'isTaxable' => $this->boolean(),
@@ -835,6 +834,8 @@ class Install extends Migration
                 'dateCreated' => $this->dateTime()->notNull(),
                 'dateUpdated' => $this->dateTime()->notNull(),
                 'uid' => $this->uid(),
+                //FK
+                'employerId' => $this->integer(), // Create FK to Employer [id]
                 //fields
                 'title' => $this->string()->notNull(),
                 'code' => $this->string()->notNull(),
@@ -884,7 +885,6 @@ class Install extends Migration
                 'uid' => $this->uid(),
                 //FK
                 //intern
-                'payRunEntryId' => $this->integer(), // create FK to PayRunEntry [id] //can be null
                 //staffology
                 'taxAndNiId' => $this->integer(), // create FK to TaxAndNi [id]
                 'fpsFieldsId' => $this->integer(), // create FK to fpsFields [id]
@@ -1398,7 +1398,6 @@ class Install extends Migration
         $this->createIndex(null, Table::EMPLOYEES, "autoEnrolmentId", true);
         $this->createIndex(null, Table::EMPLOYEES, "leaveSettingsId", true);
         $this->createIndex(null, Table::EMPLOYEES, "rightToWorkId", true);
-        $this->createIndex(null, Table::EMPLOYEES, "payOptionsId", true);
         $this->createIndex(null, Table::EMPLOYEES, "staffologyId", true);
 
         $this->createIndex(null, Table::PENSIONS, "staffologyId", true);
@@ -1414,7 +1413,7 @@ class Install extends Migration
         $this->createIndex(null, Table::PAYRUN_ENTRIES, "employeeId", false);
         $this->createIndex(null, Table::PAYRUN_ENTRIES, "employerId", false);
         $this->createIndex(null, Table::PAYRUN_ENTRIES, "payRunId", false);
-        $this->createIndex(null, Table::PAYRUN_ENTRIES, "priorPayrollCode", false);
+        $this->createIndex(null, Table::PAYRUN_ENTRIES, "priorPayrollCodeId", false);
         $this->createIndex(null, Table::PAYRUN_ENTRIES, "payOptionsId", true);
         $this->createIndex(null, Table::PAYRUN_ENTRIES, "pensionSummaryId", true);
         $this->createIndex(null, Table::PAYRUN_ENTRIES, "totalsId", true);
@@ -1491,10 +1490,9 @@ class Install extends Migration
         $this->createIndex(null, Table::NOTE, "employeeId", false);
 
         $this->createIndex(null, Table::PAY_CODES, 'code', false);
+        $this->createIndex(null, Table::PAY_CODES, "employerId", false);
 
         $this->createIndex(null, Table::PAY_LINES, "payOptionsId", false);
-
-        $this->createIndex(null, Table::PAY_OPTIONS, "payRunEntryId", false);
 
         $this->createIndex(null, Table::PENSION_ADMINISTRATOR, "addressId", true);
         $this->createIndex(null, Table::PENSION_ADMINISTRATOR, "staffologyId", true);
@@ -1575,7 +1573,6 @@ class Install extends Migration
         $this->addForeignKey(null, Table::EMPLOYEES, ['autoEnrolmentId'], Table::AUTO_ENROLMENT, ['id']);
         $this->addForeignKey(null, Table::EMPLOYEES, ['leaveSettingsId'], Table::LEAVE_SETTINGS, ['id']);
         $this->addForeignKey(null, Table::EMPLOYEES, ['rightToWorkId'], Table::RIGHT_TO_WORK, ['id']);
-        $this->addForeignKey(null, Table::EMPLOYEES, ['payOptionsId'], Table::PAY_OPTIONS, ['id']);
 
         //PENSION
         $this->addForeignKey(null, Table::PENSIONS, ['employeeId'], Table::EMPLOYEES, ['id'], 'CASCADE', 'CASCADE');
@@ -1592,7 +1589,7 @@ class Install extends Migration
         $this->addForeignKey(null, Table::PAYRUN_ENTRIES, ['employeeId'], Table::EMPLOYEES, ['id'], 'CASCADE', 'CASCADE');
         $this->addForeignKey(null, Table::PAYRUN_ENTRIES, ['employerId'], Table::EMPLOYERS, ['id'], 'CASCADE', 'CASCADE');
         $this->addForeignKey(null, Table::PAYRUN_ENTRIES, ['payRunId'], Table::PAYRUN, ['id'], 'CASCADE', 'CASCADE');
-        $this->addForeignKey(null, Table::PAYRUN_ENTRIES, ['priorPayrollCode'], Table::PAY_CODES, ['code']);
+        $this->addForeignKey(null, Table::PAYRUN_ENTRIES, ['priorPayrollCodeId'], Table::PAY_CODES, ['id']);
         $this->addForeignKey(null, Table::PAYRUN_ENTRIES, ['payOptionsId'], Table::PAY_OPTIONS, ['id']);
         $this->addForeignKey(null, Table::PAYRUN_ENTRIES, ['pensionSummaryId'], Table::PENSION_SUMMARY, ['id']);
         $this->addForeignKey(null, Table::PAYRUN_ENTRIES, ['totalsId'], Table::PAYRUN_TOTALS, ['id']);
@@ -1688,11 +1685,11 @@ class Install extends Migration
         //NOTE
         $this->addForeignKey(null, Table::NOTE, ['employeeId'], Table::EMPLOYEES, ['id'], 'CASCADE', 'CASCADE');
 
+        //PAY_CODES
+        $this->addForeignKey(null, Table::PAY_CODES, ['employerId'], Table::EMPLOYERS, ['id'], 'CASCADE', 'CASCADE');
+
         //PAY_LINES
         $this->addForeignKey(null, Table::PAY_LINES, ['payOptionsId'], Table::PAY_OPTIONS, ['id']);
-
-        //PAY_OPTIONS
-        $this->addForeignKey(null, Table::PAY_OPTIONS, ['payRunEntryId'], Table::PAYRUN_ENTRIES, ['id'], 'CASCADE', 'CASCADE');
 
         //PENSION_ADMINISTRATOR
         $this->addForeignKey(null, Table::PENSION_ADMINISTRATOR, ['addressId'], Table::ADDRESSES, ['id'], 'CASCADE', 'CASCADE');
