@@ -95,6 +95,10 @@ class PayRunController extends Controller
                 $payRunData = json_decode($response->getBody()->getContents(), true);
 
                 if($payRunData) {
+
+                    $employer['id'] = $employer['staffologyId'];
+
+                    Staff::$plugin->payRuns->fetchPayCodesList($employer);
                     Staff::$plugin->payRuns->fetchPayRuns($payRunData, $employer);
 
                     App::maxPowerCaptain();

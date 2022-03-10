@@ -215,8 +215,6 @@ class PayRuns extends Component
 
     public function fetchPayRuns(array $payRuns, array $employer): void
     {
-        $employer['id'] = $employer['staffologyId'];
-
         $queue = Craft::$app->getQueue();
         $queue->push(new CreatePayRunJob([
             'description' => 'Fetch pay runs',
