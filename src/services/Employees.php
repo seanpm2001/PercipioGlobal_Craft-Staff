@@ -136,8 +136,8 @@ class Employees extends Component
             }
 
             //foreign keys
-            $personalDetails = Staff::$plugin->employees->savePersonalDetails($employee['personalDetails'], $personalDetailsId);
-            $employmentDetails = Staff::$plugin->employees->saveEmploymentDetails($employee['employmentDetails'], $employmentDetailsId);
+            $personalDetails = $this->savePersonalDetails($employee['personalDetails'], $personalDetailsId);
+            $employmentDetails = $this->saveEmploymentDetails($employee['employmentDetails'], $employmentDetailsId);
             $employerId = EmployerRecord::findOne(['staffologyId' => $employer['id']]);
 
             $employeeRecord->employerId = $employerId->id ?? null;
@@ -204,7 +204,7 @@ class Employees extends Component
         }
         
         $record->cisSubContractor = $employmentDetails['cisSubCopntractor'] ?? null;
-        $record->payrollCode = SecurityHelper::encrypt($employmentDetails['cisSubCopntractor'] ?? '');
+        $record->payrollCode = SecurityHelper::encrypt($employmentDetails['payrollCode'] ?? '');
         $record->jobTitle = SecurityHelper::encrypt($employmentDetails['jobTitle'] ?? '');
         $record->onHold = $employmentDetails['onHold'] ?? null;
         $record->onFurlough = $employmentDetails['onFurlough'] ?? null;
@@ -228,6 +228,7 @@ class Employees extends Component
     
     public function savePersonalDetails(array $personalDetails, int $personalDetailsId = null): PersonalDetails
     {
+
         if($personalDetailsId) {
             $record = PersonalDetails::findOne($personalDetailsId);
 
@@ -273,6 +274,34 @@ class Employees extends Component
     }
 
 
+
+
+    /* PARSE SECURITY VALUES */
+    public function parsePersonalDetails(array $personalDetails): array
+    {
+        $personalDetails['title'] = SecurityHelper::decrypt($personalDetails['title'] ?? '');
+        $personalDetails['firstName'] = SecurityHelper::decrypt($personalDetails['firstName'] ?? '');
+        $personalDetails['middleName'] = SecurityHelper::decrypt($personalDetails['middleName'] ?? '');
+        $personalDetails['lastName'] = SecurityHelper::decrypt($personalDetails['lastName'] ?? '');
+        $personalDetails['email'] = SecurityHelper::decrypt($personalDetails['email'] ?? '');
+        $personalDetails['pdfPassword'] = SecurityHelper::decrypt($personalDetails['pdfPassword'] ?? '');
+        $personalDetails['telephone'] = SecurityHelper::decrypt($personalDetails['telephone'] ?? '');
+        $personalDetails['mobile'] = SecurityHelper::decrypt($personalDetails['mobile'] ?? '');
+        $personalDetails['niNumber'] = SecurityHelper::decrypt($personalDetails['niNumber'] ?? '');
+        $personalDetails['passportNumber'] = SecurityHelper::decrypt($personalDetails['passportNumber'] ?? '');
+
+        return $personalDetails;
+    }
+
+    public function parseEmploymentDetails(array $employmentDetails): array
+    {
+        $employmentDetails['payrollCode'] = SecurityHelper::decrypt($employmentDetails['payrollCode'] ?? '');
+        $employmentDetails['jobTitle'] = SecurityHelper::decrypt($employmentDetails['jobTitle'] ?? '');
+        $employmentDetails['furloughCalculationBasisAmount'] = SecurityHelper::decrypt($employmentDetails['furloughCalculationBasisAmount'] ?? '');
+        $employmentDetails['forcePreviousPayrollCode'] = SecurityHelper::decrypt($employmentDetails['forcePreviousPayrollCode'] ?? '');
+
+        return $employmentDetails;
+    }
 
 
 

@@ -11,7 +11,6 @@
 namespace percipiolondon\staff\services;
 
 use craft\helpers\App;
-use percipiolondon\attendees\helpers\Log;
 use percipiolondon\staff\db\Table;
 use percipiolondon\staff\helpers\Logger;
 use percipiolondon\staff\helpers\Security as SecurityHelper;
@@ -23,7 +22,6 @@ use percipiolondon\staff\jobs\FetchEmployersJob;
 use Craft;
 use craft\base\Component;
 use craft\helpers\Json;
-use yii\db\Exception;
 use yii\db\Query;
 
 /**
