@@ -22,69 +22,52 @@ class PayRunController extends Controller
                 'name' => ' Robert Smith',
                 'niNumber' => 'JM888888A',
                 'payrollCode' => '1',
-                'gross' => 2120,
-                'netPay' => 1747.52,
-                'totalCost' => 2359.45,
-                'AEO' => 1,
-                'description_AEO' => '',
-                'AEOFEE' => 1,
-                'description_AEOFEE' => '',
-                'AHPAY' => 1,
-                'description_AHPAY' => 'Accrued Holiday Pay',
-                'BASIC' => 200,
-                'description_BASIC' => '',
-                'CISCONTROL' => '',
-                'description_CISCONTROL' => '',
-                'CISDEDUCTION' => '',
-                'description_CISDEDUCTION' => '',
-                'CISVAT' => 1,
-                'description_CISVAT' => '',
-                'EMPLYRNIC' =>'',
-                'description_EMPLYRNIC' => '',
-                'MAPS' => 1,
-                'description_MAPS' => '',
-                'NIC' => 1,
-                'description_NIC' => '',
-                'NOTUSED' => 1,
+                'gross' => 1650,
+                'netPay' => 1427.92,
+                'totalCost' => 1810.49,
+                'NOTUSED' => 300,
+                'description_NOTUSED' => 'testing a not used paycode',
+                'PERCIPIO' => 250,
+                'description_PERCIPIO' => 'percipio awesome sauce'
+            ],
+            [
+                'id' => 38,
+                'name' => 'Mr John Deo',
+                'niNumber' => 'JM333333A',
+                'payrollCode' => '2',
+                'gross' => 2000,
+                'netPay' => 1569.8,
+                'totalCost' => 2320.4,
+                'NOTUSED' => '',
                 'description_NOTUSED' => '',
-                'PAYE' => 1,
-                'description_PAYE' => '',
-                'PAYENICC' => '',
-                'description_PAYENICC' => '',
-                'PBIK' => 3,
-                'description_PBIK' => '',
-                'PENSION' => 3,
-                'description_PENSION' => '',
-                'PENSIONCONTRIB' => '',
-                'description_PENSIONCONTRIB' => '',
-                'PENSIONCRED' =>'',
-                'description_PENSIONCRED' => '',
-                'PENSIONRAS' => 3,
-                'description_PENSIONRAS' => 'Pension contribution (5% of £1,600.00)',
-                'PENSIONSS' => 3,
-                'description_PENSIONSS' => '',
-                'PERCIPIO' => 110,
-                'description_PERCIPIO' => 'percipio awesome sauce',
-                'PGLOAN' => 3,
-                'description_PGLOAN' => '',
-                'SALARY' => '',
-                'description_SALARY' => '',
-                'SAP' => 3,
-                'description_SAP' => '',
-                'SHPP' => 3,
-                'description_SHPP' => '',
-                'SMP' => 3,
-                'description_SMP' => '',
-                'SPBP' => 3,
-                'description_SPBP' => '',
-                'SPP' => 3,
-                'description_SPP' => '',
-                'SSP' => 3,
-                'description_SSP' => '',
-                'STLOAN' => 3,
-                'description_STLOAN' => 'test description',
-                'TERMINATION' => 3,
-                'description_TERMINATION' => ''
+                'PERCIPIO' => '',
+                'description_PERCIPIO' => ''
+            ],
+            [
+                'id' => 40,
+                'name' => 'Mrs Jane Deo',
+                'niNumber' => 'JM111111A',
+                'payrollCode' => '4',
+                'gross' => 1900,
+                'netPay' => 1596.24,
+                'totalCost' => 2101.89,
+                'NOTUSED' => '',
+                'description_NOTUSED' => '',
+                'PERCIPIO' => '',
+                'description_PERCIPIO' => ''
+            ],
+            [
+                'id' => 42,
+                'name' => 'Miss Elizabeth Jenkins',
+                'niNumber' => '',
+                'payrollCode' => '5',
+                'gross' => 3250,
+                'netPay' => 2515.44,
+                'totalCost' => 3678.69,
+                'NOTUSED' => 3,
+                'description_NOTUSED' => 'Stefs description',
+                'PERCIPIO' => 3250,
+                'description_PERCIPIO' => 'percipio awesome sauce'
             ]
         ];
         //END TEST
@@ -101,9 +84,13 @@ class PayRunController extends Controller
             $payPeriod = $entry['payPeriod'] ?? null;
             $employer = $entry['employerId'] ?? null;
 
-            $csvEntry = array_map(function($csv) use ($entry) { return $csv['id'] == $entry['id'] ? $csv : null; }, $entries);
-            $csvEntry = $csvEntry[0] ?? [];
+            $csvEntry = array_filter($entries, function($csv) use ($entry){  return $csv['id'] == $entry['id']; });
+
+            $csvEntry = reset($csvEntry) ?? [];
             $payRollCode = $csvEntry['payrollCode'] ?? null;
+
+            $payLines = PayLineRecord::find()->where(['payOptionsId' => $entry['payOptionsId'] ?? null])->all();
+            $regularPayLines = [];
 
             unset($csvEntry['id']);
             unset($csvEntry['name']);
@@ -113,46 +100,50 @@ class PayRunController extends Controller
             unset($csvEntry['netPay']);
             unset($csvEntry['totalCost']);
 
-            $payLines = PayLineRecord::find()->where(['payOptionsId' => $entry['payOptionsId'] ?? null])->all();
-            $regularPayLines = [];
-
             foreach($payLines as $payLine) {
                 $payLine = $payLine->toArray();
+                $code = $payLine['code'] ?? SecurityHelper::decrypt($payLine['value'] ?? '');
 
-                //overwrite values
-                $payLine['value'] = $csvEntry[$payLine['code'] ?? SecurityHelper::decrypt($payLine['value'] ?? '')];
-                $payLine['rate'] = SecurityHelper::decrypt($payLine['rate'] ?? '');
-                $payLine['description'] = $csvEntry['description_'.$payLine['code'] ?? $payLine['description'] ?? ''];
+                if($payLine && array_key_exists($code, $csvEntry)){
+                    $value = $csvEntry[$payLine['code'] ?? SecurityHelper::decrypt($payLine['value'] ?? '')];
 
-                //reset in csvEntry to check which ones are new to save later on
-                $csvEntry[$payLine['code']] = '';
+                    //overwrite values
+                    $payLine['value'] = $value;
+                    $payLine['rate'] = SecurityHelper::decrypt($payLine['rate'] ?? '');
+                    $payLine['description'] = $csvEntry['description_'.$payLine['code'] ?? $payLine['description'] ?? ''];
 
-                //remove own fields
-                unset($payLine['id']);
-                unset($payLine['dateCreated']);
-                unset($payLine['dateUpdated']);
-                unset($payLine['uid']);
-                unset($payLine['payOptionsId']);
+                    //reset in csvEntry to check which ones are new to save later on
+                    $csvEntry[$payLine['code']] = '';
 
-                //save
-                $regularPayLines[] = $payLine;
+                    //remove own fields
+                    unset($payLine['id']);
+                    unset($payLine['dateCreated']);
+                    unset($payLine['dateUpdated']);
+                    unset($payLine['uid']);
+                    unset($payLine['payOptionsId']);
+
+                    if($payLine['value'] != ''){
+                        //save
+                        $regularPayLines[] = $payLine;
+                    }
+                }
             }
 
-            foreach(array_filter($csvEntry) as $key => $defaultPayCode){
-                if(strpos($key, 'description') === false){
+            foreach(array_filter($csvEntry) as $key => $defaultPayCode) {
+
+                if(strpos($key, 'description') === false && strlen($defaultPayCode) > 0){
 
                     $payLine = [];
                     $payLine['code'] = $key;
                     $payLine['value'] = $defaultPayCode;
 
-                    if($csvEntry['description_'.$key]){
+                    if(array_key_exists('description_'.$key, $csvEntry)){
                         $payLine['description'] = $csvEntry['description_'.$key];
                     }
 
                     $regularPayLines[] = $payLine;
                 }
             }
-//            $payRunEntry = PayRunEntryRecord::findOne($entry['id'] ?? null);
 
             $updatedEntries[] = [
                 'payrollCode' => $payRollCode,

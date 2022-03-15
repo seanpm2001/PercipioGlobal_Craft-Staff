@@ -202,7 +202,7 @@ class PayRuns extends Component
 
         // fetch pay codes
         $payRunEmployerId = $employer['id'] ?? null;
-        $payCodes = PayCodeRecord::find()->where(['employerId' => $payRunEmployerId])->all();
+        $payCodes = PayCodeRecord::find()->where(['employerId' => $payRunEmployerId, 'isSystemCode' => 0])->all();
 
         //create pay codes for all entries
         $payCodeKeys = array_map(function($code){ return $code['code']; },$payCodes);
@@ -241,7 +241,6 @@ class PayRuns extends Component
             $payRunEntry['id'] = (int)($entry['id'] ?? null);
             $payRunEntry['name'] = ($personalDetails['title'] . ' ' ?? null).($personalDetails['firstName'] ?? null) . ' ' . ($personalDetails['lastName'] ?? null);
             $payRunEntry['niNumber'] = $personalDetails['niNumber'] ?? null;
-            $payRunEntry['staffologyId'] = $entry['staffologyId'] ?? null;
             $payRunEntry['payrollCode'] = $employmentDetails['payrollCode'] ?? null;
             $payRunEntry['gross'] = (float)($totals['gross'] ?? 0);
             $payRunEntry['netPay'] = (float)($totals['netPay'] ?? 0);
@@ -258,7 +257,7 @@ class PayRuns extends Component
                 $payLine = $payLine->toArray();
                 $payLine = $this->_parsePayLines($payLine);
 
-                if($payLine){
+                if($payLine && in_array($payLine['code'], $payCodeKeys, true)){
 
                     $payRunEntry[$payLine['code']] = (float)($payLine['value'] ?? '');
                     $payRunEntry['description_'.$payLine['code']] = $payLine['description'] ?? '';
@@ -417,11 +416,11 @@ class PayRuns extends Component
         if(!$payCodeRecord){
             $payCodeRecord = new PayCodeRecord();
         }
-
         $payCodeRecord->title = $payCode['title'] ?? null;
         $payCodeRecord->code = $payCode['code'] ?? null;
         $payCodeRecord->employerId = $employerRecord->id ?? null;
         $payCodeRecord->defaultValue = SecurityHelper::encrypt($payCode['defaultValue'] ?? '');
+        $payCodeRecord->isSystemCode = $payCode['isSystemCode'] ?? null;
         $success = $payCodeRecord->save();
 
         if($success) {
@@ -839,7 +838,7 @@ class PayRuns extends Component
 
         if($employer){
             $api = App::parseEnv(Staff::$plugin->getSettings()->apiKeyStaffology);
-            $base_url = 'https://api.staffology.co.uk/employers/'.$employer['staffologyId'].'/payrun/'.$payPeriod.'/importpay';
+            $base_url = 'https://api.staffology.co.uk/employers/'.$employer['staffologyId'].'/payrun/'.$payPeriod.'/importpay?linesOnly=true';
 //            $base_url = 'https://api.staffology.co.uk/employers/'.$employer['staffologyId'].'/payrun/'.$payRunEntry['taxYear'].'/'.$payRunEntry['payPeriod'].'/'.$payRunEntry['period'].'/'.$payRunEntry['staffologyId'];
             $credentials = base64_encode('staff:'.$api);
             $client = new \GuzzleHttp\Client([
@@ -858,7 +857,8 @@ class PayRuns extends Component
                 $response = $client->post(
                     $base_url,
                     [
-                        'json' => $payRunEntryUpdate
+                        'json' => $payRunEntryUpdate,
+                        'linesOnly' => true
                     ]
                 );
 
