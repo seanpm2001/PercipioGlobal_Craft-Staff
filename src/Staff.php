@@ -186,6 +186,8 @@ class Staff extends Plugin
 
         $this->installEventListeners();
 
+//        Craft::dd(Staff::$plugin->payRuns->getCsvTemplate(3));
+
         /**
          * Logging in Craft involves using one of the following methods:
          *
@@ -249,9 +251,9 @@ class Staff extends Plugin
             ];
         }
         if ($currentUser->can('hub:payruns')) {
-            $subNavs['payruns'] = [
+            $subNavs['payRuns'] = [
                 'label' => Craft::t('staff-management', 'Pay Runs'),
-                'url' => 'staff-management/payruns'
+                'url' => 'staff-management/pay-runs'
             ];
         }
 
@@ -349,8 +351,9 @@ class Staff extends Plugin
         return [
             'staff-management' => 'staff-management/settings/dashboard',
             'staff-management/dashboard' => 'staff-management/settings/dashboard',
-            'staff-management/payruns' => 'staff-management/settings/payruns',
+            'staff-management/pay-runs' => 'staff-management/settings/payruns',
             'staff-management/plugin' => 'staff-management/settings/plugin',
+            'staff-management/pay-runs/<payRunId:\d+>' => 'staff-management/pay-run/save-pay-run-entry'
         ];
     }
 
@@ -366,7 +369,7 @@ class Staff extends Plugin
                 'label' => Craft::t('staff-management', 'Dashboard'),
             ],
             'hub:payruns' => [
-                'label' => Craft::t('staff-management', 'Payruns'),
+                'label' => Craft::t('staff-management', 'Pay Runs'),
             ],
             'hub:plugin-settings' => [
                 'label' => Craft::t('staff-management', 'Edit Plugin Settings'),

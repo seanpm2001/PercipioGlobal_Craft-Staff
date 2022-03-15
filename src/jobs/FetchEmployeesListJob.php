@@ -48,7 +48,7 @@ class FetchEmployeesListJob extends BaseJob
 //                Staff::$plugin->pensions->fetchPension($employee, $this->criteria['employer']['id']);
 
                 if($currentEmployee === $totalEmployees){
-                    Staff::$plugin->payRuns->fetchPayRun($this->criteria['employer']);
+                    Staff::$plugin->payRuns->fetchPayRunByEmployer($this->criteria['employer']);
                 }
 
                 $this->setProgress($queue, $currentEmployee / $totalEmployees);

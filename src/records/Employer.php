@@ -20,6 +20,7 @@ use percipiolondon\staff\db\Table;
 * @property string $slug;
 *
 * @property int $addressId;
+* @property int $defaultPayOptionsId;
 *
 * @property string $staffologyId;
 * @property string $name;
