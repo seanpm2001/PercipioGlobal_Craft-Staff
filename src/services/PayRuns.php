@@ -11,6 +11,7 @@
 namespace percipiolondon\staff\services;
 
 use craft\helpers\App;
+use craft\queue\QueueInterface;
 use GuzzleHttp\Exception\GuzzleException;
 use percipiolondon\staff\db\Table;
 use percipiolondon\staff\elements\PayRun;
@@ -43,6 +44,7 @@ use percipiolondon\staff\Staff;
 use craft\helpers\Json;
 use yii\db\Exception;
 use yii\db\Query;
+use yii\queue\redis\Queue as RedisQueue;
 
 /**
  * PayRun Service
@@ -385,6 +387,22 @@ class PayRuns extends Component
         ]));
     }
 
+    public function fetchPayRunByPayRunId(int $payRunId): void
+    {
+        $payRun = PayRunRecord::findOne($payRunId);
+        $employerId = $payRun['employerId'] ?? null;
+        $employer = EmployerRecord::findOne($employerId);
+
+        $queue = Craft::$app->getQueue();
+        $queue->push(new CreatePayRunJob([
+            'description' => 'Fetch pay runs',
+            'criteria' => [
+                'payRuns' => [$payRun],
+                'employer' => $employer,
+            ]
+        ]));
+    }
+
     public function fetchPaySlip(array $payRunEntry, array $employer): void
     {
         $queue = Craft::$app->getQueue();
@@ -459,10 +477,10 @@ class PayRuns extends Component
             $totalsId = $payRunRecord->totalsId ?? null;
 
             $totals = $this->saveTotals($payRun['totals'], $totalsId);
-            $employerRecord = EmployerRecord::findOne(['staffologyId' => $employer['id']]);
+            $employerRecord = is_int($employer['id'] ?? null) ? $employer : EmployerRecord::findOne(['staffologyId' => $employer['id'] ?? null]);
 
             // save
-            $payRunRecord->employerId = $employerRecord->id ?? null;
+            $payRunRecord->employerId = $employerRecord['id'] ?? null;
             $payRunRecord->totalsId = $totals->id ?? null;
             $payRunRecord->taxYear = $payRun['taxYear'] ?? null;
             $payRunRecord->taxMonth = $payRun['taxMonth'] ?? null;
@@ -832,9 +850,11 @@ class PayRuns extends Component
 
 
     /* UPDATES */
-    public function updatePayRunEntry(string $payPeriod, int $employer, array $payRunEntryUpdate): void
+    public function updatePayRunEntry(string $payPeriod, int $employer, int $payRunId, array $payRunEntryUpdate): void
     {
         $employer = EmployerRecord::findOne($employer);
+
+        Craft::dd('stop');
 
         if($employer){
             $api = App::parseEnv(Staff::$plugin->getSettings()->apiKeyStaffology);
@@ -858,12 +878,18 @@ class PayRuns extends Component
                     $base_url,
                     [
                         'json' => $payRunEntryUpdate,
-                        'linesOnly' => true
                     ]
                 );
 
-                //@TODO: SAVE
-                Craft::dd(json_decode($response->getBody()->getContents(), true));
+
+                $this->fetchPayRunByPayRunId($payRunId);
+
+                $queue = Craft::$app->getQueue();
+                if ($queue instanceof QueueInterface) {
+                    $queue->run();
+                } elseif ($queue instanceof RedisQueue) {
+                    $queue->run(false);
+                }
 
 
             } catch (GuzzleException $e) {
@@ -939,6 +965,7 @@ class PayRuns extends Component
     /* SAVE ELEMENTS */
     public function savePayRunElement(): bool
     {
+        return false;
         $payRunRecord = new PayRun();
         $elementsService = Craft::$app->getElements();
         return $elementsService->saveElement($payRunRecord);
@@ -946,6 +973,7 @@ class PayRuns extends Component
 
     public function savePayRunEntryElement(): bool
     {
+        return false;
         $payRunEntryRecord = new PayRunEntry();
         $elementsService = Craft::$app->getElements();
         return $elementsService->saveElement($payRunEntryRecord);

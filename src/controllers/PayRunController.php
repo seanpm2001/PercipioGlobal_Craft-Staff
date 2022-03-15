@@ -40,7 +40,7 @@ class PayRunController extends Controller
                 'totalCost' => 2320.4,
                 'NOTUSED' => '',
                 'description_NOTUSED' => '',
-                'PERCIPIO' => '',
+                'PERCIPIO' => 0,
                 'description_PERCIPIO' => ''
             ],
             [
@@ -54,7 +54,7 @@ class PayRunController extends Controller
                 'NOTUSED' => '',
                 'description_NOTUSED' => '',
                 'PERCIPIO' => '',
-                'description_PERCIPIO' => ''
+                'description_PERCIPIO' => 200
             ],
             [
                 'id' => 42,
@@ -151,6 +151,6 @@ class PayRunController extends Controller
             ];
         }
 
-        Staff::$plugin->payRuns->updatePayRunEntry($payPeriod, $employer, $updatedEntries);
+        Staff::$plugin->payRuns->updatePayRunEntry($payPeriod, $employer, $payRunId, $updatedEntries);
     }
 }

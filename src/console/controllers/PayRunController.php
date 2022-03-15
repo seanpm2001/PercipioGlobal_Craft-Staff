@@ -55,12 +55,6 @@ class PayRunController extends Controller
         return $options;
     }
 
-    /**
-     * Fetch all pay run from staffology
-     * e.g.: actions/staff-management/pay-run-controller/do-something
-     *
-     * @return mixed
-     */
     public function actionFetchPayRunByEmployer()
     {
         $logger = new Logger();
