@@ -129,6 +129,11 @@ class Employers extends Component
 
                 $employers = Json::decodeIfJson($response->getBody()->getContents(), true);
 
+                //TESTING PURPOSE
+                if(App::parseEnv('$HUB_DEV_MODE') && App::parseEnv('$HUB_DEV_MODE') == 1){
+                    $employers = array_filter($employers, function($emp){ return $emp['name'] == 'Acme Limited (Demo)';});
+                }
+
                 if(count($employers) > 0){
 
                     $logger->stdout("End fetching list of " . count($employers) . " employers " . PHP_EOL, $logger::RESET);
@@ -253,6 +258,7 @@ class Employers extends Component
     /* SAVES ELEMENTS */
     public function saveEmployerElement(array $employer): bool
     {
+        return false;
         $emp = new Employer();
         $elementsService = Craft::$app->getElements();
         return $elementsService->saveElement($emp);
