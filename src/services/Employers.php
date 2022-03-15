@@ -59,7 +59,7 @@ class Employers extends Component
         }
 
         foreach ($employersQuery as $employer) {
-            $employers[] = $this->_parseEmployer($employer);
+            $employers[] = $this->parseEmployer($employer);
         }
 
         return $employers;
@@ -78,7 +78,7 @@ class Employers extends Component
             return [];
         }
 
-        $employer = $this->_parseEmployer($employerQuery);
+        $employer = $this->parseEmployer($employerQuery);
 
         $query = new Query();
         $query->from(Table::PAY_OPTIONS)
@@ -193,7 +193,7 @@ class Employers extends Component
             //save
             $employerRecord->defaultPayOptionsId = $payOptions->id ?? null;
             $employerRecord->addressId = $address->id ?? null;
-            $employerRecord->slug = SecurityHelper::encrypt((strtolower(trim(preg_replace('/[^A-Za-z0-9-]+/', '-', $this->name ?? ''), '-'))));
+            $employerRecord->slug = SecurityHelper::encrypt((strtolower(trim(preg_replace('/[^A-Za-z0-9-]+/', '-', $employer['name'] ?? ''), '-'))));
             $employerRecord->staffologyId = $employer['id'] ?? null;
             $employerRecord->name = SecurityHelper::encrypt($employer['name'] ?? '');
             $employerRecord->crn = SecurityHelper::encrypt($employer['crn'] ?? '');
@@ -236,7 +236,7 @@ class Employers extends Component
 
 
     /* PARSE SECURITY VALUES */
-    private function _parseEmployer(array $employer) :array
+    public function parseEmployer(array $employer) :array
     {
         $employer['name'] = SecurityHelper::decrypt($employer['name'] ?? '');
         $employer['crn'] = SecurityHelper::decrypt($employer['crn'] ?? '');

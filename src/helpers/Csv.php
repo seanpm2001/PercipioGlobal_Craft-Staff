@@ -8,15 +8,24 @@ use percipiolondon\staff\records\PayRunEntry as PayRunEntryRecord;
 
 class Csv
 {
-    public static function arrayToCsv( array $fields, $filename = "payrun.csv" )
+    public static function arrayToCsv( array $fields, $filename = "payrun" )
     {
         header( 'Content-Type: text/csv' );
-        header( 'Content-Disposition: attachment;filename='.$filename);
+        header( 'Content-Disposition: attachment;filename='.$filename.'.csv');
         $fp = fopen('php://output', 'w');
 
-        foreach ( $fields as $field ) {
-            fputcsv($fp, array_keys($field));
+        $loop = 0;
+
+        foreach ( $fields as $index => $field ) {
+
+            if($loop === 0){
+                fputcsv($fp, array_keys($field));
+            }
+
             fputcsv($fp, array_values($field));
+
+
+            $loop++;
         }
 
         fclose($fp);
