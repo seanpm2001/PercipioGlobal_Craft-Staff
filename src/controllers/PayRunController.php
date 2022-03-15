@@ -10,9 +10,43 @@ use percipiolondon\staff\records\PayRunEntry as PayRunEntryRecord;
 use percipiolondon\staff\Staff;
 
 use Craft;
+use yii\web\NotFoundHttpException;
+use yii\web\Response;
 
 class PayRunController extends Controller
 {
+
+    /**
+     * Payrun display
+     *
+     * @param string|null $siteHandle
+     *
+     * @return Response The rendered result
+     * @throws NotFoundHttpException
+     * @throws \yii\web\ForbiddenHttpException
+     */
+    public function actionIndex(string $siteHandle = null): Response
+    {
+        $variables = [];
+
+        $pluginName = Staff::$settings->pluginName;
+        $templateTitle = Craft::t('staff-management', 'Pay Runs');
+
+        $variables['controllerHandle'] = 'payruns';
+        $variables['pluginName'] = Staff::$settings->pluginName;
+        $variables['title'] = $templateTitle;
+        $variables['docTitle'] = "{$pluginName} - {$templateTitle}";
+        $variables['selectedSubnavItem'] = 'payruns';
+
+        $variables['csrf'] = [
+            'name' => Craft::$app->getConfig()->getGeneral()->csrfTokenName,
+            'value' => Craft::$app->getRequest()->getCsrfToken(),
+        ];
+
+        // Render the template
+        return $this->renderTemplate('staff-management/payruns/index', $variables);
+    }
+
     public function actionSavePayRunEntry(int $payRunId)
     {
         //TEST --> should be in the post
@@ -151,6 +185,6 @@ class PayRunController extends Controller
             ];
         }
 
-        Staff::$plugin->payRuns->updatePayRunEntry($payPeriod, $employer, $payRunId, $updatedEntries);
+//        Staff::$plugin->payRuns->updatePayRunEntry($payPeriod, $employer, $payRunId, $updatedEntries);
     }
 }

@@ -351,8 +351,8 @@ class Staff extends Plugin
         return [
             'staff-management' => 'staff-management/settings/dashboard',
             'staff-management/dashboard' => 'staff-management/settings/dashboard',
-            'staff-management/pay-runs' => 'staff-management/settings/payruns',
             'staff-management/plugin' => 'staff-management/settings/plugin',
+            'staff-management/pay-runs' => 'staff-management/pay-run',
             'staff-management/pay-runs/<payRunId:\d+>' => 'staff-management/pay-run/save-pay-run-entry'
         ];
     }
