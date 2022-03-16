@@ -391,17 +391,20 @@ class PayRuns extends Component
     public function fetchPayRunByPayRunId(int $payRunId): void
     {
         $payRun = PayRunRecord::findOne($payRunId);
-        $employerId = $payRun['employerId'] ?? null;
-        $employer = EmployerRecord::findOne($employerId);
 
-        $queue = Craft::$app->getQueue();
-        $queue->push(new CreatePayRunJob([
-            'description' => 'Fetch pay runs',
-            'criteria' => [
-                'payRuns' => [$payRun],
-                'employer' => $employer,
-            ]
-        ]));
+        if($payRun) {
+            $employerId = $payRun['employerId'] ?? null;
+            $employer = EmployerRecord::findOne($employerId);
+
+            $queue = Craft::$app->getQueue();
+            $queue->push(new CreatePayRunJob([
+                'description' => 'Fetch pay runs',
+                'criteria' => [
+                    'payRuns' => [$payRun],
+                    'employer' => $employer,
+                ]
+            ]));
+        }
     }
 
     public function fetchPaySlip(array $payRunEntry, array $employer): void
@@ -579,7 +582,7 @@ class PayRuns extends Component
         return $success;
     }
 
-    public function savePayRunEntry(array $payRunEntryData, array $employer, int $payRunId): ?PayRunEntryRecord
+    public function savePayRunEntry(array $payRunEntryData, array $employer, int $payRunId): ?PayRunEntry
     {
         $logger = new Logger();
         $logger->stdout("✓ Save pay run entry for " . $payRunEntryData['employee']['name'] ?? '' . '...', $logger::RESET);
@@ -654,6 +657,8 @@ class PayRuns extends Component
                 $logger->stdout($errors . PHP_EOL, $logger::FG_RED);
                 Craft::error($payRunEntryRecord->errors, __METHOD__);
             }
+
+            return $payRunEntryRecord;
 
         } catch (\Exception $e) {
 
