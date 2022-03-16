@@ -30,7 +30,7 @@ class PayRun extends Query
                 'type' => PayRunInterface::getType(),
                 'args' => PayRunArguments::getArguments(),
                 'resolve' => PayRunResolver::class . '::resolveOne',
-                'description' => 'This query is used to query for a single payruns.',
+                'description' => 'This query is used to query for a single payrun.',
                 'complexity' => GqlHelper::relatedArgumentComplexity(),
             ]
         ];
