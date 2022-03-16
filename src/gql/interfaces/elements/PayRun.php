@@ -2,11 +2,11 @@
 
 namespace percipiolondon\staff\gql\interfaces\elements;
 
-use craft\gql\GqlEntityRegistry;
 use craft\gql\interfaces\Element;
+use craft\gql\GqlEntityRegistry;
+use craft\gql\TypeLoader;
 use craft\gql\TypeManager;
 use craft\gql\types\DateTime;
-
 use craft\helpers\Gql;
 use craft\helpers\Json;
 
@@ -14,8 +14,9 @@ use GraphQL\Type\Definition\InterfaceType;
 use GraphQL\Type\Definition\ResolveInfo;
 use GraphQL\Type\Definition\Type;
 
-use percipiolondon\staff\gql\types\PayRunTotals;
-use percipiolondon\staff\gql\types\generators\PayRunType;
+use percipiolondon\staff\elements\PayRun as PayRunElement;
+use percipiolondon\staff\gql\types\generators\PayRunGenerator;
+use percipiolondon\staff\helpers\Security as SecurityHelper;
 
 
 class PayRun extends Element
@@ -25,7 +26,7 @@ class PayRun extends Element
      */
     public static function getTypeGenerator(): string
     {
-        return PayRunType::class;
+        return PayRunGenerator::class;
     }
 
     /**
@@ -42,10 +43,12 @@ class PayRun extends Element
             'name' => static::getName(),
             'fields' => self::class . '::getFieldDefinitions',
             'description' => 'This is the interface implemented for all payruns.',
-            'resolveType' => self::class . '::resolveElementTypeName',
+            'resolveType' => function(PayRunElement $value) {
+                return $value->getGqlTypeName();
+            }
         ]));
 
-        PayRunType::generateTypes();
+        PayRunGenerator::generateTypes();
 
         return $type;
     }
@@ -63,8 +66,9 @@ class PayRun extends Element
      */
     public static function getFieldDefinitions(): array
     {
+        $parentFields = parent::getFieldDefinitions();
 
-        return TypeManager::prepareFieldDefinitions(array_merge(parent::getFieldDefinitions(), self::getConditionalFields(), [
+        $fields = [
             'staffologyId' => [
                 'name' => 'staffologyId',
                 'type' => Type::string(),
@@ -75,7 +79,6 @@ class PayRun extends Element
                 'type' => Type::int(),
                 'description' => 'The id of the employer this payruns is for.',
             ],
-            // TODO CREATE ENUM ??
             'taxYear' => [
                 'name' => 'taxYear',
                 'type' => Type::string(),
@@ -85,7 +88,6 @@ class PayRun extends Element
                 'type' => Type::int(),
                 'description' => 'The Tax Month that the Payment Date falls in.',
             ],
-            // TODO CREATE ENUM
             'payPeriod' => [
                 'name' => 'payPeriod',
                 'type' => Type::string(),
@@ -125,12 +127,6 @@ class PayRun extends Element
                 'type' => Type::int(),
                 'description' => 'The number of CIS Subcontractors included in this PayRun.',
             ],
-            'totals' => [
-                'name' => 'totals',
-                'type' => PayRunTotals::getType(),
-                'description' => 'Used to represent totals for a PayRun or PayRunEntry. If a value is 0 then it will not be shown.'
-            ],
-            // TODO CREATE ENUM
             'state' => [
                 'name' => 'state',
                 'type' => Type::string(),
@@ -145,14 +141,8 @@ class PayRun extends Element
                 'name' => 'dateClosed',
                 'type' => DateTime::getType(),
             ],
-        ]), self::getName());
-    }
+        ];
 
-    /**
-     * @inheritdoc
-     */
-    protected static function getConditionalFields(): array
-    {
-        return [];
+        return TypeManager::prepareFieldDefinitions(array_merge($parentFields, $fields), self::getName());
     }
 }

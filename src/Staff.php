@@ -415,7 +415,7 @@ class Staff extends Plugin
             function(RegisterGqlTypesEvent $event) {
                 $event->types[] = EmployerInterface::class;
                 $event->types[] = EmployeeInterface::class;
-                //$event->types[] = PayRunInterface::class;
+                $event->types[] = PayRunInterface::class;
                 //$event->types[] = PayRunEntryInterface::class;
             }
         );
@@ -435,7 +435,7 @@ class Staff extends Plugin
                         // employees component with read action, labelled “View Employees” in UI
                         'employees:read' => ['label' => Craft::t('staff-management', 'View Employees')],
                         // payruns component with read action, labelled “View Payruns” in UI
-                        //'payruns:read' => ['label' => Craft::t('staff-management', 'View Payruns')]
+                        'payruns:read' => ['label' => Craft::t('staff-management', 'View Payruns')]
                     ],
                     //'PayrunEntries' => [
                         // payruns entries component with read action, labelled “View Payruns” in UI
@@ -457,7 +457,7 @@ class Staff extends Plugin
                     $event->queries,
                     EmployerQueries::getQueries(),
                     EmployeeQueries::getQueries(),
-                    //PayRunQueries::getQueries(),
+                    PayRunQueries::getQueries(),
                     //PayRunEntryQueries::getQueries(),
                 );
             }

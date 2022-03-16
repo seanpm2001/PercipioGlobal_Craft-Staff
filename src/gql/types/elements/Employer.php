@@ -1,9 +1,4 @@
 <?php
-/**
- * @link https://craftcms.com/
- * @copyright Copyright (c) Pixel & Tonic, Inc.
- * @license https://craftcms.github.io/license/
- */
 
 namespace percipiolondon\staff\gql\types\elements;
 
@@ -14,7 +9,6 @@ use GraphQL\Type\Definition\ResolveInfo;
 
 use percipiolondon\staff\elements\Employer as EmployerElement;
 use percipiolondon\staff\gql\interfaces\elements\Employer as EmployerInterface;
-
 
 /**
  * Class Employer

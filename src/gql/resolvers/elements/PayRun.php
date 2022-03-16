@@ -4,8 +4,8 @@ namespace percipiolondon\staff\gql\resolvers\elements;
 
 use craft\gql\base\ElementResolver;
 
-use percipiolondon\staff\helpers\Gql as GqlHelper;
 use percipiolondon\staff\elements\PayRun as PayRunElement;
+use percipiolondon\staff\helpers\Gql as GqlHelper;
 
 class PayRun extends ElementResolver
 {
