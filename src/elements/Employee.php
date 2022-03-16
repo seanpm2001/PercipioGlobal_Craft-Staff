@@ -14,12 +14,17 @@ use craft\db\Query;
 
 use Craft;
 use craft\base\Element;
-use craft\elements\db\ElementQuery;
 use craft\elements\db\ElementQueryInterface;
 use craft\elements\User;
 
+use percipiolondon\staff\helpers\Logger;
+use percipiolondon\staff\helpers\Security as SecurityHelper;
 use percipiolondon\staff\elements\db\EmployeeQuery;
+use percipiolondon\staff\records\Employee as EmployeeRecord;
 
+use percipiolondon\staff\records\Permission;
+use percipiolondon\staff\records\PersonalDetails;
+use percipiolondon\staff\Staff;
 use yii\db\Exception;
 
 /**
@@ -34,14 +39,14 @@ class Employee extends Element
     public $staffologyId;
     public $employerId;
     public $userId;
-    public $personalDetails;
-    public $employmentDetails;
+    public $personalDetailsId;
+    public $employmentDetailsId;
     public $autoEnrolment;
-    public $leaveSettings;
+    public $leaveSettingsId;
     public $rightToWork;
-    public $bankDetails;
+    public $bankDetailsId;
     public $status;
-    public $aeNotEnroledWarning;
+    public $autoEnrolmentId;
     public $niNumber;
     public $sourceSystemId;
     public $isDirector;
@@ -194,6 +199,8 @@ class Employee extends Element
      */
     public function afterSave(bool $isNew)
     {
+        $this->_saveRecord($isNew);
+
         return parent::afterSave($isNew);
     }
 
@@ -215,6 +222,90 @@ class Employee extends Element
     public function afterDelete()
     {
         return true;
+    }
+
+    private function _saveRecord($isNew)
+    {
+        try {
+            $record = EmployeeRecord::findOne($this->id);
+
+            if ($record) {
+                $record = EmployeeRecord::findOne($this->id);
+
+                if (!$record) {
+                    throw new Exception('Invalid employee ID: ' . $this->id);
+                }
+
+            } else {
+                $record = new EmployeeRecord();
+                $record->id = (int)$this->id;
+            }
+
+            $personalDetails = PersonalDetails::findOne($this->personalDetailsId);
+
+            // user creation
+            if($personalDetails) {
+                $user = User::findOne(['email' => $personalDetails['email']]);
+
+                $email = SecurityHelper::decrypt($personalDetails['email']) ?? '';
+
+                // check if user exists, if so, skip this step
+                if(!$user && $email) {
+
+                    //create user
+                    $user = new User();
+                    $user->firstName = SecurityHelper::decrypt($personalDetails['firstName']);
+                    $user->lastName = SecurityHelper::decrypt($personalDetails['lastName']);
+                    $user->username = $email;
+                    $user->email = $email;
+
+                    $success = Craft::$app->elements->saveElement($user, true);
+
+                    if(!$success){
+                        throw new Exception("The user couldn't be created");
+                    }
+
+                    Craft::info("Craft Staff: new user creation: ".$user->id);
+
+                    // assign user to group
+                    $group = Craft::$app->getUserGroups()->getGroupByHandle('hardingUsers');
+                    Craft::$app->getUsers()->assignUserToGroups($user->id, [$group->id]);
+                }
+
+                //assign the userId to the employee record
+                $this->userId = $user->id ?? null;
+            }
+
+            $record->employerId = $this->employerId ?? null;
+            $record->staffologyId = $this->staffologyId;
+            $record->personalDetailsId = $this->personalDetailsId;
+            $record->employmentDetailsId = $this->employmentDetailsId;
+            $record->status = $this->status;
+            $record->sourceSystemId = $this->sourceSystemId;
+            $record->niNumber = SecurityHelper::encrypt($this->niNumber ?? '');
+            $record->userId = $this->userId;
+            $record->isDirector = $this->isDirector;
+
+            $record->save();
+
+            if($isNew) {
+                //assign permissions to employee
+                if($this->isDirector) {
+                    $permissions = Permission::find()->all();
+                } else {
+                    $permissions = [Permission::findOne(['name' => 'access:employer'])];
+                }
+
+                Staff::$plugin->userPermissions->createPermissions($permissions, $this->userId, $this->id);
+            }
+
+        } catch (\Exception $e) {
+
+            $logger = new Logger();
+            $logger->stdout(PHP_EOL, $logger::RESET);
+            $logger->stdout($e->getMessage() . PHP_EOL, $logger::FG_RED);
+            Craft::error($e->getMessage(), __METHOD__);
+        }
     }
 
     /**

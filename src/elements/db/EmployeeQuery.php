@@ -15,14 +15,14 @@ class EmployeeQuery extends ElementQuery
     public $staffologyId;
     public $employerId;
     public $userId;
-    public $personalDetails;
-    public $employmentDetails;
+    public $personalDetailsId;
+    public $employmentDetailsId;
     public $autoEnrolment;
-    public $leaveSettings;
+    public $leaveSettingsId;
     public $rightToWork;
-    public $bankDetails;
+    public $bankDetailsId;
     public $status;
-    public $aeNotEnroledWarning;
+    public $autoEnrolmentId;
     public $niNumber;
     public $sourceSystemId;
     public $isDirector;
@@ -35,9 +35,9 @@ class EmployeeQuery extends ElementQuery
         parent::__construct($elementType, $config);
     }
 
-    public function personalDetails($value)
+    public function personalDetailsId($value)
     {
-        $this->personalDetails = $value;
+        $this->personalDetailsId = $value;
         return $this;
     }
     public function staffologyId($value)
@@ -55,9 +55,9 @@ class EmployeeQuery extends ElementQuery
         $this->userId = $value;
         return $this;
     }
-    public function employmentDetails($value)
+    public function employmentDetailsId($value)
     {
-        $this->employmentDetails = $value;
+        $this->employmentDetailsId = $value;
         return $this;
     }
     public function autoEnrolment($value)
@@ -65,9 +65,9 @@ class EmployeeQuery extends ElementQuery
         $this->autoEnrolment = $value;
         return $this;
     }
-    public function leaveSettings($value)
+    public function leaveSettingsId($value)
     {
-        $this->leaveSettings = $value;
+        $this->leaveSettingsId = $value;
         return $this;
     }
     public function rightToWork($value)
@@ -114,20 +114,20 @@ class EmployeeQuery extends ElementQuery
         $this->joinElementTable('staff_employees');
 
         $this->query->select([
-            'staff_employees.personalDetails',
+            'staff_employees.personalDetailsId',
             'staff_employees.staffologyId',
             'staff_employees.employerId',
             'staff_employees.userId',
-            'staff_employees.personalDetails',
-            'staff_employees.employmentDetails',
-            'staff_employees.autoEnrolment',
-            'staff_employees.leaveSettings',
-            'staff_employees.rightToWork',
-            'staff_employees.bankDetails',
+            'staff_employees.personalDetailsId',
+            'staff_employees.employmentDetailsId',
+//            'staff_employees.autoEnrolmentId',
+//            'staff_employees.leaveSettingsId',
+//            'staff_employees.rightToWorkId',
+//            'staff_employees.bankDetailsId',
             'staff_employees.status',
-            'staff_employees.aeNotEnroledWarning',
+//            'staff_employees.aeNotEnroledWarning',
             'staff_employees.niNumber',
-            'staff_employees.sourceSystemId',
+//            'staff_employees.sourceSystemId',
             'staff_employees.isDirector',
         ]);
 
