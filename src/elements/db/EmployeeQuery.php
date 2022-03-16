@@ -24,7 +24,6 @@ class EmployeeQuery extends ElementQuery
     public $status;
     public $autoEnrolmentId;
     public $niNumber;
-    public $sourceSystemId;
     public $isDirector;
 
     /**
@@ -40,60 +39,58 @@ class EmployeeQuery extends ElementQuery
         $this->personalDetailsId = $value;
         return $this;
     }
+
     public function staffologyId($value)
     {
         $this->staffologyId = $value;
         return $this;
     }
+
     public function employerId($value)
     {
         $this->employerId = $value;
         return $this;
     }
+
     public function userId($value)
     {
         $this->userId = $value;
         return $this;
     }
+
     public function employmentDetailsId($value)
     {
         $this->employmentDetailsId = $value;
         return $this;
     }
+
     public function autoEnrolment($value)
     {
         $this->autoEnrolment = $value;
         return $this;
     }
+
     public function leaveSettingsId($value)
     {
         $this->leaveSettingsId = $value;
         return $this;
     }
+
     public function rightToWork($value)
     {
         $this->rightToWork = $value;
         return $this;
     }
+
     public function bankDetails($value)
     {
         $this->bankDetails = $value;
         return $this;
     }
-    public function sourceSystemId($value)
-    {
-        $this->sourceSystemId = $value;
-        return $this;
-    }
+
     public function status($value)
     {
         $this->status = $value;
-        return $this;
-    }
-
-    public function aeNotEnroledWarning($value)
-    {
-        $this->aeNotEnroledWarning = $value;
         return $this;
     }
 

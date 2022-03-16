@@ -10,11 +10,11 @@
 
 namespace percipiolondon\staff\records;
 
-use craft\validators\DateTimeValidator;
-use percipiolondon\staff\Staff;
-
 use Craft;
 use craft\db\ActiveRecord;
+use craft\validators\DateTimeValidator;
+use DateTime;
+
 use percipiolondon\staff\db\Table;
 
 /**
@@ -30,11 +30,10 @@ use percipiolondon\staff\db\Table;
  * @property int $employeeId
  * @property int $employerId
  * @property int $payRunId
- *
  * @property int $staffologyId
  * @property string $taxYear
- * @property \DateTime $startDate
- * @property \DateTime $endDate
+ * @property DateTime $startDate
+ * @property DateTime $endDate
  * @property string $note
  * @property string $bacsSubReference
  * @property string $bacsHashcode
@@ -46,7 +45,7 @@ use percipiolondon\staff\db\Table;
  * @property boolean $isNewStarter
  * @property boolean $unpaidAbsence
  * @property boolean $hasAttachmentOrders
- * @property \DateTime $paymentDate
+ * @property DateTime $paymentDate
  * @property double $forcedCisVatAmount
  * @property double $holidayAccrued
  * @property string $state

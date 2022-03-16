@@ -8,7 +8,6 @@
 namespace percipiolondon\staff\gql\interfaces\elements;
 
 use craft\gql\interfaces\Element;
-use craft\gql\types\DateTime;
 use craft\gql\GqlEntityRegistry;
 use craft\gql\TypeLoader;
 use craft\gql\TypeManager;
@@ -76,12 +75,12 @@ class Employer extends Element
     public static function getFieldDefinitions(): array
     {
         $parentFields = parent::getFieldDefinitions();
-        unset($parentFields["slug"]);
+        unset($parentFields['slug']);
 
         $securedFields = [
             'crn' => [
                 'name' => 'crn',
-                'type' => Type::string(),
+                'type' => Type::id(),
                 'description' => 'The company registration number.',
                 'resolve' => function ($source, array $arguments, $context, ResolveInfo $resolveInfo) {
                     return SecurityHelper::resolve($source, $resolveInfo);
@@ -97,7 +96,7 @@ class Employer extends Element
             ],
             'slug' => [
                 'name' => 'slug',
-                'type' => Type::string(),
+                'type' => Type::nonNull(Type::string()),
                 'description' => 'The company slug.',
                 'resolve' => function ($source, array $arguments, $context, ResolveInfo $resolveInfo) {
                     return SecurityHelper::resolve($source, $resolveInfo);
@@ -116,7 +115,7 @@ class Employer extends Element
             ],
             'staffologyId' => [
                 'name' => 'staffologyId',
-                'type' => Type::string(),
+                'type' => Type::nonNull(Type::id()),
                 'description' => 'The employer id from staffology, needed for API calls.'
             ],
             'startYear' => [

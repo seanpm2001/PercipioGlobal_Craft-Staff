@@ -4,8 +4,10 @@ namespace percipiolondon\staff\gql\resolvers\elements;
 
 use craft\gql\base\ElementResolver;
 
-use percipiolondon\staff\helpers\Gql as GqlHelper;
+use GraphQL\Type\Definition\ResolveInfo;
+
 use percipiolondon\staff\elements\Employee as EmployeeElement;
+use percipiolondon\staff\helpers\Gql as GqlHelper;
 
 class Employee extends ElementResolver
 {

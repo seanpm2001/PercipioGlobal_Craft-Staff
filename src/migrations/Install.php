@@ -194,7 +194,7 @@ class Install extends Migration
                 'employeeId' => $this->integer()->notNull(),
                 'employerId' => $this->integer()->notNull()->defaultValue(null),
                 'payRunId' => $this->integer()->notNull()->defaultValue(0),
-                //stafology
+                //staffology
                 'priorPayrollCodeId' => $this->integer(), // create FK to PayCode table [id]
                 'payOptionsId' => $this->integer(), // create FK to PayOptions table [id]
                 'pensionSummaryId' => $this->integer(),// create FK to PensionSummary table [id]

@@ -11,18 +11,18 @@ use craft\gql\base\SingleGeneratorInterface;
 use craft\gql\GqlEntityRegistry;
 use craft\gql\TypeManager;
 
-use percipiolondon\staff\gql\arguments\elements\PayRunEntry as PayRunEntryArguments;
 use percipiolondon\staff\elements\PayRunEntry as PayRunEntryElement;
+use percipiolondon\staff\gql\arguments\elements\PayRunEntry as PayRunEntryArguments;
 use percipiolondon\staff\gql\interfaces\elements\PayRunEntry as PayRunEntryInterface;
 use percipiolondon\staff\gql\types\elements\PayRunEntry;
 
 /**
- * Class PayRunEntryType
+ * Class PayRunEntryGenerator
  *
  * @author Percipio Global Ltd. <support@percipio.london>
  * @since 1.0.0
  */
-class PayRunEntryType extends Generator implements GeneratorInterface, SingleGeneratorInterface
+class PayRunEntryGenerator extends Generator implements GeneratorInterface, SingleGeneratorInterface
 {
     /**
      * @inheritdoc

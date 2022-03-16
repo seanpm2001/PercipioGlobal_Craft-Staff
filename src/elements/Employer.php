@@ -14,12 +14,10 @@ use Craft;
 use craft\base\Element;
 use craft\elements\db\ElementQueryInterface;
 
-use percipiolondon\staff\elements\db\EmployerQuery;
-
-use percipiolondon\staff\Staff;
 use yii\db\Exception;
 use yii\db\Query;
 
+use percipiolondon\staff\elements\db\EmployerQuery;
 use percipiolondon\staff\helpers\Logger;
 use percipiolondon\staff\helpers\Security as SecurityHelper;
 use percipiolondon\staff\records\Employer as EmployerRecord;
@@ -168,7 +166,6 @@ class Employer extends Element
 
     /**
      * @inheritdoc
-     * @since 1.0.0
      */
     public function getGqlTypeName(): string
     {
