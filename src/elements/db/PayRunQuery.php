@@ -31,12 +31,6 @@ class PayRunQuery extends ElementQuery
     public $url;
     public $employerId;
 
-    public function staffologyId($value)
-    {
-        $this->staffologyId = $value;
-        return $this;
-    }
-
     public function taxYear($value)
     {
         $this->taxYear = $value;
@@ -145,7 +139,6 @@ class PayRunQuery extends ElementQuery
         $this->joinElementTable('staff_payrun');
 
         $this->query->select([
-            'staff_payrun.staffologyId',
             'staff_payrun.taxYear',
             'staff_payrun.taxMonth',
             'staff_payrun.payPeriod',

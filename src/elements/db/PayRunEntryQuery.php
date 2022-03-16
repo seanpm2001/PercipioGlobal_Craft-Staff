@@ -31,25 +31,25 @@ class PayRunEntryQuery extends ElementQuery
     public $unpaidAbsence;
     public $hasAttachmentOrders;
     public $paymentDate;
-    public $priorPayrollCode;
-    public $payOptions;
-    public $pensionSummary;
-    public $totals;
+    public $priorPayrollCodeId;
+    public $payOptionsId;
+    public $pensionSummaryId;
+    public $totalsId;
     public $periodOverrides;
-    public $totalsYtd;
+    public $totalsYtdId;
     public $totalsYtdOverrides;
     public $forcedCisVatAmount;
     public $holidayAccured;
     public $state;
     public $isClosed;
     public $manualNi;
-    public $nationalInsuranceCalculation;
+    public $nationalInsuranceCalculationId;
     public $payrollCodeChanged;
     public $aeNotEnroledWarning;
-    public $fps;
+    public $fpsId;
     public $receivingOffsetPay;
     public $paymentAfterLearning;
-    public $umbrellaPayment;
+    public $umbrellaPaymentId;
     public $employee;
     public $pdf;
 
@@ -78,43 +78,43 @@ class PayRunEntryQuery extends ElementQuery
     }
     public function payOptionsId($value)
     {
-        $this->payOptions = $value;
+        $this->payOptionsId = $value;
         return $this;
     }
 
     public function pensionSummaryId($value)
     {
-        $this->pensionSummary = $value;
+        $this->pensionSummaryId = $value;
         return $this;
     }
 
     public function totalsId($value)
     {
-        $this->totals = $value;
+        $this->totalsId = $value;
         return $this;
     }
 
-    public function priorPayrollCode($value)
+    public function priorPayrollCodeId($value)
     {
-        $this->priorPayrollCode = $value;
+        $this->priorPayrollCodeId = $value;
         return $this;
     }
 
     public function totalsYtdId($value)
     {
-        $this->totalsYtd = $value;
+        $this->totalsYtdId = $value;
         return $this;
     }
 
     public function totalsYtdOverridesId($value)
     {
-        $this->totalsYtdOverrides = $value;
+        $this->totalsYtdOverridesId = $value;
         return $this;
     }
 
     public function nationalInsuranceCalculationId($value)
     {
-        $this->nationalInsuranceCalculation = $value;
+        $this->nationalInsuranceCalculationId = $value;
         return $this;
     }
 
@@ -256,9 +256,9 @@ class PayRunEntryQuery extends ElementQuery
         return $this;
     }
 
-    public function fps($value)
+    public function fpsId($value)
     {
-        $this->fps = $value;
+        $this->fpsId = $value;
         return $this;
     }
 
@@ -274,9 +274,9 @@ class PayRunEntryQuery extends ElementQuery
         return $this;
     }
 
-    public function umbrellaPayment($value)
+    public function umbrellaPaymentId($value)
     {
-        $this->umbrellaPayment = $value;
+        $this->umbrellaPaymentId = $value;
         return $this;
     }
 
