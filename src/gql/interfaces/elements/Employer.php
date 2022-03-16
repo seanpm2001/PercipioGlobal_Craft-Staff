@@ -105,7 +105,15 @@ class Employer extends Element
                     return SecurityHelper::decrypt($source[$fieldName]);
                 }
             ],
-            //'slug' =>
+            'slug' => [
+                'name' => 'slug',
+                'type' => Type::string(),
+                'description' => 'The company slug.',
+                'resolve' => function ($source, array $arguments, $context, ResolveInfo $resolveInfo) {
+                    $fieldName = $resolveInfo->fieldName;
+                    return SecurityHelper::decrypt($source[$fieldName]);
+                }
+            ],
             'staffologyId' => [
                 'name' => 'staffologyId',
                 'type' => Type::string(),
