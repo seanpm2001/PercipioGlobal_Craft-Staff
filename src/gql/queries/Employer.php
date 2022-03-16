@@ -3,7 +3,9 @@
 namespace percipiolondon\staff\gql\queries;
 
 use craft\gql\base\Query;
+
 use GraphQL\Type\Definition\Type;
+
 use percipiolondon\staff\helpers\Gql as GqlHelper;
 use percipiolondon\staff\gql\arguments\elements\Employer as EmployerArguments;
 use percipiolondon\staff\gql\interfaces\elements\Employer as EmployerInterface;
@@ -11,11 +13,14 @@ use percipiolondon\staff\gql\resolvers\elements\Employer as EmployerResolver;
 
 class Employer extends Query
 {
+    // Public Methods
+    // =========================================================================
+
     public static function getQueries($checkToken = true): array
     {
-//        if($checkToken && !GqlHelper::canQueryEmployers()) {
-//            return [];
-//        }
+         if($checkToken && !GqlHelper::canQueryEmployers()) {
+           return [];
+         }
 
         return [
             'employers' => [
