@@ -39,29 +39,18 @@ class PayRunEntry extends Element
 
         $fieldName = $resolveInfo->fieldName;
 
-        switch($fieldName) {
-            case 'nationalInsuranceCalculation':
-                return Json::decodeIfJson($source->nationalInsuranceCalculation);
-            case 'payOptions':
-                return Json::decodeIfJson($source->payOptions);
-            case 'pensionSummary':
-                return Json::decodeIfJson($source->pensionSummary);
-            case 'totals':
-                return Json::decodeIfJson($source->totals);
-            case 'periodOverrides':
-                return Json::decodeIfJson($source->periodOverrides);
-            case 'totalsYtd':
-                return Json::decodeIfJson($source->totalsYtd);
-            case 'totalsYtdOverrides':
-                return Json::decodeIfJson($source->totalsYtdOverrides);
-            case 'fps':
-                return Json::decodeIfJson($source->fps);
-            case 'umbrellaPayment':
-                return Json::decodeIfJson($source->umbrellaPayment);
-            case 'employee':
-                return Json::decodeIfJson($source->employee);
-        }
-
-        return parent::resolve($source, $arguments, $context, $resolveInfo);
+        return match ($fieldName) {
+            'nationalInsuranceCalculation' => Json::decodeIfJson($source->nationalInsuranceCalculation),
+            'payOptions' => Json::decodeIfJson($source->payOptions),
+            'pensionSummary' => Json::decodeIfJson($source->pensionSummary),
+            'totals' => Json::decodeIfJson($source->totals),
+            'periodOverrides' => Json::decodeIfJson($source->periodOverrides),
+            'totalsYtd' => Json::decodeIfJson($source->totalsYtd),
+            'totalsYtdOverrides' => Json::decodeIfJson($source->totalsYtdOverrides),
+            'fps' => Json::decodeIfJson($source->fps),
+            'umbrellaPayment' => Json::decodeIfJson($source->umbrellaPayment),
+            'employee' => Json::decodeIfJson($source->employee),
+            default => parent::resolve($source, $arguments, $context, $resolveInfo),
+        };
     }
 }

@@ -416,7 +416,7 @@ class Staff extends Plugin
                 $event->types[] = EmployerInterface::class;
                 $event->types[] = EmployeeInterface::class;
                 $event->types[] = PayRunInterface::class;
-                //$event->types[] = PayRunEntryInterface::class;
+                $event->types[] = PayRunEntryInterface::class;
             }
         );
     }
@@ -437,10 +437,10 @@ class Staff extends Plugin
                         // payruns component with read action, labelled “View Payruns” in UI
                         'payruns:read' => ['label' => Craft::t('staff-management', 'View Payruns')]
                     ],
-                    //'PayrunEntries' => [
+                    'PayrunEntries' => [
                         // payruns entries component with read action, labelled “View Payruns” in UI
-                        //'payrunentries:read' => ['label' => Craft::t('staff-management', 'View Payrun Entries')]
-                    //],
+                        'payrunentries:read' => ['label' => Craft::t('staff-management', 'View Payrun Entries')]
+                    ],
                 ]);
 
             }
@@ -458,7 +458,7 @@ class Staff extends Plugin
                     EmployerQueries::getQueries(),
                     EmployeeQueries::getQueries(),
                     PayRunQueries::getQueries(),
-                    //PayRunEntryQueries::getQueries(),
+                    PayRunEntryQueries::getQueries(),
                 );
             }
         );
