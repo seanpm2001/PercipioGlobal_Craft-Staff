@@ -78,7 +78,7 @@ class Employer extends Element
         $parentFields = parent::getFieldDefinitions();
         unset($parentFields["slug"]);
 
-        $fields = [
+        $securedFields = [
             'crn' => [
                 'name' => 'crn',
                 'type' => Type::string(),
@@ -86,14 +86,6 @@ class Employer extends Element
                 'resolve' => function ($source, array $arguments, $context, ResolveInfo $resolveInfo) {
                     return SecurityHelper::resolve($source, $resolveInfo);
                 }
-            ],
-            'currentYear' => [
-                'name' => 'currentYear',
-                'type' => Type::string(),
-            ],
-            'employeeCount' => [
-                'name' => 'employeeCount',
-                'type' => Type::int(),
             ],
             'name' => [
                 'name' => 'name',
@@ -108,9 +100,19 @@ class Employer extends Element
                 'type' => Type::string(),
                 'description' => 'The company slug.',
                 'resolve' => function ($source, array $arguments, $context, ResolveInfo $resolveInfo) {
-                    $fieldName = $resolveInfo->fieldName;
-                    return SecurityHelper::decrypt($source[$fieldName]);
+                    return SecurityHelper::resolve($source, $resolveInfo);
                 }
+            ],
+        ];
+
+        $fields = [
+            'currentYear' => [
+                'name' => 'currentYear',
+                'type' => Type::string(),
+            ],
+            'employeeCount' => [
+                'name' => 'employeeCount',
+                'type' => Type::int(),
             ],
             'staffologyId' => [
                 'name' => 'staffologyId',
@@ -123,7 +125,7 @@ class Employer extends Element
             ],
         ];
 
-        return TypeManager::prepareFieldDefinitions(array_merge($parentFields, $fields), self::getName());
+        return TypeManager::prepareFieldDefinitions(array_merge($parentFields, $securedFields, $fields), self::getName());
     }
 
 }
