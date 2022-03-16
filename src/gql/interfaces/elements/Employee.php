@@ -76,7 +76,7 @@ class Employee extends Element
         $securedFields = [
             'niNumber' => [
                 'name' => 'niNumber',
-                'type' => Type::string(),
+                'type' => Type::id(),
                 'description' => 'Nation insurance number.',
                 'resolve' => function ($source, array $arguments, $context, ResolveInfo $resolveInfo) {
                     return SecurityHelper::resolve($source, $resolveInfo);

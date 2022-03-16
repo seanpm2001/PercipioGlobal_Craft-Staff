@@ -80,7 +80,7 @@ class Employer extends Element
         $securedFields = [
             'crn' => [
                 'name' => 'crn',
-                'type' => Type::string(),
+                'type' => Type::id(),
                 'description' => 'The company registration number.',
                 'resolve' => function ($source, array $arguments, $context, ResolveInfo $resolveInfo) {
                     return SecurityHelper::resolve($source, $resolveInfo);
