@@ -14,6 +14,7 @@ use Craft;
 use craft\base\Component;
 
 use craft\elements\User;
+use percipiolondon\staff\helpers\Logger;
 use percipiolondon\staff\helpers\Security as SecurityHelper;
 use percipiolondon\staff\elements\Employee;
 use percipiolondon\staff\jobs\CreateEmployeeJob;
@@ -26,7 +27,7 @@ use percipiolondon\staff\records\Employer as EmployerRecord;
 
 use percipiolondon\staff\Staff;
 use percipiolondon\staff\jobs\FetchEmployeesListJob;
-use percipiolondon\staff\helpers\Logger;
+
 use yii\base\BaseObject;
 use yii\db\Exception;
 
@@ -89,84 +90,39 @@ class Employees extends Component
         $logger = new Logger();
         $logger->stdout("✓ Save employee " .$employeeName . '...', $logger::RESET);
 
-        $employeeRecord = EmployeeRecord::findOne(['staffologyId' => $employee['id']]);
-        $isNew = false;
-        $user = null;
+        $employeeRecord = Employee::findOne(['staffologyId' => $employee['id']]);
 
         try {
 
             if (!$employeeRecord) {
-                $employeeRecord = new EmployeeRecord();
-                $isNew = true;
+                $employeeRecord = new Employee();
             }
 
             //foreign keys
             $personalDetailsId = $employeeRecord->personalDetailsId ?? null;
             $employmentDetailsId = $employeeRecord->employmentDetailsId ?? null;
 
-
-            // user creation
-            if($employee['personalDetails'] && array_key_exists('email', $employee['personalDetails'])) {
-                $user = User::findOne(['email' => $employee['personalDetails']['email']]);
-
-                // check if user exists, if so, skip this step
-                if(!$user) {
-
-                    //create user
-                    $user = new User();
-                    $user->firstName = $employee['personalDetails']['firstName'];
-                    $user->lastName = $employee['personalDetails']['lastName'];
-                    $user->username = $employee['personalDetails']['email'];
-                    $user->email = $employee['personalDetails']['email'];
-
-                    $success = Craft::$app->elements->saveElement($user, true);
-
-                    if(!$success){
-                        throw new Exception("The user couldn't be created");
-                    }
-
-                    Craft::info("Staff: new user creation: ".$user->id);
-
-                    // assign user to group
-                    $group = Craft::$app->getUserGroups()->getGroupByHandle('hardingUsers');
-                    if($group){
-                        Craft::$app->getUsers()->assignUserToGroups($user->id, [$group->id]);
-                    }
-                }
-            }
-
-            //foreign keys
             $personalDetails = $this->savePersonalDetails($employee['personalDetails'], $personalDetailsId);
             $employmentDetails = $this->saveEmploymentDetails($employee['employmentDetails'], $employmentDetailsId);
-            $employerId = EmployerRecord::findOne(['staffologyId' => $employer['id']]);
+            $employerRecord = EmployerRecord::findOne(['staffologyId' => $employer['id']]);
 
-            $employeeRecord->employerId = $employerId->id ?? null;
-            $employeeRecord->userId = $user->id ?? null;
+            $employeeRecord->employerId = $employerRecord['id'] ?? null;
+            $employeeRecord->staffologyId = $employee['id'];
+            $employeeRecord->siteId = Craft::$app->getSites()->currentSite->id;
             $employeeRecord->personalDetailsId = $personalDetails->id ?? null;
             $employeeRecord->employmentDetailsId = $employmentDetails->id ?? null;
-            $employeeRecord->staffologyId = $employee['id'] ?? null;
-            $employeeRecord->status = $employee['status'] ?? null;
-            $employeeRecord->sourceSystemId = $employee['sourceSystemId'] ?? null;
-            $employeeRecord->niNumber = SecurityHelper::encrypt($employee['niNumber'] ?? '');
-            $employeeRecord->isDirector = $employee['employmentDetails']['directorshipDetails']['isDirector'] ?? null;
+            $employeeRecord->leaveSettingsId = $employee['leaveSettings'] ?? null;
+            $employeeRecord->status = $employee['status'] ?? '';
+            $employeeRecord->niNumber = $employee['personalDetails']['niNumber'] ?? null;
+            $employeeRecord->userId = null;
+            $employeeRecord->isDirector = $this->isDirector ?? false;
 
-            $success = $employeeRecord->save();
-
-            if($isNew && $user) {
-                //assign permissions to employee
-                if($employeeRecord->isDirector) {
-                    $permissions = Permission::find()->all();
-                } else {
-                    $permissions = [Permission::findOne(['name' => 'access:employer'])];
-                }
-
-                Staff::$plugin->userPermissions->createPermissions($permissions, $user->id, $employeeRecord->id);
-            }
+            // save new employee
+            $elementsService = Craft::$app->getElements();
+            $success = $elementsService->saveElement($employeeRecord);
 
             if($success){
                 $logger->stdout(" done" . PHP_EOL, $logger::FG_GREEN);
-
-                $this->saveEmployeeElement();
             }else{
                 $logger->stdout(" failed" . PHP_EOL, $logger::FG_RED);
 
@@ -301,18 +257,5 @@ class Employees extends Component
         $employmentDetails['forcePreviousPayrollCode'] = SecurityHelper::decrypt($employmentDetails['forcePreviousPayrollCode'] ?? '');
 
         return $employmentDetails;
-    }
-
-
-
-
-    /* SAVES ELEMENTS */
-    public function saveEmployeeElement(): bool
-    {
-        return false;
-        $employeeRecord = new Employee();
-        $elementsService = Craft::$app->getElements();
-        return $elementsService->saveElement($employeeRecord);
-
     }
 }

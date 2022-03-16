@@ -157,10 +157,6 @@ class PayRunQuery extends ElementQuery
             'staff_payrun.employerId'
         ]);
 
-        if ($this->staffologyId) {
-            $this->subQuery->andWhere(Db::parseParam('staff_payrun.staffologyId', $this->staffologyId));
-        }
-
         if ($this->employerId) {
             $this->subQuery->andWhere(Db::parseParam('staff_payrun.employerId', $this->employerId));
         }

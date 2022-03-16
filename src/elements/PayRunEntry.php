@@ -55,25 +55,25 @@ class PayRunEntry extends Element
     public $unpaidAbsence;
     public $hasAttachmentOrders;
     public $paymentDate;
-    public $priorPayrollCode;
-    public $payOptions;
-    public $pensionSummary;
-    public $totals;
+    public $priorPayrollCodeId;
+    public $payOptionsId;
+    public $pensionSummaryId;
+    public $totalsId;
     public $periodOverrides;
-    public $totalsYtd;
+    public $totalsYtdId;
     public $totalsYtdOverrides;
     public $forcedCisVatAmount;
     public $holidayAccrued;
     public $state;
     public $isClosed;
     public $manualNi;
-    public $nationalInsuranceCalculation;
+    public $nationalInsuranceCalculationId;
     public $payrollCodeChanged;
     public $aeNotEnroledWarning;
-    public $fps;
+    public $fpsId;
     public $receivingOffsetPay;
     public $paymentAfterLearning;
-    public $umbrellaPayment;
+    public $umbrellaPaymentId;
     public $employee;
     public $pdf;
 
@@ -224,6 +224,8 @@ class PayRunEntry extends Element
      */
     public function afterSave(bool $isNew)
     {
+        $this->_saveRecord($isNew);
+
         return parent::afterSave($isNew);
     }
 
@@ -270,6 +272,8 @@ class PayRunEntry extends Element
 
     private function _saveRecord($isNew)
     {
+        $logger = new Logger();
+
         try {
             if (!$isNew) {
                 $record = PayRunEntryRecord::findOne($this->id);
@@ -278,34 +282,17 @@ class PayRunEntry extends Element
                     throw new Exception('Invalid pay run entry ID: ' . $this->id);
                 }
 
-                // Foreign keys
-                $totalsId = $record->totalsId;
-                $totalsYtdId = $record->totalsYtdId;
-                $payOptionsId = $record->payOptionsId;
-
             } else {
                 $record = new PayRunEntryRecord();
                 $record->id = (int)$this->id;
-
-                // Foreign keys
-                $totalsId = null;
-                $totalsYtdId = null;
-                $payOptionsId = null;
             }
 
-            // Foreign keys
-            $totals = Staff::$plugin->payRuns->saveTotals($this->totals, $totalsId);
-            $totalsYtd = Staff::$plugin->payRuns->saveTotals($this->totalsYtd, $totalsYtdId);
-            $payOptions = Staff::$plugin->payRuns->savePayOptions($this->payOptions, $payOptionsId);
-            $employee = Employee::findOne(['staffologyId' => $this->employeeId]);
-            $employer = Employer::findOne(['staffologyId' => $this->employerId]);
-
-            $record->employerId = $employer->id ?? null;
-            $record->employeeId = $employee->id ?? null;
+            $record->employerId = $this->employerId ?? null;
+            $record->employeeId = $this->employeeId ?? null;
             $record->payRunId = $this->payRunId ?? null;
-            $record->payOptionsId = $payOptions->id ?? null;
-            $record->totalsId = $totals->id ?? null;
-            $record->totalsYtdId = $totalsYtd->id ?? null;
+            $record->payOptionsId = $this->payOptionsId ?? null;
+            $record->totalsId = $this->totalsId ?? null;
+            $record->totalsYtdId = $this->totalsYtdId ?? null;
             $record->staffologyId = $this->staffologyId;
             $record->taxYear = $this->taxYear;
             $record->startDate = $this->startDate;
@@ -333,11 +320,21 @@ class PayRunEntry extends Element
             $record->paymentAfterLearning = $this->paymentAfterLearning;
             $record->pdf = $this->pdf;
 
-            $record->save(false);
+            $success = $record->save(false);
+
+            if(!$success) {
+                $errors = "";
+
+                foreach($record->errors as $err) {
+                    $errors .= implode(',', $err);
+                }
+
+                $logger->stdout($errors . PHP_EOL, $logger::FG_RED);
+                Craft::error($record->errors, __METHOD__);
+            }
 
         } catch (\Exception $e) {
 
-            $logger = new Logger();
             $logger->stdout(PHP_EOL, $logger::RESET);
             $logger->stdout($e->getMessage() . PHP_EOL, $logger::FG_RED);
             Craft::error($e->getMessage(), __METHOD__);
