@@ -7,22 +7,19 @@
 
 namespace percipiolondon\staff\gql\interfaces\elements;
 
-use craft\gql\GqlEntityRegistry;
 use craft\gql\interfaces\Element;
-use craft\gql\TypeManager;
 use craft\gql\types\DateTime;
-
-use percipiolondon\staff\gql\types\Address;
-use percipiolondon\staff\gql\types\HmrcDetails;
-use percipiolondon\staff\gql\types\PayOptions;
-use percipiolondon\staff\gql\types\generators\EmployerType;
-
+use craft\gql\GqlEntityRegistry;
+use craft\gql\TypeLoader;
+use craft\gql\TypeManager;
 use craft\helpers\Gql;
 use craft\helpers\Json;
 
 use GraphQL\Type\Definition\InterfaceType;
 use GraphQL\Type\Definition\ResolveInfo;
 use GraphQL\Type\Definition\Type;
+
+use percipiolondon\staff\gql\types\generators\EmployerGenerator;
 
 /**
  * Class Employer
@@ -37,7 +34,7 @@ class Employer extends Element
      */
     public static function getTypeGenerator(): string
     {
-        return EmployerType::class;
+        return EmployerGenerator::class;
     }
 
     /**
@@ -53,10 +50,12 @@ class Employer extends Element
             'name' => static::getName(),
             'fields' => self::class . '::getFieldDefinitions',
             'description' => 'This is the interface implemented by all employers.',
-            'resolveType' => self::class . '::resolveElementTypeName',
+            'resolveType' => function(Employer $value) {
+                return $value->getGqlTypeName();
+            }
         ]));
 
-        EmployerType::generateTypes();
+        EmployerGenerator::generateTypes();
 
         return $type;
     }
@@ -74,7 +73,9 @@ class Employer extends Element
      */
     public static function getFieldDefinitions(): array
     {
-        return TypeManager::prepareFieldDefinitions(array_merge(parent::getFieldDefinitions(), self::getConditionalFields(), [
+        $parentFields = parent::getFieldDefinitions();
+
+        $fields = [
             'name' => [
                 'name' => 'name',
                 'type' => Type::string(),
@@ -90,16 +91,6 @@ class Employer extends Element
                 'type' => Type::string(),
                 'description' => 'The company registration number.',
             ],
-            'address' => [
-                'name' => 'address',
-                'type' => Address::getType(),
-                'description' => 'The address object.',
-            ],
-            'hmrcDetails' => [
-                'name' => 'hmrcDetails',
-                'type' => HmrcDetails::getType(),
-                'description' => 'Get the HMRC Details.',
-            ],
             'startYear' => [
                 'name' => 'startYear',
                 'type' => Type::string(),
@@ -112,21 +103,10 @@ class Employer extends Element
                 'name' => 'employeeCount',
                 'type' => Type::int(),
             ],
-            'defaultPayOptions' => [
-                'name' => 'defaultPayOptions',
-                'type' => PayOptions::getType(),
-                'description' => 'Get the default pay options',
-            ],
 
-        ]), self::getName());
-    }
+        ];
 
-    /**
-     * @inheritdoc
-     */
-    protected static function getConditionalFields(): array
-    {
-        return [];
+        return TypeManager::prepareFieldDefinitions(array_merge($parentFields, $fields), self::getName());
     }
 
 }
