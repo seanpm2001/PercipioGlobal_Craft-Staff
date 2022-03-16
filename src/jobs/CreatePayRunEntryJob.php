@@ -38,29 +38,22 @@ class CreatePayRunEntryJob extends Basejob
             $progress = "[".$current."/".$total."] ";
 
             $logger->stdout($progress."↧ Fetching pay run entry of " . $payRunEntryData['name'] . '...', $logger::RESET);
+            $logger->stdout(" done" . PHP_EOL, $logger::FG_GREEN);
 
-            $payRunEntry = PayRunEntryRecord::findOne(['staffologyId' => $payRunEntryData['id']]);
+            $base_url = "https://api.staffology.co.uk/" . $payRunEntryData['url'];
 
-            // SET PAY RUN ENTRY IF IT DOESN'T EXIST
-            if (!$payRunEntry) {
+            try {
+                $response = $client->get($base_url, $headers);
+                $result = json_decode($response->getBody()->getContents(), true);
 
-                $logger->stdout(" done" . PHP_EOL, $logger::FG_GREEN);
+                Staff::$plugin->payRuns->savePayRunEntry($result, $this->criteria['employer'], $this->criteria['payRun']->id);
+                Staff::$plugin->payRuns->fetchPaySlip($result, $this->criteria['employer']);
+            } catch (\Exception $e) {
 
-                $base_url = "https://api.staffology.co.uk/" . $payRunEntryData['url'];
+                $logger->stdout(PHP_EOL, $logger::RESET);
+                $logger->stdout($e->getMessage() . PHP_EOL, $logger::FG_RED);
+                Craft::error($e->getMessage(), __METHOD__);
 
-                try {
-                    $response = $client->get($base_url, $headers);
-                    $result = json_decode($response->getBody()->getContents(), true);
-
-                    Staff::$plugin->payRuns->savePayRunEntry($result, $this->criteria['employer'], $this->criteria['payRun']);
-                    Staff::$plugin->payRuns->fetchPaySlip($result, $this->criteria['employer']);
-                } catch (\Exception $e) {
-
-                    $logger->stdout(PHP_EOL, $logger::RESET);
-                    $logger->stdout($e->getMessage() . PHP_EOL, $logger::FG_RED);
-                    Craft::error($e->getMessage(), __METHOD__);
-
-                }
             }
         }
     }

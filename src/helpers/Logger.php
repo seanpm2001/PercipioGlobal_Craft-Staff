@@ -2,6 +2,7 @@
 
 namespace percipiolondon\staff\helpers;
 
+use craft\console\Application as ConsoleApplication;
 use yii\helpers\BaseConsole;
 use yii\helpers\Console;
 
@@ -88,13 +89,15 @@ class Logger
      */
     public function stdout($string)
     {
-        if ($this->isColorEnabled()) {
-            $args = func_get_args();
-            array_shift($args);
-            $string = BaseConsole::ansiFormat($string, $args);
-        }
+        if(\Craft::$app instanceof ConsoleApplication){
+            if ($this->isColorEnabled()) {
+                $args = func_get_args();
+                array_shift($args);
+                $string = BaseConsole::ansiFormat($string, $args);
+            }
 
-        return BaseConsole::stdout($string);
+            return BaseConsole::stdout($string);
+        }
     }
 
     /**

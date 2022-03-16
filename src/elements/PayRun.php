@@ -397,10 +397,10 @@ class PayRun extends Element
      */
     public function afterSave(bool $isNew)
     {
-        if (!$this->propagating) {
-
-            $this->_saveRecord($isNew);
-        }
+//        if (!$this->propagating) {
+//
+//            $this->_saveRecord($isNew);
+//        }
 
         return parent::afterSave($isNew);
     }
@@ -440,56 +440,56 @@ class PayRun extends Element
         return $payrunIds;
     }
 
-    private function _saveRecord($isNew)
-    {
-        try {
-            if (!$isNew) {
-                $record = PayRunRecord::findOne($this->id);
-
-                if (!$record) {
-                    throw new Exception('Invalid pay run ID: ' . $this->id);
-                }
-
-                //foreign keys
-                $totalsId = $record->totalsId;
-            } else {
-                $record = new PayRunRecord();
-                $record->id = (int)$this->id;
-
-                //foreign keys
-                $totalsId = null;
-            }
-
-            //foreign keys
-            $totals = Staff::$plugin->payRuns->saveTotals($this->totals, $totalsId);
-            $employer = Employer::findOne(['staffologyId' => $this->employerId]);
-
-            $record->employerId = $employer->id ?? null;
-
-            $record->taxYear = $this->taxYear;
-            $record->taxMonth = $this->taxMonth;
-            $record->payPeriod = $this->payPeriod;
-            $record->ordinal = $this->ordinal;
-            $record->period = $this->period;
-            $record->startDate = $this->startDate;
-            $record->endDate = $this->endDate;
-            $record->paymentDate = $this->paymentDate;
-            $record->employeeCount = $this->employeeCount;
-            $record->subContractorCount = $this->subContractorCount;
-            $record->totalsId = $totals->id;
-            $record->state = $this->state;
-            $record->isClosed = $this->isClosed;
-            $record->dateClosed = $this->dateClosed;
-            $record->url = $this->url;
-
-            $success = $record->save(false);
-
-        } catch (\Exception $e) {
-
-            $logger = new Logger();
-            $logger->stdout(PHP_EOL, $logger::RESET);
-            $logger->stdout($e->getMessage() . PHP_EOL, $logger::FG_RED);
-            Craft::error($e->getMessage(), __METHOD__);
-        }
-    }
+//    private function _saveRecord($isNew)
+//    {
+//        try {
+//            if (!$isNew) {
+//                $record = PayRunRecord::findOne($this->id);
+//
+//                if (!$record) {
+//                    throw new Exception('Invalid pay run ID: ' . $this->id);
+//                }
+//
+//                //foreign keys
+//                $totalsId = $record->totalsId;
+//            } else {
+//                $record = new PayRunRecord();
+//                $record->id = (int)$this->id;
+//
+//                //foreign keys
+//                $totalsId = null;
+//            }
+//
+//            //foreign keys
+//            $totals = Staff::$plugin->payRuns->saveTotals($this->totals, $totalsId);
+//            $employer = Employer::findOne(['staffologyId' => $this->employerId]);
+//
+//            $record->employerId = $employer->id ?? null;
+//
+//            $record->taxYear = $this->taxYear;
+//            $record->taxMonth = $this->taxMonth;
+//            $record->payPeriod = $this->payPeriod;
+//            $record->ordinal = $this->ordinal;
+//            $record->period = $this->period;
+//            $record->startDate = $this->startDate;
+//            $record->endDate = $this->endDate;
+//            $record->paymentDate = $this->paymentDate;
+//            $record->employeeCount = $this->employeeCount;
+//            $record->subContractorCount = $this->subContractorCount;
+//            $record->totalsId = $totals->id;
+//            $record->state = $this->state;
+//            $record->isClosed = $this->isClosed;
+//            $record->dateClosed = $this->dateClosed;
+//            $record->url = $this->url;
+//
+//            $success = $record->save(false);
+//
+//        } catch (\Exception $e) {
+//
+//            $logger = new Logger();
+//            $logger->stdout(PHP_EOL, $logger::RESET);
+//            $logger->stdout($e->getMessage() . PHP_EOL, $logger::FG_RED);
+//            Craft::error($e->getMessage(), __METHOD__);
+//        }
+//    }
 }

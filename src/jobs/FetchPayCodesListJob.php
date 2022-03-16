@@ -29,32 +29,21 @@ class FetchPayCodesListJob extends BaseJob
 
         $client = new \GuzzleHttp\Client();
 
-        $current = 0;
-        $total = count($this->criteria['employers']);
+        $logger->stdout("↧ Fetching pay codes of " . $this->criteria['employer']['name'] . '...', $logger::RESET);
 
-        foreach($this->criteria['employers'] as $employer) {
+        try {
+            $response = $client->get($base_url.'employers/'.$this->criteria['employer']['id'].'/paycodes', $headers);
+            $payCodes = Json::decodeIfJson($response->getBody()->getContents(), true);
 
-            $current++;
-            $progress = "[".$current."/".$total."] ";
+            $logger->stdout(" done" . PHP_EOL, $logger::FG_GREEN);
 
-            $logger->stdout($progress."↧ Fetching pay codes of " . $employer['name'] . '...', $logger::RESET);
+            Staff::$plugin->payRuns->fetchPayCodes($payCodes, $this->criteria['employer']);
+        } catch (\Exception $e) {
 
-            try {
-                $response = $client->get($base_url.'employers/'.$employer['id'].'/paycodes', $headers);
-                $payCodes = Json::decodeIfJson($response->getBody()->getContents(), true);
+            $logger->stdout(PHP_EOL, $logger::RESET);
+            $logger->stdout($e->getMessage() . PHP_EOL, $logger::FG_RED);
+            Craft::error($e->getMessage(), __METHOD__);
 
-                $logger->stdout(" done" . PHP_EOL, $logger::FG_GREEN);
-
-                Staff::$plugin->payRuns->fetchPayCodes($payCodes, $employer);
-            } catch (\Exception $e) {
-
-                $logger->stdout(PHP_EOL, $logger::RESET);
-                $logger->stdout($e->getMessage() . PHP_EOL, $logger::FG_RED);
-                Craft::error($e->getMessage(), __METHOD__);
-
-            }
-
-            $this->setProgress($queue, $current / $total);
         }
     }
 }

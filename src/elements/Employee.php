@@ -417,10 +417,10 @@ class Employee extends Element
      */
     public function afterSave(bool $isNew)
     {
-        if (!$this->propagating) {
-
-            $this->_saveRecord($isNew);
-        }
+//        if (!$this->propagating) {
+//
+//            $this->_saveRecord($isNew);
+//        }
 
         return parent::afterSave($isNew);
     }
@@ -458,97 +458,5 @@ class Employee extends Element
         }
 
         return $employeeIds;
-    }
-
-    private function _saveRecord($isNew)
-    {
-        try {
-            if (!$isNew) {
-                $record = EmployeeRecord::findOne($this->id);
-
-                if (!$record) {
-                    throw new Exception('Invalid employee ID: ' . $this->id);
-                }
-
-                //foreign keys
-                $personalDetailsId = $record->personalDetailsId;
-                $employmentDetailsId = $record->employmentDetailsId;
-
-            } else {
-                $record = new EmployeeRecord();
-                $record->id = (int)$this->id;
-
-                //foreign keys
-                $personalDetailsId = null;
-                $employmentDetailsId = null;
-            }
-
-
-            // user creation
-            if($this->personalDetails && array_key_exists('email', $this->personalDetails)) {
-                $user = User::findOne(['email' => $this->personalDetails['email']]);
-
-                // check if user exists, if so, skip this step
-                if(!$user) {
-
-                    //create user
-                    $user = new User();
-                    $user->firstName = $this->personalDetails['firstName'];
-                    $user->lastName = $this->personalDetails['lastName'];
-                    $user->username = $this->personalDetails['email'];
-                    $user->email = $this->personalDetails['email'];
-
-                    $success = Craft::$app->elements->saveElement($user, true);
-
-                    if(!$success){
-                        throw new Exception("The user couldn't be created");
-                    }
-
-                    Craft::info("Craft Staff: new user creation: ".$user->id);
-
-                    // assign user to group
-                    $group = Craft::$app->getUserGroups()->getGroupByHandle('hardingUsers');
-                    Craft::$app->getUsers()->assignUserToGroups($user->id, [$group->id]);
-                }
-
-                //assign the userId to the employee record
-                $this->userId = $user->id;
-            }
-
-            //foreign keys
-            $personalDetails = Staff::$plugin->employees->savePersonalDetails($this->personalDetails, $personalDetailsId);
-            $employmentDetails = Staff::$plugin->employees->saveEmploymentDetails($this->employmentDetails, $employmentDetailsId);
-            $employerId = Employer::findOne(['staffologyId' => $this->employerId]);
-
-            $record->employerId = $employerId->id ?? null;
-            $record->staffologyId = $this->staffologyId;
-            $record->personalDetailsId = $personalDetails->id;
-            $record->employmentDetailsId = $employmentDetails->id;
-            $record->status = $this->status;
-            $record->sourceSystemId = $this->sourceSystemId;
-            $record->niNumber = SecurityHelper::encrypt($this->niNumber ?? '');
-            $record->userId = $this->userId;
-            $record->isDirector = $this->isDirector;
-
-            $record->save();
-
-            if($isNew) {
-                //assign permissions to employee
-                if($this->isDirector) {
-                    $permissions = Permission::find()->all();
-                } else {
-                    $permissions = [Permission::findOne(['name' => 'access:employer'])];
-                }
-
-                Staff::$plugin->userPermissions->createPermissions($permissions, $this->userId, $this->id);
-            }
-
-        } catch (\Exception $e) {
-
-            $logger = new Logger();
-            $logger->stdout(PHP_EOL, $logger::RESET);
-            $logger->stdout($e->getMessage() . PHP_EOL, $logger::FG_RED);
-            Craft::error($e->getMessage(), __METHOD__);
-        }
     }
 }

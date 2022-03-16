@@ -139,6 +139,23 @@ class Install extends Migration
                 'slug' => $this->string(255)->notNull(),
             ]);
 
+            $this->createTable(Table::IMPORTS, [
+                'id' => $this->primaryKey(),
+                'dateCreated' => $this->dateTime()->notNull(),
+                'dateUpdated' => $this->dateTime()->notNull(),
+                'uid' => $this->uid(),
+                //FK
+                //intern
+                'payRunId' => $this->integer()->notNull()->defaultValue(null), // create FK to PayRun [id]
+                'uploadedBy' => $this->integer()->notNull()->defaultValue(null), // create FK to User [id]
+                'approvedBy' => $this->integer()->notNull()->defaultValue(null), // create FK to User [id]
+                //fields
+                'filepath' => $this->string(255)->notNull()->defaultValue(''),
+                'filename' => $this->string(255)->notNull()->defaultValue(''),
+                'rowCount' => $this->integer()->defaultValue(1),
+                'dateApproved' => $this->dateTime()->notNull(),
+            ]);
+
             $this->createTable(Table::PAYRUN, [
                 'id' => $this->primaryKey(),
                 'dateCreated' => $this->dateTime()->notNull(),
