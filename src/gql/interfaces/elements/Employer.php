@@ -73,7 +73,9 @@ class Employer extends Element
      */
     public static function getFieldDefinitions(): array
     {
-        $fields = array_merge(parent::getFieldDefinitions(), [
+        $parentFields = parent::getFieldDefinitions();
+
+        $fields = [
             'name' => [
                 'name' => 'name',
                 'type' => Type::string(),
@@ -102,9 +104,9 @@ class Employer extends Element
                 'type' => Type::int(),
             ],
 
-        ]);
+        ];
 
-        return TypeManager::prepareFieldDefinitions($fields, self::getName());
+        return TypeManager::prepareFieldDefinitions(array_merge($parentFields, $fields), self::getName());
     }
 
 }

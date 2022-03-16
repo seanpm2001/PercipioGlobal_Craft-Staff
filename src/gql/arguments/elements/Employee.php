@@ -2,12 +2,11 @@
 
 namespace percipiolondon\staff\gql\arguments\elements;
 
-use Craft;
-use craft\gql\base\ElementArguments;
-use craft\gql\types\QueryArgument;
 use GraphQL\Type\Definition\Type;
 
-class Employee extends ElementArguments
+use percipiolondon\staff\gql\base\HardingArguments;
+
+class Employee extends HardingArguments
 {
     /**
      * @inheritdoc
