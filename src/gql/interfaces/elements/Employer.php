@@ -84,8 +84,7 @@ class Employer extends Element
                 'type' => Type::string(),
                 'description' => 'The company registration number.',
                 'resolve' => function ($source, array $arguments, $context, ResolveInfo $resolveInfo) {
-                    $fieldName = $resolveInfo->fieldName;
-                    return SecurityHelper::decrypt($source[$fieldName]);
+                    return SecurityHelper::resolve($source, $resolveInfo);
                 }
             ],
             'currentYear' => [
@@ -101,8 +100,7 @@ class Employer extends Element
                 'type' => Type::string(),
                 'description' => 'The company name.',
                 'resolve' => function ($source, array $arguments, $context, ResolveInfo $resolveInfo) {
-                    $fieldName = $resolveInfo->fieldName;
-                    return SecurityHelper::decrypt($source[$fieldName]);
+                    return SecurityHelper::resolve($source, $resolveInfo);
                 }
             ],
             'slug' => [
