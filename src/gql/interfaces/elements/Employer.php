@@ -21,6 +21,7 @@ use GraphQL\Type\Definition\Type;
 
 use percipiolondon\staff\elements\Employer as EmployerElement;
 use percipiolondon\staff\gql\types\generators\EmployerGenerator;
+use percipiolondon\staff\helpers\Security as SecurityHelper;
 
 /**
  * Class Employer
@@ -75,26 +76,17 @@ class Employer extends Element
     public static function getFieldDefinitions(): array
     {
         $parentFields = parent::getFieldDefinitions();
+        unset($parentFields["slug"]);
 
         $fields = [
-            'name' => [
-                'name' => 'name',
-                'type' => Type::string(),
-                'description' => 'The company name.',
-            ],
-            'staffologyId' => [
-                'name' => 'staffologyId',
-                'type' => Type::string(),
-                'description' => 'The employer id from staffology, needed for API calls.'
-            ],
             'crn' => [
                 'name' => 'crn',
                 'type' => Type::string(),
                 'description' => 'The company registration number.',
-            ],
-            'startYear' => [
-                'name' => 'startYear',
-                'type' => Type::string(),
+                'resolve' => function ($source, array $arguments, $context, ResolveInfo $resolveInfo) {
+                    $fieldName = $resolveInfo->fieldName;
+                    return SecurityHelper::decrypt($source[$fieldName]);
+                }
             ],
             'currentYear' => [
                 'name' => 'currentYear',
@@ -104,7 +96,25 @@ class Employer extends Element
                 'name' => 'employeeCount',
                 'type' => Type::int(),
             ],
-
+            'name' => [
+                'name' => 'name',
+                'type' => Type::string(),
+                'description' => 'The company name.',
+                'resolve' => function ($source, array $arguments, $context, ResolveInfo $resolveInfo) {
+                    $fieldName = $resolveInfo->fieldName;
+                    return SecurityHelper::decrypt($source[$fieldName]);
+                }
+            ],
+            //'slug' =>
+            'staffologyId' => [
+                'name' => 'staffologyId',
+                'type' => Type::string(),
+                'description' => 'The employer id from staffology, needed for API calls.'
+            ],
+            'startYear' => [
+                'name' => 'startYear',
+                'type' => Type::string(),
+            ],
         ];
 
         return TypeManager::prepareFieldDefinitions(array_merge($parentFields, $fields), self::getName());
