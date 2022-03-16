@@ -14,6 +14,7 @@ use craft\helpers\App;
 use craft\queue\QueueInterface;
 use GuzzleHttp\Exception\GuzzleException;
 use percipiolondon\staff\db\Table;
+use percipiolondon\staff\elements\Employer;
 use percipiolondon\staff\elements\PayRun;
 use percipiolondon\staff\elements\PayRunEntry;
 use percipiolondon\staff\helpers\Logger;
@@ -462,29 +463,29 @@ class PayRuns extends Component
     public function savePayRun(array $payRun, string $payRunUrl, array $employer): void
     {
         $logger = new Logger();
+        $logger->stdout("✓ Save pay run of " .$employer['name'] . ' ' . $payRun['taxYear'] .  ' / ' . $payRun['taxMonth'] . '...', $logger::RESET);
 
-        $payRunRecord = PayRunRecord::findOne(['url' => $payRunUrl]);
-
-        $logger->stdout("✓ Save pay run of " . $payRun['taxYear'] . ' / ' . $payRun['taxMonth'] . '...', $logger::RESET);
+        $payRunRecord = PayRun::findOne(['url' => $payRunUrl]);
 
         try {
+            if(!$payRunRecord) {
+                $payRunRecord = new PayRun();
 
-            if (!$payRunRecord) {
-                $payRunRecord = new PayRunRecord();
+                //foreign keys
+                $totalsId = $payRunRecord->totalsId;
+            } else {
+                //foreign keys
+                $totalsId = null;
             }
 
             //foreign keys
-            $totalsId = $payRunRecord->totalsId ?? null;
+            $totals = Staff::$plugin->payRuns->saveTotals( $payRun['totals'] ?? [], $totalsId);
+            $emp = Employer::findOne(['staffologyId' => $employer['id'] ?? null]);
 
-            $totals = $this->saveTotals($payRun['totals'], $totalsId);
-            $employerRecord = is_int($employer['id'] ?? null) ? $employer : EmployerRecord::findOne(['staffologyId' => $employer['id'] ?? null]);
-
-            // save
-            $payRunRecord->employerId = $employerRecord['id'] ?? null;
-            $payRunRecord->totalsId = $totals->id ?? null;
-            $payRunRecord->taxYear = $payRun['taxYear'] ?? null;
+            $payRunRecord->employerId = $emp['id'] ?? null;
+            $payRunRecord->taxYear = $payRun['taxYear'] ?? '';
             $payRunRecord->taxMonth = $payRun['taxMonth'] ?? null;
-            $payRunRecord->payPeriod = $payRun['payPeriod'] ?? null;
+            $payRunRecord->payPeriod = $payRun['payPeriod'] ?? '';
             $payRunRecord->ordinal = $payRun['ordinal'] ?? null;
             $payRunRecord->period = $payRun['period'] ?? null;
             $payRunRecord->startDate = $payRun['startDate'] ?? null;
@@ -492,16 +493,18 @@ class PayRuns extends Component
             $payRunRecord->paymentDate = $payRun['paymentDate'] ?? null;
             $payRunRecord->employeeCount = $payRun['employeeCount'] ?? null;
             $payRunRecord->subContractorCount = $payRun['subContractorCount'] ?? null;
-            $payRunRecord->state = $payRun['state'] ?? null;
-            $payRunRecord->isClosed = $payRun['isClosed'] ?? null;
+            $payRunRecord->totalsId = $totals->id ?? null;
+            $payRunRecord->state = $payRun['state'] ?? '';
+            $payRunRecord->isClosed = $payRun['isClosed'] ?? '';
             $payRunRecord->dateClosed = $payRun['dateClosed'] ?? null;
-            $payRunRecord->url = $payRunUrl ?? null;
+            $payRunRecord->url = $payRunUrl ?? '';
 
-            $success = $payRunRecord->save(false);
+            $elementsService = Craft::$app->getElements();
+            $success = $elementsService->saveElement($payRunRecord);
 
-            if($success){
-                $logger->stdout(" done" . PHP_EOL, $logger::FG_GREEN);
+            if($success) {
 
+                // GET PAYRUNENTRY FROM PAYRUN
                 $queue = Craft::$app->getQueue();
                 $queue->push(new CreatePayRunEntryJob([
                     'description' => 'Fetch pay run entry',
@@ -512,9 +515,10 @@ class PayRuns extends Component
                     ]
                 ]));
 
-//                $this->savePayRunLog($payRun, $payRunUrl, $payRunRecord->id, $employer['id']);
+                $logger->stdout(" done" . PHP_EOL, $logger::FG_GREEN);
 
-                $this->savePayRunElement();
+                $this->savePayRunLog($payRun, $payRunUrl, $payRunRecord->id, $employer['id']);
+
             }else{
                 $logger->stdout(" failed" . PHP_EOL, $logger::FG_RED);
 
@@ -535,7 +539,6 @@ class PayRuns extends Component
             $logger->stdout($e->getMessage() . PHP_EOL, $logger::FG_RED);
             Craft::error($e->getMessage(), __METHOD__);
         }
-
     }
 
     public function savePayRunLog(array $payRun, string $url, string $payRunId, string $employerId): bool
@@ -581,11 +584,11 @@ class PayRuns extends Component
         $logger = new Logger();
         $logger->stdout("✓ Save pay run entry for " . $payRunEntryData['employee']['name'] ?? '' . '...', $logger::RESET);
 
-        $payRunEntryRecord = PayRunEntryRecord::findOne(['staffologyId' => $payRunEntryData['id'] ?? null]);
+        $payRunEntryRecord = PayRun::findOne(['staffologyId' => $payRunEntryData['id'] ?? null]);
 
         try {
             if (!$payRunEntryRecord) {
-                $payRunEntryRecord = new PayRunEntryRecord();
+                $payRunEntryRecord = new PayRun();
             }
 
             //foreign keys
@@ -634,14 +637,11 @@ class PayRuns extends Component
             $payRunEntryRecord->paymentAfterLearning = $payRunEntryData['paymentAfterLearning'] ?? null;
             $payRunEntryRecord->pdf = '';
 
-            $success = $payRunEntryRecord->save(false);
+            $elementsService = Craft::$app->getElements();
+            $success = $elementsService->saveElement($payRunEntryRecord);
 
             if($success){
                 $logger->stdout(" done" . PHP_EOL, $logger::FG_GREEN);
-
-                $this->savePayRunEntryElement();
-
-                return $payRunEntryRecord;
             }
 
             $logger->stdout(" failed" . PHP_EOL, $logger::FG_RED);

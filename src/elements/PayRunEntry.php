@@ -224,6 +224,8 @@ class PayRunEntry extends Element
      */
     public function afterSave(bool $isNew)
     {
+        $this->_saveRecord($isNew);
+
         return parent::afterSave($isNew);
     }
 
@@ -278,27 +280,10 @@ class PayRunEntry extends Element
                     throw new Exception('Invalid pay run entry ID: ' . $this->id);
                 }
 
-                // Foreign keys
-                $totalsId = $record->totalsId;
-                $totalsYtdId = $record->totalsYtdId;
-                $payOptionsId = $record->payOptionsId;
-
             } else {
                 $record = new PayRunEntryRecord();
                 $record->id = (int)$this->id;
-
-                // Foreign keys
-                $totalsId = null;
-                $totalsYtdId = null;
-                $payOptionsId = null;
             }
-
-            // Foreign keys
-            $totals = Staff::$plugin->payRuns->saveTotals($this->totals, $totalsId);
-            $totalsYtd = Staff::$plugin->payRuns->saveTotals($this->totalsYtd, $totalsYtdId);
-            $payOptions = Staff::$plugin->payRuns->savePayOptions($this->payOptions, $payOptionsId);
-            $employee = Employee::findOne(['staffologyId' => $this->employeeId]);
-            $employer = Employer::findOne(['staffologyId' => $this->employerId]);
 
             $record->employerId = $employer->id ?? null;
             $record->employeeId = $employee->id ?? null;
