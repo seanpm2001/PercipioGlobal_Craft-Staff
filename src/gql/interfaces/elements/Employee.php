@@ -71,7 +71,7 @@ class Employee extends Element
     public static function getFieldDefinitions(): array
     {
         $parentFields = parent::getFieldDefinitions();
-        unset($parentFields["slug"]);
+        unset($parentFields['slug']);
 
         $securedFields = [
             'niNumber' => [
@@ -84,7 +84,7 @@ class Employee extends Element
             ],
             'slug' => [
                 'name' => 'slug',
-                'type' => Type::string(),
+                'type' => Type::nonNull(Type::string()),
                 'description' => 'The company slug.',
                 'resolve' => function ($source, array $arguments, $context, ResolveInfo $resolveInfo) {
                     return SecurityHelper::resolve($source, $resolveInfo);
@@ -95,28 +95,23 @@ class Employee extends Element
         $fields = [
             'staffologyId' => [
                 'name' => 'staffologyId',
-                'type' => Type::string(),
+                'type' => Type::nonNull(Type::id()),
                 'description' => 'The employee id from staffology, needed for API calls.'
             ],
             'employerId' => [
                 'name' => 'employerId',
-                'type' => Type::int(),
+                'type' => Type::id(),
                 'description' => 'The id of the employer this employee works for.',
             ],
             'userId' => [
                 'name' => 'userId',
-                'type' => Type::int(),
+                'type' => Type::id(),
                 'description' => 'The user ID.',
             ],
             'status' => [
                 'name' => 'status',
                 'type' => Type::string(),
                 'description' => 'The employee status.'
-            ],
-            'sourceSystemId' => [
-                'name' => 'sourceSystemId',
-                'type' => Type::string(),
-                'description' => 'Source system ID.'
             ],
             'isDirector' => [
                 'name' => 'isDirector',
