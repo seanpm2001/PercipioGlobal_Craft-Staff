@@ -88,14 +88,6 @@ class Employee extends Element
     }
 
     /**
-     * @inheritdoc
-     */
-    public static function refHandle()
-    {
-        return 'employee';
-    }
-
-    /**
      * Creates an [[ElementQueryInterface]] instance for query purpose.
      *
      * The returned [[ElementQueryInterface]] instance can be further customized by calling
