@@ -81,12 +81,11 @@ class Employer extends Element
     public $name;
     public $logoUrl;
     public $crn;
-    public $defaultPayOptions;
-    public $address;
+    public $defaultPayOptionsId;
+    public $addressId;
     public $startYear;
     public $currentYear;
     public $employeeCount;
-    public $employer;
 
     // Static Methods
     // =========================================================================
@@ -416,9 +415,9 @@ class Employer extends Element
     public function afterSave(bool $isNew)
     {
 
-//        if (!$this->propagating) {
-//            Staff::$plugin->employers->saveEmployerActiveRecord($this->employer);
-//        }
+        if (!$this->propagating) {
+            Staff::$plugin->employers->saveEmployerActiveRecord($this->employer);
+        }
 
         return parent::afterSave($isNew);
     }
