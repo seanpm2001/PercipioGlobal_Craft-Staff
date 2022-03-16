@@ -10,21 +10,17 @@
 
 namespace percipiolondon\staff\elements;
 
-use percipiolondon\staff\helpers\Logger;
-use percipiolondon\staff\records\Countries;
-use percipiolondon\staff\Staff;
-use percipiolondon\staff\helpers\Security as SecurityHelper;
-
 use Craft;
 use craft\base\Element;
 use craft\elements\db\ElementQuery;
 use craft\elements\db\ElementQueryInterface;
+
 use percipiolondon\staff\elements\db\EmployerQuery;
+
 use yii\base\InvalidConfigException;
 use yii\db\Exception;
 use yii\db\Query;
-use percipiolondon\staff\records\Employer as EmployerRecord;
-use percipiolondon\staff\records\Address as AddressRecord;
+
 
 /**
  * Employer Element
@@ -134,122 +130,12 @@ class Employer extends Element
     }
 
     /**
-     * Returns whether elements of this type will be storing any data in the `content`
-     * table (tiles or custom fields).
-     *
-     * @return bool Whether elements of this type will be storing any data in the `content` table.
-     */
-    public static function hasContent(): bool
-    {
-        return false;
-    }
-
-    /**
-     * Returns whether elements of this type have traditional titles.
-     *
-     * @return bool Whether elements of this type have traditional titles.
-     */
-    public static function hasTitles(): bool
-    {
-        return true;
-    }
-
-    /**
-     * @inheritdoc
-     */
-    public static function hasUris(): bool
-    {
-        return false;
-    }
-
-    /**
-     * @inheritdoc
-     */
-    public static function hasStatuses(): bool
-    {
-        return true;
-    }
-
-    /**
-     * @inheritdoc
-     */
-    public function getStatus()
-    {
-        $status = parent::getStatus();
-
-        return $status;
-    }
-
-    /**
-     * Returns whether elements of this type have statuses.
-     *
-     * If this returns `true`, the element index template will show a Status menu
-     * by default, and your elements will get status indicator icons next to them.
-     *
-     * Use [[statuses()]] to customize which statuses the elements might have.
-     *
-     * @return bool Whether elements of this type have statuses.
-     * @see statuses()
-     */
-    public static function statuses(): array
-    {
-        return [
-            self::STATUS_ENABLED => Craft::t('staff-management', 'Enabled'),
-            self::STATUS_DISABLED => Craft::t('staff-management', 'Disabled'),
-        ];
-    }
-
-    /**
-     * @return bool
-     */
-    public static function isLocalized(): bool
-    {
-        return true;
-    }
-
-    /**
      * Creates an [[ElementQueryInterface]] instance for query purpose.
      *
      * The returned [[ElementQueryInterface]] instance can be further customized by calling
      * methods defined in [[ElementQueryInterface]] before `one()` or `all()` is called to return
      * populated [[ElementInterface]] instances. For example,
      *
-     * ```php
-     * // Find the entry whose ID is 5
-     * $entry = Entry::find()->id(5)->one();
-     *
-     * // Find all assets and order them by their filename:
-     * $assets = Asset::find()
-     *     ->orderBy('filename')
-     *     ->all();
-     * ```
-     *
-     * If you want to define custom criteria parameters for your elements, you can do so by overriding
-     * this method and returning a custom query class. For example,
-     *
-     * ```php
-     * class Product extends Element
-     * {
-     *     public static function find()
-     *     {
-     *         // use ProductQuery instead of the default ElementQuery
-     *         return new ProductQuery(get_called_class());
-     *     }
-     * }
-     * ```
-     *
-     * You can also set default criteria parameters on the ElementQuery if you don’t have a need for
-     * a custom query class. For example,
-     *
-     * ```php
-     * class Customer extends ActiveRecord
-     * {
-     *     public static function find()
-     *     {
-     *         return parent::find()->limit(50);
-     *     }
-     * }
-     * ```
      *
      * @return ElementQueryInterface The newly created [[ElementQueryInterface]] instance.
      */
@@ -299,24 +185,6 @@ class Employer extends Element
     }
 
     /**
-     * Returns whether the current user can edit the element.
-     *
-     * @return bool
-     */
-    public function getIsEditable(): bool
-    {
-        return true;
-    }
-
-    /**
-     * @return string
-     */
-    public function getCpEditUrl()
-    {
-        return 'staff-management/employers/' . $this->id;
-    }
-
-    /**
      * Returns the field layout used by this element.
      *
      * @return FieldLayout|null
@@ -326,47 +194,8 @@ class Employer extends Element
         return null;
     }
 
-    public function getGroup()
-    {
-        if ($this->groupId === null) {
-            throw new InvalidConfigException('Tag is missing its group ID');
-        }
-
-        if (($group = Craft::$app->getTags()->getTagGroupById($this->groupId)) === null) {
-            throw new InvalidConfigException('Invalid tag group ID: ' . $this->groupId);
-        }
-
-        return $group;
-    }
-
     // Indexes, etc.
     // -------------------------------------------------------------------------
-
-    /**
-     * Returns the HTML for the element’s editor HUD.
-     *
-     * @return string The HTML for the editor HUD
-     */
-    public function getEditorHtml(): string
-    {
-        $html = Craft::$app->getView()->renderTemplateMacro('_includes/forms', 'textField', [
-            [
-                'label' => Craft::t('app', 'Title'),
-                'siteId' => $this->siteId,
-                'id' => 'title',
-                'name' => 'title',
-                'value' => $this->title,
-                'errors' => $this->getErrors('title'),
-                'first' => true,
-                'autofocus' => true,
-                'required' => true
-            ]
-        ]);
-
-        $html .= parent::getEditorHtml();
-
-        return $html;
-    }
 
     /**
      * @inheritdoc
@@ -395,18 +224,6 @@ class Employer extends Element
     // -------------------------------------------------------------------------
 
     /**
-     * Performs actions before an element is saved.
-     *
-     * @param bool $isNew Whether the element is brand new
-     *
-     * @return bool Whether the element should be saved
-     */
-    public function beforeSave(bool $isNew): bool
-    {
-        return true;
-    }
-
-    /**
      * Performs actions after an element is saved.
      *
      * @param bool $isNew Whether the element is brand new
@@ -415,11 +232,6 @@ class Employer extends Element
      */
     public function afterSave(bool $isNew)
     {
-
-//        if (!$this->propagating) {
-//            Staff::$plugin->employers->saveEmployerActiveRecord($this->employer);
-//        }
-
         return parent::afterSave($isNew);
     }
 
@@ -440,62 +252,14 @@ class Employer extends Element
      */
     public function afterDelete()
     {
-    }
-
-    /**
-     * Performs actions before an element is moved within a structure.
-     *
-     * @param int $structureId The structure ID
-     *
-     * @return bool Whether the element should be moved within the structure
-     */
-    public function beforeMoveInStructure(int $structureId): bool
-    {
         return true;
     }
 
     /**
+     * Returns all employer ID's
+     *
      * @return array
      */
-    protected static function defineTableAttributes(): array
-    {
-        return [
-            'id' => ['label' => Craft::t('staff-management', 'Id')],
-            'dateCreated' => ['label' => Craft::t('staff-management', 'Date Created')],
-        ];
-    }
-
-    /**
-     * @param string $source
-     * @return array
-     */
-    protected static function defineDefaultTableAttributes(string $source): array
-    {
-        $attributes = [];
-        $attributes[] = 'id';
-        $attributes[] = 'dateCreated';
-        $attributes[] = 'dateUpdated';
-
-        return $attributes;
-    }
-
-    /**
-     * @param string $attribute
-     * @return string
-     * @throws InvalidConfigException
-     */
-    protected function tableAttributeHtml(string $attribute): string
-    {
-        switch ($attribute) {
-            case 'id':
-                // use this to customise returned values (add links / mailto's etc)
-                // https://docs.craftcms.com/commerce/api/v3/craft-commerce-elements-traits-orderelementtrait.html#protected-methods
-                return $this->id;
-        }
-
-        return parent::tableAttributeHtml($attribute);
-    }
-
     private static function _getEmployerIds(): array
     {
         $employerIds = [];
