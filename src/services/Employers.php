@@ -178,60 +178,42 @@ class Employers extends Component
     {
         $employerRecord = EmployerRecord::findOne(['staffologyId' => $employer['id']]);
 
-        $logger = new Logger();
-        $logger->stdout("✓ Save employer " . $employer['name'] ?? null . '...', $logger::RESET);
+        if (!$employerRecord) {
 
-        try {
+            $logger = new Logger();
+            $logger->stdout("✓ Save employer " . $employer['name'] ?? null . '...', $logger::RESET);
 
-            if (!$employerRecord) {
-                $employerRecord = new EmployerRecord();
-            }
+            $emp = new Employer();
 
-            //foreign keys
-            $addressId = $employerRecord->addressId ?? null;
-            $defaultPayOptionsId = $employerRecord->defaultPayOptionsId ?? null;
+            $emp->siteId = Craft::$app->getSites()->currentSite->id;
+            $emp->staffologyId = $employer['id'];
+            $emp->name = $employer['name'] ?? null;
+            $emp->title = $employer['name'] ?? null;
+            $emp->logoUrl = $employer['logoUrl'] ?? null;
+            $emp->crn = $employer['crn'] ?? null;
+            $emp->address = $employer['address'] ?? null;
+            $emp->startYear = $employer['startYear'] ?? null;
+            $emp->currentYear = $employer['currentYear'] ?? null;
+            $emp->employeeCount = $employer['employeeCount'] ?? null;
+            $emp->defaultPayOptions = $employer['defaultPayOptions'] ?? null;
 
-            // Attach the foreign keys
-            $address = $employer['address'] ? Staff::$plugin->addresses->saveAddress($employer['address'], $addressId) : null;
-            $payOptions = $employer['defaultPayOptions'] ? Staff::$plugin->payRuns->savePayOptions($employer['defaultPayOptions'], $defaultPayOptionsId) : null;
-
-            //save
-            $employerRecord->defaultPayOptionsId = $payOptions->id ?? null;
-            $employerRecord->addressId = $address->id ?? null;
-            $employerRecord->slug = SecurityHelper::encrypt((strtolower(trim(preg_replace('/[^A-Za-z0-9-]+/', '-', $employer['name'] ?? ''), '-'))));
-            $employerRecord->staffologyId = $employer['id'] ?? null;
-            $employerRecord->name = SecurityHelper::encrypt($employer['name'] ?? '');
-            $employerRecord->crn = SecurityHelper::encrypt($employer['crn'] ?? '');
-            $employerRecord->logoUrl = SecurityHelper::encrypt($employer['logoUrl'] ?? '');
-            $employerRecord->startYear = $employer['startYear'] ?? null;
-            $employerRecord->currentYear = $employer['currentYear'] ?? null;
-            $employerRecord->employeeCount = $employer['employeeCount'] ?? null;
-
-            $success = $employerRecord->save(false);
+            $elementsService = Craft::$app->getElements();
+            $success = $elementsService->saveElement($emp);
 
             if($success){
                 $logger->stdout(" done" . PHP_EOL, $logger::FG_GREEN);
-
-                $this->saveEmployerElement($employer);
             }else{
                 $logger->stdout(" failed" . PHP_EOL, $logger::FG_RED);
 
                 $errors = "";
 
-                foreach($employerRecord->errors as $err) {
+                foreach($emp->errors as $err) {
                     $errors .= implode(',', $err);
                 }
 
                 $logger->stdout($errors . PHP_EOL, $logger::FG_RED);
-                Craft::error($employerRecord->errors, __METHOD__);
+                Craft::error($emp->errors, __METHOD__);
             }
-
-        } catch (\Exception $e) {
-            $logger->stdout(" failed" . PHP_EOL, $logger::FG_RED);
-
-            $logger->stdout(PHP_EOL, $logger::RESET);
-            $logger->stdout($e->getMessage() . PHP_EOL, $logger::FG_RED);
-            Craft::error($e->getMessage(), __METHOD__);
         }
 
     }
@@ -249,19 +231,5 @@ class Employers extends Component
         $employer['logoUrl'] = SecurityHelper::decrypt($employer['logoUrl'] ?? '');
 
         return $employer;
-    }
-
-
-
-
-
-    /* SAVES ELEMENTS */
-    public function saveEmployerElement(array $employer): bool
-    {
-        return false;
-        $emp = new Employer();
-        $elementsService = Craft::$app->getElements();
-        return $elementsService->saveElement($emp);
-
     }
 }
