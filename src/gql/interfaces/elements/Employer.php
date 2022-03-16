@@ -19,6 +19,7 @@ use GraphQL\Type\Definition\InterfaceType;
 use GraphQL\Type\Definition\ResolveInfo;
 use GraphQL\Type\Definition\Type;
 
+use percipiolondon\staff\elements\Employer as EmployerElement;
 use percipiolondon\staff\gql\types\generators\EmployerGenerator;
 
 /**
@@ -50,7 +51,7 @@ class Employer extends Element
             'name' => static::getName(),
             'fields' => self::class . '::getFieldDefinitions',
             'description' => 'This is the interface implemented by all employers.',
-            'resolveType' => function(Employer $value) {
+            'resolveType' => function(EmployerElement $value) {
                 return $value->getGqlTypeName();
             }
         ]));

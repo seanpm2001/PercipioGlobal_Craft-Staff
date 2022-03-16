@@ -161,15 +161,6 @@ class Employer extends Element
     // Indexes, etc.
     // -------------------------------------------------------------------------
 
-    /**
-     * @inheritdoc
-     * @since 3.3.0
-     */
-    public static function gqlScopesByContext($context): array
-    {
-        return ['employers.' . $context->uid];
-    }
-
     public static function gqlTypeNameByContext($context): string
     {
         return 'Employer';
@@ -177,7 +168,7 @@ class Employer extends Element
 
     /**
      * @inheritdoc
-     * @since 3.3.0
+     * @since 1.0.0
      */
     public function getGqlTypeName(): string
     {
