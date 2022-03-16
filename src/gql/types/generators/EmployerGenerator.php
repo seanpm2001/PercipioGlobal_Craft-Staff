@@ -15,18 +15,18 @@ use craft\gql\base\SingleGeneratorInterface;
 use craft\gql\GqlEntityRegistry;
 use craft\gql\TypeManager;
 
-use percipiolondon\staff\gql\arguments\elements\Employer as EmployerArguments;
 use percipiolondon\staff\elements\Employer as EmployerElement;
+use percipiolondon\staff\gql\arguments\elements\Employer as EmployerArguments;
 use percipiolondon\staff\gql\interfaces\elements\Employer as EmployerInterface;
 use percipiolondon\staff\gql\types\elements\Employer;
 
 /**
- * Class EmployerType
+ * Class EmployerGenerator
  *
  * @author Percipio Global Ltd. <support@percipio.london>
  * @since 1.0.0
  */
-class EmployerType extends Generator implements GeneratorInterface, SingleGeneratorInterface
+class EmployerGenerator extends Generator implements GeneratorInterface, SingleGeneratorInterface
 {
     /**
      * @inheritdoc
