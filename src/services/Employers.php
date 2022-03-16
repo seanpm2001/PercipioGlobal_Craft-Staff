@@ -176,46 +176,57 @@ class Employers extends Component
     /* SAVES */
     public function saveEmployer(array $employer)
     {
-        $employerRecord = EmployerRecord::findOne(['staffologyId' => $employer['id']]);
+        $logger = new Logger();
+        $logger->stdout("✓ Save employer " . $employer['name'] ?? null . '...', $logger::RESET);
 
-        if (!$employerRecord) {
+        $emp = Employer::findOne(['staffologyId' => $employer['id']]);
 
-            $logger = new Logger();
-            $logger->stdout("✓ Save employer " . $employer['name'] ?? null . '...', $logger::RESET);
-
+        if (!$emp) {
             $emp = new Employer();
 
-            $emp->siteId = Craft::$app->getSites()->currentSite->id;
-            $emp->staffologyId = $employer['id'];
-            $emp->name = $employer['name'] ?? null;
-            $emp->title = $employer['name'] ?? null;
-            $emp->logoUrl = $employer['logoUrl'] ?? null;
-            $emp->crn = $employer['crn'] ?? null;
-            $emp->address = $employer['address'] ?? null;
-            $emp->startYear = $employer['startYear'] ?? null;
-            $emp->currentYear = $employer['currentYear'] ?? null;
-            $emp->employeeCount = $employer['employeeCount'] ?? null;
-            $emp->defaultPayOptions = $employer['defaultPayOptions'] ?? null;
+            $addressId = null;
+            $defaultPayOptionsId = null;
+        } else {
 
-            $elementsService = Craft::$app->getElements();
-            $success = $elementsService->saveElement($emp);
+            $addressId = $emp['addressId'];
+            $defaultPayOptionsId = $emp['defaultPayOptionsId'];
 
-            if($success){
-                $logger->stdout(" done" . PHP_EOL, $logger::FG_GREEN);
-            }else{
-                $logger->stdout(" failed" . PHP_EOL, $logger::FG_RED);
-
-                $errors = "";
-
-                foreach($emp->errors as $err) {
-                    $errors .= implode(',', $err);
-                }
-
-                $logger->stdout($errors . PHP_EOL, $logger::FG_RED);
-                Craft::error($emp->errors, __METHOD__);
-            }
         }
 
+        // Attach the foreign keys
+        $address = $employer['address'] ? Staff::$plugin->addresses->saveAddress($employer['address'], $addressId) : null;
+        $payOptions = $employer['defaultPayOptions'] ? Staff::$plugin->payRuns->savePayOptions($employer['defaultPayOptions'], $defaultPayOptionsId) : null;
+
+        $emp->addressId = $address->id ?? null;
+        $emp->defaultPayOptionsId = $payOptions->id ?? null;
+
+        $emp->siteId = Craft::$app->getSites()->currentSite->id;
+        $emp->staffologyId = $employer['id'];
+        $emp->name = $employer['name'] ?? null;
+        $emp->title = $employer['name'] ?? null;
+        $emp->logoUrl = $employer['logoUrl'] ?? null;
+        $emp->crn = $employer['crn'] ?? null;
+        $emp->startYear = $employer['startYear'] ?? null;
+        $emp->currentYear = $employer['currentYear'] ?? null;
+        $emp->employeeCount = $employer['employeeCount'] ?? null;
+
+        $elementsService = Craft::$app->getElements();
+        $success = $elementsService->saveElement($emp);
+
+        if($success){
+            $logger->stdout(" done" . PHP_EOL, $logger::FG_GREEN);
+        }else{
+            $logger->stdout(" failed" . PHP_EOL, $logger::FG_RED);
+
+            $errors = "";
+
+            foreach($emp->errors as $err) {
+                $errors .= implode(',', $err);
+            }
+
+            $logger->stdout($errors . PHP_EOL, $logger::FG_RED);
+            Craft::error($emp->errors, __METHOD__);
+        }
     }
 
 

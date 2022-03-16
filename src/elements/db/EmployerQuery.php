@@ -18,8 +18,8 @@ class EmployerQuery extends ElementQuery
     public $name;
     public $logoUrl;
     public $crn;
-    public $defaultPayOptionsId;
-    public $addressId;
+    public $defaultPayOptions;
+    public $address;
     public $startYear;
     public $currentYear;
     public $employeeCount;
@@ -60,15 +60,15 @@ class EmployerQuery extends ElementQuery
         return $this;
     }
 
-    public function defaultPayOptionsId($value)
+    public function defaultPayOptions($value)
     {
-        $this->defaultPayOptionsId = $value;
+        $this->defaultPayOptions = $value;
         return $this;
     }
 
-    public function addressId($value)
+    public function address($value)
     {
-        $this->addressId = $value;
+        $this->address = $value;
         return $this;
     }
 
@@ -97,32 +97,32 @@ class EmployerQuery extends ElementQuery
         $this->query->select([
             'staff_employers.staffologyId',
             'staff_employers.addressId',
-            'staff_employers.bankDetailsId',
+//            'staff_employers.bankDetailsId',
             'staff_employers.defaultPayOptionsId',
-            'staff_employers.hmrcDetailsId',
-            'staff_employers.rtiSubmissionSettingsId',
-            'staff_employers.autoEnrolmentSettingsId',
-            'staff_employers.leaveSettingsId',
-            'staff_employers.settingsId',
-            'staff_employers.umbrellaSettingsId',
+//            'staff_employers.hmrcDetailsId',
+//            'staff_employers.rtiSubmissionSettingsId',
+//            'staff_employers.autoEnrolmentSettingsId',
+//            'staff_employers.leaveSettingsId',
+//            'staff_employers.settingsId',
+//            'staff_employers.umbrellaSettingsId',
             'staff_employers.name',
             'staff_employers.crn',
             'staff_employers.logoUrl',
-            'staff_employers.alternativeId',
-            'staff_employers.bankPaymentsCsvFormat',
-            'staff_employers.bacsServiceUserNumber',
-            'staff_employers.bacsBureauNumber',
-            'staff_employers.rejectInvalidBankDetails',
-            'staff_employers.bankPaymentsReferenceFormat',
-            'staff_employers.useTenantRtiSubmissionSettings',
+//            'staff_employers.alternativeId',
+//            'staff_employers.bankPaymentsCsvFormat',
+//            'staff_employers.bacsServiceUserNumber',
+//            'staff_employers.bacsBureauNumber',
+//            'staff_employers.rejectInvalidBankDetails',
+//            'staff_employers.bankPaymentsReferenceFormat',
+//            'staff_employers.useTenantRtiSubmissionSettings',
             'staff_employers.employeeCount',
-            'staff_employers.subcontractorCount',
+//            'staff_employers.subcontractorCount',
             'staff_employers.startYear',
             'staff_employers.currentYear',
-            'staff_employers.supportAccessEnabled',
-            'staff_employers.archived',
-            'staff_employers.canUseBureauFeatures',
-            'staff_employers.sourceSystemId',
+//            'staff_employers.supportAccessEnabled',
+//            'staff_employers.archived',
+//            'staff_employers.canUseBureauFeatures',
+//            'staff_employers.sourceSystemId',
             'staff_employers.slug',
         ]);
 
