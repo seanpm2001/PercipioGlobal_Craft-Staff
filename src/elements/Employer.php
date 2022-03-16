@@ -42,8 +42,8 @@ class Employer extends Element
     public $name;
     public $logoUrl;
     public $crn;
-    public $defaultPayOptions;
-    public $address;
+    public $defaultPayOptionsId;
+    public $addressId;
     public $startYear;
     public $currentYear;
     public $employeeCount;
@@ -239,31 +239,21 @@ class Employer extends Element
                     throw new Exception('Invalid employer ID: ' . $this->id);
                 }
 
-                $addressId = $record->addressId;
-                $defaultPayOptionsId = $record->defaultPayOptionsId;
-
             } else {
                 $record = new EmployerRecord();
                 $record->id = (int)$this->id;
-
-                $addressId = null;
-                $defaultPayOptionsId = null;
             }
-
-            // Attach the foreign keys
-            $address = $this->address ? Staff::$plugin->addresses->saveAddress($this->address, $addressId) : null;
-            $payOptions = $this->defaultPayOptions ? Staff::$plugin->payRuns->savePayOptions($this->defaultPayOptions, $defaultPayOptionsId) : null;
 
             $record->slug = SecurityHelper::encrypt((strtolower(trim(preg_replace('/[^A-Za-z0-9-]+/', '-', $this->name ?? ''), '-'))));
             $record->staffologyId = $this->staffologyId;
             $record->name = SecurityHelper::encrypt($this->name ?? '');
             $record->crn = SecurityHelper::encrypt($this->crn ?? '');
             $record->logoUrl = SecurityHelper::encrypt($this->logoUrl ?? '');
-            $record->addressId = $address->id ?? null;
-            $record->startYear = $this->startYear;
-            $record->currentYear = $this->currentYear;
-            $record->employeeCount = $this->employeeCount;
-            $record->defaultPayOptionsId = $payOptions->id ?? null;
+            $record->addressId = $this->addressId ?? null;
+            $record->startYear = $this->startYear ?? null;
+            $record->currentYear = $this->currentYear ?? null;
+            $record->employeeCount = $this->employeeCount ?? null;
+            $record->defaultPayOptionsId = $this->defaultPayOptionsId ?? null;
 
             $success = $record->save(false);
 
