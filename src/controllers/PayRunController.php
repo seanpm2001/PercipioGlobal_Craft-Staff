@@ -4,8 +4,10 @@ namespace percipiolondon\staff\controllers;
 
 use craft\web\Controller;
 use percipiolondon\staff\helpers\Security as SecurityHelper;
+use percipiolondon\staff\records\Employer as EmployerRecord;
 use percipiolondon\staff\records\PayCode;
 use percipiolondon\staff\records\PayLine as PayLineRecord;
+use percipiolondon\staff\records\PayRun as PayRunRecord;
 use percipiolondon\staff\records\PayRunEntry as PayRunEntryRecord;
 use percipiolondon\staff\Staff;
 
@@ -25,7 +27,7 @@ class PayRunController extends Controller
      * @throws NotFoundHttpException
      * @throws \yii\web\ForbiddenHttpException
      */
-    public function actionIndex(string $siteHandle = null): Response
+    public function actionIndex(): Response
     {
         $variables = [];
 
@@ -36,7 +38,7 @@ class PayRunController extends Controller
         $variables['pluginName'] = Staff::$settings->pluginName;
         $variables['title'] = $templateTitle;
         $variables['docTitle'] = "{$pluginName} - {$templateTitle}";
-        $variables['selectedSubnavItem'] = 'payruns';
+        $variables['selectedSubnavItem'] = 'payRuns';
 
         $variables['csrf'] = [
             'name' => Craft::$app->getConfig()->getGeneral()->csrfTokenName,
@@ -45,6 +47,42 @@ class PayRunController extends Controller
 
         // Render the template
         return $this->renderTemplate('staff-management/payruns/index', $variables);
+    }
+
+    /**
+     * @throws NotFoundHttpException
+     */
+    public function actionPayRunByEmployer(int $employerId): Response
+    {
+        $variables = [];
+
+        $employer = EmployerRecord::findOne($employerId);
+
+        if(!$employer){
+            throw new NotFoundHttpException();
+        }
+
+//        $payRuns = PayRunRecord::findAll(['employerId' => $employer['id']]);
+        $employerName = SecurityHelper::decrypt($employer['name']) ?? '';
+
+        $pluginName = Staff::$settings->pluginName;
+        $templateTitle = Craft::t('staff-management', 'Pay Runs');
+
+        $variables['controllerHandle'] = 'payruns';
+        $variables['pluginName'] = Staff::$settings->pluginName;
+        $variables['title'] = $templateTitle;
+        $variables['docTitle'] = "{$pluginName} - {$templateTitle} - {$employerName}";
+        $variables['selectedSubnavItem'] = 'payRuns';
+
+        $variables['employerId'] = $employer['id'];
+
+        $variables['csrf'] = [
+            'name' => Craft::$app->getConfig()->getGeneral()->csrfTokenName,
+            'value' => Craft::$app->getRequest()->getCsrfToken(),
+        ];
+
+        // Render the template
+        return $this->renderTemplate('staff-management/payruns/employer', $variables);
     }
 
     public function actionSavePayRunEntry(int $payRunId)
