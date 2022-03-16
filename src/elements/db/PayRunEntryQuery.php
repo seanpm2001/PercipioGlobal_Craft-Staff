@@ -39,7 +39,7 @@ class PayRunEntryQuery extends ElementQuery
     public $totalsYtdId;
     public $totalsYtdOverrides;
     public $forcedCisVatAmount;
-    public $holidayAccured;
+    public $holidayAccrued;
     public $state;
     public $isClosed;
     public $manualNi;
@@ -220,9 +220,9 @@ class PayRunEntryQuery extends ElementQuery
         return $this;
     }
 
-    public function holidayAccured($value)
+    public function holidayAccrued($value)
     {
-        $this->holidayAccured = $value;
+        $this->holidayAccrued = $value;
         return $this;
     }
 
@@ -301,9 +301,8 @@ class PayRunEntryQuery extends ElementQuery
             'staff_payrunentries.employerId',
             'staff_payrunentries.employeeId',
             'staff_payrunentries.payOptionsId',
-            'staff_payrunentries.priorPayrollCode',
+            'staff_payrunentries.priorPayrollCodeId',
             'staff_payrunentries.totalsYtdId',
-            'staff_payrunentries.totalsYtdOverridesId',
             'staff_payrunentries.umbrellaPaymentId',
             'staff_payrunentries.nationalInsuranceCalculationId',
             'staff_payrunentries.pensionSummaryId',
@@ -325,10 +324,9 @@ class PayRunEntryQuery extends ElementQuery
             'staff_payrunentries.unpaidAbsence',
             'staff_payrunentries.hasAttachmentOrders',
             'staff_payrunentries.paymentDate',
-            'staff_payrunentries.totals',
-            'staff_payrunentries.periodOverrides',
+            'staff_payrunentries.totalsId',
             'staff_payrunentries.forcedCisVatAmount',
-            'staff_payrunentries.holidayAccured',
+            'staff_payrunentries.holidayAccrued',
             'staff_payrunentries.state',
             'staff_payrunentries.isClosed',
             'staff_payrunentries.manualNi',

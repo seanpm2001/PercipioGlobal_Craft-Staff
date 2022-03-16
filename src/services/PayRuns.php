@@ -584,11 +584,11 @@ class PayRuns extends Component
         $logger = new Logger();
         $logger->stdout("✓ Save pay run entry for " . $payRunEntryData['employee']['name'] ?? '' . '...', $logger::RESET);
 
-        $payRunEntryRecord = PayRun::findOne(['staffologyId' => $payRunEntryData['id'] ?? null]);
+        $payRunEntryRecord = PayRunEntry::findOne(['staffologyId' => $payRunEntryData['id'] ?? null]);
 
         try {
             if (!$payRunEntryRecord) {
-                $payRunEntryRecord = new PayRun();
+                $payRunEntryRecord = new PayRunEntry();
             }
 
             //foreign keys
@@ -642,18 +642,18 @@ class PayRuns extends Component
 
             if($success){
                 $logger->stdout(" done" . PHP_EOL, $logger::FG_GREEN);
+            } else {
+                $logger->stdout(" failed" . PHP_EOL, $logger::FG_RED);
+
+                $errors = "";
+
+                foreach($payRunEntryRecord->errors as $err) {
+                    $errors .= implode(',', $err);
+                }
+
+                $logger->stdout($errors . PHP_EOL, $logger::FG_RED);
+                Craft::error($payRunEntryRecord->errors, __METHOD__);
             }
-
-            $logger->stdout(" failed" . PHP_EOL, $logger::FG_RED);
-
-            $errors = "";
-
-            foreach($payRunEntryRecord->errors as $err) {
-                $errors .= implode(',', $err);
-            }
-
-            $logger->stdout($errors . PHP_EOL, $logger::FG_RED);
-            Craft::error($payRunEntryRecord->errors, __METHOD__);
 
         } catch (\Exception $e) {
 
@@ -867,11 +867,11 @@ class PayRuns extends Component
                 ],
             ]);
 
-//            var_dump($base_url);
-//            echo "<br/><br/>";
-//            var_dump(json_encode($payRunEntryUpdate));
-//            echo "<br/>";
-//            Craft::dd((array)$payRunEntryUpdate);
+            var_dump($base_url);
+            echo "<br/><br/>";
+            var_dump(json_encode($payRunEntryUpdate));
+            echo "<br/>";
+            Craft::dd((array)$payRunEntryUpdate);
 
             try {
                 $response = $client->post(
@@ -956,26 +956,5 @@ class PayRuns extends Component
         $payLine['rate'] = SecurityHelper::decrypt($payLine['rate'] ?? '');
 
         return $payLine;
-    }
-
-
-
-
-
-    /* SAVE ELEMENTS */
-    public function savePayRunElement(): bool
-    {
-        return false;
-        $payRunRecord = new PayRun();
-        $elementsService = Craft::$app->getElements();
-        return $elementsService->saveElement($payRunRecord);
-    }
-
-    public function savePayRunEntryElement(): bool
-    {
-        return false;
-        $payRunEntryRecord = new PayRunEntry();
-        $elementsService = Craft::$app->getElements();
-        return $elementsService->saveElement($payRunEntryRecord);
     }
 }
