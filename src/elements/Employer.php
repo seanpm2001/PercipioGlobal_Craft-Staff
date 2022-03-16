@@ -41,6 +41,7 @@ class Employer extends Element
     public $logoUrl;
     public $crn;
     public $defaultPayOptionsId;
+    public $address;
     public $addressId;
     public $startYear;
     public $currentYear;
