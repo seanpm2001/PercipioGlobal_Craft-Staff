@@ -18,7 +18,7 @@ class Employer extends Query
 
     public static function getQueries($checkToken = true): array
     {
-         if($checkToken && !GqlHelper::canQueryEmployers()) {
+         if ($checkToken && !GqlHelper::canQueryEmployers()) {
            return [];
          }
 

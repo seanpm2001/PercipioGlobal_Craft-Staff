@@ -2,11 +2,10 @@
 
 namespace percipiolondon\staff\gql\interfaces\elements;
 
-use craft\gql\GqlEntityRegistry;
 use craft\gql\interfaces\Element;
+use craft\gql\GqlEntityRegistry;
+use craft\gql\TypeLoader;
 use craft\gql\TypeManager;
-use craft\gql\types\DateTime;
-
 use craft\helpers\Gql;
 use craft\helpers\Json;
 
@@ -14,13 +13,9 @@ use GraphQL\Type\Definition\InterfaceType;
 use GraphQL\Type\Definition\ResolveInfo;
 use GraphQL\Type\Definition\Type;
 
-use percipiolondon\staff\gql\types\BankDetails;
-use percipiolondon\staff\gql\types\EmploymentDetails;
-use percipiolondon\staff\gql\types\LeaveSettings;
-use percipiolondon\staff\gql\types\PayOptions;
-use percipiolondon\staff\gql\types\PersonalDetails;
-use percipiolondon\staff\gql\types\RightToWork;
-use percipiolondon\staff\gql\types\generators\EmployeeType;
+use percipiolondon\staff\elements\Employee as EmployeeElement;
+use percipiolondon\staff\gql\types\generators\EmployeeGenerator;
+use percipiolondon\staff\helpers\Security as SecurityHelper;
 
 /**
  * Class Employee
@@ -35,7 +30,7 @@ class Employee extends Element
      */
     public static function getTypeGenerator(): string
     {
-        return EmployeeType::class;
+        return EmployeeGenerator::class;
     }
 
     /**
@@ -52,10 +47,12 @@ class Employee extends Element
             'name' => static::getName(),
             'fields' => self::class . '::getFieldDefinitions',
             'description' => 'This is the interface implemented by all employees.',
-            'resolveType' => self::class . '::resolveElementTypeName',
+            'resolveType' => function(EmployeeElement $value) {
+                return $value->getGqlTypeName();
+            }
         ]));
 
-        EmployeeType::generateTypes();
+        EmployeeGenerator::generateTypes();
 
         return $type;
     }
@@ -73,8 +70,29 @@ class Employee extends Element
      */
     public static function getFieldDefinitions(): array
     {
+        $parentFields = parent::getFieldDefinitions();
+        unset($parentFields["slug"]);
 
-        return TypeManager::prepareFieldDefinitions(array_merge(parent::getFieldDefinitions(), self::getConditionalFields(), [
+        $securedFields = [
+            'niNumber' => [
+                'name' => 'niNumber',
+                'type' => Type::string(),
+                'description' => 'Nation insurance number.',
+                'resolve' => function ($source, array $arguments, $context, ResolveInfo $resolveInfo) {
+                    return SecurityHelper::resolve($source, $resolveInfo);
+                }
+            ],
+            'slug' => [
+                'name' => 'slug',
+                'type' => Type::string(),
+                'description' => 'The company slug.',
+                'resolve' => function ($source, array $arguments, $context, ResolveInfo $resolveInfo) {
+                    return SecurityHelper::resolve($source, $resolveInfo);
+                }
+            ],
+        ];
+
+        $fields = [
             'staffologyId' => [
                 'name' => 'staffologyId',
                 'type' => Type::string(),
@@ -90,45 +108,10 @@ class Employee extends Element
                 'type' => Type::int(),
                 'description' => 'The user ID.',
             ],
-            'personalDetails' => [
-                'name' => 'personalDetails',
-                'type' => PersonalDetails::getType(),
-            ],
-            'employmentDetails' => [
-                'name' => 'employmentDetails',
-                'type' => EmploymentDetails::getType(),
-            ],
-            'leaveSettings' => [
-                'name' => 'leaveSettings',
-                'type' => LeaveSettings::getType(),
-            ],
-            'rightToWork' => [
-                'name' => 'rightToWork',
-                'type' => RightToWork::getType(),
-            ],
-            'bankDetails' => [
-                'name' => 'bankDetails',
-                'type' => BankDetails::getType(),
-            ],
-            'payOptions' => [
-                'name' => 'payOptions',
-                'type' => PayOptions::getType(),
-            ],
-            // TODO: Create Enum
             'status' => [
                 'name' => 'status',
                 'type' => Type::string(),
                 'description' => 'The employee status.'
-            ],
-            'aeNotEnroledWarning' => [
-                'name' => 'aeNotEnroledWarning',
-                'type' => Type::boolean(),
-                'description' => 'AE not enroled warning.'
-            ],
-            'niNumber' => [
-                'name' => 'niNumber',
-                'type' => Type::string(),
-                'description' => 'National insurance number.'
             ],
             'sourceSystemId' => [
                 'name' => 'sourceSystemId',
@@ -137,18 +120,13 @@ class Employee extends Element
             ],
             'isDirector' => [
                 'name' => 'isDirector',
-                'type' => Type::string(),
+                'type' => Type::boolean(),
                 'description' => 'Is this employer a employer'
             ]
 
-        ]), self::getName());
+        ];
+
+        return TypeManager::prepareFieldDefinitions(array_merge($parentFields, $securedFields, $fields), self::getName());
     }
 
-    /**
-     * @inheritdoc
-     */
-    protected static function getConditionalFields(): array
-    {
-        return [];
-    }
 }

@@ -4,7 +4,6 @@ namespace percipiolondon\staff\helpers;
 
 use Craft;
 use GraphQL\Type\Definition\ResolveInfo;
-use percipiolondon\staff\helpers\Security as SecurityHelper;
 
 class Security
 {
@@ -18,10 +17,12 @@ class Security
         return Craft::$app->getSecurity()->decryptByKey(utf8_decode($data ?? null));
     }
 
-    public static function resolve($source, ResolveInfo $resolveInfo): string
+    public static function resolve($source, ResolveInfo $resolveInfo): string|null
     {
         $fieldName = $resolveInfo->fieldName;
-        return SecurityHelper::decrypt($source[$fieldName]);
+        $value = self::decrypt($source[$fieldName] ?? '');
+        return empty($value) ?
+             null : $value;
     }
 }
 

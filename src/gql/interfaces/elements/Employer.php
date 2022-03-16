@@ -8,7 +8,6 @@
 namespace percipiolondon\staff\gql\interfaces\elements;
 
 use craft\gql\interfaces\Element;
-use craft\gql\types\DateTime;
 use craft\gql\GqlEntityRegistry;
 use craft\gql\TypeLoader;
 use craft\gql\TypeManager;

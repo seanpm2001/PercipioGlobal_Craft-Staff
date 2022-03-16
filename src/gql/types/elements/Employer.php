@@ -44,17 +44,11 @@ class Employer extends Element
         /** @var EmployerElement $source */
         $fieldName = $resolveInfo->fieldName;
 
-        switch($fieldName) {
-            case 'address':
-               return Json::decodeIfJson($source->address);
-
-            case 'hmrcDetails':
-                return Json::decodeIfJson($source->hmrcDetails);
-
-            case 'defaultPayOptions':
-                return Json::decodeIfJson($source->defaultPayOptions);
-        }
-
-        return parent::resolve($source, $arguments, $context, $resolveInfo);
+        return match ($fieldName) {
+            'address' => Json::decodeIfJson($source->address),
+            'hmrcDetails' => Json::decodeIfJson($source->hmrcDetails),
+            'defaultPayOptions' => Json::decodeIfJson($source->defaultPayOptions),
+            default => parent::resolve($source, $arguments, $context, $resolveInfo),
+        };
     }
 }
