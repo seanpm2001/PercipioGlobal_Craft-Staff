@@ -10,10 +10,9 @@
 
 namespace percipiolondon\staff\elements;
 
-use craft\db\Query;
-
 use Craft;
 use craft\base\Element;
+use craft\db\Query;
 use craft\elements\db\ElementQueryInterface;
 use craft\elements\User;
 
@@ -21,10 +20,10 @@ use percipiolondon\staff\helpers\Logger;
 use percipiolondon\staff\helpers\Security as SecurityHelper;
 use percipiolondon\staff\elements\db\EmployeeQuery;
 use percipiolondon\staff\records\Employee as EmployeeRecord;
-
 use percipiolondon\staff\records\Permission;
 use percipiolondon\staff\records\PersonalDetails;
 use percipiolondon\staff\Staff;
+
 use yii\db\Exception;
 
 /**
@@ -86,14 +85,6 @@ class Employee extends Element
     public static function pluralLowerDisplayName(): string
     {
         return Craft::t('staff-management', 'employees');
-    }
-
-    /**
-     * @inheritdoc
-     */
-    public static function refHandle()
-    {
-        return 'employee';
     }
 
     /**
@@ -163,16 +154,6 @@ class Employee extends Element
     // Indexes, etc.
     // -------------------------------------------------------------------------
 
-
-    /**
-     * @inheritdoc
-     * @since 3.3.0
-     */
-    public static function gqlScopesByContext($context): array
-    {
-        return ['employees.' . $context->uid];
-    }
-
     public static function gqlTypeNameByContext($context): string
     {
         return 'Employee';
@@ -180,7 +161,6 @@ class Employee extends Element
 
     /**
      * @inheritdoc
-     * @since 3.3.0
      */
     public function getGqlTypeName(): string
     {

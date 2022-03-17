@@ -14,12 +14,10 @@ use Craft;
 use craft\base\Element;
 use craft\elements\db\ElementQueryInterface;
 
-use percipiolondon\staff\elements\db\EmployerQuery;
-
-use percipiolondon\staff\Staff;
 use yii\db\Exception;
 use yii\db\Query;
 
+use percipiolondon\staff\elements\db\EmployerQuery;
 use percipiolondon\staff\helpers\Logger;
 use percipiolondon\staff\helpers\Security as SecurityHelper;
 use percipiolondon\staff\records\Employer as EmployerRecord;
@@ -43,6 +41,7 @@ class Employer extends Element
     public $logoUrl;
     public $crn;
     public $defaultPayOptionsId;
+    public $address;
     public $addressId;
     public $startYear;
     public $currentYear;
@@ -83,14 +82,6 @@ class Employer extends Element
     public static function pluralLowerDisplayName(): string
     {
         return Craft::t('staff-management', 'employers');
-    }
-
-    /**
-     * @inheritdoc
-     */
-    public static function refHandle()
-    {
-        return 'employer';
     }
 
     /**
@@ -161,15 +152,6 @@ class Employer extends Element
     // Indexes, etc.
     // -------------------------------------------------------------------------
 
-    /**
-     * @inheritdoc
-     * @since 3.3.0
-     */
-    public static function gqlScopesByContext($context): array
-    {
-        return ['employers.' . $context->uid];
-    }
-
     public static function gqlTypeNameByContext($context): string
     {
         return 'Employer';
@@ -177,7 +159,6 @@ class Employer extends Element
 
     /**
      * @inheritdoc
-     * @since 3.3.0
      */
     public function getGqlTypeName(): string
     {

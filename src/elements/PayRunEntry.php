@@ -18,10 +18,7 @@ use craft\validators\DateTimeValidator;
 
 use percipiolondon\staff\elements\db\PayRunEntryQuery;
 use percipiolondon\staff\helpers\Logger;
-use percipiolondon\staff\records\Employee;
-use percipiolondon\staff\records\Employer;
 use percipiolondon\staff\records\PayRunEntry as PayRunEntryRecord;
-use percipiolondon\staff\Staff;
 
 use yii\db\Exception;
 
@@ -115,14 +112,6 @@ class PayRunEntry extends Element
     }
 
     /**
-     * @inheritdoc
-     */
-    public static function refHandle()
-    {
-        return 'payRunEntry';
-    }
-
-    /**
      * Creates an [[ElementQueryInterface]] instance for query purpose.
      *
      * The returned [[ElementQueryInterface]] instance can be further customized by calling
@@ -189,15 +178,6 @@ class PayRunEntry extends Element
     // Indexes, etc.
     // -------------------------------------------------------------------------
 
-    /**
-     * @inheritdoc
-     * @since 1.0.0
-     */
-    public static function gqlScopesByContext($context): array
-    {
-        return ['payrunentries.' . $context->uid];
-    }
-
     public static function gqlTypeNameByContext($context): string
     {
         return 'PayRunEntry';
@@ -205,7 +185,6 @@ class PayRunEntry extends Element
 
     /**
      * @inheritdoc
-     * @since 1.0.0
      */
     public function getGqlTypeName(): string
     {

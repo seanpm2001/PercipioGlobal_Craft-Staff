@@ -414,9 +414,9 @@ class Staff extends Plugin
             Gql::EVENT_REGISTER_GQL_TYPES,
             function(RegisterGqlTypesEvent $event) {
                 $event->types[] = EmployerInterface::class;
-                //$event->types[] = EmployeeInterface::class;
-                //$event->types[] = PayRunInterface::class;
-                //$event->types[] = PayRunEntryInterface::class;
+                $event->types[] = EmployeeInterface::class;
+                $event->types[] = PayRunInterface::class;
+                $event->types[] = PayRunEntryInterface::class;
             }
         );
     }
@@ -433,14 +433,14 @@ class Staff extends Plugin
                         // employers component with read action, labelled “View Employers” in UI
                         'employers:read' => ['label' => Craft::t('staff-management', 'View Employers')],
                         // employees component with read action, labelled “View Employees” in UI
-                        //'employees:read' => ['label' => Craft::t('staff-management', 'View Employees')],
+                        'employees:read' => ['label' => Craft::t('staff-management', 'View Employees')],
                         // payruns component with read action, labelled “View Payruns” in UI
-                        //'payruns:read' => ['label' => Craft::t('staff-management', 'View Payruns')]
+                        'payruns:read' => ['label' => Craft::t('staff-management', 'View Payruns')]
                     ],
-                    //'PayrunEntries' => [
+                    'PayrunEntries' => [
                         // payruns entries component with read action, labelled “View Payruns” in UI
-                        //'payrunentries:read' => ['label' => Craft::t('staff-management', 'View Payrun Entries')]
-                    //],
+                        'payrunentries:read' => ['label' => Craft::t('staff-management', 'View Payrun Entries')]
+                    ],
                 ]);
 
             }
@@ -456,9 +456,9 @@ class Staff extends Plugin
                 $event->queries = array_merge(
                     $event->queries,
                     EmployerQueries::getQueries(),
-                    //EmployeeQueries::getQueries(),
-                    //PayRunQueries::getQueries(),
-                    //PayRunEntryQueries::getQueries(),
+                    EmployeeQueries::getQueries(),
+                    PayRunQueries::getQueries(),
+                    PayRunEntryQueries::getQueries(),
                 );
             }
         );

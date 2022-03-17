@@ -19,7 +19,6 @@ use percipiolondon\staff\Staff;
 use yii\db\Exception;
 
 use percipiolondon\staff\helpers\Logger;
-use percipiolondon\staff\helpers\Security as SecurityHelper;
 use percipiolondon\staff\records\PayRun as PayRunRecord;
 use percipiolondon\staff\elements\db\PayRunQuery;
 
@@ -91,14 +90,6 @@ class PayRun extends Element
     }
 
     /**
-     * @inheritdoc
-     */
-    public static function refHandle()
-    {
-        return 'payRun';
-    }
-
-    /**
      * Creates an [[ElementQueryInterface]] instance for query purpose.
      *
      * The returned [[ElementQueryInterface]] instance can be further customized by calling
@@ -165,15 +156,6 @@ class PayRun extends Element
     // Indexes, etc.
     // -------------------------------------------------------------------------
 
-    /**
-     * @inheritdoc
-     * @since 3.3.0
-     */
-    public static function gqlScopesByContext($context): array
-    {
-        return ['payruns.' . $context->uid];
-    }
-
     public static function gqlTypeNameByContext($context): string
     {
         return 'PayRun';
@@ -181,7 +163,6 @@ class PayRun extends Element
 
     /**
      * @inheritdoc
-     * @since 3.3.0
      */
     public function getGqlTypeName(): string
     {

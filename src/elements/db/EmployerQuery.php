@@ -4,9 +4,11 @@ namespace percipiolondon\staff\elements\db;
 
 use craft\db\Query;
 use craft\db\QueryAbortedException;
-use craft\db\Table;
 use craft\elements\db\ElementQuery;
 use craft\helpers\Db;
+
+use percipiolondon\staff\db\Table;
+use percipiolondon\staff\models\Address;
 
 use yii\db\Connection;
 
@@ -19,6 +21,7 @@ class EmployerQuery extends ElementQuery
     public $logoUrl;
     public $crn;
     public $defaultPayOptions;
+    public $addressId;
     public $address;
     public $startYear;
     public $currentYear;
@@ -66,9 +69,20 @@ class EmployerQuery extends ElementQuery
         return $this;
     }
 
+    public function addressId($value)
+    {
+        $this->addressId = $value;
+        return $this;
+    }
+
     public function address($value)
     {
-        $this->address = $value;
+        if ($value instanceof Address) {
+            $this->addressId = [$value->id];
+        } else {
+            $this->addressId = null;
+        }
+
         return $this;
     }
 

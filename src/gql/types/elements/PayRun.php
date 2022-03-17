@@ -36,14 +36,11 @@ class PayRun extends Element
     protected function resolve($source, $arguments, $context, ResolveInfo $resolveInfo)
     {
         /** @var PayRunElement $source */
-
         $fieldName = $resolveInfo->fieldName;
 
-        switch($fieldName) {
-            case 'totals':
-                return Json::decodeIfJson($source->totals);
-        }
-
-        return parent::resolve($source, $arguments, $context, $resolveInfo);
+        return match ($fieldName) {
+            'totals' => Json::decodeIfJson($source->totals),
+            default => parent::resolve($source, $arguments, $context, $resolveInfo),
+        };
     }
 }
