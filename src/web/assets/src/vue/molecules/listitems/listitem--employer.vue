@@ -5,54 +5,21 @@
 </script>
 
 <template>
-    <li>
-        <a class="flex flex-col w-full hover:bg-gray-50 hover:no-underline py-2">
-
-            <div class="flex items-center w-full">
-
-                <h5 class="text-lg font-medium text-indigo-600">
-                    Company Name
-                </h5>
-
-                <div class="ml-auto flex-shrink-0 flex">
-                    <p class="px-4 py-1 inline-flex text-sm leading-5 font-semibold rounded-full bg-green-100 text-green-800">
-                        Pay Run: 11
-                    </p>
-                </div>
-
+    <a 
+        v-for="employer in employerData" :key="employer.id"
+        :href="`/admin/staff-management/pay-runs/${employer.id}`" 
+        :title="`Go to pay runs of ${employer.name}`" 
+        class="grid grid-cols-6 border-b border-solid border-gray-200" 
+    >
+        <div class="col-span-2 whitespace-nowrap py-4 pl-4 pr-3 text-sm font-medium text-indigo-800 sm:pl-6 flex">
+            <div class="object-cover object-center w-6 h-6 rounded-full overflow-hidden" style="margin-bottom:0px">
+                <img :src="employer.logoUrl" class="w-full h-full" />
             </div>
-
-            <div class="sm:flex w-full">
-
-                <div class="sm:flex space-x-8">
-                    <div class="flex flex-col items-start">
-                        <span class="font-bold text-xs">
-                            CRN
-                        </span>
-                        <span class="text-sm">
-                            123456789
-                        </span>
-                    </div>
-                    
-                    <div class="flex flex-col items-start">
-                        <span class="font-bold text-xs">
-                            Employees
-                        </span>
-                        <span class="text-sm">
-                            216
-                        </span>
-                    </div>
-                </div>
-
-                <div class="ml-auto flex items-center text-sm text-gray-500 sm:mt-0 sm:pr-2">
-                    <p>
-                        Last synced on
-                        <time datetime="2020-01-07">
-                            January 7, 2020
-                        </time>
-                    </p>
-                </div>
-            </div>
-        </a>
-    </li>
+            <span style="margin-bottom:0px">{{ employer.name }}</span>
+        </div>
+        <div class="whitespace-nowrap px-3 py-4 text-sm text-gray-500">{{ employer.crn }}</div>
+        <div class="whitespace-nowrap px-3 py-4 text-sm text-gray-500">{{ employer.employeeCount }}</div>
+        <div class="whitespace-nowrap px-3 py-4 text-sm text-gray-500">{{ employer.currentPayRun }}</div>
+        <div class="whitespace-nowrap px-3 py-4 text-sm text-gray-500">{{ employer.synced }}</div>
+    </a>
 </template>

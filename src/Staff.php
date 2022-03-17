@@ -353,7 +353,8 @@ class Staff extends Plugin
             'staff-management/dashboard' => 'staff-management/settings/dashboard',
             'staff-management/plugin' => 'staff-management/settings/plugin',
             'staff-management/pay-runs' => 'staff-management/pay-run',
-            'staff-management/pay-runs/<employerId:\d+>' => 'staff-management/pay-run/pay-run-by-employer'
+            'staff-management/pay-runs/<employerId:\d+>' => 'staff-management/pay-run/pay-run-by-employer',
+            'staff-management/pay-runs/<employerId:\d+>/<payRunId:\d+>' => 'staff-management/pay-run/detail'
         ];
     }
 

@@ -7,7 +7,7 @@
     //import inputSearch from '~/vue/atoms/inputs/input--search.vue'
 
     const employers = [
-        { name: 'Acme Limited (Demo)', logoUrl: 'https://prodstaffologystorage.blob.core.windows.net/images/generic-logo.png', crn: '123456', employeeCount: '5', currentPayRun: 'Year2021/12', synced: '15/04/2022 - 18:30' },
+        { id: 12434, name: 'Acme Limited (Demo)', logoUrl: 'https://prodstaffologystorage.blob.core.windows.net/images/generic-logo.png', crn: '123456', employeeCount: '5', currentPayRun: 'Year2021/12', synced: '15/04/2022 - 18:30' },
         // More people...
     ]
 
@@ -22,7 +22,7 @@
     <div class="sm:flex">
         <div class="sm:flex-auto">
             <h1 class="text-xl font-semibold text-gray-900">Employers</h1>
-            <p class="mt-2 text-sm text-gray-700">A list of all the employers on The Harding Hub.</p>
+            <p class="mt-2 text-sm text-gray-700">Click on a company from whom you want to upload pay run entries from.</p>
         </div>
         <!--div class="mt-4 sm:mt-0 sm:ml-16 sm:flex-none">
             <button type="button" class="inline-flex items-center justify-center rounded-md border border-transparent bg-indigo-600 px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 sm:w-auto">Add user</button>
@@ -43,18 +43,7 @@
                     </div>
 
                     <!-- CONTENT -->
-                    <div class="grid grid-cols-6 border-b border-solid border-gray-200" v-for="employer in employers">
-                        <a href="#" class="col-span-2 whitespace-nowrap py-4 pl-4 pr-3 text-sm font-medium text-indigo-800 sm:pl-6 flex">
-                            <div class="object-cover object-center w-6 h-6 rounded-full overflow-hidden">
-                                <img :src="employer.logoUrl" class="w-full h-full" />
-                            </div>
-                            <span>{{ employer.name }}</span>
-                        </a>
-                        <div class="whitespace-nowrap px-3 py-4 text-sm text-gray-500">{{ employer.crn }}</div>
-                        <div class="whitespace-nowrap px-3 py-4 text-sm text-gray-500">{{ employer.employeeCount }}</div>
-                        <div class="whitespace-nowrap px-3 py-4 text-sm text-gray-500">{{ employer.currentPayRun }}</div>
-                        <div class="whitespace-nowrap px-3 py-4 text-sm text-gray-500">{{ employer.synced }}</div>
-                    </div>
+                    <EmployerListItem :employer-data="employers" />
                 </div>
             </div>
         </div>

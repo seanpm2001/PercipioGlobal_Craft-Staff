@@ -3,6 +3,8 @@
 namespace percipiolondon\staff\controllers;
 
 use craft\web\Controller;
+use percipiolondon\staff\elements\Employer;
+use percipiolondon\staff\elements\PayRun;
 use percipiolondon\staff\helpers\Security as SecurityHelper;
 use percipiolondon\staff\records\Employer as EmployerRecord;
 use percipiolondon\staff\records\PayCode;
@@ -56,7 +58,7 @@ class PayRunController extends Controller
     {
         $variables = [];
 
-        $employer = EmployerRecord::findOne($employerId);
+        $employer = Employer::findOne($employerId);
 
         if(!$employer){
             throw new NotFoundHttpException();
@@ -66,7 +68,7 @@ class PayRunController extends Controller
         $employerName = SecurityHelper::decrypt($employer['name']) ?? '';
 
         $pluginName = Staff::$settings->pluginName;
-        $templateTitle = Craft::t('staff-management', 'Pay Runs');
+        $templateTitle = Craft::t('staff-management', 'Pay Runs > '.$employerName);
 
         $variables['controllerHandle'] = 'payruns';
         $variables['pluginName'] = Staff::$settings->pluginName;
@@ -83,6 +85,45 @@ class PayRunController extends Controller
 
         // Render the template
         return $this->renderTemplate('staff-management/payruns/employer', $variables);
+    }
+
+    /**
+     * @throws NotFoundHttpException
+     */
+    public function actionDetail(int $employerId, int $payRunId): Response
+    {
+        $variables = [];
+
+        $employer = Employer::findOne($employerId);
+        $payRun = PayRun::findOne($payRunId);
+
+        if(!$employer || !$payRun){
+            throw new NotFoundHttpException();
+        }
+
+//        $payRuns = PayRunRecord::findAll(['employerId' => $employer['id']]);
+        $employerName = SecurityHelper::decrypt($employer['name']) ?? '';
+        $taxYear = $payRun['taxYear'] ?? '';
+        $period = $payRun['period'] ?? '';
+        
+        $pluginName = Staff::$settings->pluginName;
+        $templateTitle = Craft::t('staff-management', 'Pay Runs > '.$employerName. ' > '.$taxYear.' / '.$period);
+
+        $variables['controllerHandle'] = 'payruns';
+        $variables['pluginName'] = Staff::$settings->pluginName;
+        $variables['title'] = $templateTitle;
+        $variables['docTitle'] = "{$pluginName} - {$templateTitle} - {$employerName}";
+        $variables['selectedSubnavItem'] = 'payRuns';
+
+        $variables['employerId'] = $employer['id'];
+
+        $variables['csrf'] = [
+            'name' => Craft::$app->getConfig()->getGeneral()->csrfTokenName,
+            'value' => Craft::$app->getRequest()->getCsrfToken(),
+        ];
+
+        // Render the template
+        return $this->renderTemplate('staff-management/payruns/detail', $variables);
     }
 
     public function actionSavePayRunEntry(int $payRunId)
