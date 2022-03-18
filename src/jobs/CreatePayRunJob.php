@@ -49,7 +49,10 @@ class CreatePayRunJob extends BaseJob
 //                // SET PAYRUN IF IT HASN'T ALREADY BEEN FETCHED IN PAYRUNLOG
 //                if(!$payRunLog) {
 
-                    $logger->stdout($progress."↧ Fetching pay run info of " . $payRun['metadata']['taxYear'] . ' / ' . $payRun['name'] . '...', $logger::RESET);
+                    $taxYear = $payRun['metadata']['taxYear'] ?? '';
+                    $name = $payRun['name'] ?? '';
+
+                    $logger->stdout($progress."↧ Fetching pay run info of " . $taxYear . ' / ' . $name . '...', $logger::RESET);
 
                     $response =  $client->get("https://api.staffology.co.uk".$url, $headers);
                     $payRunData = json_decode($response->getBody()->getContents(), true);

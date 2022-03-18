@@ -106,6 +106,8 @@ class PayRunController extends Controller
     {
         $this->requireLogin();
 
+//        Staff::$plugin->payRuns->fetchPayRunByPayRunId($payRunId, true);
+
         $variables = [];
 
         $employer = Employer::findOne($employerId);
