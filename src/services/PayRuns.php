@@ -285,6 +285,11 @@ class PayRuns extends Component
         $payRunQuery = PayRunRecord::findOne($payRunId);
         $payRunQuery = $payRunQuery ? $payRunQuery->toArray() : [];
 
+        // fetch employer
+        $employer = EmployerRecord::findOne($payRunQuery['employerId'] ?? null);
+        $employer = $employer ? $employer->toArray() : [];
+        $employer = Staff::$plugin->employers->parseEmployer($employer);
+
         $csvEntries = $this->getCsvData($payRunId);
 
         CsvHelper::arrayToCsv($csvEntries,'pay-'.($employer['slug'] ?? 'x').'-'.($payRunQuery['taxMonth'] ?? 'x').'-'.strtolower($payRunQuery['taxYear']) ?? 'x');
@@ -879,7 +884,7 @@ class PayRuns extends Component
 
 
     /* UPDATES */
-    public function updatePayRunEntry(string $payPeriod, int $employer, int $payRunId, array $payRunEntryUpdate): void
+    public function updatePayRunEntry(string $payPeriod, int $employer, int $payRunId, array $payRunEntryUpdate): bool
     {
         $employer = EmployerRecord::findOne($employer);
 
@@ -895,11 +900,15 @@ class PayRuns extends Component
                 ],
             ]);
 
+
+            # START TEST
 //            var_dump($base_url);
 //            echo "<br/><br/>";
 //            var_dump(json_encode($payRunEntryUpdate));
 //            echo "<br/>";
+//            return true;
 //            Craft::dd((array)$payRunEntryUpdate);
+            #END TEST
 
             try {
                 $response = $client->post(
@@ -911,13 +920,18 @@ class PayRuns extends Component
 
                 $this->fetchPayRunByPayRunId($payRunId, true);
 
+                return true;
 
             } catch (GuzzleException $e) {
 
                 Craft::error($e->getMessage(), __METHOD__);
 
+                return false;
+
             }
         }
+
+        return false;
     }
 
 

@@ -8,6 +8,13 @@
 
 {%- endset -%}
 
+
+{% js %}
+    window.validation = {{ {
+        "error": error ?? ''
+    }|json_encode|raw }}
+{% endjs %}
+
 {%- block foot -%}
     {{ parent() }}
     {%- set tagOptions = {

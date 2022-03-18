@@ -1,14 +1,16 @@
 <script setup lang="ts">
     import { defaultClient } from '~/js/composables/useApolloClient'
     import { DefaultApolloClient } from '@vue/apollo-composable'
-    import { provide } from 'vue'
+    import { provide, ref } from 'vue'
     import { usePayRunStore } from '~/js/stores/payrun'
     import PayRunStats from '~/vue/molecules/stats/stats--payrun.vue'
+    import BannerError from '~/vue/molecules/banners/banner--error.vue'
     import FormImport from '~/vue/organisms/forms/form--import.vue'
 
     provide(DefaultApolloClient, defaultClient)
 
     const store = usePayRunStore()
+    const error = ref(window?.validation?.error)
 
     const payrun = {
         id: 12605, 
@@ -31,6 +33,10 @@
     const downloadTemplate = () => {
         const url = `/admin/staff-management/pay-runs/download-template/${payrun.id}`
         const popout = window.open(url)
+    }
+
+    const handleClose = () => {
+        error.value = ''
     }
 
 </script>
@@ -56,6 +62,9 @@
     </div>
 
     <div class="mt-8 flex">
+
+        <BannerError v-if="error" :error="error" @close="handleClose" />
+
         <div class="sm:flex-auto" style="margin-bottom:0">
             <h2>Uploaded Pay Run Entries</h2>
             <p class="mt-2 text-sm text-gray-700">Last Synced: 03/03/2022 10:09</p>
