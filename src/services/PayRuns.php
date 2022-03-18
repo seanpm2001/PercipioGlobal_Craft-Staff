@@ -188,7 +188,7 @@ class PayRuns extends Component
         return $payRuns;
     }
 
-    public function getCsvTemplate(int $payRunId) :void
+    public function getCsvData(int $payRunId, bool $fetchHeaders = false): array
     {
         // fetch pay run
         $payRunQuery = PayRunRecord::findOne($payRunId);
@@ -196,7 +196,7 @@ class PayRuns extends Component
 
         // fetch pay run entries
         $payRunId = $payRunQuery['id'] ?? null;
-        $payRunEntries = PayRunEntryRecord::findAll(['payRunId' => $payRunId]);
+        $payRunEntries = $fetchHeaders ? [PayRunEntryRecord::findOne(['payRunId' => $payRunId])] : PayRunEntryRecord::findAll(['payRunId' => $payRunId]);
 
         // fetch employer
         $employer = EmployerRecord::findOne($payRunQuery['employerId'] ?? null);
@@ -275,6 +275,13 @@ class PayRuns extends Component
         usort($csvEntries, function($a, $b){
             return $a['payrollCode'] > $b['payrollCode'];
         });
+
+        return $csvEntries;
+    }
+
+    public function getCsvTemplate(int $payRunId) :void
+    {
+        $csvEntries = $this->getCsvData($payRunId);
 
         CsvHelper::arrayToCsv($csvEntries,'pay-'.($employer['slug'] ?? 'x').'-'.($payRunQuery['taxMonth'] ?? 'x').'-'.strtolower($payRunQuery['taxYear']) ?? 'x');
     }
@@ -857,9 +864,8 @@ class PayRuns extends Component
     {
         $employer = EmployerRecord::findOne($employer);
 
-        Craft::dd('stop');
-
         if($employer){
+
             $api = App::parseEnv(Staff::$plugin->getSettings()->apiKeyStaffology);
             $base_url = 'https://api.staffology.co.uk/employers/'.$employer['staffologyId'].'/payrun/'.$payPeriod.'/importpay?linesOnly=true';
 //            $base_url = 'https://api.staffology.co.uk/employers/'.$employer['staffologyId'].'/payrun/'.$payRunEntry['taxYear'].'/'.$payRunEntry['payPeriod'].'/'.$payRunEntry['period'].'/'.$payRunEntry['staffologyId'];
@@ -870,11 +876,11 @@ class PayRuns extends Component
                 ],
             ]);
 
-            var_dump($base_url);
-            echo "<br/><br/>";
-            var_dump(json_encode($payRunEntryUpdate));
-            echo "<br/>";
-            Craft::dd((array)$payRunEntryUpdate);
+//            var_dump($base_url);
+//            echo "<br/><br/>";
+//            var_dump(json_encode($payRunEntryUpdate));
+//            echo "<br/>";
+//            Craft::dd((array)$payRunEntryUpdate);
 
             try {
                 $response = $client->post(
@@ -896,8 +902,6 @@ class PayRuns extends Component
 
 
             } catch (GuzzleException $e) {
-
-                Craft::dd($e->getMessage());
 
                 Craft::error($e->getMessage(), __METHOD__);
 
@@ -960,4 +964,12 @@ class PayRuns extends Component
 
         return $payLine;
     }
+
+
+
+
+
+
+    /* PRIVATE */
+
 }
