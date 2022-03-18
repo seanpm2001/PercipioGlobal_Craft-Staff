@@ -13,3 +13,10 @@
     {{- craft.staff.register('src/js/staff.ts', false, tagOptions, tagOptions) -}}
 
 {%- endblock -%}
+
+{% js %}
+    window.api = {{ {
+        "cpUrl": cpUrl(),
+        "csrf": craft.app.request.csrfToken
+    }|json_encode|raw }}
+{% endjs %}

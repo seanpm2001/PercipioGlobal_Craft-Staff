@@ -276,8 +276,6 @@ class PayRuns extends Component
             return $a['payrollCode'] > $b['payrollCode'];
         });
 
-        Craft::dd($csvEntries);
-
         CsvHelper::arrayToCsv($csvEntries,'pay-'.($employer['slug'] ?? 'x').'-'.($payRunQuery['taxMonth'] ?? 'x').'-'.strtolower($payRunQuery['taxYear']) ?? 'x');
     }
 

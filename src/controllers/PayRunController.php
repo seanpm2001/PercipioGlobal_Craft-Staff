@@ -126,6 +126,17 @@ class PayRunController extends Controller
         return $this->renderTemplate('staff-management/payruns/detail', $variables);
     }
 
+    public function actionDownloadTemplate(int $payRunId): void
+    {
+        $payRun = PayRun::findOne($payRunId);
+
+        if(!$payRun){
+            throw new NotFoundHttpException();
+        }
+
+        Staff::$plugin->payRuns->getCsvTemplate($payRunId);
+    }
+
     public function actionSavePayRunEntry(int $payRunId)
     {
         //TEST --> should be in the post

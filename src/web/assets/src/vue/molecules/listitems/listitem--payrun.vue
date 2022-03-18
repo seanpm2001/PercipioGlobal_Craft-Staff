@@ -23,8 +23,6 @@
         <div class="hide lg:block whitespace-nowrap px-3 py-4 text-sm text-gray-500">£ {{ payrun.totalCost }}</div>
         <div class="whitespace-nowrap px-3 py-4 text-sm text-gray-500">{{ payrun.paymentDate }}</div>
         <div class="text-center lg:text-left px-3 py-3.5 text-sm font-semibold text-gray-900">
-
-        {{payrun.importApproved}}
             <span v-if="payrun.importApproved == 1" class="block w-4 h-4 xl:inline-block xl:w-auto xl:h-auto rounded-full text-xs bg-emerald-400 text-white text-bold xl:px-4 xl:py-1"><span class="opacity-0 pointer-events-none xl:opacity-100">Approved</span></span>
             <span v-else-if="payrun.importApproved == 0" class="block w-4 h-4 xl:inline-block xl:w-auto xl:h-auto rounded-full text-xs bg-orange-300 text-orange-800 text-bold xl:px-4 xl:py-1"><span class="opacity-0 pointer-events-none xl:opacity-100">Pending</span></span>
             <span v-else class="block w-4 h-4 xl:inline-block xl:w-auto xl:h-auto rounded-full text-xs bg-gray-400 text-gray-800 text-bold xl:px-4 xl:py-1"><span class="opacity-0 pointer-events-none xl:opacity-100">Not applicable</span></span>
