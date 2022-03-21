@@ -350,6 +350,7 @@ class Staff extends Plugin
         return [
             'staff-management' => 'staff-management/settings/dashboard',
             'staff-management/dashboard' => 'staff-management/settings/dashboard',
+            'staff-management/settings/get-gql-token' => 'staff-management/settings/get-gql-token',
             'staff-management/plugin' => 'staff-management/settings/plugin',
             'staff-management/pay-runs' => 'staff-management/pay-run',
             'staff-management/pay-runs/queue' => 'staff-management/pay-run/get-queue',
