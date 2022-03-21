@@ -50,37 +50,6 @@ class SettingsController extends Controller
     }
 
     /**
-     * Payrun display
-     *
-     * @param string|null $siteHandle
-     *
-     * @return Response The rendered result
-     * @throws NotFoundHttpException
-     * @throws \yii\web\ForbiddenHttpException
-     */
-    public function actionPayruns(string $siteHandle = null): Response
-    {
-        $variables = [];
-
-        $pluginName = Staff::$settings->pluginName;
-        $templateTitle = Craft::t('staff-management', 'Pay Runs');
-
-        $variables['controllerHandle'] = 'payruns';
-        $variables['pluginName'] = Staff::$settings->pluginName;
-        $variables['title'] = $templateTitle;
-        $variables['docTitle'] = "{$pluginName} - {$templateTitle}";
-        $variables['selectedSubnavItem'] = 'payruns';
-
-        $variables['csrf'] = [
-            'name' => Craft::$app->getConfig()->getGeneral()->csrfTokenName,
-            'value' => Craft::$app->getRequest()->getCsrfToken(),
-        ];
-
-        // Render the template
-        return $this->renderTemplate('staff-management/payruns/index', $variables);
-    }
-
-    /**
      * Settings display
      *
      *

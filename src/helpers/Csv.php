@@ -5,30 +5,20 @@ namespace percipiolondon\staff\helpers;
 use Craft;
 use percipiolondon\staff\records\Employer as EmployerRecord;
 use percipiolondon\staff\records\PayRunEntry as PayRunEntryRecord;
+use yii\data\ArrayDataProvider;
+use yii2tech\csvgrid\CsvGrid;
 
 class Csv
 {
     public static function arrayToCsv( array $fields, $filename = "payrun" )
     {
-        header( 'Content-Type: text/csv' );
-        header( 'Content-Disposition: attachment;filename='.$filename.'.csv');
-        $fp = fopen('php://output', 'w');
+        $exporter = new CsvGrid([
+            'dataProvider' => new ArrayDataProvider([
+                'allModels' => $fields
+            ])
+        ]);
 
-        $loop = 0;
-
-        foreach ( $fields as $index => $field ) {
-
-            if($loop === 0){
-                fputcsv($fp, array_keys($field));
-            }
-
-            fputcsv($fp, array_values($field));
-
-
-            $loop++;
-        }
-
-        fclose($fp);
+        return $exporter->export()->send($filename.'.csv');
     }
 
     public static function csvArrayToPayRunEntry( array $entries )
