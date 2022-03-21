@@ -43,7 +43,7 @@ class CreatePayRunJob extends BaseJob
                 $current++;
                 $progress = "[".$current."/".$total."] ";
 
-                $employer = is_int($this->criteria['employer']['id'] ?? null) ? $this->criteria['employer'] : EmployerRecord::findOne(['staffologyId' => $this->criteria['employer']['id'] ?? null])->toArray();
+                $employer = is_int($this->criteria['employer']['id'] ?? null) ? EmployerRecord::findOne($this->criteria['employer']['id'])->toArray() : $this->criteria['employer'];
 
                 $url = strpos($payRun['url'], 'api.staffology') > 0 ? str_replace("https://api.staffology.co.uk", "", $payRun['url']) : $payRun['url'];
 //
