@@ -388,7 +388,7 @@ class PayRuns extends Component
         ]));
     }
 
-    public function fetchPayRunByEmployer(array $employer): void
+    public function fetchPayRunByEmployer(array $employer, bool $startQueue = false): void
     {
         $payRuns = $employer['metadata']['payruns'] ?? [];
 
@@ -400,11 +400,80 @@ class PayRuns extends Component
                 'employer' => $employer,
             ]
         ]));
+
+        if($startQueue) {
+            $queue = Craft::$app->getQueue();
+            if ($queue instanceof QueueInterface) {
+                $queue->run();
+            } elseif ($queue instanceof RedisQueue) {
+                $queue->run(false);
+            }
+        }
+    }
+
+    public function fetchPayRunByInternalEmployer(int $employerId, string $taxYear = '')
+    {
+        $logger = new Logger();
+
+        if(!$employerId) {
+            $logger->stdout("There's no employer id provided" . PHP_EOL, $logger::FG_RED);
+            Craft::error("There's no employer id provided", __METHOD__);
+        }
+
+        $employer = Staff::$plugin->employers->getEmployerById($employerId);
+
+        if($employer){
+
+            $id = $employer['staffologyId'] ?? '';
+            $taxYear = $taxYear === '' ? $employer['currentYear'] : $taxYear;
+            $payPeriod = $employer['defaultPayOptions']['period'] ?? 'Monthly';
+
+            $url = '/employers/'.$id.'/payrun/'.$taxYear.'/'.$payPeriod;
+
+            $api = App::parseEnv(Staff::$plugin->getSettings()->apiKeyStaffology);
+            $credentials = base64_encode('staff:'.$api);
+            $headers = [
+                'headers' => [
+                    'Authorization' => 'Basic ' . $credentials,
+                ],
+            ];
+            $client = new \GuzzleHttp\Client();
+
+            try {
+
+                $response =  $client->get("https://api.staffology.co.uk/" . $url, $headers);
+                $payRunData = json_decode($response->getBody()->getContents(), true);
+
+                if($payRunData) {
+
+                    $employer['id'] = $employer['staffologyId'];
+
+                    $this->fetchPayCodesList($employer);
+                    $this->fetchPayRuns($payRunData, $employer);
+
+                    App::maxPowerCaptain();
+                    $queue = Craft::$app->getQueue();
+                    if ($queue instanceof QueueInterface) {
+                        $queue->run();
+                    } elseif ($queue instanceof RedisQueue) {
+                        $queue->run(false);
+                    }
+                }
+
+            } catch (\Exception $e) {
+
+                $logger->stdout(PHP_EOL, $logger::RESET);
+                $logger->stdout($e->getMessage() . PHP_EOL, $logger::FG_RED);
+                Craft::error($e->getMessage(), __METHOD__);
+
+            }
+        }
     }
 
     public function fetchPayRunByPayRunId(int $payRunId, bool $startQueue = false): void
     {
         $payRun = PayRunRecord::findOne($payRunId);
+
         $employerId = $payRun['employerId'] ?? null;
         $employer = EmployerRecord::findOne($employerId);
 
@@ -902,12 +971,12 @@ class PayRuns extends Component
 
 
             # START TEST
-//            var_dump($base_url);
-//            echo "<br/><br/>";
-//            var_dump(json_encode($payRunEntryUpdate));
-//            echo "<br/>";
-//            return true;
-//            Craft::dd((array)$payRunEntryUpdate);
+            var_dump($base_url);
+            echo "<br/><br/>";
+            var_dump(json_encode($payRunEntryUpdate));
+            echo "<br/>";
+            return true;
+            Craft::dd((array)$payRunEntryUpdate);
             #END TEST
 
             try {
