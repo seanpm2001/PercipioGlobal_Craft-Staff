@@ -48,7 +48,10 @@ export const getQueue = () => {
 
 }
 
-export const getToken = () => {
+export const getToken = async () => {
+    
+    const store = usePayRunStore()
+
     axios({
         method: 'get',
         url: `${ENDPOINT}/staff-management/settings/get-gql-token`,
@@ -56,4 +59,7 @@ export const getToken = () => {
     .then( (response) => {
         store.token = response?.data?.token ? response.data.token : null
     })
+
+    return store.token
+
 }
