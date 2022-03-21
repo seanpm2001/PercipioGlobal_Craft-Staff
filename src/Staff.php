@@ -61,11 +61,10 @@ use yii\base\Event;
  *
  * @author    Percipio
  * @package   Staff
- * @since     0.2.0
+ * @since     1.0.0
  *
  * @property  Settings              $settings
  * @property  VitePluginService     $vite
- * @method    Settings              getSettings()
  */
 class Staff extends Plugin
 {

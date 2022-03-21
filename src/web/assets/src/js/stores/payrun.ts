@@ -6,6 +6,7 @@ export const usePayRunStore = defineStore('payrun', {
     state: () => ({
         employeeCount: 115,
         queue: 0,
-        loadingFetched: false
+        loadingFetched: false,
+        token: null,
     }),
 })
