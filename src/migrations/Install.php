@@ -139,7 +139,7 @@ class Install extends Migration
                 'slug' => $this->string(255)->notNull(),
             ]);
 
-            $this->createTable(Table::IMPORTS, [
+            $this->createTable(Table::PAYRUN_IMPORTS, [
                 'id' => $this->primaryKey(),
                 'dateCreated' => $this->dateTime()->notNull(),
                 'dateUpdated' => $this->dateTime()->notNull(),
