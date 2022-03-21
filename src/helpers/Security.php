@@ -9,12 +9,20 @@ class Security
 {
     public static function encrypt(string $data): string
     {
-        return utf8_encode(Craft::$app->getSecurity()->encryptByKey($data ?? null));
+        if($data == '' || $data === null){
+            return $data;
+        }
+
+        return utf8_encode(Craft::$app->getSecurity()->encryptByKey($data));
     }
 
     public static function decrypt(string $data): string
     {
-        return Craft::$app->getSecurity()->decryptByKey(utf8_decode($data ?? null));
+        if($data == '' || $data === null){
+            return $data;
+        }
+
+        return Craft::$app->getSecurity()->decryptByKey(utf8_decode($data));
     }
 
     public static function resolve($source, ResolveInfo $resolveInfo): string|null
