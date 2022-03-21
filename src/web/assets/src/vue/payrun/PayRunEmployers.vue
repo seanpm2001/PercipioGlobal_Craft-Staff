@@ -1,5 +1,6 @@
 <script setup lang="ts">
     import { defaultClient } from '~/js/composables/useApolloClient'
+    import { getToken } from '~/js/composables/useAxiosClient'
     import { DefaultApolloClient } from '@vue/apollo-composable'
     import { provide } from 'vue'
     import { usePayRunStore } from '~/js/stores/payrun'
@@ -14,10 +15,17 @@
     provide(DefaultApolloClient, defaultClient)
 
     const store = usePayRunStore()
+    const token = await getToken()
+
+    console.table(token)
 
 </script>
 
 <template>
+
+    <div class="bg-red-200 p-8">
+        {{ token }}
+    </div>
 
     <div class="sm:flex">
         <div class="sm:flex-auto">
