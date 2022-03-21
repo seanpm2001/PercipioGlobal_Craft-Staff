@@ -186,6 +186,8 @@ class Staff extends Plugin
 
         $this->installEventListeners();
 
+//        Craft::dd(Staff::$plugin->payRuns->getTotalsById(1));
+
         /**
          * Logging in Craft involves using one of the following methods:
          *
