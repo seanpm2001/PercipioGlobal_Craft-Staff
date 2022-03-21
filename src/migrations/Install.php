@@ -1444,6 +1444,10 @@ class Install extends Migration
         $this->createIndex(null, Table::PAYRUN_ENTRIES, "payRunId", false);
         $this->createIndex(null, Table::PAYRUN_ENTRIES, "staffologyId", false);
 
+        $this->createIndex(null, Table::PAYRUN_IMPORTS, "payRunId", false);
+        $this->createIndex(null, Table::PAYRUN_IMPORTS, "uploadedBy", false);
+        $this->createIndex(null, Table::PAYRUN_IMPORTS, "approvedBy", false);
+
         $this->createIndex(null, Table::PAYRUN_LOG, "employerId", false);
         $this->createIndex(null, Table::PAYRUN_LOG, "payRunId", false);
 
@@ -1616,6 +1620,11 @@ class Install extends Migration
         $this->addForeignKey(null, Table::PAYRUN_ENTRIES, ['umbrellaPaymentId'], Table::UMBRELLA_PAYMENT, ['id']);
         $this->addForeignKey(null, Table::PAYRUN_ENTRIES, ['employee'], Table::ITEMS, ['id']);
         $this->addForeignKey(null, Table::PAYRUN_ENTRIES, ['fpsId'], Table::ITEMS, ['id']);
+
+        //PAYRUN_IMPORT
+        $this->addForeignKey(null, Table::PAYRUN_IMPORTS, ["payRunId"], Table::PAYRUN, false);
+        $this->addForeignKey(null, Table::PAYRUN_IMPORTS, ["uploadedBy"], \craft\db\Table::USERS, false);
+        $this->addForeignKey(null, Table::PAYRUN_IMPORTS, ["approvedBy"], \craft\db\Table::USERS, false);
 
         //PAYRUN_LOG
         $this->addForeignKey(null, Table::PAYRUN_LOG, ['employerId'], Table::EMPLOYERS, ['id'], 'CASCADE', 'CASCADE');
