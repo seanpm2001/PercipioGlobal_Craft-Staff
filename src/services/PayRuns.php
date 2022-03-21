@@ -977,12 +977,12 @@ class PayRuns extends Component
 
 
             # START TEST
-            var_dump($base_url);
-            echo "<br/><br/>";
-            var_dump(json_encode($payRunEntryUpdate));
-            echo "<br/>";
+//            var_dump($base_url);
+//            echo "<br/><br/>";
+//            var_dump(json_encode($payRunEntryUpdate));
+//            echo "<br/>";
             return true;
-            Craft::dd((array)$payRunEntryUpdate);
+//            Craft::dd((array)$payRunEntryUpdate);
             #END TEST
 
             try {

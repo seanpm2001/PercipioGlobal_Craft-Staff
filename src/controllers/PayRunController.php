@@ -232,19 +232,19 @@ class PayRunController extends Controller
                 fclose($fileHandle);
             }
             // Read in the headers
-            $csv = Reader::createFromPath($file->tempName);
-            try {
-                $csv->setDelimiter(';');
-            } catch (Exception $e) {
-                Craft::error($e, __METHOD__);
-            }
-            $headers = $csv->fetchOne(0);
+//            $csv = Reader::createFromPath($file->tempName);
+//            try {
+//                $csv->setDelimiter(',');
+//            } catch (Exception $e) {
+//                Craft::error($e, __METHOD__);
+//            }
+//            $headers = $csv->fetchOne(0);
         }
 
         //PARSE CSV
         try {
             $csv = Reader::createFromPath($filePath);
-            $csv->setDelimiter(';');
+            $csv->setDelimiter(',');
             $headers = array_flip($csv->fetchOne(0));
         } catch (\Exception $e) {
             // If this throws an exception, try to read the CSV file from the data cache
@@ -266,12 +266,18 @@ class PayRunController extends Controller
         }
 
         // If we have headers, then we have a file, so parse it
-        if ($headers === null) {
+        if ($headers !== null) {
             $entries = $this->importCsvApi9($csv, $headers, $payRunId);
 
             if(count($entries) > 0){
+
                 $success = $this->saveEntriesToStaffology($payRunId, $entries);
+
                 if($success){
+
+                    //save log
+
+
                     Craft::$app->getSession()->setNotice(Craft::t('staff-management', 'Imports from CSV started.'));
                 } else {
                     $error = 'The data in the CSV doesn\'t match with what Staffology expects. Please make sure you click on "Fetch Pay Run" first. After the last sync date is updated, click on "Download Latest Pay Run Entries Template". Check for mismatches in your uploaded CSV according to the one from the download.';
