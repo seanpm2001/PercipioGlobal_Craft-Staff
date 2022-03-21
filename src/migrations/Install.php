@@ -942,6 +942,7 @@ class Install extends Migration
                 'netPay' => $this->string(),
                 'adjustments' => $this->string(),
                 'additions' => $this->string(),
+                'deductions' => $this->string(),
                 'takeHomePay' => $this->string(),
                 'nonTaxOrNICPmt' => $this->string(),
                 'itemsSubjectToClass1NIC' => $this->double(),

@@ -47,6 +47,11 @@ class PayRunTotals
                 'type' => Type::float(),
                 'description' => 'The amount of the Gross that is subject to NI',
             ],
+            'grossNotSubjectToEmployersNi' => [
+                'name' => 'grossNotSubjectToEmployersNi',
+                'type' => Type::float(),
+                'description' => 'The amount of the Gross that is subject to NI',
+            ],
             'grossForTax' => [
                 'name' => 'grossForTax',
                 'type' => Type::float(),
@@ -280,6 +285,18 @@ class PayRunTotals
                 'name' => 'taxOnPaymentAfterLeaving',
                 'type' => Type::float(),
                 'description' => 'Tax On Payment After Leaving',
+            ],
+            'nilPaid' => [
+                'name' => 'nilPaid',
+                'type' => Type::int(),
+            ],
+            'leavers' => [
+                'name' => 'leavers',
+                'type' => Type::int(),
+            ],
+            'starters' => [
+                'name' => 'starters',
+                'type' => Type::int(),
             ],
             'totalCost' => [
                 'name' => 'totalCost',
