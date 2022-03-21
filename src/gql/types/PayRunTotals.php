@@ -243,56 +243,89 @@ class PayRunTotals
             'postgradLoanRecovered' => [
                 'name' => 'postgradLoanRecovered',
                 'type' => Type::float(),
+                'resolve' => function ($source, array $arguments, $context, ResolveInfo $resolveInfo) {
+                    return SecurityHelper::resolve($source, $resolveInfo);
+                }
             ],
             'pensionableEarnings' => [
                 'name' => 'pensionableEarnings',
                 'type' => Type::float(),
                 'description' => 'The amount of the Gross that is subject to Pension Deductions. If the Pension Scheme uses Qualifying Earnings (upper and lower limits) then this value is before those are applied',
+                'resolve' => function ($source, array $arguments, $context, ResolveInfo $resolveInfo) {
+                    return SecurityHelper::resolve($source, $resolveInfo);
+                }
             ],
             'pensionablePay' => [
                 'name' => 'pensionablePay',
                 'type' => Type::float(),
                 'description' => 'The amount of the Gross that pension calculations are based on after taking into account Upper and Lower Limits for the WorkerGroup.',
+                'resolve' => function ($source, array $arguments, $context, ResolveInfo $resolveInfo) {
+                    return SecurityHelper::resolve($source, $resolveInfo);
+                }
             ],
             'nonTierablePay' => [
                 'name' => 'nonTierablePay',
                 'type' => Type::float(),
                 'description' => 'The value of any pay that shouldn\'t count towards determining a pension tier.',
+                'resolve' => function ($source, array $arguments, $context, ResolveInfo $resolveInfo) {
+                    return SecurityHelper::resolve($source, $resolveInfo);
+                }
             ],
             'employeePensionContribution' => [
                 'name' => 'employeePensionContribution',
                 'type' => Type::float(),
                 'description' => 'The value of the Pension Contribution being made by this Employee, excluding any Additional Voluntary Contributions',
+                'resolve' => function ($source, array $arguments, $context, ResolveInfo $resolveInfo) {
+                    return SecurityHelper::resolve($source, $resolveInfo);
+                }
             ],
             'employeePensionContributionAvc' => [
                 'name' => 'employeePensionContributionAvc',
                 'type' => Type::float(),
                 'description' => 'The value of the Pension Contribution being made by this Employee as an Additional Voluntary Contribution',
+                'resolve' => function ($source, array $arguments, $context, ResolveInfo $resolveInfo) {
+                    return SecurityHelper::resolve($source, $resolveInfo);
+                }
             ],
             'employerPensionContribution' => [
                 'name' => 'employerPensionContribution',
                 'type' => Type::float(),
                 'description' => 'The value of the Pension Contribution being made by the Employer for this Employee',
+                'resolve' => function ($source, array $arguments, $context, ResolveInfo $resolveInfo) {
+                    return SecurityHelper::resolve($source, $resolveInfo);
+                }
             ],
             'empeePenContribnsNotPaid' => [
                 'name' => 'empeePenContribnsNotPaid',
                 'type' => Type::float(),
                 'description' => 'Value of employee pension contributions that are not paid under \'net pay arrangements\', including any AVC',
+                'resolve' => function ($source, array $arguments, $context, ResolveInfo $resolveInfo) {
+                    return SecurityHelper::resolve($source, $resolveInfo);
+                }
             ],
             'empeePenContribnsPaid' => [
                 'name' => 'empeePenContribnsPaid',
                 'type' => Type::float(),
                 'description' => 'Value of employee pension contributions paid under \'net pay arrangements\', including any AVC',
+                'resolve' => function ($source, array $arguments, $context, ResolveInfo $resolveInfo) {
+                    return SecurityHelper::resolve($source, $resolveInfo);
+                }
             ],
             'attachmentOrderDeductions' => [
                 'name' => 'attachmentOrderDeductions',
                 'type' => Type::float(),
                 'description' => 'Value of deductions made due to AttachmentOrders',
+                'resolve' => function ($source, array $arguments, $context, ResolveInfo $resolveInfo) {
+                    return SecurityHelper::resolve($source, $resolveInfo);
+                }
             ],
             'cisDeduction' => [
                 'name' => 'cisDeduction',
                 'type' => Type::float(),
                 'description' => 'Value of any CIS Deduction made',
+                'resolve' => function ($source, array $arguments, $context, ResolveInfo $resolveInfo) {
+                    return SecurityHelper::resolve($source, $resolveInfo);
+                }
             ],
             'cisVat' => [
                 'name' => 'cisVat',
