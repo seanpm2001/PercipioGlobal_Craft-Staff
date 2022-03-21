@@ -1,31 +1,39 @@
 <script setup lang="ts">
-    import { defaultClient } from '~/js/composables/useApolloClient'
-    import { getToken } from '~/js/composables/useAxiosClient'
-    import { DefaultApolloClient } from '@vue/apollo-composable'
-    import { provide } from 'vue'
-    import { usePayRunStore } from '~/js/stores/payrun'
+    import { useQuery } from '@vue/apollo-composable'
+    import { EMPLOYERS } from '~/graphql/employers.ts'
+    import { logErrorMessages } from '@vue/apollo-util'
     import EmployerListItem from '~/vue/molecules/listitems/listitem--employer.vue'
     //import inputSearch from '~/vue/atoms/inputs/input--search.vue'
 
     const employers = [
         { id: 12665, name: 'Acme Limited (Demo)', logoUrl: 'https://prodstaffologystorage.blob.core.windows.net/images/generic-logo.png', crn: '123456', employeeCount: '5', currentPayRun: 'Year2021/12', synced: '15/04/2022 - 18:30' },
-        // More people...
     ]
 
-    provide(DefaultApolloClient, defaultClient)
+    const { result, loading, onResult, onError } = useQuery(EMPLOYERS)
 
-    const store = usePayRunStore()
-    const token = await getToken()
+    onResult(queryResult => {
+        console.log(queryResult.data)
+        console.log(queryResult.loading)
+        console.log(queryResult.networkStatus)
+    })
 
-    console.table(token)
+    onError(error => {
+        logErrorMessages(error)
+    })
 
 </script>
 
 <template>
 
-    <div class="bg-red-200 p-8">
-        {{ token }}
+    <h1>--- TEST ---</h1>
+
+    <div v-if="loading">Loading...</div>
+
+    <div v-else-if="result" class="bg-sky-200">
+        {{ result }}
     </div>
+
+    <h1>--- END TEST ---</h1>
 
     <div class="sm:flex">
         <div class="sm:flex-auto">
@@ -56,4 +64,5 @@
             </div>
         </div>
     </div>
+
 </template>

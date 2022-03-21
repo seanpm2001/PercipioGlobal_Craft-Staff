@@ -18,8 +18,8 @@ export default defineConfig(({command}) => ({
     rollupOptions: {
       input: {
         employers: 'src/js/employers.ts',
-        payruns: 'src/js/payruns.ts',
-        'payrun-details': 'src/js/payrun-details.ts',
+        //payruns: 'src/js/payruns.ts',
+        //details: 'src/js/payrun-details.ts',
         staff: 'src/js/staff.ts',
       },
       output: {

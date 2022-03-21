@@ -6,26 +6,30 @@ import { usePayRunStore } from '~/js/stores/payrun'
 
 // set our token
 
-const token = () => {
-    const store = usePayRunStore()
-    let token = store.token ?? getToken()
 
-    return store.token
+const setToken = async () => {
+    const store = usePayRunStore()
+    if(!store.token) await getToken()
+    return true
 }
 
 
 // HTTP connection to the API
 const httpLink = new HttpLink({
-    uri: '',
+    uri: 'http://localhost:8001/api',
     credentials: 'include'
 })
 
-const authLink = setContext((_, { headers }) => {
+const authLink = setContext(async (_, { headers }) => {
     // get the authentication token from the store, if it's null fetch it through axios
+    const store = usePayRunStore()
+    if(!store.token) await setToken()
+
+    const token = '_A2rfTFrwpdU6S0nQtK8TSJgQE4wGcho'
     return {
         headers: {
             ...headers,
-            authorization: token ? `Authorization: Bearer ${token}` : null
+            authorization: `Bearer ${token}`
         }
     }
 })
@@ -35,5 +39,5 @@ const errorLink = onError( ({ graphQLErrors, networkError, operation, forward })
 
 export const defaultClient: ApolloClient = new ApolloClient({
     cache: new InMemoryCache(),
-    link: from([ errorLink, httpLink ])
+    link: from([ errorLink, authLink, httpLink ])
 })
