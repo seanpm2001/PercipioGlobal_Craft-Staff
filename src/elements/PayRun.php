@@ -25,6 +25,7 @@ use percipiolondon\staff\elements\db\PayRunQuery;
 /**
  * PayRun Element
  *
+ * @property PayRunTotals|null $payRunTotals the payrun totals.
  * Element is the base class for classes representing elements in terms of objects.
  *
  */
@@ -51,6 +52,8 @@ class PayRun extends Element
     public $pdf;
     public $url;
     public $employerId;
+
+    private $_totals;
 
     // Static Methods
     // =========================================================================
@@ -123,6 +126,28 @@ class PayRun extends Element
                 'criteria' => ['id' => $ids],
             ]
         ];
+    }
+
+    /**
+     * Returns the payrun totals.
+     *
+     * @return PayRunTotals|null
+     * @throws InvalidConfigException if [[totalId]] is set but invalid
+     */
+    public function getTotals()
+    {
+        if ($this->_totals === null) {
+            if ($this->totalsId === null) {
+                return null;
+            }
+
+            if (($this->_totals = Craft::$app->getUsers()->getUserById($this->authorId)) === null) {
+                // The author is probably soft-deleted. Just no author is set
+                $this->_totals = false;
+            }
+        }
+
+        return $this->_totals ?: null;
     }
 
     // Public Methods
