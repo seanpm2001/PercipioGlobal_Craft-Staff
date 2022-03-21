@@ -39,7 +39,7 @@ class PayRunTotals
                 'type' => Type::float(),
                 'description' => 'The amount to be paid to this Employee as a result of the PayOptions that have been set',
                 'resolve' => function ($source, array $arguments, $context, ResolveInfo $resolveInfo) {
-                    return SecurityHelper::resolve($source, $resolveInfo);
+                    return SecurityHelper::resolve($source, $resolveInfo, 'float');
                 }
             ],
             'gross' => [
@@ -47,7 +47,7 @@ class PayRunTotals
                 'type' => Type::float(),
                 'description' => 'Gross pay',
                 'resolve' => function ($source, array $arguments, $context, ResolveInfo $resolveInfo) {
-                    return SecurityHelper::resolve($source, $resolveInfo);
+                    return SecurityHelper::resolve($source, $resolveInfo, 'float');
                 }
             ],
             'grossForNi' => [
@@ -55,7 +55,7 @@ class PayRunTotals
                 'type' => Type::float(),
                 'description' => 'The amount of the Gross that is subject to NI',
                 'resolve' => function ($source, array $arguments, $context, ResolveInfo $resolveInfo) {
-                    return SecurityHelper::resolve($source, $resolveInfo);
+                    return SecurityHelper::resolve($source, $resolveInfo, 'float');
                 }
             ],
             'grossNotSubjectToEmployersNi' => [
@@ -63,7 +63,7 @@ class PayRunTotals
                 'type' => Type::float(),
                 'description' => 'The amount of the Gross that is subject to NI',
                 'resolve' => function ($source, array $arguments, $context, ResolveInfo $resolveInfo) {
-                    return SecurityHelper::resolve($source, $resolveInfo);
+                    return SecurityHelper::resolve($source, $resolveInfo, 'float');
                 }
             ],
             'grossForTax' => [
@@ -71,21 +71,21 @@ class PayRunTotals
                 'type' => Type::float(),
                 'description' => 'The amount of the Gross that is subject to PAYE',
                 'resolve' => function ($source, array $arguments, $context, ResolveInfo $resolveInfo) {
-                    return SecurityHelper::resolve($source, $resolveInfo);
+                    return SecurityHelper::resolve($source, $resolveInfo, 'float');
                 }
             ],
             'employerNi' => [
                 'name' => 'employerNi',
                 'type' => Type::float(),
                 'resolve' => function ($source, array $arguments, $context, ResolveInfo $resolveInfo) {
-                    return SecurityHelper::resolve($source, $resolveInfo);
+                    return SecurityHelper::resolve($source, $resolveInfo, 'float');
                 }
             ],
             'employeeNi' => [
                 'name' => 'employeeNi',
                 'type' => Type::float(),
                 'resolve' => function ($source, array $arguments, $context, ResolveInfo $resolveInfo) {
-                    return SecurityHelper::resolve($source, $resolveInfo);
+                    return SecurityHelper::resolve($source, $resolveInfo, 'float');
                 }
             ],
             'employerNiOffPayroll' => [
@@ -93,21 +93,21 @@ class PayRunTotals
                 'type' => Type::float(),
                 'description' => 'The amount included in EmployerNi that is in relation to Off-Payroll Workers',
                 'resolve' => function ($source, array $arguments, $context, ResolveInfo $resolveInfo) {
-                    return SecurityHelper::resolve($source, $resolveInfo);
+                    return SecurityHelper::resolve($source, $resolveInfo, 'float');
                 }
             ],
             'realTimeClass1ANi' => [
                 'name' => 'realTimeClass1ANi',
                 'type' => Type::float(),
                 'resolve' => function ($source, array $arguments, $context, ResolveInfo $resolveInfo) {
-                    return SecurityHelper::resolve($source, $resolveInfo);
+                    return SecurityHelper::resolve($source, $resolveInfo, 'float');
                 }
             ],
             'tax' => [
                 'name' => 'tax',
                 'type' => Type::float(),
                 'resolve' => function ($source, array $arguments, $context, ResolveInfo $resolveInfo) {
-                    return SecurityHelper::resolve($source, $resolveInfo);
+                    return SecurityHelper::resolve($source, $resolveInfo, 'float');
                 }
             ],
             'netPay' => [
@@ -115,7 +115,7 @@ class PayRunTotals
                 'type' => Type::float(),
                 'description' => 'The Net Pay for this Employee.',
                 'resolve' => function ($source, array $arguments, $context, ResolveInfo $resolveInfo) {
-                    return SecurityHelper::resolve($source, $resolveInfo);
+                    return SecurityHelper::resolve($source, $resolveInfo, 'float');
                 }
             ],
             'adjustments' => [
@@ -123,7 +123,7 @@ class PayRunTotals
                 'type' => Type::float(),
                 'description' => 'The value of adjustments made to the Net Pay (Non taxable/NIable additions/deductions)',
                 'resolve' => function ($source, array $arguments, $context, ResolveInfo $resolveInfo) {
-                    return SecurityHelper::resolve($source, $resolveInfo);
+                    return SecurityHelper::resolve($source, $resolveInfo, 'float');
                 }
             ],
             'additions' => [
@@ -131,7 +131,7 @@ class PayRunTotals
                 'type' => Type::float(),
                 'description' => 'The value of all additions. This minus Deductions should equal TakeHomePay',
                 'resolve' => function ($source, array $arguments, $context, ResolveInfo $resolveInfo) {
-                    return SecurityHelper::resolve($source, $resolveInfo);
+                    return SecurityHelper::resolve($source, $resolveInfo, 'float');
                 }
             ],
             'deductions' => [
@@ -139,7 +139,7 @@ class PayRunTotals
                 'type' => Type::float(),
                 'description' => 'The value of all deductions. Additions minus This value should equal TakeHomePay',
                 'resolve' => function ($source, array $arguments, $context, ResolveInfo $resolveInfo) {
-                    return SecurityHelper::resolve($source, $resolveInfo);
+                    return SecurityHelper::resolve($source, $resolveInfo, 'float');
                 }
             ],
             'takeHomePay' => [
@@ -147,7 +147,7 @@ class PayRunTotals
                 'type' => Type::float(),
                 'description' => 'The amount this Employee takes home',
                 'resolve' => function ($source, array $arguments, $context, ResolveInfo $resolveInfo) {
-                    return SecurityHelper::resolve($source, $resolveInfo);
+                    return SecurityHelper::resolve($source, $resolveInfo, 'float');
                 }
             ],
             'nonTaxOrNICPmt' => [
@@ -155,7 +155,7 @@ class PayRunTotals
                 'type' => Type::float(),
                 'description' => 'The value of any payments being made to this Employee that aren\'t being subjected to PAYE or NI',
                 'resolve' => function ($source, array $arguments, $context, ResolveInfo $resolveInfo) {
-                    return SecurityHelper::resolve($source, $resolveInfo);
+                    return SecurityHelper::resolve($source, $resolveInfo, 'float');
                 }
             ],
             'itemsSubjectToClass1NIC' => [
@@ -237,14 +237,14 @@ class PayRunTotals
                 'name' => 'studentLoanRecovered',
                 'type' => Type::float(),
                 'resolve' => function ($source, array $arguments, $context, ResolveInfo $resolveInfo) {
-                    return SecurityHelper::resolve($source, $resolveInfo);
+                    return SecurityHelper::resolve($source, $resolveInfo, 'float');
                 }
             ],
             'postgradLoanRecovered' => [
                 'name' => 'postgradLoanRecovered',
                 'type' => Type::float(),
                 'resolve' => function ($source, array $arguments, $context, ResolveInfo $resolveInfo) {
-                    return SecurityHelper::resolve($source, $resolveInfo);
+                    return SecurityHelper::resolve($source, $resolveInfo, 'float');
                 }
             ],
             'pensionableEarnings' => [
@@ -252,7 +252,7 @@ class PayRunTotals
                 'type' => Type::float(),
                 'description' => 'The amount of the Gross that is subject to Pension Deductions. If the Pension Scheme uses Qualifying Earnings (upper and lower limits) then this value is before those are applied',
                 'resolve' => function ($source, array $arguments, $context, ResolveInfo $resolveInfo) {
-                    return SecurityHelper::resolve($source, $resolveInfo);
+                    return SecurityHelper::resolve($source, $resolveInfo, 'float');
                 }
             ],
             'pensionablePay' => [
@@ -260,7 +260,7 @@ class PayRunTotals
                 'type' => Type::float(),
                 'description' => 'The amount of the Gross that pension calculations are based on after taking into account Upper and Lower Limits for the WorkerGroup.',
                 'resolve' => function ($source, array $arguments, $context, ResolveInfo $resolveInfo) {
-                    return SecurityHelper::resolve($source, $resolveInfo);
+                    return SecurityHelper::resolve($source, $resolveInfo, 'float');
                 }
             ],
             'nonTierablePay' => [
@@ -268,7 +268,7 @@ class PayRunTotals
                 'type' => Type::float(),
                 'description' => 'The value of any pay that shouldn\'t count towards determining a pension tier.',
                 'resolve' => function ($source, array $arguments, $context, ResolveInfo $resolveInfo) {
-                    return SecurityHelper::resolve($source, $resolveInfo);
+                    return SecurityHelper::resolve($source, $resolveInfo, 'float');
                 }
             ],
             'employeePensionContribution' => [
@@ -276,7 +276,7 @@ class PayRunTotals
                 'type' => Type::float(),
                 'description' => 'The value of the Pension Contribution being made by this Employee, excluding any Additional Voluntary Contributions',
                 'resolve' => function ($source, array $arguments, $context, ResolveInfo $resolveInfo) {
-                    return SecurityHelper::resolve($source, $resolveInfo);
+                    return SecurityHelper::resolve($source, $resolveInfo, 'float');
                 }
             ],
             'employeePensionContributionAvc' => [
@@ -284,7 +284,7 @@ class PayRunTotals
                 'type' => Type::float(),
                 'description' => 'The value of the Pension Contribution being made by this Employee as an Additional Voluntary Contribution',
                 'resolve' => function ($source, array $arguments, $context, ResolveInfo $resolveInfo) {
-                    return SecurityHelper::resolve($source, $resolveInfo);
+                    return SecurityHelper::resolve($source, $resolveInfo, 'float');
                 }
             ],
             'employerPensionContribution' => [
@@ -292,7 +292,7 @@ class PayRunTotals
                 'type' => Type::float(),
                 'description' => 'The value of the Pension Contribution being made by the Employer for this Employee',
                 'resolve' => function ($source, array $arguments, $context, ResolveInfo $resolveInfo) {
-                    return SecurityHelper::resolve($source, $resolveInfo);
+                    return SecurityHelper::resolve($source, $resolveInfo, 'float');
                 }
             ],
             'empeePenContribnsNotPaid' => [
@@ -300,7 +300,7 @@ class PayRunTotals
                 'type' => Type::float(),
                 'description' => 'Value of employee pension contributions that are not paid under \'net pay arrangements\', including any AVC',
                 'resolve' => function ($source, array $arguments, $context, ResolveInfo $resolveInfo) {
-                    return SecurityHelper::resolve($source, $resolveInfo);
+                    return SecurityHelper::resolve($source, $resolveInfo, 'float');
                 }
             ],
             'empeePenContribnsPaid' => [
@@ -308,7 +308,7 @@ class PayRunTotals
                 'type' => Type::float(),
                 'description' => 'Value of employee pension contributions paid under \'net pay arrangements\', including any AVC',
                 'resolve' => function ($source, array $arguments, $context, ResolveInfo $resolveInfo) {
-                    return SecurityHelper::resolve($source, $resolveInfo);
+                    return SecurityHelper::resolve($source, $resolveInfo, 'float');
                 }
             ],
             'attachmentOrderDeductions' => [
@@ -316,7 +316,7 @@ class PayRunTotals
                 'type' => Type::float(),
                 'description' => 'Value of deductions made due to AttachmentOrders',
                 'resolve' => function ($source, array $arguments, $context, ResolveInfo $resolveInfo) {
-                    return SecurityHelper::resolve($source, $resolveInfo);
+                    return SecurityHelper::resolve($source, $resolveInfo, 'float');
                 }
             ],
             'cisDeduction' => [
@@ -324,7 +324,7 @@ class PayRunTotals
                 'type' => Type::float(),
                 'description' => 'Value of any CIS Deduction made',
                 'resolve' => function ($source, array $arguments, $context, ResolveInfo $resolveInfo) {
-                    return SecurityHelper::resolve($source, $resolveInfo);
+                    return SecurityHelper::resolve($source, $resolveInfo, 'float');
                 }
             ],
             'cisVat' => [
@@ -332,7 +332,7 @@ class PayRunTotals
                 'type' => Type::float(),
                 'description' => 'Value of any VAT paid to CIS Subcontractor',
                 'resolve' => function ($source, array $arguments, $context, ResolveInfo $resolveInfo) {
-                    return SecurityHelper::resolve($source, $resolveInfo);
+                    return SecurityHelper::resolve($source, $resolveInfo, 'float');
                 }
             ],
             'cisUmbrellaFee' => [
@@ -345,7 +345,7 @@ class PayRunTotals
                 'type' => Type::float(),
                 'description' => 'Value of any post-tax fee charged to the CIS Subcontractor for processing the payment',
                 'resolve' => function ($source, array $arguments, $context, ResolveInfo $resolveInfo) {
-                    return SecurityHelper::resolve($source, $resolveInfo);
+                    return SecurityHelper::resolve($source, $resolveInfo, 'float');
                 }
             ],
             'pbik' => [
@@ -363,7 +363,7 @@ class PayRunTotals
                 'type' => Type::float(),
                 'description' => 'Value of any Umbrella fee charged for processing the payment',
                 'resolve' => function ($source, array $arguments, $context, ResolveInfo $resolveInfo) {
-                    return SecurityHelper::resolve($source, $resolveInfo);
+                    return SecurityHelper::resolve($source, $resolveInfo, 'float');
                 }
             ],
             'appLevyDeduction' => [
@@ -397,7 +397,7 @@ class PayRunTotals
                 'name' => 'totalCost',
                 'type' => Type::float(),
                 'resolve' => function ($source, array $arguments, $context, ResolveInfo $resolveInfo) {
-                    return SecurityHelper::resolve($source, $resolveInfo);
+                    return SecurityHelper::resolve($source, $resolveInfo, 'float');
                 }
             ],
         ];

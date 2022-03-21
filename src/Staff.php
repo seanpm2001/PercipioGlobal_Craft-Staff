@@ -30,6 +30,7 @@ use craft\web\twig\variables\CraftVariable;
 use nystudio107\pluginvite\services\VitePluginService;
 
 use percipiolondon\staff\assetbundles\staff\StaffAsset;
+use percipiolondon\staff\helpers\Security;
 use percipiolondon\staff\models\Settings;
 use percipiolondon\staff\elements\Employer as EmployerElement;
 use percipiolondon\staff\elements\Employee as EmployeeElement;
@@ -184,8 +185,6 @@ class Staff extends Plugin
         $this->_registerControllers();
 
         $this->installEventListeners();
-
-//        Craft::dd(Staff::$plugin->payRuns->getTotalsById(1));
 
         /**
          * Logging in Craft involves using one of the following methods:

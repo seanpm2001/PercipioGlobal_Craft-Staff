@@ -2,11 +2,11 @@ import axios from 'axios'
 import { usePayRunStore } from '~/js/stores/payrun'
 
 const ENDPOINT = window.api.cpUrl ?? 'https://localhost:8003'
-const store = usePayRunStore()
 
 
 export const fetchPayRuns = (employerId: String) => {
 
+    const store = usePayRunStore()
     store.loadingFetched = true
 
     axios({
@@ -21,6 +21,7 @@ export const fetchPayRuns = (employerId: String) => {
 
 export const fetchPayRun = (payRunId: String) => {
 
+    const store = usePayRunStore()
     store.loadingFetched = true
 
     axios({
@@ -34,6 +35,8 @@ export const fetchPayRun = (payRunId: String) => {
 }
 
 export const getQueue = () => {
+
+    const store = usePayRunStore()
 
     axios({
         method: 'get',
