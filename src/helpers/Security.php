@@ -7,7 +7,7 @@ use GraphQL\Type\Definition\ResolveInfo;
 
 class Security
 {
-    public static function encrypt(string|null $data): string
+    public static function encrypt(string|null $data): string|null
     {
         if($data === '' || $data === null){
             return $data;
@@ -16,7 +16,7 @@ class Security
         return utf8_encode(Craft::$app->getSecurity()->encryptByKey($data));
     }
 
-    public static function decrypt(string|null $data): string
+    public static function decrypt(string|null $data): string|float|int|bool|null
     {
         if($data === '' || $data === null){
             return $data;
