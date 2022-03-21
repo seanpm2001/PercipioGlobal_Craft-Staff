@@ -105,6 +105,14 @@ class Employer extends Element
         ];
 
         $fields = [
+            'address' => [
+              'name' => 'address',
+              'type' => Type::string(),
+            ],
+            'addressId' => [
+                'name' => 'addressId',
+                'type' => Type::string(),
+            ],
             'currentYear' => [
                 'name' => 'currentYear',
                 'type' => Type::string(),

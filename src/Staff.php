@@ -186,8 +186,6 @@ class Staff extends Plugin
 
         $this->installEventListeners();
 
-//        Craft::dd(Staff::$plugin->payRuns->getCsvTemplate(3));
-
         /**
          * Logging in Craft involves using one of the following methods:
          *
@@ -351,9 +349,11 @@ class Staff extends Plugin
         return [
             'staff-management' => 'staff-management/settings/dashboard',
             'staff-management/dashboard' => 'staff-management/settings/dashboard',
-            'staff-management/pay-runs' => 'staff-management/settings/payruns',
             'staff-management/plugin' => 'staff-management/settings/plugin',
-            'staff-management/pay-runs/<payRunId:\d+>' => 'staff-management/pay-run/save-pay-run-entry'
+            'staff-management/pay-runs' => 'staff-management/pay-run',
+            'staff-management/pay-runs/<employerId:\d+>' => 'staff-management/pay-run/pay-run-by-employer',
+            'staff-management/pay-runs/<employerId:\d+>/<payRunId:\d+>' => 'staff-management/pay-run/detail',
+            'staff-management/pay-runs/download-template/<payRunId:\d+>' => 'staff-management/pay-run/download-template'
         ];
     }
 

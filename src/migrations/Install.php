@@ -1600,7 +1600,7 @@ class Install extends Migration
 
         //PAYRUN
         $this->addForeignKey(null, Table::PAYRUN, ['employerId'], Table::EMPLOYERS, ['id'], 'CASCADE', 'CASCADE');
-        $this->addForeignKey(null, Table::PAYRUN, ['totalsId'], Table::PAYRUN_TOTALS, ['id']);
+        $this->addForeignKey(null, Table::PAYRUN, ['totalsId'], Table::PAYRUN_TOTALS, ['id'], 'CASCADE', 'CASCADE');
 
         //PAYRUN_ENTRIES
         $this->addForeignKey(null, Table::PAYRUN_ENTRIES, ['employeeId'], Table::EMPLOYEES, ['id'], 'CASCADE', 'CASCADE');

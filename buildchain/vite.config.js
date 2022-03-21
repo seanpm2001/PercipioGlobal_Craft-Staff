@@ -17,7 +17,9 @@ export default defineConfig(({command}) => ({
     outDir: '../src/web/assets/dist',
     rollupOptions: {
       input: {
-        payrun: 'src/js/payrun.ts',
+        payrunemployers: 'src/js/payrun-employers.ts',
+        payrunpayruns: 'src/js/payrun-payruns.ts',
+        payrundetail: 'src/js/payrun-payruns.ts',
         staff: 'src/js/staff.ts',
       },
       output: {

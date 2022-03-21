@@ -8,6 +8,13 @@
 
 {%- endset -%}
 
+
+{% js %}
+    window.validation = {{ {
+        "error": error ?? ''
+    }|json_encode|raw }}
+{% endjs %}
+
 {%- block foot -%}
     {{ parent() }}
     {%- set tagOptions = {
@@ -15,5 +22,5 @@
             'percipiolondon\\staff\\assetbundles\\staff\\StaffAsset'
         ]
     } -%}
-    {{  craft.staff.register('src/js/payrun-employers.ts', false, tagOptions, tagOptions) }}
+    {{  craft.staff.register('src/js/payrun-payrundetail.ts', false, tagOptions, tagOptions) }}
 {%- endblock -%}

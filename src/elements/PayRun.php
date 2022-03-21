@@ -90,14 +90,6 @@ class PayRun extends Element
     }
 
     /**
-     * @inheritdoc
-     */
-    public static function refHandle()
-    {
-        return 'payRun';
-    }
-
-    /**
      * Creates an [[ElementQueryInterface]] instance for query purpose.
      *
      * The returned [[ElementQueryInterface]] instance can be further customized by calling
