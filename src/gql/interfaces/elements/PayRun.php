@@ -15,6 +15,7 @@ use GraphQL\Type\Definition\ResolveInfo;
 use GraphQL\Type\Definition\Type;
 
 use percipiolondon\staff\elements\PayRun as PayRunElement;
+use percipiolondon\staff\gql\types\PayRunTotals;
 use percipiolondon\staff\gql\types\generators\PayRunGenerator;
 use percipiolondon\staff\helpers\Security as SecurityHelper;
 
@@ -141,6 +142,11 @@ class PayRun extends Element
                 'name' => 'dateClosed',
                 'type' => DateTime::getType(),
             ],
+            'totals' => [
+                'name' => 'totals',
+                'type' => PayRunTotals::getType(),
+                'description' => 'Totals of the payrun.',
+            ]
         ];
 
         return TypeManager::prepareFieldDefinitions(array_merge($parentFields, $fields), self::getName());
