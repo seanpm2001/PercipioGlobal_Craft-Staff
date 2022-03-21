@@ -62,11 +62,10 @@ use yii\base\Event;
  *
  * @author    Percipio
  * @package   Staff
- * @since     0.2.0
+ * @since     1.0.0
  *
  * @property  Settings              $settings
  * @property  VitePluginService     $vite
- * @method    Settings              getSettings()
  */
 class Staff extends Plugin
 {
@@ -350,6 +349,7 @@ class Staff extends Plugin
         return [
             'staff-management' => 'staff-management/settings/dashboard',
             'staff-management/dashboard' => 'staff-management/settings/dashboard',
+            'staff-management/settings/get-gql-token' => 'staff-management/settings/get-gql-token',
             'staff-management/plugin' => 'staff-management/settings/plugin',
             'staff-management/pay-runs' => 'staff-management/pay-run',
             'staff-management/pay-runs/queue' => 'staff-management/pay-run/get-queue',

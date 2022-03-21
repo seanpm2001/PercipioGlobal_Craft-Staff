@@ -42,8 +42,18 @@ export const getQueue = () => {
         method: 'get',
         url: `${ENDPOINT}/staff-management/pay-runs/queue`,
     })
-    .then(function (response) {
+    .then((response) => {
         store.queue = response?.data?.total ? response.data.total : 0
     })
 
+}
+
+export const getToken = () => {
+    axios({
+        method: 'get',
+        url: `${ENDPOINT}/staff-management/settings/get-gql-token`,
+    })
+    .then( (response) => {
+        store.token = response?.data?.token ? response.data.token : null
+    })
 }
