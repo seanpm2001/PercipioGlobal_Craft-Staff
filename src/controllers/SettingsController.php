@@ -11,6 +11,7 @@ namespace percipiolondon\staff\controllers;
 
 use Craft;
 use craft\elements\Entry;
+use craft\helpers\App;
 use craft\helpers\UrlHelper;
 use craft\web\Controller;
 
@@ -110,5 +111,16 @@ class SettingsController extends Controller
         Craft::$app->getSession()->setNotice(Craft::t('app', 'Plugin settings saved.'));
 
         return $this->redirectToPostedUrl();
+    }
+
+    public function actionGetGqlToken(): Response
+    {
+        $this->requireLogin();
+        $this->requireAcceptsJson();
+
+        return $this->asJson([
+            'success' => true,
+            'token' => App::parseEnv('$GQL_TOKEN')
+        ]);
     }
 }

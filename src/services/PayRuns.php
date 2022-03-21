@@ -188,6 +188,12 @@ class PayRuns extends Component
         return $payRuns;
     }
 
+    public function getTotalsById(int $totalsId) : array
+    {
+        $payRunTotals = PayRunTotals::findOne($totalsId);
+        return $payRunTotals ? $payRunTotals->toArray() : [];
+    }
+
     public function getCsvData(int $payRunId, bool $fetchHeaders = false): array
     {
         // fetch pay run
