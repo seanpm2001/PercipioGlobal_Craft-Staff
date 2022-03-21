@@ -160,7 +160,7 @@ class PayRunController extends Controller
         $this->requireLogin();
         $this->requireAcceptsJson();
 
-        Staff::$plugin->payRuns->fetchPayRunByInternalEmployer($employerId);
+        Staff::$plugin->payRuns->fetchPayRunByEmployer($employerId);
 
         return $this->asJson([
             'success' => true

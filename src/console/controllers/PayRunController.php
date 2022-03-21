@@ -57,7 +57,7 @@ class PayRunController extends Controller
 
     public function actionFetchPayRunByEmployer()
     {
-        Staff::$plugin->payRuns->fetchPayRunByInternalEmployer($this->employer, $this->taxYear);
+        Staff::$plugin->payRuns->fetchPayRunByEmployer($this->employer, $this->taxYear);
     }
 //    public function actionFetch()
 //    {

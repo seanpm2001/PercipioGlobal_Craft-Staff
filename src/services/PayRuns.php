@@ -388,7 +388,7 @@ class PayRuns extends Component
         ]));
     }
 
-    public function fetchPayRunByEmployer(array $employer, bool $startQueue = false): void
+    public function fetchPayRunByStaffologyEmployer(array $employer, bool $startQueue = false): void
     {
         $payRuns = $employer['metadata']['payruns'] ?? [];
 
@@ -411,7 +411,7 @@ class PayRuns extends Component
         }
     }
 
-    public function fetchPayRunByInternalEmployer(int $employerId, string $taxYear = '')
+    public function fetchPayRunByEmployer(int $employerId, string $taxYear = '')
     {
         $logger = new Logger();
 
