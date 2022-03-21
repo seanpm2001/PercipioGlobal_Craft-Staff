@@ -118,9 +118,12 @@ class SettingsController extends Controller
         $this->requireLogin();
         $this->requireAcceptsJson();
 
+        $token = App::env('GQL_TOKEN') ?: null;
+
         return $this->asJson([
             'success' => true,
-            'token' => App::parseEnv('$GQL_TOKEN')
+            'token' => $token
         ]);
+
     }
 }
