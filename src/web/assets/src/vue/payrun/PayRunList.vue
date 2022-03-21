@@ -1,19 +1,29 @@
 <script setup lang="ts">
-    import { defaultClient } from '~/js/composables/useApolloClient'
+    import { provide, ref, watchEffect } from 'vue'
+    import { storeToRefs } from 'pinia'
     import { DefaultApolloClient } from '@vue/apollo-composable'
-    import { provide } from 'vue'
     import { usePayRunStore } from '~/js/stores/payrun'
+    import { defaultClient } from '~/js/composables/useApolloClient'
+    import { fetchPayRuns } from '~/js/composables/useAxiosClient'
+
     import PayRunList from '~/vue/molecules/listitems/listitem--payrun.vue'
+    import StatusSynced from '~/vue/molecules/status/status--synced.vue'
 
     const payruns = [
         { id: 12605, employer: 'Acme Limited (Demo)', employerId: 12600, period: 12, taxYear: 'Year2021', startDate: '2022-02-01 ', endDate: '2022-02-28', employeeCount: 4, state: 'Open', paymentDate: '2022-03-25', dateUpdated: '2022-03-16 17:16:49', totalCost:1234},
-        { id: 12605, employer: 'Acme Limited (Demo)', employerId: 12600, period: 11, taxYear: 'Year2021', startDate: '2022-02-01 ', endDate: '2022-02-28', employeeCount: 4, state: 'Closed', paymentDate: '2022-03-25', dateUpdated: '2022-03-16 17:16:49', totalCost:1234 },
+        { id: 12605, employer: 'Acme Limited (Demo)', employerId: 12600, period: 11, taxYear: 'Year2021', startDate: '2022-02-01 ', endDate: '2022-02-28', employeeCount: 4, state: 'Closed', paymentDate: '2022-03-25', dateUpdated: '2021-03-16 17:16:49', totalCost:1234 },
         // More people...
     ]
 
+    const store = usePayRunStore()
+    const { queue } = storeToRefs(store)
+
     provide(DefaultApolloClient, defaultClient)
 
-    const store = usePayRunStore()
+    const getLatestSync = () => {
+        const sorted = payruns.sort((a, b) => (a.dateUpdated < b.dateUpdated) ? 1 : -1)
+        return sorted[0]?.dateUpdated
+    }
 
 </script>
 
@@ -28,8 +38,19 @@
             <p class="mt-2 text-sm text-gray-700">Click on a pay run to upload the CSV with the pay run entries. If the pay run is not provided in the list bellow, use the "Fetch&nbsp;Pay&nbsp;Runs" button on your right to fetch.</p>
         </div>
         <div class="mt-4 md:mt-0 flex" style="margin-bottom:0">
-            <span class="mt-4 md:mt-0 text-xs inline-flex mr-2 flex-grow" style="margin-bottom:0">Last Synced: 03/03/2022 10:09</span>
-            <button type="button" class="inline-flex items-center justify-center rounded-md border border-transparent bg-indigo-600 px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 sm:w-auto" style="margin-bottom:0">Fetch Pay Runs</button>
+            <StatusSynced :date="getLatestSync()" />
+            <button 
+                @click="fetchPayRuns(payruns[0]?.employerId)" 
+                :disabled="store.loadingFetched" 
+                class="cursor-pointer inline-flex items-center justify-center rounded-md border border-transparent bg-indigo-600 disabled:bg-indigo-400 disabled:cursor-not-allowed px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 sm:w-auto" 
+                style="margin-bottom:0"
+            >
+                <span>Fetch Pay Runs</span>
+                <svg v-if="store.loadingFetched" class="animate-spin ml-1 h-3 w-3 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" style="margin-bottom:0">
+                    <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                    <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                </svg>
+            </button>
         </div>
     </div>
     <div class="mt-8 flex flex-col w-full">

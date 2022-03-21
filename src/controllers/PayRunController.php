@@ -144,6 +144,8 @@ class PayRunController extends Controller
 
     public function actionDownloadTemplate(int $payRunId): void
     {
+        $this->requireLogin();
+
         $payRun = PayRun::findOne($payRunId);
 
         if(!$payRun){
@@ -152,6 +154,44 @@ class PayRunController extends Controller
 
         Staff::$plugin->payRuns->getCsvTemplate($payRunId);
     }
+
+    public function actionFetchPayRuns(int $employerId): Response
+    {
+        $this->requireLogin();
+        $this->requireAcceptsJson();
+
+        Staff::$plugin->payRuns->fetchPayRunByEmployer($employerId);
+
+        return $this->asJson([
+            'success' => true
+        ]);
+    }
+
+    public function actionFetchPayRun(int $payRunId): Response
+    {
+        $this->requireLogin();
+        $this->requireAcceptsJson();
+
+        Staff::$plugin->payRuns->fetchPayRunByPayRunId($payRunId, true);
+
+        return $this->asJson([
+            'success' => true
+        ]);
+    }
+
+    public function actionGetQueue(): Response
+    {
+        $this->requireLogin();
+        $this->requireAcceptsJson();
+
+        $queue = Craft::$app->getQueue();
+
+        return $this->asJson([
+            'total' => $queue->getTotalJobs(),
+            'jobs' => $queue->getJobInfo(),
+        ]);
+    }
+
 
     public function actionImport()
     {

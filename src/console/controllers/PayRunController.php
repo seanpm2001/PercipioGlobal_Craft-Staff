@@ -57,62 +57,7 @@ class PayRunController extends Controller
 
     public function actionFetchPayRunByEmployer()
     {
-        $logger = new Logger();
-
-        if(!$this->employer) {
-            $logger->stdout("There's no employer id provided" . PHP_EOL, $logger::FG_RED);
-            Craft::error("There's no employer id provided", __METHOD__);
-        }
-
-        $employer = Staff::$plugin->employers->getEmployerById($this->employer);
-
-        if($employer){
-
-            $id = $employer['staffologyId'] ?? '';
-            $taxYear = $this->taxYear === '' ? $employer['currentYear'] : $this->taxYear;
-            $payPeriod = $employer['defaultPayOptions']['period'] ?? 'Monthly';
-
-            $url = '/employers/'.$id.'/payrun/'.$taxYear.'/'.$payPeriod;
-
-            $api = App::parseEnv(Staff::$plugin->getSettings()->apiKeyStaffology);
-            $credentials = base64_encode('staff:'.$api);
-            $headers = [
-                'headers' => [
-                    'Authorization' => 'Basic ' . $credentials,
-                ],
-            ];
-            $client = new \GuzzleHttp\Client();
-
-            try {
-
-                $response =  $client->get("https://api.staffology.co.uk/" . $url, $headers);
-                $payRunData = json_decode($response->getBody()->getContents(), true);
-
-                if($payRunData) {
-
-                    $employer['id'] = $employer['staffologyId'];
-
-                    Staff::$plugin->payRuns->fetchPayCodesList($employer);
-                    Staff::$plugin->payRuns->fetchPayRuns($payRunData, $employer);
-
-                    App::maxPowerCaptain();
-                    $queue = Craft::$app->getQueue();
-                    if ($queue instanceof QueueInterface) {
-                        $queue->run();
-                    } elseif ($queue instanceof RedisQueue) {
-                        $queue->run(false);
-                    }
-                }
-
-            } catch (\Exception $e) {
-
-                $logger->stdout(PHP_EOL, $logger::RESET);
-                $logger->stdout($e->getMessage() . PHP_EOL, $logger::FG_RED);
-                Craft::error($e->getMessage(), __METHOD__);
-
-            }
-        }
-
+        Staff::$plugin->payRuns->fetchPayRunByEmployer($this->employer, $this->taxYear);
     }
 //    public function actionFetch()
 //    {

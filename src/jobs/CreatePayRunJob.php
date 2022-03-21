@@ -7,6 +7,7 @@ use craft\helpers\App;
 use craft\helpers\Queue;
 use craft\queue\BaseJob;
 use percipiolondon\staff\helpers\Logger;
+use percipiolondon\staff\records\Employer as EmployerRecord;
 use percipiolondon\staff\records\PayRun as PayRunRecord;
 use percipiolondon\staff\elements\PayRun;
 use percipiolondon\staff\records\PayRunLog as PayRunLogRecord;
@@ -42,6 +43,8 @@ class CreatePayRunJob extends BaseJob
                 $current++;
                 $progress = "[".$current."/".$total."] ";
 
+                $employer = is_int($this->criteria['employer']['id'] ?? null) ? $this->criteria['employer'] : EmployerRecord::findOne(['staffologyId' => $this->criteria['employer']['id'] ?? null])->toArray();
+
                 $url = strpos($payRun['url'], 'api.staffology') > 0 ? str_replace("https://api.staffology.co.uk", "", $payRun['url']) : $payRun['url'];
 //
 //                $payRunLog = PayRunLogRecord::findOne(['url' => $url]);
@@ -49,7 +52,7 @@ class CreatePayRunJob extends BaseJob
 //                // SET PAYRUN IF IT HASN'T ALREADY BEEN FETCHED IN PAYRUNLOG
 //                if(!$payRunLog) {
 
-                    $taxYear = $payRun['metadata']['taxYear'] ?? '';
+                    $taxYear = $payRun['metadata']['taxYear'] ?? $payRun['taxYear'] ?? '';
                     $name = $payRun['name'] ?? '';
 
                     $logger->stdout($progress."↧ Fetching pay run info of " . $taxYear . ' / ' . $name . '...', $logger::RESET);
@@ -59,7 +62,7 @@ class CreatePayRunJob extends BaseJob
 
                     $logger->stdout(" done" . PHP_EOL, $logger::FG_GREEN);
 
-                    Staff::$plugin->payRuns->savePayRun($payRunData, $url, $this->criteria['employer']);
+                    Staff::$plugin->payRuns->savePayRun($payRunData, $url, $employer);
 //                }
 
             }
