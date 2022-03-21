@@ -17,6 +17,7 @@ use percipiolondon\staff\records\PayCode;
 use percipiolondon\staff\records\PayLine as PayLineRecord;
 use percipiolondon\staff\records\PayRun as PayRunRecord;
 use percipiolondon\staff\records\PayRunEntry as PayRunEntryRecord;
+use percipiolondon\staff\records\PayRunImport;
 use percipiolondon\staff\Staff;
 
 use Craft;
@@ -192,6 +193,16 @@ class PayRunController extends Controller
         ]);
     }
 
+    public function actionGetPayRunLogs(int $payRunId) : Response
+    {
+        $this->requireLogin();
+        $this->requireAcceptsJson();
+
+        return $this->asJson([
+            'logs' => PayRunImport::findAll(['payRunId' => $payRunId])
+        ]);
+    }
+
 
     public function actionImport()
     {
@@ -214,6 +225,7 @@ class PayRunController extends Controller
         $headers = null;
         $filePath = "";
         $error = "";
+        $importLog = null;
 
         $file = UploadedFile::getInstanceByName('file');
 
@@ -276,7 +288,14 @@ class PayRunController extends Controller
                 if($success){
 
                     //save log
+                    $importLog = new PayRunImport();
+                    $importLog->payRunId = $payRunId;
+                    $importLog->uploadedBy = Craft::$app->getUser()->id;
+                    $importLog->filepath = $filePath;
+                    $importLog->filename = $file->name;
+                    $importLog->rowCount = count($entries);
 
+                    $importLog->save();
 
                     Craft::$app->getSession()->setNotice(Craft::t('staff-management', 'Imports from CSV started.'));
                 } else {
@@ -309,7 +328,6 @@ class PayRunController extends Controller
 
         return $this->renderTemplate('staff-management/payruns/detail', $variables);
     }
-
 
     protected function saveEntriesToStaffology(int $payRunId, array $entries): bool
     {

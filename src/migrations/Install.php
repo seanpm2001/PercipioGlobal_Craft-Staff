@@ -146,14 +146,14 @@ class Install extends Migration
                 'uid' => $this->uid(),
                 //FK
                 //intern
-                'payRunId' => $this->integer()->notNull()->defaultValue(null), // create FK to PayRun [id]
-                'uploadedBy' => $this->integer()->notNull()->defaultValue(null), // create FK to User [id]
-                'approvedBy' => $this->integer()->notNull()->defaultValue(null), // create FK to User [id]
+                'payRunId' => $this->integer()->notNull(), // create FK to PayRun [id]
+                'uploadedBy' => $this->integer()->notNull(), // create FK to User [id]
+                'approvedBy' => $this->integer(), // create FK to User [id]
                 //fields
                 'filepath' => $this->string(255)->notNull()->defaultValue(''),
                 'filename' => $this->string(255)->notNull()->defaultValue(''),
                 'rowCount' => $this->integer()->defaultValue(1),
-                'dateApproved' => $this->dateTime()->notNull(),
+                'dateApproved' => $this->dateTime(),
             ]);
 
             $this->createTable(Table::PAYRUN, [
