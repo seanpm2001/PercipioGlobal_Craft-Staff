@@ -141,7 +141,7 @@ class PayRun extends Element
                 return null;
             }
 
-            if (($this->_totals = Craft::$app->getUsers()->getUserById($this->authorId)) === null) {
+            if (($this->_totals = Staff::$plugin->payRuns->getTotalsById($this->totalsId)) === null) {
                 // The author is probably soft-deleted. Just no author is set
                 $this->_totals = false;
             }
