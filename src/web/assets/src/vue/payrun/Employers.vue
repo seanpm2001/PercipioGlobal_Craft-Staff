@@ -5,35 +5,11 @@
     import EmployerListItem from '~/vue/molecules/listitems/listitem--employer.vue'
     //import inputSearch from '~/vue/atoms/inputs/input--search.vue'
 
-    const employers = [
-        { id: 12665, name: 'Acme Limited (Demo)', logoUrl: 'https://prodstaffologystorage.blob.core.windows.net/images/generic-logo.png', crn: '123456', employeeCount: '5', currentPayRun: 'Year2021/12', synced: '15/04/2022 - 18:30' },
-    ]
-
-    const { result, loading, onResult, onError } = useQuery(EMPLOYERS)
-
-    onResult(queryResult => {
-        console.log(queryResult.data)
-        console.log(queryResult.loading)
-        console.log(queryResult.networkStatus)
-    })
-
-    onError(error => {
-        logErrorMessages(error)
-    })
+    const { result, loading } = useQuery(EMPLOYERS)
 
 </script>
 
 <template>
-
-    <h1>--- TEST ---</h1>
-
-    <div v-if="loading">Loading...</div>
-
-    <div v-else-if="result" class="bg-sky-200">
-        {{ result }}
-    </div>
-
-    <h1>--- END TEST ---</h1>
 
     <div class="sm:flex">
         <div class="sm:flex-auto">
@@ -59,7 +35,7 @@
                     </div>
 
                     <!-- CONTENT -->
-                    <EmployerListItem :employer-data="employers" />
+                    <EmployerListItem :employer-data="result.employers" />
                 </div>
             </div>
         </div>
