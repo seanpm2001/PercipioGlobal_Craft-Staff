@@ -16,10 +16,10 @@ export default defineConfig(({command}) => ({
         outDir: '../src/web/assets/dist',
         rollupOptions: {
             input: {
-                employers: 'src/js/employers.ts',
-                payruns: 'src/js/payruns.ts',
-                details: 'src/js/payrunDetails.ts',
-                staff: 'src/js/staff.ts',
+                employers: '/src/js/employers.ts',
+                payruns: '/src/js/payruns.ts',
+                details: '/src/js/payrunDetails.ts',
+                staff: '/src/js/staff.ts',
             },
             output: {
                 sourcemap: true
