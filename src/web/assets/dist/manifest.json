@@ -1,0 +1,24 @@
+{
+  "../src/web/assets/src/js/employers.ts": {
+    "file": "assets/employers.3c10780b.js",
+    "src": "../src/web/assets/src/js/employers.ts",
+    "isEntry": true,
+    "imports": [
+      "_vendor.bb42b6a3.js"
+    ],
+    "integrity": "sha384-/JuQWe7P93sbEkHj3ThkEWkon/Z5ancE/9clG9cWaLraPpYtrIVfmN6Cij0GbnxV"
+  },
+  "../src/web/assets/src/js/staff.ts": {
+    "file": "assets/staff.394784cb.js",
+    "src": "../src/web/assets/src/js/staff.ts",
+    "isEntry": true,
+    "css": [
+      "assets/staff.49c28327.css"
+    ],
+    "integrity": "sha384-Kcx0gEO5hnQ/Asv3AznXqh/qp6GulOcvm5sgITSIFxuks6QnKDoQJHq3nrPoa5nu"
+  },
+  "_vendor.bb42b6a3.js": {
+    "file": "assets/vendor.bb42b6a3.js",
+    "integrity": "sha384-iJlIEJ8o8oJfdb+PNPSdxVXG/AwAg1FKEJMmWJegzNCNjCRhUCmkdRSij+2yKHvZ"
+  }
+}
