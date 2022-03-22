@@ -2,7 +2,7 @@ import Details from '~/vue/payrun/PayRunDetail.vue'
 import { createApp, h, provide } from 'vue'
 import { createPinia } from 'pinia'
 import { DefaultApolloClient } from '@vue/apollo-composable'
-import { defaultClient } from '~/js/composables/useApolloClient'
+import { defaultClient } from '~/js/composables/useApolloClient.ts'
 
 
 const payRunDetails = async () => {
