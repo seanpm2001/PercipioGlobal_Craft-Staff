@@ -1,4 +1,6 @@
 <script setup lang="ts">
+    import { format } from '~/js/composables/useCurrencyFormat'
+
     const props = defineProps({
         payrunData: Object,
     })
@@ -20,7 +22,7 @@
         </div>
         <div class="hide lg:block whitespace-nowrap px-3 py-4 text-sm text-gray-500">{{ payrun.employeeCount }}</div>
         <div class="hide lg:block col-span-2 whitespace-nowrap px-3 py-4 text-sm text-gray-500">{{ payrun.startDate }} - {{ payrun.endDate }}</div>
-        <div class="hide lg:block whitespace-nowrap px-3 py-4 text-sm text-gray-500">£ {{ payrun.totalCost }}</div>
+        <div class="hide lg:block whitespace-nowrap px-3 py-4 text-sm text-gray-500">£ {{ format(payrun.totals.totalCost) }}</div>
         <div class="whitespace-nowrap px-3 py-4 text-sm text-gray-500">{{ payrun.paymentDate }}</div>
         <div class="col-span-2 whitespace-nowrap px-3 py-4 text-sm text-gray-500">{{ payrun.dateUpdated }}</div>
     </a>

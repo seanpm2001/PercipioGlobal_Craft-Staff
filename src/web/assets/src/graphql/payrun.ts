@@ -1,15 +1,21 @@
 import { gql } from 'graphql-tag'
 
 export const PAYRUNS = gql`
-    query Payruns($employerId: ID!) {
-        payrun(employerId: $employerId) {
+    query Payruns($employerId: [ID]) {
+        payruns(employerId: $employerId) {
             id,
-            paymentDate
-            totals {
+            employerId
+            taxYear
+            period
+            employeeCount
+            startDate @formatDateTime(format:"Y-m-d")
+            endDate @formatDateTime(format:"Y-m-d")
+            paymentDate @formatDateTime(format:"Y-m-d")
+            dateUpdated @formatDateTime(format:"Y-m-d")
+            employer
+            state
+            totals{
                 totalCost
-                gross
-                tax
-                grossForNi
             }
         }
     }
@@ -19,7 +25,7 @@ export const PAYRUN = gql`
     query Payrun($id: [QueryArgument]) {
         payrun(id: $id) {
             id,
-            paymentDate
+            paymentDate @formatDateTime(format:"Y-m-d")
             employerId
             taxYear
             period
