@@ -1,9 +1,10 @@
 <script setup lang="ts">
     import { useQuery } from '@vue/apollo-composable'
     import { ref } from 'vue'
+    import { storeToRefs } from 'pinia'
 
     import { fetchPayRun } from '~/js/composables/useAxiosClient'
-    import { usePayRunStore } from '~/js/stores/payrun'
+    import { usePayRunStore } from '~/stores/payrun'
     import { PAYRUN } from '~/graphql/payrun.ts'
 
     import PayRunStats from '~/vue/molecules/stats/stats--payrun.vue'
@@ -26,6 +27,8 @@
         const url = `/admin/staff-management/pay-runs/download-template/${id}`
         const popout = window.open(url)
     }
+
+    // const fetchPayRun = () => {}
 
 
     const handleClose = () => {
