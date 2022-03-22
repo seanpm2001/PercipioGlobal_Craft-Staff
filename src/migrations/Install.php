@@ -152,7 +152,8 @@ class Install extends Migration
                 //fields
                 'filepath' => $this->string(255)->notNull()->defaultValue(''),
                 'filename' => $this->string(255)->notNull()->defaultValue(''),
-                'rowCount' => $this->integer()->defaultValue(1),
+                'rowCount' => $this->integer()->defaultValue(0),
+                'status' => $this->enum('status', ['Succeeded', 'Failed']),
                 'dateApproved' => $this->dateTime(),
             ]);
 

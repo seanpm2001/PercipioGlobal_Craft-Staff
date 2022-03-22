@@ -196,8 +196,9 @@ class PayRunController extends Controller
 
         $query = new \yii\db\Query();
         $query->from(['log' => Table::PAYRUN_IMPORTS])
-            ->select(['filename', 'rowCount', 'uploadedBy', 'payRunId', 'log.dateCreated', 'user.username', 'user.firstName', 'user.lastName'])
-            ->innerJoin(['user' => \craft\db\Table::USERS],'`user`.`id` = `uploadedBy`');
+            ->select(['filename', 'rowCount', 'uploadedBy', 'payRunId', 'status', 'log.dateCreated', 'user.username', 'user.firstName', 'user.lastName'])
+            ->innerJoin(['user' => \craft\db\Table::USERS],'`user`.`id` = `uploadedBy`')
+            ->orderBy(['dateCreated' => SORT_DESC]);
 
         return $this->asJson([
             'logs' => $query->all()
@@ -277,37 +278,40 @@ class PayRunController extends Controller
             }
         }
 
+        //save log
+        $importLog = new PayRunImport();
+        $importLog->payRunId = $payRunId;
+        $importLog->uploadedBy = Craft::$app->getUser()->id;
+        $importLog->filepath = $filePath;
+        $importLog->filename = $file->name;
+
         // If we have headers, then we have a file, so parse it
         if ($headers !== null) {
             $entries = $this->importCsvApi9($csv, $headers, $payRunId);
 
             if(count($entries) > 0){
+                $importLog->rowCount = count($entries);
 
                 $success = $this->saveEntriesToStaffology($payRunId, $entries);
 
                 if($success){
-
-                    //save log
-                    $importLog = new PayRunImport();
-                    $importLog->payRunId = $payRunId;
-                    $importLog->uploadedBy = Craft::$app->getUser()->id;
-                    $importLog->filepath = $filePath;
-                    $importLog->filename = $file->name;
-                    $importLog->rowCount = count($entries);
-
-                    $importLog->save();
-
+                    $importLog->status = 'Succeeded';
                     Craft::$app->getSession()->setNotice(Craft::t('staff-management', 'Imports from CSV started.'));
                 } else {
+                    $importLog->status = 'Failed';
                     $error = 'The data in the CSV doesn\'t match with what Staffology expects. Please make sure you click on "Fetch Pay Run" first. After the last sync date is updated, click on "Download Latest Pay Run Entries Template". Check for mismatches in your uploaded CSV according to the one from the download.';
                 }
             }else{
+                $importLog->status = 'Failed';
                 $error = "There was a mismatch in the CSV template, please download the latest template to check if the fields match with the CSV you want to upload.";
             }
             @unlink($filename);
         } else {
+            $importLog->status = 'Failed';
             $error = "There was a technical problem. Please contact the developers at Percipio to solve.";
         }
+
+        $importLog->save();
 
         // Render the template
         $employerName = SecurityHelper::decrypt($employer['name']) ?? '';
