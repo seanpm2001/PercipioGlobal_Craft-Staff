@@ -16,9 +16,9 @@
             </div>
             <span style="margin-bottom:0px">{{ employer.name }}</span>
         </div>
-        <div class="whitespace-nowrap px-3 py-4 text-sm text-gray-500">{{ employer.crn }}</div>
+        <div class="whitespace-nowrap px-3 py-4 text-sm text-gray-500">{{ employer.crn ? employer.crn : '-' }}</div>
         <div class="whitespace-nowrap px-3 py-4 text-sm text-gray-500">{{ employer.employeeCount }}</div>
-        <div class="whitespace-nowrap px-3 py-4 text-sm text-gray-500">{{ employer.currentPayRun }}</div>
-        <div class="whitespace-nowrap px-3 py-4 text-sm text-gray-500">{{ employer.synced }}</div>
+        <div class="whitespace-nowrap px-3 py-4 text-sm text-gray-500">{{ employer.currentPayRun?.taxYear }} / {{ employer.currentPayRun?.period }}</div>
+        <div class="whitespace-nowrap px-3 py-4 text-sm text-gray-500">{{ employer.dateUpdated }}</div>
     </a>
 </template>

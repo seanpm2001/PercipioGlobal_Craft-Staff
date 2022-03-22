@@ -9,6 +9,11 @@ export const EMPLOYERS = gql`
             employeeCount
             currentYear
             logoUrl
+            dateUpdated
+            currentPayRun{
+                taxYear
+                period
+            }
         }
     }
 `
