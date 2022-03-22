@@ -1,12 +1,11 @@
 <script setup lang="ts">
     const props = defineProps({
-        employerData: Object,
+        employer: Object,
     })
 </script>
 
 <template>
     <a 
-        v-for="employer in employerData" :key="employer.id"
         :href="`/admin/staff-management/pay-runs/${employer.id}`" 
         :title="`Go to pay runs of ${employer.name}`" 
         class="grid grid-cols-6 border-b border-solid border-gray-200" 

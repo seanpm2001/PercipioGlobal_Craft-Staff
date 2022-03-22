@@ -1,8 +1,8 @@
 <script setup lang="ts">
     import { useQuery } from '@vue/apollo-composable'
     import { EMPLOYERS } from '~/graphql/employers.ts'
-    import { logErrorMessages } from '@vue/apollo-util'
-    import EmployerListItem from '~/vue/molecules/listitems/listitem--employer.vue'
+    //import EmployerListItem from '~/vue/molecules/listitems/listitem--employer.vue'
+    import EmployerList from '~/vue/organisms/lists/list--employers.vue'
     //import inputSearch from '~/vue/atoms/inputs/input--search.vue'
 
     const { result, loading } = useQuery(EMPLOYERS)
@@ -34,8 +34,7 @@
                         <div class="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">Last synced</div>
                     </div>
 
-                    <!-- CONTENT -->
-                    <EmployerListItem :employer-data="result.employers" />
+                    <EmployerList v-if="result" :employers="result.employers" />
                 </div>
             </div>
         </div>
