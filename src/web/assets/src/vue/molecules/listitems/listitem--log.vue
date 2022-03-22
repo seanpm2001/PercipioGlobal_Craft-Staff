@@ -1,7 +1,7 @@
 <script setup lang="ts">
-    import { usePayRunStore } from '~/js/stores/payrun'
-
-    const store = usePayRunStore()
+    const props = defineProps({
+        log: Object,
+    })
 
     const user = (log) => {
 
@@ -27,8 +27,6 @@
 
 <template>
     <div 
-        v-for="log in store.logs" 
-        :key="log.id"
         class="grid grid-cols-7 border-b border-solid border-gray-200"
     >
         <div class="col-span-2 whitespace-nowrap px-3 py-4 flex text-sm text-gray-500">{{ log.filename }}</div>

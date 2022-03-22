@@ -299,11 +299,11 @@ class PayRunController extends Controller
                     Craft::$app->getSession()->setNotice(Craft::t('staff-management', 'Imports from CSV started.'));
                 } else {
                     $importLog->status = 'Failed';
-                    $error = 'The data in the CSV doesn\'t match with what Staffology expects. Please make sure you click on "Fetch Pay Run" first. After the last sync date is updated, click on "Download Latest Pay Run Entries Template". Check for mismatches in your uploaded CSV according to the one from the download.';
+                    $error = 'Staffology contains different pay codes than what existed when this CSV template was downloaded. Click "Refresh Pay Run" and download the new Pay Run Template.';
                 }
             }else{
                 $importLog->status = 'Failed';
-                $error = "There was a mismatch in the CSV template, please download the latest template to check if the fields match with the CSV you want to upload.";
+                $error = "There is an error in the CSV template you are trying to upload. Have you altered a column heading or added any additional columns? Download the latest pay run template to check against your file.";
             }
             @unlink($filename);
         } else {
