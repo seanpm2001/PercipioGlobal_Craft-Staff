@@ -11,7 +11,11 @@
     import StatusSynced from '~/vue/molecules/status/status--synced.vue'
 
     const employerId = window.location.href.split("/").pop()
-    const { result, loading } = useQuery(PAYRUNS, {employerId: employerId})
+    const { result, loading } = useQuery(
+        PAYRUNS, 
+        { employerId: employerId }, 
+        { pollInterval: 5000 }
+    )
     const store = usePayRunStore()
     const { queue } = storeToRefs(store)
 
