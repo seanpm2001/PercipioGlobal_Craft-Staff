@@ -139,7 +139,7 @@ class Employer extends Element
                 return null;
             }
 
-            if (($this->_currentPayRun = Staff::$plugin->payRuns->getOpenPayRunByEmployer($this->id)) === null) {
+            if (($this->_currentPayRun = Staff::$plugin->payRuns->getLastPayRunByEmployer($this->id)) === null) {
                 // The author is probably soft-deleted. Just no author is set
                 $this->_currentPayRun = false;
             }
