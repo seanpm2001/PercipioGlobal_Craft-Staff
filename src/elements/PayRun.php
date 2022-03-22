@@ -237,6 +237,7 @@ class PayRun extends Element
         $attributes[] = 'dateClosed';
         $attributes[] = 'paymentDate';
         $attributes[] = 'startDate';
+        $attributes[] = 'endDate';
         return $attributes;
     }
 
