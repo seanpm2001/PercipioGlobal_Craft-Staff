@@ -4,7 +4,7 @@ import { usePayRunStore } from '~/stores/payrun'
 const ENDPOINT = window.api.cpUrl ?? 'https://localhost:8003'
 
 
-export const fetchPayRuns = (employerId: String) => {
+export const fetchPayRuns = (employerId: string) => {
 
     const store = usePayRunStore()
     store.loadingFetched = true
@@ -19,7 +19,7 @@ export const fetchPayRuns = (employerId: String) => {
 
 }
 
-export const fetchPayRun = (payRunId: String) => {
+export const fetchPayRun = (payRunId: string) => {
 
     const store = usePayRunStore()
     store.loadingFetched = true
@@ -48,7 +48,7 @@ export const getQueue = () => {
 
 }
 
-export const getPayRunLogs = (payRunId: String) => {
+export const getPayRunLogs = (payRunId: string) => {
 
     const store = usePayRunStore()
 
@@ -65,7 +65,7 @@ export const getPayRunLogs = (payRunId: String) => {
 
 export const getToken = async (): Promise<string|null> => {
 
-    let token = {
+    const token = {
         value: null,
     }
 

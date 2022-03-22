@@ -22,10 +22,7 @@ const authLink = setContext(async (_, { headers }) => {
     }
 })
 
-// Handle errors
-const errorLink = onError( ({ graphQLErrors, networkError, operation, forward }):any => {} )
-
-export const defaultClient: ApolloClient = new ApolloClient({
+export const defaultClient = new ApolloClient({
     cache: new InMemoryCache(),
-    link: from([ errorLink, authLink, httpLink ])
+    link: from([ authLink, httpLink ])
 })
