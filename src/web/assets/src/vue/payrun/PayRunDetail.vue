@@ -40,7 +40,7 @@
             <p class="mt-2 text-sm text-gray-700">Download the current pay run CSV using the Download button below. When uploading, ensure table headings and the file format (CSV) remain unchanged.</p>
         </div>
         <div class="mt-4 md:mt-0 flex" style="margin-bottom:0">
-            <StatusSynced :date="result?.payrun?.dateUpdated" />
+            <StatusSynced :date="result?.payrun?.dateSynced" />
             <button 
                 @click="fetchPayRun(payrun?.id)"
                 :disabled="store.loadingFetched" 
@@ -67,7 +67,7 @@
         <div class="sm:flex-auto" style="margin-bottom:0">
             <h2>Uploaded Pay Run Entries</h2>
             <span class="mt-4 md:mt-0 text-xs inline-flex mr-2 flex-grow" style="margin-bottom:0">
-                Last Synced: {{ result?.payrun?.dateUpdated }}
+                Last Synced: {{ result?.payrun?.dateSynced }}
             </span>
         </div>
         <div class="mt-4 sm:mt-0 sm:ml-16 sm:flex-none space-x-2" style="margin-bottom:0">

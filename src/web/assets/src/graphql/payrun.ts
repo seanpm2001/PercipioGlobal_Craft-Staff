@@ -8,10 +8,11 @@ export const PAYRUNS = gql`
             taxYear
             period
             employeeCount
-            startDate @formatDateTime(format:"Y-m-d")
-            endDate @formatDateTime(format:"Y-m-d")
-            paymentDate @formatDateTime(format:"Y-m-d")
-            dateUpdated @formatDateTime(format:"Y-m-d")
+            startDate @formatDateTime(format:"jS M, Y")
+            endDate @formatDateTime(format:"jS M, Y")
+            paymentDate @formatDateTime(format:"jS M, Y")
+            dateUpdated @formatDateTime(format:"jS M, Y")
+            dateSynced:dateUpdated @formatDateTime(format:"Y-m-d H:i")
             employer
             state
             totals{
@@ -25,7 +26,8 @@ export const PAYRUN = gql`
     query Payrun($id: [QueryArgument]) {
         payrun(id: $id) {
             id,
-            paymentDate @formatDateTime(format:"Y-m-d")
+            paymentDate @formatDateTime(format:"j M, Y")
+            dateSynced:dateUpdated @formatDateTime(format:"Y-m-d H:i")
             employerId
             taxYear
             period
@@ -33,7 +35,8 @@ export const PAYRUN = gql`
                 totalCost
                 gross
                 tax
-                grossForNi
+                employerNi
+                employeeNi
             }
         }
     }

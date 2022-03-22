@@ -20,7 +20,7 @@
         </div>
         <div class="px-4 py-5 bg-gray-200 shadow rounded-lg overflow-hidden sm:p-6">
             <dt class="text-sm font-medium text-gray-500 truncate text-center">
-                Total gross
+                Total pay
             </dt>
             <dd class="mt-1 text-2xl font-semibold text-gray-900 text-center">
                 £ {{ format(payrun?.totals?.gross) }}
@@ -28,7 +28,7 @@
         </div>
         <div class="px-4 py-5 bg-gray-200 shadow rounded-lg overflow-hidden sm:p-6">
             <dt class="text-sm font-medium text-gray-500 truncate text-center">
-                Total Tax
+                Tax
             </dt>
             <dd class="mt-1 text-2xl font-semibold text-gray-900 text-center">
                 £ {{ format(payrun?.totals?.tax) }}
@@ -36,18 +36,18 @@
         </div>
         <div class="px-4 py-5 bg-gray-200 shadow rounded-lg overflow-hidden sm:p-6">
             <dt class="text-sm font-medium text-gray-500 truncate text-center">
-                Total EE &amp; ER Nics (grossForNi)
+                Employee NI
             </dt>
             <dd class="mt-1 text-2xl font-semibold text-gray-900 text-center">
-                £ {{ format(payrun?.totals?.grossForNi) }}
+                £ {{ format(payrun?.totals?.employeeNi) }}
             </dd>
         </div>
         <div class="px-4 py-5 bg-gray-200 shadow rounded-lg overflow-hidden sm:p-6">
             <dt class="text-sm font-medium text-gray-500 truncate text-center">
-                Total cost
+                Employer NI
             </dt>
             <dd class="mt-1 text-2xl font-semibold text-gray-900 text-center">
-                £ {{ format(payrun?.totals?.totalCost) }}
+                £ {{ format(payrun?.totals?.employerNi) }}
             </dd>
         </div>
     </dl>

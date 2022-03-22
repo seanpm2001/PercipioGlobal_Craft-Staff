@@ -16,11 +16,9 @@
     const { queue } = storeToRefs(store)
 
 
-    const getLatestSync = () => {
-        console.log(result)
-        return "test"
-        // const sorted = result.payruns.sort((a, b) => (a.dateUpdated < b.dateUpdated) ? 1 : -1)
-        // return sorted[0]?.dateUpdated
+    const getLatestSync = (payruns) => {
+        const sorted = payruns.sort((a, b) => (a.dateSynced < b.dateSynced) ? 1 : -1)
+        return sorted[0]?.dateSynced
     }
 
 </script>
@@ -33,10 +31,10 @@
                 <a href="/admin/staff-management/pay-runs" :title="`Back to ${result.payruns[0]?.employer}`" class="inline-flex items-center px-2.5 py-1.5 rounded-full text-sm text-indigo-700 bg-indigo-100 hover:bg-indigo-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500" style="margin-bottom:0">&larr;</a>
                 <h1 class="ml-1 text-xl font-semibold text-gray-900">{{result.payruns[0]?.employer}}</h1>
             </div>
-            <p class="mt-2 text-sm text-gray-700">The table below shows payrun overviews for {{ payruns[0]?.employer }}. If a payrun has recently been setup in Staffology but does not yet appear below, click the Fetch&nbsp;Pay&nbsp;Runs button to update. </p>
+            <p class="mt-2 text-sm text-gray-700">The table below shows payrun overviews for {{ result.payruns[0]?.employer }}. If a payrun has recently been setup in Staffology but does not yet appear below, click the Fetch&nbsp;Pay&nbsp;Runs button to update. </p>
         </div>
         <div class="mt-4 md:mt-0 flex" style="margin-bottom:0">
-            <StatusSynced :date="getLatestSync()" />
+            <StatusSynced :date="getLatestSync(result.payruns)" />
             <button 
                 @click="fetchPayRuns(result.payruns[0]?.employerId)" 
                 :disabled="store.loadingFetched" 
