@@ -294,68 +294,68 @@ class PayRunEntryQuery extends ElementQuery
 
     protected function beforePrepare(): bool
     {
-        $this->joinElementTable('staff_payrunentries');
+        $this->joinElementTable('staff_payrun_entries');
 
         $this->query->select([
-            'staff_payrunentries.payRunId',
-            'staff_payrunentries.employerId',
-            'staff_payrunentries.employeeId',
-            'staff_payrunentries.payOptionsId',
-            'staff_payrunentries.priorPayrollCodeId',
-            'staff_payrunentries.totalsYtdId',
-            'staff_payrunentries.umbrellaPaymentId',
-            'staff_payrunentries.nationalInsuranceCalculationId',
-            'staff_payrunentries.pensionSummaryId',
-            'staff_payrunentries.employee',
-            'staff_payrunentries.fpsId',
-            'staff_payrunentries.staffologyId',
-            'staff_payrunentries.taxYear',
-            'staff_payrunentries.startDate',
-            'staff_payrunentries.endDate',
-            'staff_payrunentries.note',
-            'staff_payrunentries.bacsSubReference',
-            'staff_payrunentries.bacsHashcode',
-            'staff_payrunentries.percentageOfWorkingDaysPaidAsNormal',
-            'staff_payrunentries.workingDaysNotPaidAsNormal',
-            'staff_payrunentries.payPeriod',
-            'staff_payrunentries.ordinal',
-            'staff_payrunentries.period',
-            'staff_payrunentries.isNewStarter',
-            'staff_payrunentries.unpaidAbsence',
-            'staff_payrunentries.hasAttachmentOrders',
-            'staff_payrunentries.paymentDate',
-            'staff_payrunentries.totalsId',
-            'staff_payrunentries.forcedCisVatAmount',
-            'staff_payrunentries.holidayAccrued',
-            'staff_payrunentries.state',
-            'staff_payrunentries.isClosed',
-            'staff_payrunentries.manualNi',
-            'staff_payrunentries.payrollCodeChanged',
-            'staff_payrunentries.aeNotEnroledWarning',
-            'staff_payrunentries.receivingOffsetPay',
-            'staff_payrunentries.paymentAfterLearning',
-            'staff_payrunentries.pdf',
+            'staff_payrun_entries.payRunId',
+            'staff_payrun_entries.employerId',
+            'staff_payrun_entries.employeeId',
+            'staff_payrun_entries.payOptionsId',
+            'staff_payrun_entries.priorPayrollCodeId',
+            'staff_payrun_entries.totalsYtdId',
+            'staff_payrun_entries.umbrellaPaymentId',
+            'staff_payrun_entries.nationalInsuranceCalculationId',
+            'staff_payrun_entries.pensionSummaryId',
+            'staff_payrun_entries.employee',
+            'staff_payrun_entries.fpsId',
+            'staff_payrun_entries.staffologyId',
+            'staff_payrun_entries.taxYear',
+            'staff_payrun_entries.startDate',
+            'staff_payrun_entries.endDate',
+            'staff_payrun_entries.note',
+            'staff_payrun_entries.bacsSubReference',
+            'staff_payrun_entries.bacsHashcode',
+            'staff_payrun_entries.percentageOfWorkingDaysPaidAsNormal',
+            'staff_payrun_entries.workingDaysNotPaidAsNormal',
+            'staff_payrun_entries.payPeriod',
+            'staff_payrun_entries.ordinal',
+            'staff_payrun_entries.period',
+            'staff_payrun_entries.isNewStarter',
+            'staff_payrun_entries.unpaidAbsence',
+            'staff_payrun_entries.hasAttachmentOrders',
+            'staff_payrun_entries.paymentDate',
+            'staff_payrun_entries.totalsId',
+            'staff_payrun_entries.forcedCisVatAmount',
+            'staff_payrun_entries.holidayAccrued',
+            'staff_payrun_entries.state',
+            'staff_payrun_entries.isClosed',
+            'staff_payrun_entries.manualNi',
+            'staff_payrun_entries.payrollCodeChanged',
+            'staff_payrun_entries.aeNotEnroledWarning',
+            'staff_payrun_entries.receivingOffsetPay',
+            'staff_payrun_entries.paymentAfterLearning',
+            'staff_payrun_entries.pdf',
 
         ]);
 
         if ($this->staffologyId) {
-            $this->subQuery->andWhere(Db::parseParam('staff_payrunentries.staffologyId', $this->staffologyId));
+            $this->subQuery->andWhere(Db::parseParam('staff_payrun_entries.staffologyId', $this->staffologyId));
         }
 
         if ($this->payRunId) {
-            $this->subQuery->andWhere(Db::parseParam('staff_payrunentries.payRunId', $this->payRunId));
+            $this->subQuery->andWhere(Db::parseParam('staff_payrun_entries.payRunId', $this->payRunId));
         }
 
         if ($this->employerId) {
-            $this->subQuery->andWhere(Db::parseParam('staff_payrunentries.employerId', $this->employerId));
+            $this->subQuery->andWhere(Db::parseParam('staff_payrun_entries.employerId', $this->employerId));
         }
 
         if ($this->employeeId) {
-            $this->subQuery->andWhere(Db::parseParam('staff_payrunentries.employeeId', $this->employeeId));
+            $this->subQuery->andWhere(Db::parseParam('staff_payrun_entries.employeeId', $this->employeeId));
         }
 
         if ($this->isClosed) {
-            $this->subQuery->andWhere(Db::parseParam('staff_payrunentries.isClosed', $this->isClosed, '=', false));
+            $this->subQuery->andWhere(Db::parseParam('staff_payrun_entries.isClosed', $this->isClosed, '=', false));
         }
 
         return parent::beforePrepare();

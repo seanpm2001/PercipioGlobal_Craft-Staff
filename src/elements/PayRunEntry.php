@@ -238,7 +238,7 @@ class PayRunEntry extends Element
         $payrunEntryIds = [];
 
         $payrunentries = (new Query())
-            ->from('{{%staff_payrunentries}}')
+            ->from('{{%staff_payrun_entries}}')
             ->select('id')
             ->all();
 
