@@ -5,7 +5,6 @@
 </script>
 
 <template>
-    {{ employer }}
     <a 
         :href="`/admin/staff-management/pay-runs/${employer.id}`" 
         :title="`Go to pay runs of ${employer.name}`" 
