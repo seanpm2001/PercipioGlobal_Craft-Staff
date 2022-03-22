@@ -56,14 +56,17 @@ export const getPayRunLogs = (payRunId: String) => {
         method: 'get',
         url: `${ENDPOINT}/staff-management/pay-runs/get-logs/${payRunId}`,
     })
-    .then((response) => {
-        store.logs = response?.data?.logs ? response.data.logs : []
-        // store.loadingFetched = false
-    })
+        .then((response) => {
+            store.logs = response?.data?.logs ? response.data.logs : []
+            // store.loadingFetched = false
+        })
 
 }
 
-export const getToken = () => {
+export const getToken = async () => {
+    
+    const store = usePayRunStore()
+
     axios({
         method: 'get',
         url: `${ENDPOINT}/staff-management/settings/get-gql-token`,
@@ -71,4 +74,7 @@ export const getToken = () => {
     .then( (response) => {
         store.token = response?.data?.token ? response.data.token : null
     })
+
+    return store.token
+
 }

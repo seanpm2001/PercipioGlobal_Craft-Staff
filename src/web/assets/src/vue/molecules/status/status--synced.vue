@@ -11,6 +11,7 @@
     const interval = ref(null)
 
     onMounted(() => {
+        console.log("mounted")
         interval.value = setInterval(() => {
             getQueue()
         }, 5000)

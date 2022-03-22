@@ -3,20 +3,16 @@
 namespace percipiolondon\staff\controllers;
 
 use craft\helpers\ArrayHelper;
-use craft\helpers\Queue;
 use craft\web\Controller;
 use League\Csv\AbstractCsv;
 use League\Csv\Exception;
 use League\Csv\Reader;
 use League\Csv\Statement;
+use percipiolondon\staff\db\Table;
 use percipiolondon\staff\elements\Employer;
 use percipiolondon\staff\elements\PayRun;
 use percipiolondon\staff\helpers\Security as SecurityHelper;
-use percipiolondon\staff\records\Employer as EmployerRecord;
-use percipiolondon\staff\records\PayCode;
 use percipiolondon\staff\records\PayLine as PayLineRecord;
-use percipiolondon\staff\records\PayRun as PayRunRecord;
-use percipiolondon\staff\records\PayRunEntry as PayRunEntryRecord;
 use percipiolondon\staff\records\PayRunImport;
 use percipiolondon\staff\Staff;
 
@@ -198,8 +194,13 @@ class PayRunController extends Controller
         $this->requireLogin();
         $this->requireAcceptsJson();
 
+        $query = new \yii\db\Query();
+        $query->from(['log' => Table::PAYRUN_IMPORTS])
+            ->select(['filename', 'rowCount', 'uploadedBy', 'payRunId', 'log.dateCreated', 'user.username', 'user.firstName', 'user.lastName'])
+            ->innerJoin(['user' => \craft\db\Table::USERS],'`user`.`id` = `uploadedBy`');
+
         return $this->asJson([
-            'logs' => PayRunImport::findAll(['payRunId' => $payRunId])
+            'logs' => $query->all()
         ]);
     }
 
@@ -225,7 +226,6 @@ class PayRunController extends Controller
         $headers = null;
         $filePath = "";
         $error = "";
-        $importLog = null;
 
         $file = UploadedFile::getInstanceByName('file');
 

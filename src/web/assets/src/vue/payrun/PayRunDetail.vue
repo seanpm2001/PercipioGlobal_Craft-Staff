@@ -82,7 +82,9 @@
 
         <div class="sm:flex-auto" style="margin-bottom:0">
             <h2>Uploaded Pay Run Entries</h2>
-            <StatusSynced :date="payrun.dateUpdated" />
+            <span class="mt-4 md:mt-0 text-xs inline-flex mr-2 flex-grow" style="margin-bottom:0">
+                Last Synced: {{ payrun.dateUpdated }}
+            </span>
         </div>
         <div class="mt-4 sm:mt-0 sm:ml-16 sm:flex-none space-x-2" style="margin-bottom:0">
             <button @click="downloadTemplate" class="cursor-pointer inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-indigo-700 bg-indigo-100 hover:bg-indigo-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">Download Latest Pay Run Entries Template</button>

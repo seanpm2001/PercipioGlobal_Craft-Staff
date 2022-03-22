@@ -38,4 +38,3 @@ class Security
              null : $value;
     }
 }
-
