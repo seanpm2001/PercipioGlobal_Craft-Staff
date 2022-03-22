@@ -14,7 +14,11 @@
     import ListLogs from '~/vue/organisms/lists/list--logs.vue'
 
     const payRunId = window.location.href.split("/").pop()
-    const { result, loading } = useQuery(PAYRUN, { id: payRunId })
+    const { result, loading } = useQuery(
+        PAYRUN, 
+        { id: payRunId },
+        { pollInterval: 5000 }
+    )
     const store = usePayRunStore()
     const error = ref(window?.validation?.error)
 
