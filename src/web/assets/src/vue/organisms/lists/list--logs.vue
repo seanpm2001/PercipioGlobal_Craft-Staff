@@ -4,7 +4,7 @@
     import LogListItem from '~/vue/molecules/listitems/listitem--log.vue'
 
     const props = defineProps({
-        payrun: Number,
+        payrun: String,
     })
 
     getPayRunLogs(props.payrun)
