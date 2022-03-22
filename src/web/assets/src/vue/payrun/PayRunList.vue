@@ -1,6 +1,5 @@
 <script setup lang="ts">
     import { useQuery } from '@vue/apollo-composable'
-    import { provide, ref, watchEffect } from 'vue'
     import { storeToRefs } from 'pinia'
 
     import { fetchPayRuns } from '~/js/composables/useAxiosClient'
@@ -8,6 +7,7 @@
     import { PAYRUNS } from '~/graphql/payrun.ts'
 
     import PayRunList from '~/vue/molecules/listitems/listitem--payrun.vue'
+    import LoadingList from '~/vue/molecules/listitems/listitem--loading.vue'
     import StatusSynced from '~/vue/molecules/status/status--synced.vue'
 
     const employerId = window.location.href.split("/").pop()
@@ -65,6 +65,8 @@
                         <div class="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">Pay Date</div>
                         <div class="col-span-2 px-3 py-3.5 text-left text-sm font-semibold text-gray-900">Last synced</div>
                     </div>
+
+                    <LoadingList v-if="loading" />
 
                     <!-- CONTENT -->
                     <PayRunList :payrun-data="result.payruns" />

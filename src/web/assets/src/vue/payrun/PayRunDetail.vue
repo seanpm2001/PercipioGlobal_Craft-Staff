@@ -1,8 +1,8 @@
 <script setup lang="ts">
     import { useQuery } from '@vue/apollo-composable'
-    import { provide, ref } from 'vue'
+    import { ref } from 'vue'
 
-    import { fetchPayRun, getQueue } from '~/js/composables/useAxiosClient'
+    import { fetchPayRun } from '~/js/composables/useAxiosClient'
     import { usePayRunStore } from '~/js/stores/payrun'
     import { PAYRUN } from '~/graphql/payrun.ts'
 
@@ -13,7 +13,7 @@
     import ListLogs from '~/vue/organisms/lists/list--logs.vue'
 
     const payRunId = window.location.href.split("/").pop()
-    const { result, loading } = useQuery(PAYRUN, {id: payRunId})
+    const { result, loading } = useQuery(PAYRUN, { id: payRunId })
     const store = usePayRunStore()
     const error = ref(window?.validation?.error)
 
