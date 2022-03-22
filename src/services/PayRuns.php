@@ -10,6 +10,7 @@
 
 namespace percipiolondon\staff\services;
 
+use craft\base\ElementInterface;
 use craft\helpers\App;
 use craft\queue\QueueInterface;
 use GuzzleHttp\Exception\GuzzleException;
@@ -67,125 +68,12 @@ class PayRuns extends Component
 
 
     /* GETTERS */
-    public function getPayRunsOfEmployer(int $employerId): array
+    public function getOpenPayRunByEmployer(int $employerId) : ElementInterface
     {
-        $query = new Query();
-        $query->from(Table::PAYRUN)
-            ->where('employerId = '.$employerId)
-            ->all();
-        $command = $query->createCommand();
-        $payRunQuery = $command->queryAll();
-
-        $payRuns = [];
-
-        foreach($payRunQuery as $payRun) {
-
-            $query = new Query();
-            $query->from(Table::PAYRUN_TOTALS)
-                ->where('id = '.$payRun['totalsId'])
-                ->all();
-            $command = $query->createCommand();
-            $totals = $command->queryOne();
-
-            $payRun['totals'] = $this->_parseTotals($totals);
-
-            $payRuns[] = $payRun;
-        }
-
-        return $payRuns;
-    }
-
-    public function getPayRunById(int $payRunId): array
-    {
-        $query = new Query();
-        $query->from(Table::PAYRUN)
-            ->where('id = '.$payRunId)
-            ->all();
-        $command = $query->createCommand();
-        $payRunQuery = $command->queryAll();
-
-        $payRuns = [];
-
-        foreach($payRunQuery as $payRun) {
-
-            //totalsId
-            $query = new Query();
-            $query->from(Table::PAYRUN_TOTALS)
-                ->where('id = '.$payRun['totalsId'])
-                ->one();
-            $command = $query->createCommand();
-            $totals = $command->queryOne();
-
-            $payRun['totals'] = $this->_parseTotals($totals);
-
-            //entries
-            $query = new Query();
-            $query->from(Table::PAYRUN_ENTRIES)
-                ->where('payRunId = '.$payRun['id'])
-                ->all();
-            $command = $query->createCommand();
-            $payRunEntries = $command->queryAll();
-
-            $payRun['entries'] = [];
-
-            foreach($payRunEntries as $entry) {
-
-                //pdf
-                $entry['pdf'] = SecurityHelper::decrypt($entry['pdf'] ?? '');
-
-                //totals
-                $query = new Query();
-                $query->from(Table::PAYRUN_TOTALS)
-                    ->where('id = '.$entry['totalsId'])
-                    ->one();
-                $command = $query->createCommand();
-                $totals = $command->queryOne();
-
-                $entry['totals'] = $this->_parseTotals($totals);
-
-
-                //totalsYtd
-                $query = new Query();
-                $query->from(Table::PAYRUN_TOTALS)
-                    ->where('id = '.$entry['totalsYtdId'])
-                    ->one();
-                $command = $query->createCommand();
-                $totals = $command->queryOne();
-
-                $entry['totalsYtd'] = $this->_parseTotals($totals);
-
-
-                //payOptions
-                $query = new Query();
-                $query->from(Table::PAY_OPTIONS)
-                    ->where('id = '.$entry['payOptionsId'])
-                    ->one();
-                $command = $query->createCommand();
-                $payOptions = $command->queryOne();
-
-                $entry['payOptions'] = $this->parsePayOptions($payOptions);
-
-                //payLines
-                $query = new Query();
-                $query->from(Table::PAY_LINES)
-                    ->where('payOptionsId = '.$entry['payOptionsId'])
-                    ->all();
-                $command = $query->createCommand();
-                $payLines = $command->queryAll();
-
-                $entry['payOptions']['regularPayLines'] = [];
-
-                foreach($payLines as $payLine){
-                    $entry['payOptions']['regularPayLines'][] = $this->_parsePayLines($payLine);
-                }
-
-                $payRun['entries'][] = $entry;
-            }
-
-            $payRuns[] = $payRun;
-        }
-
-        return $payRuns;
+        return PayRun::find()
+            ->employerId($employerId)
+            ->orderBy('dateCreated DESC')
+            ->one();
     }
 
     public function getTotalsById(int $totalsId) : array

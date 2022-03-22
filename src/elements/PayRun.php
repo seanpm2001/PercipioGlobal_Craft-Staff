@@ -128,6 +128,9 @@ class PayRun extends Element
         ];
     }
 
+    // Public Methods
+    // =========================================================================
+
     /**
      * Returns the payrun totals.
      *
@@ -149,9 +152,6 @@ class PayRun extends Element
 
         return $this->_totals ?: null;
     }
-
-    // Public Methods
-    // =========================================================================
 
     /**
      * Returns the validation rules for attributes.

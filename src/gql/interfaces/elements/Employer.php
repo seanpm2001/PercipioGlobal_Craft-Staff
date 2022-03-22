@@ -137,6 +137,11 @@ class Employer extends Element
                     return SecurityHelper::resolve($source, $resolveInfo);
                 }
             ],
+            'currentPayRun' => [
+                'name' => 'currentPayRun',
+                'type' => PayRun::getType(),
+                'description' => 'Current open pay run'
+            ]
         ];
 
         return TypeManager::prepareFieldDefinitions(array_merge($parentFields, $securedFields, $fields), self::getName());
