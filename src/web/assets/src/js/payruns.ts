@@ -18,4 +18,6 @@ const payruns = async () => {
     return root
 }
 
-payruns()
+payruns().then( () => {
+    console.log()
+})
