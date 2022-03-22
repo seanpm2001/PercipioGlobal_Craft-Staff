@@ -354,9 +354,10 @@ class Staff extends Plugin
             'staff-management/pay-runs' => 'staff-management/pay-run',
             'staff-management/pay-runs/queue' => 'staff-management/pay-run/get-queue',
             'staff-management/pay-runs/<employerId:\d+>' => 'staff-management/pay-run/pay-run-by-employer',
+            'staff-management/pay-runs/<employerId:\d+>/<payRunId:\d+>' => 'staff-management/pay-run/detail',
             'staff-management/pay-runs/fetch-pay-runs/<employerId:\d+>' => 'staff-management/pay-run/fetch-pay-runs',
             'staff-management/pay-runs/fetch-pay-run/<payRunId:\d+>' => 'staff-management/pay-run/fetch-pay-run',
-            'staff-management/pay-runs/<employerId:\d+>/<payRunId:\d+>' => 'staff-management/pay-run/detail',
+            'staff-management/pay-runs/get-logs/<payRunId:\d+>' => 'staff-management/pay-run/get-pay-run-logs',
             'staff-management/pay-runs/download-template/<payRunId:\d+>' => 'staff-management/pay-run/download-template'
         ];
     }
