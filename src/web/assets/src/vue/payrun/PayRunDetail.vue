@@ -37,7 +37,7 @@
                 <a :href="`/admin/staff-management/pay-runs/${result?.payrun?.employerId}`" title="Go back to overview" class="inline-flex items-center px-2.5 py-1.5 rounded-full text-sm text-indigo-700 bg-indigo-100 hover:bg-indigo-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500" style="margin-bottom:0">&larr;</a>
                 <h1 class="ml-2 text-xl font-semibold text-gray-900">{{ result?.payrun?.taxYear }} / {{ result?.payrun?.period }}</h1>
             </div>
-            <p class="mt-2 text-sm text-gray-700">A detailed view of the figures on this pay run. You can download the latest figures by clicking "Download&nbsp;Latest&nbsp;Pay&nbsp;Run&nbsp;Entries&nbsp;Template". You can upload the CSV by clicking "Upload&nbsp;CSV&nbsp;To&nbsp;Staffology", make sure you have the same headings in the CSV to upload. The CSV gets directly uploaded to Staffology.</p>
+            <p class="mt-2 text-sm text-gray-700">Download the current pay run CSV using the Download button below. When uploading, ensure table headings and the file format (CSV) remain unchanged.</p>
         </div>
         <div class="mt-4 md:mt-0 flex" style="margin-bottom:0">
             <StatusSynced :date="result?.payrun?.dateUpdated" />
