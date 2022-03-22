@@ -12,7 +12,8 @@
     import FormImport from '~/vue/organisms/forms/form--import.vue'
     import ListLogs from '~/vue/organisms/lists/list--logs.vue'
 
-    const { result, loading } = useQuery(PAYRUN, {id: "12682"})
+    const payRunId = window.location.href.split("/").pop()
+    const { result, loading } = useQuery(PAYRUN, {id: payRunId})
     const store = usePayRunStore()
     const error = ref(window?.validation?.error)
 
