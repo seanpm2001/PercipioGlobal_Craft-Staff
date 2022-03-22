@@ -35,7 +35,7 @@
     <div class="md:flex items-start">
         <div class="flex-grow pr-4" style="margin-bottom:0">
             <div class="flex items-center">
-                <a :href="`/admin/staff-management/pay-runs/${result?.payrun?.employerId}`" title="Go back to overview" class="inline-flex items-center px-2.5 py-1.5 rounded-full text-sm text-indigo-700 bg-indigo-100 hover:bg-indigo-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500" style="margin-bottom:0">&larr;</a>
+                <a :href="`/admin/staff-management/pay-runs/${result?.payrun?.employerId}`" title="Go back to overview" class="inline-flex no-underline items-center px-2.5 py-1.5 rounded-full text-sm text-indigo-700 bg-indigo-100 hover:bg-indigo-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500" style="margin-bottom:0">&larr;</a>
                 <h1 class="ml-2 text-xl font-semibold text-gray-900">{{ result?.payrun?.taxYear }} / {{ result?.payrun?.period }}</h1>
             </div>
             <p class="mt-2 text-sm text-gray-700">Download the current pay run CSV using the Download button below. When uploading, ensure table headings and the file format (CSV) remain unchanged.</p>
@@ -43,7 +43,7 @@
         <div class="mt-4 md:mt-0 flex" style="margin-bottom:0">
             <StatusSynced :date="result?.payrun?.dateSynced" />
             <button 
-                @click="fetchPayRun(payrun?.id)"
+                @click="fetchPayRun(result?.payrun?.id)"
                 :disabled="store.loadingFetched" 
                 class="cursor-pointer inline-flex items-center justify-center rounded-md border border-transparent bg-indigo-600 disabled:bg-indigo-400 disabled:cursor-not-allowed px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 sm:w-auto" 
                 style="margin-bottom:0"
