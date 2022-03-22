@@ -1,7 +1,7 @@
 <script setup lang="ts">
     import { getQueue } from '~/js/composables/useAxiosClient'
     import { ref, onMounted, onUnmounted } from 'vue'
-    import { usePayRunStore } from '~/js/stores/payrun'
+    import { usePayRunStore } from '~/stores/payrun'
 
     const props = defineProps({
         date: String,

@@ -1,5 +1,5 @@
 import axios from 'axios'
-import { usePayRunStore } from '~/js/stores/payrun'
+import { usePayRunStore } from '~/stores/payrun'
 
 const ENDPOINT = window.api.cpUrl ?? 'https://localhost:8003'
 

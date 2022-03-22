@@ -5,5 +5,5 @@ export const usePayRunStore = defineStore('payrun', {
         queue: 0,
         fetching: false,
         logs: []
-    }),
+    })
 })

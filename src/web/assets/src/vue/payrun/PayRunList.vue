@@ -3,7 +3,7 @@
     import { storeToRefs } from 'pinia'
 
     import { fetchPayRuns } from '~/js/composables/useAxiosClient'
-    import { usePayRunStore } from '~/js/stores/payrun'
+    import { usePayRunStore } from '~/stores/payrun'
     import { PAYRUNS } from '~/graphql/payrun.ts'
 
     import PayRunList from '~/vue/molecules/listitems/listitem--payrun.vue'
