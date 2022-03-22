@@ -1,4 +1,4 @@
-import{g as r,d as n,x as m,y as d,z as i,o as t,c as a,f as l,t as p,B as c,a as y}from"./vendor.6feb70cb.js";import{u,g as f}from"./useApolloClient.ec8c64b5.js";const N=r`
+import{g as r,d as n,x as m,y as d,z as i,o as t,c as a,f as l,t as p,B as c,a as y}from"./vendor.6feb70cb.js";import{u,g as f}from"./useApolloClient.c8aae7ed.js";const N=r`
     query Payruns($employerId: [ID]) {
         payruns(employerId: $employerId) {
             id,
@@ -37,4 +37,4 @@ import{g as r,d as n,x as m,y as d,z as i,o as t,c as a,f as l,t as p,B as c,a a
         }
     }
 `,U=e=>e&&parseFloat(e).toFixed(2).replace(/\d(?=(\d{3})+\.)/g,"$&,"),_={class:"mt-4 md:mt-0 text-xs inline-flex mr-2 flex-grow",style:{"margin-bottom":"0"}},g=c(" Last Synced: "),x={key:0,class:"flex items-center pl-1"},D=y("span",{style:{"margin-bottom":"0"}},"Queue is running to sync",-1),S=[D],Y={key:1,class:"pl-1"},j=n({props:{date:String},setup(e){const s=u(),o=m(null);return d(()=>{o.value=setInterval(()=>{f()},5e3)}),i(()=>{clearInterval(o.value)}),(I,T)=>(t(),a("span",_,[g,l(s).queue!=0?(t(),a("span",x,S)):(t(),a("span",Y,p(e.date),1))]))}});export{N as P,j as _,P as a,U as f};
-//# sourceMappingURL=status--synced.3d792c61.js.map
+//# sourceMappingURL=status--synced.ac449643.js.map
