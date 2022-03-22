@@ -14,6 +14,8 @@ use Craft;
 use craft\base\Element;
 use craft\elements\db\ElementQueryInterface;
 
+use percipiolondon\staff\Staff;
+use yii\base\InvalidConfigException;
 use yii\db\Exception;
 use yii\db\Query;
 
@@ -46,6 +48,8 @@ class Employer extends Element
     public $startYear;
     public $currentYear;
     public $employeeCount;
+
+    private $_currentPayRun;
 
     // Static Methods
     // =========================================================================
@@ -123,6 +127,26 @@ class Employer extends Element
 
     // Public Methods
     // =========================================================================
+    /**
+     * Returns the payrun totals.
+     *
+     * @return PayRun|null
+     */
+    public function getCurrentPayRun()
+    {
+        if ($this->_currentPayRun === null) {
+            if ($this->id === null) {
+                return null;
+            }
+
+            if (($this->_currentPayRun = Staff::$plugin->payRuns->getOpenPayRunByEmployer($this->id)) === null) {
+                // The author is probably soft-deleted. Just no author is set
+                $this->_currentPayRun = false;
+            }
+        }
+
+        return $this->_currentPayRun ?: null;
+    }
 
     /**
      * Returns the validation rules for attributes.
