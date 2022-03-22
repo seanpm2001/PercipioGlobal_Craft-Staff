@@ -1,13 +1,22 @@
 <script setup lang="ts">
     import { getPayRunLogs } from '~/js/composables/useAxiosClient'
-    import { ref, onMounted, onUnmounted } from 'vue'
+    import { ref, onMounted, onUnmounted, watchEffect } from 'vue'
+    import { usePayRunStore } from '~/stores/payrun'
+
     import LogListItem from '~/vue/molecules/listitems/listitem--log.vue'
+    import LoadingList from '~/vue/molecules/listitems/listitem--loading.vue'
+
+    const store = usePayRunStore()
 
     const props = defineProps({
-        payrun: Number,
+        payrun: String,
     })
 
-    getPayRunLogs(props.payrun)
+    watchEffect(() => {
+        if(props.payrun) {
+            getPayRunLogs(props.payrun)
+        }
+    })
 
 </script>
 
@@ -27,7 +36,8 @@
                     </div>
 
                     <!-- CONTENT -->
-                    <LogListItem />
+                    <LoadingList v-if="!payrun" />
+                    <LogListItem  v-for="log in store.logs" :key="log.id" :log="log" />
                 </div>
             </div>
         </div>

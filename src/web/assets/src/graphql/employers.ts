@@ -8,6 +8,12 @@ export const EMPLOYERS = gql`
             name
             employeeCount
             currentYear
+            logoUrl
+            dateSynced:dateUpdated @formatDateTime(format:"Y-m-d H:i")
+            currentPayRun{
+                taxYear
+                period
+            }
         }
     }
 `

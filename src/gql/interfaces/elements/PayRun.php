@@ -146,6 +146,11 @@ class PayRun extends Element
                 'name' => 'totals',
                 'type' => PayRunTotals::getType(),
                 'description' => 'Totals of the payrun.',
+            ],
+            'employer' => [
+                'name' => 'employer',
+                'type' => Type::string(),
+                'description' => 'The company name of where the pay run belongs to'
             ]
         ];
 

@@ -130,6 +130,18 @@ class Employer extends Element
                 'name' => 'startYear',
                 'type' => Type::string(),
             ],
+            'logoUrl' => [
+                'name' => 'logoUrl',
+                'type' => Type::string(),
+                'resolve' => function ($source, array $arguments, $context, ResolveInfo $resolveInfo) {
+                    return SecurityHelper::resolve($source, $resolveInfo);
+                }
+            ],
+            'currentPayRun' => [
+                'name' => 'currentPayRun',
+                'type' => PayRun::getType(),
+                'description' => 'Current open pay run'
+            ]
         ];
 
         return TypeManager::prepareFieldDefinitions(array_merge($parentFields, $securedFields, $fields), self::getName());

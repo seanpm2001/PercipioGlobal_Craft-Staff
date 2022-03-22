@@ -94,6 +94,17 @@ class Employers extends Component
         return $employer;
     }
 
+    public function getEmployerNameById(int $employerId): string
+    {
+        $employer = Employer::findOne($employerId);
+
+        if($employer){
+            return SecurityHelper::decrypt($employer['name']);
+        }
+
+        return '';
+    }
+
 
 
     /* FETCHES */

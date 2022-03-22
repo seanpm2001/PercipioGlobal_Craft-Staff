@@ -1,44 +1,19 @@
 <script setup lang="ts">
     import { useQuery } from '@vue/apollo-composable'
     import { EMPLOYERS } from '~/graphql/employers.ts'
-    import { logErrorMessages } from '@vue/apollo-util'
-    import EmployerListItem from '~/vue/molecules/listitems/listitem--employer.vue'
+    import LoadingList from '~/vue/molecules/listitems/listitem--loading.vue'
+    import EmployerList from '~/vue/organisms/lists/list--employers.vue'
     //import inputSearch from '~/vue/atoms/inputs/input--search.vue'
 
-    const employers = [
-        { id: 12676, name: 'Acme Limited (Demo)', logoUrl: 'https://prodstaffologystorage.blob.core.windows.net/images/generic-logo.png', crn: '123456', employeeCount: '5', currentPayRun: 'Year2021/12', synced: '15/04/2022 - 18:30' },
-    ]
-
-    const { result, loading, onResult, onError } = useQuery(EMPLOYERS)
-
-    onResult(queryResult => {
-        console.log(queryResult.data)
-        console.log(queryResult.loading)
-        console.log(queryResult.networkStatus)
-    })
-
-    onError(error => {
-        logErrorMessages(error)
-    })
-
+    const { result, loading } = useQuery(EMPLOYERS)
 </script>
 
 <template>
 
-    <h1>--- TEST ---</h1>
-
-    <div v-if="loading">Loading...</div>
-
-    <div v-else-if="result" class="bg-sky-200">
-        {{ result }}
-    </div>
-
-    <h1>--- END TEST ---</h1>
-
     <div class="sm:flex">
         <div class="sm:flex-auto">
             <h1 class="text-xl font-semibold text-gray-900">Employers</h1>
-            <p class="mt-2 text-sm text-gray-700">Click on a company from whom you want to upload pay run entries from.</p>
+            <p class="mt-2 text-sm text-gray-700">Select a company below to begin bulk pay run management.</p>
         </div>
         <!--div class="mt-4 sm:mt-0 sm:ml-16 sm:flex-none">
             <button type="button" class="inline-flex items-center justify-center rounded-md border border-transparent bg-indigo-600 px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 sm:w-auto">Add user</button>
@@ -58,8 +33,9 @@
                         <div class="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">Last synced</div>
                     </div>
 
-                    <!-- CONTENT -->
-                    <EmployerListItem :employer-data="employers" />
+                    <LoadingList v-if="loading" />
+
+                    <EmployerList v-if="result" :employers="result.employers" />
                 </div>
             </div>
         </div>

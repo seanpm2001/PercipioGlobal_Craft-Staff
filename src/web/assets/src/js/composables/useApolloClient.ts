@@ -2,17 +2,6 @@ import { ApolloClient, from, InMemoryCache, HttpLink } from '@apollo/client/core
 import { onError } from '@apollo/client/link/error'
 import { setContext } from '@apollo/client/link/context'
 import { getToken } from '~/js/composables/useAxiosClient'
-import { usePayRunStore } from '~/js/stores/payrun'
-
-// set our token
-
-
-const setToken = async () => {
-    const store = usePayRunStore()
-    if(!store.token) await getToken()
-    return true
-}
-
 
 // HTTP connection to the API
 const httpLink = new HttpLink({
@@ -22,10 +11,9 @@ const httpLink = new HttpLink({
 
 const authLink = setContext(async (_, { headers }) => {
     // get the authentication token from the store, if it's null fetch it through axios
-    const store = usePayRunStore()
-    if(!store.token) await setToken()
+    const token = await getToken()
 
-    const token = '_A2rfTFrwpdU6S0nQtK8TSJgQE4wGcho'
+    //const token = 'SgmAAuUYsFE0_GKOIo7deUOuZWj0yttv'
     return {
         headers: {
             ...headers,

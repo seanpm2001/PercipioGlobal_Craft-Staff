@@ -1,5 +1,5 @@
 import axios from 'axios'
-import { usePayRunStore } from '~/js/stores/payrun'
+import { usePayRunStore } from '~/stores/payrun'
 
 const ENDPOINT = window.api.cpUrl ?? 'https://localhost:8003'
 
@@ -63,18 +63,20 @@ export const getPayRunLogs = (payRunId: String) => {
 
 }
 
-export const getToken = async () => {
-    
-    const store = usePayRunStore()
+export const getToken = async (): Promise<string|null> => {
 
-    axios({
+    let token = {
+        value: null,
+    }
+
+    await axios({
         method: 'get',
         url: `${ENDPOINT}/staff-management/settings/get-gql-token`,
     })
     .then( (response) => {
-        store.token = response?.data?.token ? response.data.token : null
+        token.value = response?.data?.token ? response.data.token : null
     })
 
-    return store.token
+    return token.value || null
 
 }
