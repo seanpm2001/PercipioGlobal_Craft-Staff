@@ -1,15 +1,9 @@
 <script setup lang="ts">
+    import { format } from '~/js/composables/useCurrencyFormat'
+
     const props = defineProps({
         payrun: Object,
     })
-
-    const format = (value) => {
-        if(!value){
-            return value
-        }
-
-        return value.toFixed(2).replace(/\d(?=(\d{3})+\.)/g, "$&,");
-    }
 
 </script>
 

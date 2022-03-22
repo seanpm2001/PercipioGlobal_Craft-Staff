@@ -16,6 +16,7 @@ use craft\db\Query;
 use craft\elements\db\ElementQueryInterface;
 
 use percipiolondon\staff\Staff;
+use yii\base\InvalidConfigException;
 use yii\db\Exception;
 
 use percipiolondon\staff\helpers\Logger;
@@ -54,6 +55,7 @@ class PayRun extends Element
     public $employerId;
 
     private $_totals;
+    private $_employer;
 
     // Static Methods
     // =========================================================================
@@ -151,6 +153,28 @@ class PayRun extends Element
         }
 
         return $this->_totals ?: null;
+    }
+
+    /**
+     * Returns the payrun totals.
+     *
+     * @return string|null
+     * @throws InvalidConfigException if [[employerId]] is set but invalid
+     */
+    public function getEmployer()
+    {
+        if ($this->_employer === null) {
+            if ($this->employerId === null) {
+                return null;
+            }
+
+            if (($this->_employer = Staff::$plugin->employers->getEmployerNameById($this->employerId)) === null) {
+                // The author is probably soft-deleted. Just no author is set
+                $this->_employer = false;
+            }
+        }
+
+        return $this->_employer ?: null;
     }
 
     /**
