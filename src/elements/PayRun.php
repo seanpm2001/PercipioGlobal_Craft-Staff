@@ -231,6 +231,15 @@ class PayRun extends Element
         return true;
     }
 
+    public function datetimeAttributes(): array
+    {
+        $attributes = parent::datetimeAttributes();
+        $attributes[] = 'dateClosed';
+        $attributes[] = 'paymentDate';
+        $attributes[] = 'startDate';
+        return $attributes;
+    }
+
     /**
      * Returns all payrun ID's
      *
