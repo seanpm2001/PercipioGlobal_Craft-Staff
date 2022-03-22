@@ -2,6 +2,15 @@
     const props = defineProps({
         payrun: Object,
     })
+
+    const format = (value) => {
+        if(!value){
+            return value
+        }
+
+        return value.toFixed(2).replace(/\d(?=(\d{3})+\.)/g, "$&,");
+    }
+
 </script>
 
 <template>
@@ -12,15 +21,15 @@
                 Payment Date
             </dt>
             <dd class="mt-1 text-2xl font-semibold text-gray-900 text-center">
-                {{ payrun.paymentDate }}
+                {{ payrun?.paymentDate }}
             </dd>
         </div>
         <div class="px-4 py-5 bg-gray-200 shadow rounded-lg overflow-hidden sm:p-6">
             <dt class="text-sm font-medium text-gray-500 truncate text-center">
-                Total Net
+                Total gross
             </dt>
             <dd class="mt-1 text-2xl font-semibold text-gray-900 text-center">
-                £ {{ payrun.totalCost }}
+                £ {{ format(payrun?.totals?.gross) }}
             </dd>
         </div>
         <div class="px-4 py-5 bg-gray-200 shadow rounded-lg overflow-hidden sm:p-6">
@@ -28,15 +37,15 @@
                 Total Tax
             </dt>
             <dd class="mt-1 text-2xl font-semibold text-gray-900 text-center">
-                £ {{ payrun.totalTax }}
+                £ {{ format(payrun?.totals?.tax) }}
             </dd>
         </div>
         <div class="px-4 py-5 bg-gray-200 shadow rounded-lg overflow-hidden sm:p-6">
             <dt class="text-sm font-medium text-gray-500 truncate text-center">
-                Total EE &amp; ER Nics
+                Total EE &amp; ER Nics (grossForNi)
             </dt>
             <dd class="mt-1 text-2xl font-semibold text-gray-900 text-center">
-                £ {{ payrun.totalTax }}
+                £ {{ format(payrun?.totals?.grossForNi) }}
             </dd>
         </div>
         <div class="px-4 py-5 bg-gray-200 shadow rounded-lg overflow-hidden sm:p-6">
@@ -44,7 +53,7 @@
                 Total cost
             </dt>
             <dd class="mt-1 text-2xl font-semibold text-gray-900 text-center">
-                £ {{ payrun.totalCost }}
+                £ {{ format(payrun?.totals?.totalCost) }}
             </dd>
         </div>
     </dl>
