@@ -25,7 +25,7 @@ const authLink = setContext(async (_, { headers }) => {
     const store = usePayRunStore()
     if(!store.token) await setToken()
 
-    const token = '_A2rfTFrwpdU6S0nQtK8TSJgQE4wGcho'
+    const token = 'SgmAAuUYsFE0_GKOIo7deUOuZWj0yttv'
     return {
         headers: {
             ...headers,

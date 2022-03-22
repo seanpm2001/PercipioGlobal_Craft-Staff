@@ -8,6 +8,7 @@ export const EMPLOYERS = gql`
             name
             employeeCount
             currentYear
+            logoUrl
         }
     }
 `

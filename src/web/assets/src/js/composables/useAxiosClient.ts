@@ -48,6 +48,21 @@ export const getQueue = () => {
 
 }
 
+export const getPayRunLogs = (payRunId: String) => {
+
+    const store = usePayRunStore()
+
+    axios({
+        method: 'get',
+        url: `${ENDPOINT}/staff-management/pay-runs/get-logs/${payRunId}`,
+    })
+        .then((response) => {
+            store.logs = response?.data?.logs ? response.data.logs : []
+            // store.loadingFetched = false
+        })
+
+}
+
 export const getToken = async () => {
     
     const store = usePayRunStore()

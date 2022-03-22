@@ -3,20 +3,17 @@
 namespace percipiolondon\staff\controllers;
 
 use craft\helpers\ArrayHelper;
-use craft\helpers\Queue;
 use craft\web\Controller;
 use League\Csv\AbstractCsv;
 use League\Csv\Exception;
 use League\Csv\Reader;
 use League\Csv\Statement;
+use percipiolondon\staff\db\Table;
 use percipiolondon\staff\elements\Employer;
 use percipiolondon\staff\elements\PayRun;
 use percipiolondon\staff\helpers\Security as SecurityHelper;
-use percipiolondon\staff\records\Employer as EmployerRecord;
-use percipiolondon\staff\records\PayCode;
 use percipiolondon\staff\records\PayLine as PayLineRecord;
-use percipiolondon\staff\records\PayRun as PayRunRecord;
-use percipiolondon\staff\records\PayRunEntry as PayRunEntryRecord;
+use percipiolondon\staff\records\PayRunImport;
 use percipiolondon\staff\Staff;
 
 use Craft;
@@ -96,7 +93,7 @@ class PayRunController extends Controller
         ];
 
         // Render the template
-        return $this->renderTemplate('staff-management/payruns/employer', $variables);
+        return $this->renderTemplate('staff-management/payruns/payruns', $variables);
     }
 
     /**
@@ -192,6 +189,22 @@ class PayRunController extends Controller
         ]);
     }
 
+    public function actionGetPayRunLogs(int $payRunId) : Response
+    {
+        $this->requireLogin();
+        $this->requireAcceptsJson();
+
+        $query = new \yii\db\Query();
+        $query->from(['log' => Table::PAYRUN_IMPORTS])
+            ->select(['filename', 'rowCount', 'uploadedBy', 'payRunId', 'status', 'log.dateCreated', 'user.username', 'user.firstName', 'user.lastName'])
+            ->innerJoin(['user' => \craft\db\Table::USERS],'`user`.`id` = `uploadedBy`')
+            ->orderBy(['dateCreated' => SORT_DESC]);
+
+        return $this->asJson([
+            'logs' => $query->all()
+        ]);
+    }
+
 
     public function actionImport()
     {
@@ -232,19 +245,19 @@ class PayRunController extends Controller
                 fclose($fileHandle);
             }
             // Read in the headers
-            $csv = Reader::createFromPath($file->tempName);
-            try {
-                $csv->setDelimiter(';');
-            } catch (Exception $e) {
-                Craft::error($e, __METHOD__);
-            }
-            $headers = $csv->fetchOne(0);
+//            $csv = Reader::createFromPath($file->tempName);
+//            try {
+//                $csv->setDelimiter(',');
+//            } catch (Exception $e) {
+//                Craft::error($e, __METHOD__);
+//            }
+//            $headers = $csv->fetchOne(0);
         }
 
         //PARSE CSV
         try {
             $csv = Reader::createFromPath($filePath);
-            $csv->setDelimiter(';');
+            $csv->setDelimiter(',');
             $headers = array_flip($csv->fetchOne(0));
         } catch (\Exception $e) {
             // If this throws an exception, try to read the CSV file from the data cache
@@ -265,24 +278,40 @@ class PayRunController extends Controller
             }
         }
 
+        //save log
+        $importLog = new PayRunImport();
+        $importLog->payRunId = $payRunId;
+        $importLog->uploadedBy = Craft::$app->getUser()->id;
+        $importLog->filepath = $filePath;
+        $importLog->filename = $file->name;
+
         // If we have headers, then we have a file, so parse it
-        if ($headers === null) {
+        if ($headers !== null) {
             $entries = $this->importCsvApi9($csv, $headers, $payRunId);
 
             if(count($entries) > 0){
+                $importLog->rowCount = count($entries);
+
                 $success = $this->saveEntriesToStaffology($payRunId, $entries);
+
                 if($success){
+                    $importLog->status = 'Succeeded';
                     Craft::$app->getSession()->setNotice(Craft::t('staff-management', 'Imports from CSV started.'));
                 } else {
+                    $importLog->status = 'Failed';
                     $error = 'The data in the CSV doesn\'t match with what Staffology expects. Please make sure you click on "Fetch Pay Run" first. After the last sync date is updated, click on "Download Latest Pay Run Entries Template". Check for mismatches in your uploaded CSV according to the one from the download.';
                 }
             }else{
+                $importLog->status = 'Failed';
                 $error = "There was a mismatch in the CSV template, please download the latest template to check if the fields match with the CSV you want to upload.";
             }
             @unlink($filename);
         } else {
+            $importLog->status = 'Failed';
             $error = "There was a technical problem. Please contact the developers at Percipio to solve.";
         }
+
+        $importLog->save();
 
         // Render the template
         $employerName = SecurityHelper::decrypt($employer['name']) ?? '';
@@ -303,7 +332,6 @@ class PayRunController extends Controller
 
         return $this->renderTemplate('staff-management/payruns/detail', $variables);
     }
-
 
     protected function saveEntriesToStaffology(int $payRunId, array $entries): bool
     {
