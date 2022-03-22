@@ -3,9 +3,11 @@ import { onError } from '@apollo/client/link/error'
 import { setContext } from '@apollo/client/link/context'
 import { getToken } from '~/js/composables/useAxiosClient'
 
+const ENDPOINT = window.api.cpUrl ?? 'https://localhost:8003'
+
 // HTTP connection to the API
 const httpLink = new HttpLink({
-    uri: 'http://localhost:8001/api',
+    uri: `${ENDPOINT}/api`,
     credentials: 'include'
 })
 
