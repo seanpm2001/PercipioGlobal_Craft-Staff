@@ -70,6 +70,10 @@
 
                     <LoadingList v-if="loading" />
 
+                    <div class="grid grid-cols-7 border-b border-solid border-gray-200 py-4 px-3 text-center" v-if="!loading && result.payruns.length === 0">
+                        <div class="col-span-7">There are currently no pay runs for this employer</div>
+                    </div>
+
                     <!-- CONTENT -->
                     <PayRunList :payrun-data="result.payruns" />
                 </div>
