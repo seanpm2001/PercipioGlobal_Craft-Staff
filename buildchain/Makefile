@@ -17,6 +17,9 @@ build: docker install
 dev: docker install
 	${DOCKERRUN} \
 		run dev
+lint: docker install
+	${DOCKERRUN} \
+		run lint:ts
 docker:
 	docker build \
 		. \
