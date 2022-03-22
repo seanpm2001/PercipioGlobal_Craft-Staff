@@ -1623,9 +1623,9 @@ class Install extends Migration
         $this->addForeignKey(null, Table::PAYRUN_ENTRIES, ['fpsId'], Table::ITEMS, ['id']);
 
         //PAYRUN_IMPORT
-        $this->addForeignKey(null, Table::PAYRUN_IMPORTS, ["payRunId"], Table::PAYRUN, ['id'], 'CASCASE', 'CASCADE');
-        $this->addForeignKey(null, Table::PAYRUN_IMPORTS, ["uploadedBy"], \craft\db\Table::USERS, ['id']);
-        $this->addForeignKey(null, Table::PAYRUN_IMPORTS, ["approvedBy"], \craft\db\Table::USERS, ['id']);
+        $this->addForeignKey(null, Table::PAYRUN_IMPORTS, ['payRunId'], Table::PAYRUN, ['id'], 'CASCADE', 'CASCADE');
+        $this->addForeignKey(null, Table::PAYRUN_IMPORTS, ['uploadedBy'], \craft\db\Table::USERS, ['id']);
+        $this->addForeignKey(null, Table::PAYRUN_IMPORTS, ['approvedBy'], \craft\db\Table::USERS, ['id']);
 
         //PAYRUN_LOG
         $this->addForeignKey(null, Table::PAYRUN_LOG, ['employerId'], Table::EMPLOYERS, ['id'], 'CASCADE', 'CASCADE');
