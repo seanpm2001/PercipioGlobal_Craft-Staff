@@ -7,6 +7,7 @@
     import { PAYRUN } from '~/graphql/payrun.ts'
 
     import PayRunStats from '~/vue/molecules/stats/stats--payrun.vue'
+    import LoadingStats from '~/vue/molecules/stats/stats--loading.vue'
     import BannerError from '~/vue/molecules/banners/banner--error.vue'
     import StatusSynced from '~/vue/molecules/status/status--synced.vue'
     import FormImport from '~/vue/organisms/forms/form--import.vue'
@@ -31,7 +32,7 @@
 
 <template>
 
-    <div class="md:flex items-start" v-if="result?.payrun">
+    <div class="md:flex items-start">
         <div class="flex-grow pr-4" style="margin-bottom:0">
             <div class="flex items-center">
                 <a :href="`/admin/staff-management/pay-runs/${result?.payrun?.employerId}`" title="Go back to overview" class="inline-flex items-center px-2.5 py-1.5 rounded-full text-sm text-indigo-700 bg-indigo-100 hover:bg-indigo-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500" style="margin-bottom:0">&larr;</a>
@@ -56,11 +57,12 @@
         </div>
     </div>
 
-    <div class="mt-8" v-if="result?.payrun">
-        <PayRunStats :payrun="result?.payrun" />
+    <div class="mt-8">
+        <LoadingStats v-if="!result?.payrun"/>
+        <PayRunStats :payrun="result?.payrun" v-if="result?.payrun" />
     </div>
 
-    <div class="mt-8 flex" v-if="result?.payrun">
+    <div class="mt-8 flex">
 
         <BannerError v-if="error" :error="error" @close="handleClose" />
 
@@ -70,7 +72,7 @@
                 Last Synced: {{ result?.payrun?.dateSynced }}
             </span>
         </div>
-        <div class="mt-4 sm:mt-0 sm:ml-16 sm:flex-none space-x-2" style="margin-bottom:0">
+        <div class="mt-4 sm:mt-0 sm:ml-16 sm:flex-none space-x-2" style="margin-bottom:0" v-if="result?.payrun">
             <button @click="downloadTemplate(result?.payrun?.id)" class="cursor-pointer inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-indigo-700 bg-indigo-100 hover:bg-indigo-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">Download Latest Pay Run Template</button>
             <FormImport :payrun="result?.payrun" />            
         </div>
