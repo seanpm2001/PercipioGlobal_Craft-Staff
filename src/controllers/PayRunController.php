@@ -93,7 +93,7 @@ class PayRunController extends Controller
         ];
 
         // Render the template
-        return $this->renderTemplate('staff-management/payruns/employer', $variables);
+        return $this->renderTemplate('staff-management/payruns/payruns', $variables);
     }
 
     /**
