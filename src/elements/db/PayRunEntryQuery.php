@@ -1,6 +1,6 @@
 <?php
 
-namespace percipiolondon\craftstaff\elements\db;
+namespace percipiolondon\staff\elements\db;
 
 use craft\db\Query;
 use craft\db\QueryAbortedException;
@@ -12,7 +12,6 @@ use yii\db\Connection;
 
 class PayRunEntryQuery extends ElementQuery
 {
-    public $siteId;
     public $staffologyId;
     public $payRunId;
     public $employerId;
@@ -32,33 +31,27 @@ class PayRunEntryQuery extends ElementQuery
     public $unpaidAbsence;
     public $hasAttachmentOrders;
     public $paymentDate;
-    public $priorPayrollCode;
-    public $payOptions;
-    public $pensionSummary;
-    public $totals;
+    public $priorPayrollCodeId;
+    public $payOptionsId;
+    public $pensionSummaryId;
+    public $totalsId;
     public $periodOverrides;
-    public $totalsYtd;
+    public $totalsYtdId;
     public $totalsYtdOverrides;
     public $forcedCisVatAmount;
-    public $holidayAccured;
+    public $holidayAccrued;
     public $state;
     public $isClosed;
     public $manualNi;
-    public $nationalInsuranceCalculation;
+    public $nationalInsuranceCalculationId;
     public $payrollCodeChanged;
     public $aeNotEnroledWarning;
-    public $fps;
+    public $fpsId;
     public $receivingOffsetPay;
     public $paymentAfterLearning;
-    public $umbrellaPayment;
+    public $umbrellaPaymentId;
     public $employee;
     public $pdf;
-
-    public function siteId($value)
-    {
-        $this->siteId = $value;
-        return $this;
-    }
 
     public function staffologyId($value)
     {
@@ -72,9 +65,56 @@ class PayRunEntryQuery extends ElementQuery
         return $this;
     }
 
+    public function employeeId($value)
+    {
+        $this->employeeId = $value;
+        return $this;
+    }
+
     public function employerId($value)
     {
         $this->employerId = $value;
+        return $this;
+    }
+    public function payOptionsId($value)
+    {
+        $this->payOptionsId = $value;
+        return $this;
+    }
+
+    public function pensionSummaryId($value)
+    {
+        $this->pensionSummaryId = $value;
+        return $this;
+    }
+
+    public function totalsId($value)
+    {
+        $this->totalsId = $value;
+        return $this;
+    }
+
+    public function priorPayrollCodeId($value)
+    {
+        $this->priorPayrollCodeId = $value;
+        return $this;
+    }
+
+    public function totalsYtdId($value)
+    {
+        $this->totalsYtdId = $value;
+        return $this;
+    }
+
+    public function totalsYtdOverridesId($value)
+    {
+        $this->totalsYtdOverridesId = $value;
+        return $this;
+    }
+
+    public function nationalInsuranceCalculationId($value)
+    {
+        $this->nationalInsuranceCalculationId = $value;
         return $this;
     }
 
@@ -168,45 +208,9 @@ class PayRunEntryQuery extends ElementQuery
         return $this;
     }
 
-    public function priorPayrollCode($value)
-    {
-        $this->priorPayrollCode = $value;
-        return $this;
-    }
-
-    public function payOptions($value)
-    {
-        $this->payOptions = $value;
-        return $this;
-    }
-
-    public function pensionSummary($value)
-    {
-        $this->pensionSummary = $value;
-        return $this;
-    }
-
-    public function totals($value)
-    {
-        $this->totals = $value;
-        return $this;
-    }
-
     public function periodOverrides($value)
     {
         $this->periodOverrides = $value;
-        return $this;
-    }
-
-    public function totalsYtd($value)
-    {
-        $this->totalsYtd = $value;
-        return $this;
-    }
-
-    public function totalsYtdOverrides($value)
-    {
-        $this->totalsYtdOverrides = $value;
         return $this;
     }
 
@@ -216,9 +220,9 @@ class PayRunEntryQuery extends ElementQuery
         return $this;
     }
 
-    public function holidayAccured($value)
+    public function holidayAccrued($value)
     {
-        $this->holidayAccured = $value;
+        $this->holidayAccrued = $value;
         return $this;
     }
 
@@ -240,12 +244,6 @@ class PayRunEntryQuery extends ElementQuery
         return $this;
     }
 
-    public function nationalInsuranceCalculation($value)
-    {
-        $this->nationalInsuranceCalculation = $value;
-        return $this;
-    }
-
     public function payrollCodeChanged($value)
     {
         $this->payrollCodeChanged = $value;
@@ -258,9 +256,9 @@ class PayRunEntryQuery extends ElementQuery
         return $this;
     }
 
-    public function fps($value)
+    public function fpsId($value)
     {
-        $this->fps = $value;
+        $this->fpsId = $value;
         return $this;
     }
 
@@ -276,9 +274,9 @@ class PayRunEntryQuery extends ElementQuery
         return $this;
     }
 
-    public function umbrellaPayment($value)
+    public function umbrellaPaymentId($value)
     {
-        $this->umbrellaPayment = $value;
+        $this->umbrellaPaymentId = $value;
         return $this;
     }
 
@@ -294,79 +292,70 @@ class PayRunEntryQuery extends ElementQuery
         return $this;
     }
 
-    public function employeeId($value)
-    {
-        $this->employeeId = $value;
-        return $this;
-    }
-
     protected function beforePrepare(): bool
     {
-        $this->joinElementTable('staff_payrunentries');
+        $this->joinElementTable('staff_payrun_entries');
 
         $this->query->select([
-            'staff_payrunentries.siteId',
-            'staff_payrunentries.staffologyId',
-            'staff_payrunentries.payRunId',
-            'staff_payrunentries.employerId',
-            'staff_payrunentries.employeeId',
-            'staff_payrunentries.taxYear',
-            'staff_payrunentries.startDate',
-            'staff_payrunentries.endDate',
-            'staff_payrunentries.note',
-            'staff_payrunentries.bacsSubReference',
-            'staff_payrunentries.bacsHashcode',
-            'staff_payrunentries.percentageOfWorkingDaysPaidAsNormal',
-            'staff_payrunentries.workingDaysNotPaidAsNormal',
-            'staff_payrunentries.payPeriod',
-            'staff_payrunentries.ordinal',
-            'staff_payrunentries.period',
-            'staff_payrunentries.isNewStarter',
-            'staff_payrunentries.unpaidAbsence',
-            'staff_payrunentries.hasAttachmentOrders',
-            'staff_payrunentries.paymentDate',
-            'staff_payrunentries.priorPayrollCode',
-            'staff_payrunentries.payOptions',
-            'staff_payrunentries.pensionSummary',
-            'staff_payrunentries.totals',
-            'staff_payrunentries.periodOverrides',
-            'staff_payrunentries.totalsYtd',
-            'staff_payrunentries.totalsYtdOverrides',
-            'staff_payrunentries.forcedCisVatAmount',
-            'staff_payrunentries.holidayAccured',
-            'staff_payrunentries.state',
-            'staff_payrunentries.isClosed',
-            'staff_payrunentries.manualNi',
-            'staff_payrunentries.nationalInsuranceCalculation',
-            'staff_payrunentries.payrollCodeChanged',
-            'staff_payrunentries.aeNotEnroledWarning',
-            'staff_payrunentries.fps',
-            'staff_payrunentries.receivingOffsetPay',
-            'staff_payrunentries.paymentAfterLearning',
-            'staff_payrunentries.umbrellaPayment',
-            'staff_payrunentries.employee',
-            'staff_payrunentries.pdf',
+            'staff_payrun_entries.payRunId',
+            'staff_payrun_entries.employerId',
+            'staff_payrun_entries.employeeId',
+            'staff_payrun_entries.payOptionsId',
+            'staff_payrun_entries.priorPayrollCodeId',
+            'staff_payrun_entries.totalsYtdId',
+            'staff_payrun_entries.umbrellaPaymentId',
+            'staff_payrun_entries.nationalInsuranceCalculationId',
+            'staff_payrun_entries.pensionSummaryId',
+            'staff_payrun_entries.employee',
+            'staff_payrun_entries.fpsId',
+            'staff_payrun_entries.staffologyId',
+            'staff_payrun_entries.taxYear',
+            'staff_payrun_entries.startDate',
+            'staff_payrun_entries.endDate',
+            'staff_payrun_entries.note',
+            'staff_payrun_entries.bacsSubReference',
+            'staff_payrun_entries.bacsHashcode',
+            'staff_payrun_entries.percentageOfWorkingDaysPaidAsNormal',
+            'staff_payrun_entries.workingDaysNotPaidAsNormal',
+            'staff_payrun_entries.payPeriod',
+            'staff_payrun_entries.ordinal',
+            'staff_payrun_entries.period',
+            'staff_payrun_entries.isNewStarter',
+            'staff_payrun_entries.unpaidAbsence',
+            'staff_payrun_entries.hasAttachmentOrders',
+            'staff_payrun_entries.paymentDate',
+            'staff_payrun_entries.totalsId',
+            'staff_payrun_entries.forcedCisVatAmount',
+            'staff_payrun_entries.holidayAccrued',
+            'staff_payrun_entries.state',
+            'staff_payrun_entries.isClosed',
+            'staff_payrun_entries.manualNi',
+            'staff_payrun_entries.payrollCodeChanged',
+            'staff_payrun_entries.aeNotEnroledWarning',
+            'staff_payrun_entries.receivingOffsetPay',
+            'staff_payrun_entries.paymentAfterLearning',
+            'staff_payrun_entries.pdf',
 
         ]);
 
         if ($this->staffologyId) {
-            $this->subQuery->andWhere(Db::parseParam('staff_payrunentries.staffologyId', $this->staffologyId));
+            $this->subQuery->andWhere(Db::parseParam('staff_payrun_entries.staffologyId', $this->staffologyId));
         }
 
         if ($this->payRunId) {
-            $this->subQuery->andWhere(Db::parseParam('staff_payrunentries.payRunId', $this->payRunId));
+            $this->subQuery->andWhere(Db::parseParam('staff_payrun_entries.payRunId', $this->payRunId));
         }
 
         if ($this->employerId) {
-            $this->subQuery->andWhere(Db::parseParam('staff_payrunentries.employerId', $this->employerId));
+            $this->subQuery->andWhere(Db::parseParam('staff_payrun_entries.employerId', $this->employerId));
         }
 
         if ($this->employeeId) {
-            $this->subQuery->andWhere(Db::parseParam('staff_payrunentries.employeeId', $this->employeeId));
+            $this->subQuery->andWhere(Db::parseParam('staff_payrun_entries.employeeId', $this->employeeId));
         }
 
         if ($this->isClosed) {
-            $this->subQuery->andWhere(Db::parseParam('staff_payrunentries.isClosed', $this->isClosed, '=', false));
+            $this->subQuery->andWhere(Db::parseParam('staff_payrun_entries.isClosed', $this->isClosed, '=', false));
         }
 
         return parent::beforePrepare();

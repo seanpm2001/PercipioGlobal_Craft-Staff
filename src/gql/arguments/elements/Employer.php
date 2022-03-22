@@ -1,13 +1,12 @@
 <?php
 
-namespace percipiolondon\craftstaff\gql\arguments\elements;
+namespace percipiolondon\staff\gql\arguments\elements;
 
-use Craft;
-use craft\gql\base\ElementArguments;
-use craft\gql\types\QueryArgument;
 use GraphQL\Type\Definition\Type;
 
-class Employer extends ElementArguments
+use percipiolondon\staff\gql\base\HardingArguments;
+
+class Employer extends HardingArguments
 {
     /**
      * @inheritdoc

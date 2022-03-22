@@ -8,7 +8,7 @@
  * @copyright Copyright (c) 2021 Percipio
  */
 
-namespace percipiolondon\craftstaff\assetbundles\indexcpsection;
+namespace percipiolondon\staff\assetbundles\indexcpsection;
 
 use Craft;
 use craft\web\AssetBundle;
@@ -29,7 +29,7 @@ use craft\web\assets\cp\CpAsset;
  * http://www.yiiframework.com/doc-2.0/guide-structure-assets.html
  *
  * @author    Percipio
- * @package   Craftstaff
+ * @package   Staff
  * @since     1.0.0-alpha.1
  */
 class IndexCPSectionAsset extends AssetBundle
@@ -43,7 +43,7 @@ class IndexCPSectionAsset extends AssetBundle
     public function init()
     {
         // define the path that your publishable resources live
-        $this->sourcePath = "@percipiolondon/craftstaff/assetbundles/indexcpsection/dist";
+        $this->sourcePath = "@percipiolondon/staff/assetbundles/indexcpsection/dist";
 
         // define the dependencies
         $this->depends = [

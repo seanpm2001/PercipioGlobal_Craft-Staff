@@ -1,13 +1,12 @@
 <?php
 
-namespace percipiolondon\craftstaff\gql\arguments\elements;
+namespace percipiolondon\staff\gql\arguments\elements;
 
-use Craft;
-use craft\gql\base\ElementArguments;
-use craft\gql\types\QueryArgument;
 use GraphQL\Type\Definition\Type;
 
-class PayRunEntry extends ElementArguments
+use percipiolondon\staff\gql\base\HardingArguments;
+
+class PayRunEntry extends HardingArguments
 {
     /**
      * @inheritdoc
@@ -18,27 +17,27 @@ class PayRunEntry extends ElementArguments
             'employerId' => [
                 'name' => 'employerId',
                 'type' => Type::listOf(Type::int()),
-                'description' => 'Narrows the query results based on the payrun’ employer ID.',
+                'description' => 'Narrows the query results based on the payruns’ employer ID.',
             ],
             'employeeId' => [
                 'name' => 'employeeId',
                 'type' => Type::listOf(Type::int()),
-                'description' => 'Narrows the query results based on the payrun’ employee ID.',
+                'description' => 'Narrows the query results based on the payruns’ employee ID.',
             ],
             'payRunId' => [
                 'name' => 'payRunId',
                 'type' => Type::listOf(Type::int()),
-                'description' => 'Narrows the query results based on the payrun’ pay run ID.',
+                'description' => 'Narrows the query results based on the payruns’ pay run ID.',
             ],
             'staffologyId' => [
                 'name' => 'staffologyId',
                 'type' => Type::listOf(Type::string()),
-                'description' => 'Narrows the query results based on the payrun’ staffology ID.',
+                'description' => 'Narrows the query results based on the payruns’ staffology ID.',
             ],
             'isClosed' => [
                 'name' => 'isClosed',
                 'type' => Type::boolean(),
-                'description' => 'Narrows the query results based if the payrun is closed.',
+                'description' => 'Narrows the query results based if the payruns is closed.',
             ],
         ]);
     }

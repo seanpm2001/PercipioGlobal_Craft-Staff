@@ -1,0 +1,26 @@
+{%- requirePermission "hub:payruns" -%}
+
+{%- extends 'staff-management/_layouts/hub-cp.twig' -%}
+
+{%- set content -%}
+
+    <div id="detail-container"></div>
+
+{%- endset -%}
+
+
+{% js %}
+    window.validation = {{ {
+        "error": error ?? ''
+    }|json_encode|raw }}
+{% endjs %}
+
+{%- block foot -%}
+    {{ parent() }}
+    {%- set tagOptions = {
+        'depends': [
+            'percipiolondon\\staff\\assetbundles\\staff\\StaffAsset'
+        ]
+    } -%}
+    {{  craft.staff.register('src/js/payrunDetails.ts', false, tagOptions, tagOptions) }}
+{%- endblock -%}

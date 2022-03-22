@@ -1,18 +1,28 @@
 <?php
 
-namespace percipiolondon\craftstaff\gql\queries;
+namespace percipiolondon\staff\gql\queries;
 
 use craft\gql\base\Query;
+
 use GraphQL\Type\Definition\Type;
-use percipiolondon\craftstaff\gql\arguments\elements\Employee as EmployeeArguments;
-use percipiolondon\craftstaff\gql\interfaces\elements\Employee as EmployeeInterface;
-use percipiolondon\craftstaff\gql\resolvers\elements\Employee as EmployeeResolver;
-use percipiolondon\craftstaff\helpers\Gql as GqlHelper;
+
+use percipiolondon\staff\helpers\Gql as GqlHelper;
+use percipiolondon\staff\gql\arguments\elements\Employee as EmployeeArguments;
+use percipiolondon\staff\gql\interfaces\elements\Employee as EmployeeInterface;
+use percipiolondon\staff\gql\resolvers\elements\Employee as EmployeeResolver;
+
 
 class Employee extends Query
 {
+    // Public Methods
+    // =========================================================================
+
     public static function getQueries($checkToken = true): array
     {
+        if ($checkToken && !GqlHelper::canQueryEmployees()) {
+            return [];
+        }
+
         return [
             'employees' => [
                 'type' => Type::listOf(EmployeeInterface::getType()),

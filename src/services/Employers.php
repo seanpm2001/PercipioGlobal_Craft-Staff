@@ -8,16 +8,21 @@
  * @copyright Copyright (c) 2021 Percipio
  */
 
-namespace percipiolondon\craftstaff\services;
+namespace percipiolondon\staff\services;
 
-use percipiolondon\craftstaff\helpers\AssetHelper;
-use percipiolondon\craftstaff\Craftstaff;
-use percipiolondon\craftstaff\records\Employer as EmployerRecord;
-use percipiolondon\craftstaff\elements\Employer;
+use craft\helpers\App;
+use percipiolondon\staff\db\Table;
+use percipiolondon\staff\helpers\Logger;
+use percipiolondon\staff\helpers\Security as SecurityHelper;
+use percipiolondon\staff\Staff;
+use percipiolondon\staff\records\Employer as EmployerRecord;
+use percipiolondon\staff\elements\Employer;
+use percipiolondon\staff\jobs\FetchEmployersJob;
 
 use Craft;
 use craft\base\Component;
 use craft\helpers\Json;
+use yii\db\Query;
 
 /**
  * Employers Service
@@ -29,7 +34,7 @@ use craft\helpers\Json;
  * https://craftcms.com/docs/plugins/services
  *
  * @author    Percipio
- * @package   Craftstaff
+ * @package   Staff
  * @since     1.0.0-alpha.1
  */
 class Employers extends Component
@@ -37,29 +42,87 @@ class Employers extends Component
     // Public Methods
     // =========================================================================
 
-    /**
-     * This function can literally be anything you want, and you can have as many service
-     * functions as you want
-     *
-     * From any other plugin file, call it like this:
-     *
-     *     Craftstaff::$plugin->employers->exampleService()
-     *
-     * @return mixed
-     */
-    public function fetch()
-    {
-        $api = Craft::parseEnv(Craftstaff::$plugin->getSettings()->staffologyApiKey);
 
-        if(!$api) {
-            Craft::error("There is no staffology API key set");
+    /* GETTERS */
+    public function getEmployers(): array
+    {
+        $query = new Query();
+        $query->from(Table::EMPLOYERS)
+            ->all();
+        $command = $query->createCommand();
+        $employersQuery = $command->queryAll();
+
+        $employers = [];
+
+        if (!$employersQuery) {
+            return [];
         }
 
-        if ($api) {
+        foreach ($employersQuery as $employer) {
+            $employers[] = $this->parseEmployer($employer);
+        }
+
+        return $employers;
+    }
+
+    public function getEmployerById(int $employerId): array
+    {
+        $query = new Query();
+        $query->from(Table::EMPLOYERS)
+            ->where('id = '.$employerId)
+            ->one();
+        $command = $query->createCommand();
+        $employerQuery = $command->queryOne();
+
+        if (!$employerQuery) {
+            return [];
+        }
+
+        $employer = $this->parseEmployer($employerQuery);
+
+        $query = new Query();
+        $query->from(Table::PAY_OPTIONS)
+            ->where('id = '.$employer['defaultPayOptionsId'])
+            ->one();
+        $command = $query->createCommand();
+        $payOptions = $command->queryOne();
+
+        if($payOptions){
+            $employer['defaultPayOptions'] = Staff::$plugin->payRuns->parsePayOptions($payOptions);
+        }
+
+        return $employer;
+    }
+
+    public function getEmployerNameById(int $employerId): string
+    {
+        $employer = Employer::findOne($employerId);
+
+        if($employer){
+            return SecurityHelper::decrypt($employer['name']);
+        }
+
+        return '';
+    }
+
+
+
+    /* FETCHES */
+    public function fetchEmployerList(): array
+    {
+        $logger = new Logger();
+        $api = App::parseEnv(Staff::$plugin->getSettings()->apiKeyStaffology);
+
+        if(!$api) {
+
+            $logger->stdout("There is no staffology API key set" . PHP_EOL, $logger::FG_RED);
+            Craft::error("There is no staffology API key set");
+
+        }else{
 
             // connection props
             $base_url = 'https://api.staffology.co.uk/employers';
-            $credentials = base64_encode("craftstaff:".$api);
+            $credentials = base64_encode('staff:'.$api);
             $headers = [
                 'headers' => [
                     'Authorization' => 'Basic ' . $credentials,
@@ -68,68 +131,127 @@ class Employers extends Component
 
             $client = new \GuzzleHttp\Client();
 
+            $logger->stdout("Start fetching employer list" . PHP_EOL, $logger::RESET);
+
             // FETCH THE EMPLOYERS LIST
             try {
 
                 $response = $client->get($base_url, $headers);
 
-                $results = Json::decodeIfJson($response->getBody()->getContents(), false);
+                $employers = Json::decodeIfJson($response->getBody()->getContents(), true);
 
-                // LOOP THROUGH LIST WITH EMPLOYERS
-                foreach($results as $entry) {
+                //TESTING PURPOSE
+                if(App::parseEnv('$HUB_DEV_MODE') && App::parseEnv('$HUB_DEV_MODE') == 1){
+                    $employers = array_filter($employers, function($emp){ return $emp['name'] == 'Acme Limited (Demo)';});
+                }
 
-                    // FETCH DETAILED EMPLOYER INFO
-                    try {
-                        $response = $client->get($entry->url, $headers);
-                        $employer = $response->getBody()->getContents();
+                if(count($employers) > 0){
 
-                        if ($employer) {
-                            $employer = Json::decodeIfJson($employer, false);
+                    $logger->stdout("End fetching list of " . count($employers) . " employers " . PHP_EOL, $logger::RESET);
 
-                            $employerRecord = EmployerRecord::findOne(['staffologyId' => $employer->id]);
-
-                            if (!$employerRecord) {
-
-                                $employerRecord = new Employer();
-
-                                $employerRecord->slug = strtolower(trim(preg_replace('/[^A-Za-z0-9-]+/', '-', $employer->name), '-'));
-                                $employerRecord->siteId = Craft::$app->getSites()->currentSite->id;
-                                $employerRecord->staffologyId = $employer->id;
-                                $employerRecord->name = $employer->name ?? null;
-                                //TODO: logo --> AssetHelper::fetchRemoteImage($employer->logoUrl)
-                                $employerRecord->crn = $employer->crn ?? null;
-                                $employerRecord->address = Json::encode($employer->address);
-                                $employerRecord->hmrcDetails = Json::encode($employer->hmrcDetails);
-                                $employerRecord->startYear = $employer->startYear ?? null;
-                                $employerRecord->currentYear = $employer->currentYear ?? null;
-                                $employerRecord->employeeCount = $employer->employeeCount ?? 0;
-                                $employerRecord->defaultPayOptions = Json::encode($employer->defaultPayOptions);
-
-                                $elementsService = Craft::$app->getElements();
-                                $elementsService->saveElement($employerRecord);
-                            }
-                        }
-                    } catch (\Exception $e) {
-
-                        echo "---- error -----\n";
-                        var_dump($e->getMessage());
-                        Craft::error($e->getMessage(), __METHOD__);
-                        echo "\n---- end error ----";
-                    }
+                    return $employers;
 
                 }
 
-                return "success";
+                $logger->stdout("There are no employers found on Staffology" . PHP_EOL, $logger::FG_RED);
+                Craft::error("There are no employers found on Staffology");
+
 
             } catch (\Exception $e) {
 
-                echo "---- error -----\n";
-                var_dump($e->getMessage());
+                $logger->stdout($e->getMessage() . PHP_EOL, $logger::FG_RED);
                 Craft::error($e->getMessage(), __METHOD__);
-                echo "\n---- end error ----";
 
             }
 
         }
+
+        return [];
+    }
+
+    public function fetchEmployers(array $employers)
+    {
+        $queue = Craft::$app->getQueue();
+        $queue->push(new FetchEmployersJob([
+            'description' => 'Fetching employers',
+            'criteria' => [
+                'employers' => $employers,
+            ]
+        ]));
+    }
+
+
+
+
+
+    /* SAVES */
+    public function saveEmployer(array $employer)
+    {
+        $logger = new Logger();
+        $logger->stdout("✓ Save employer " . $employer['name'] ?? null . '...', $logger::RESET);
+
+        $emp = Employer::findOne(['staffologyId' => $employer['id']]);
+
+        if (!$emp) {
+            $emp = new Employer();
+
+            $addressId = null;
+            $defaultPayOptionsId = null;
+        } else {
+
+            $addressId = $emp['addressId'];
+            $defaultPayOptionsId = $emp['defaultPayOptionsId'];
+
+        }
+
+        // Attach the foreign keys
+        $address = $employer['address'] ? Staff::$plugin->addresses->saveAddress($employer['address'], $addressId) : null;
+        $payOptions = $employer['defaultPayOptions'] ? Staff::$plugin->payRuns->savePayOptions($employer['defaultPayOptions'], $defaultPayOptionsId) : null;
+
+        $emp->addressId = $address->id ?? null;
+        $emp->defaultPayOptionsId = $payOptions->id ?? null;
+
+        $emp->siteId = Craft::$app->getSites()->currentSite->id;
+        $emp->staffologyId = $employer['id'];
+        $emp->name = $employer['name'] ?? null;
+        $emp->title = $employer['name'] ?? null;
+        $emp->logoUrl = $employer['logoUrl'] ?? null;
+        $emp->crn = $employer['crn'] ?? null;
+        $emp->startYear = $employer['startYear'] ?? null;
+        $emp->currentYear = $employer['currentYear'] ?? null;
+        $emp->employeeCount = $employer['employeeCount'] ?? null;
+
+        $elementsService = Craft::$app->getElements();
+        $success = $elementsService->saveElement($emp);
+
+        if($success){
+            $logger->stdout(" done" . PHP_EOL, $logger::FG_GREEN);
+        }else{
+            $logger->stdout(" failed" . PHP_EOL, $logger::FG_RED);
+
+            $errors = "";
+
+            foreach($emp->errors as $err) {
+                $errors .= implode(',', $err);
+            }
+
+            $logger->stdout($errors . PHP_EOL, $logger::FG_RED);
+            Craft::error($emp->errors, __METHOD__);
+        }
+    }
+
+
+
+
+
+    /* PARSE SECURITY VALUES */
+    public function parseEmployer(array $employer) :array
+    {
+        $employer['name'] = SecurityHelper::decrypt($employer['name'] ?? '');
+        $employer['crn'] = SecurityHelper::decrypt($employer['crn'] ?? '');
+        $employer['slug'] = SecurityHelper::decrypt($employer['slug'] ?? '');
+        $employer['logoUrl'] = SecurityHelper::decrypt($employer['logoUrl'] ?? '');
+
+        return $employer;
     }
 }

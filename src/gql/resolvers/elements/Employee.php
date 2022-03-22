@@ -1,11 +1,13 @@
 <?php
 
-namespace percipiolondon\craftstaff\gql\resolvers\elements;
+namespace percipiolondon\staff\gql\resolvers\elements;
 
 use craft\gql\base\ElementResolver;
 
-use percipiolondon\craftstaff\helpers\Gql as GqlHelper;
-use percipiolondon\craftstaff\elements\Employee as EmployeeElement;
+use GraphQL\Type\Definition\ResolveInfo;
+
+use percipiolondon\staff\elements\Employee as EmployeeElement;
+use percipiolondon\staff\helpers\Gql as GqlHelper;
 
 class Employee extends ElementResolver
 {

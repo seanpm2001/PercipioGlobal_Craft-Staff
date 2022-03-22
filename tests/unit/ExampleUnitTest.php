@@ -8,19 +8,19 @@
  * @copyright Copyright (c) 2021 Percipio
  */
 
-namespace percipiolondon\craftstafftests\unit;
+namespace percipiolondon\stafftests\unit;
 
 use Codeception\Test\Unit;
 use UnitTester;
 use Craft;
-use percipiolondon\craftstaff\Craftstaff;
+use percipiolondon\staff\Staff;
 
 /**
  * ExampleUnitTest
  *
  *
  * @author    Percipio
- * @package   Craftstaff
+ * @package   Staff
  * @since     1.0.0-alpha.1
  */
 class ExampleUnitTest extends Unit
@@ -45,8 +45,8 @@ class ExampleUnitTest extends Unit
     public function testPluginInstance()
     {
         $this->assertInstanceOf(
-            Craftstaff::class,
-            Craftstaff::$plugin
+            Staff::class,
+            Staff::$plugin
         );
     }
 

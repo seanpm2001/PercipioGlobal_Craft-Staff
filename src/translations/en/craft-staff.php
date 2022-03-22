@@ -17,7 +17,7 @@
  * http://www.yiiframework.com/doc-2.0/guide-tutorial-i18n.html
  *
  * @author    Percipio
- * @package   Craftstaff
+ * @package   Staff
  * @since     1.0.0-alpha.1
  */
 return [

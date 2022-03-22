@@ -1,20 +1,14 @@
 <?php
-/**
- * @link https://craftcms.com/
- * @copyright Copyright (c) Pixel & Tonic, Inc.
- * @license https://craftcms.github.io/license/
- */
 
-namespace percipiolondon\craftstaff\gql\types\elements;
+namespace percipiolondon\staff\gql\types\elements;
 
 use craft\gql\types\elements\Element;
 use craft\helpers\Json;
 
 use GraphQL\Type\Definition\ResolveInfo;
 
-use percipiolondon\craftstaff\elements\Employer as EmployerElement;
-use percipiolondon\craftstaff\gql\interfaces\elements\Employer as EmployerInterface;
-
+use percipiolondon\staff\elements\Employer as EmployerElement;
+use percipiolondon\staff\gql\interfaces\elements\Employer as EmployerInterface;
 
 /**
  * Class Employer
@@ -44,17 +38,11 @@ class Employer extends Element
         /** @var EmployerElement $source */
         $fieldName = $resolveInfo->fieldName;
 
-        switch($fieldName) {
-            case 'address':
-               return Json::decodeIfJson($source->address);
-
-            case 'hmrcDetails':
-                return Json::decodeIfJson($source->hmrcDetails);
-
-            case 'defaultPayOptions':
-                return Json::decodeIfJson($source->defaultPayOptions);
-        }
-
-        return parent::resolve($source, $arguments, $context, $resolveInfo);
+        return match ($fieldName) {
+            'address' => Json::decodeIfJson($source->address),
+            'hmrcDetails' => Json::decodeIfJson($source->hmrcDetails),
+            'defaultPayOptions' => Json::decodeIfJson($source->defaultPayOptions),
+            default => parent::resolve($source, $arguments, $context, $resolveInfo),
+        };
     }
 }

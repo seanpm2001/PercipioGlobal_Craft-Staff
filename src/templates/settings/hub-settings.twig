@@ -1,0 +1,40 @@
+{# @var craft \craft\web\twig\variables\CraftVariable #}
+{#
+/**
+ * Staff plugin for Craft CMS 3.x
+ *
+ * Staff hub-settings.twig
+ *
+ * @author    percipio.london
+ * @copyright Copyright (c) 2022 Percipio Global Ltd.
+ * @link      https://percipio.london
+ * @package   Staff
+ * @since     1.0.0
+ */
+#}
+
+{%- requirePermission 'hub:plugin-settings' -%}
+
+{%- extends "_layouts/cp" -%}
+
+{%- import '_includes/forms' as forms -%}
+
+{%- do view.registerAssetBundle('percipiolondon\\staff\\assetbundles\\staff\\StaffAsset') -%}
+
+{%- block content -%}
+
+    <input type="hidden" name="action" value="staff-management/settings/save-plugin-settings">
+    <input type="hidden" name="pluginHandle" value="staff-management">
+
+    {{- redirectInput('staff-management/plugin') -}}
+
+    {{ forms.autosuggestField({
+        label: 'Staffology API Key',
+        instructions: "The staffology API key that allows all operations."|t('staff-management'),
+        suggestEnvVars: true,
+        id: 'apiKeyStaffology',
+        name: 'apiKeyStaffology',
+        value: settings['apiKeyStaffology'],
+    }) }}
+
+{%- endblock -%}

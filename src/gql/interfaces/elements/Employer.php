@@ -5,24 +5,22 @@
  * @license https://craftcms.github.io/license/
  */
 
-namespace percipiolondon\craftstaff\gql\interfaces\elements;
+namespace percipiolondon\staff\gql\interfaces\elements;
 
-use craft\gql\GqlEntityRegistry;
 use craft\gql\interfaces\Element;
+use craft\gql\GqlEntityRegistry;
+use craft\gql\TypeLoader;
 use craft\gql\TypeManager;
-use craft\gql\types\DateTime;
-
-use percipiolondon\craftstaff\gql\types\Address;
-use percipiolondon\craftstaff\gql\types\HmrcDetails;
-use percipiolondon\craftstaff\gql\types\PayOptions;
-use percipiolondon\craftstaff\gql\types\generators\EmployerType;
-
 use craft\helpers\Gql;
 use craft\helpers\Json;
 
 use GraphQL\Type\Definition\InterfaceType;
 use GraphQL\Type\Definition\ResolveInfo;
 use GraphQL\Type\Definition\Type;
+
+use percipiolondon\staff\elements\Employer as EmployerElement;
+use percipiolondon\staff\gql\types\generators\EmployerGenerator;
+use percipiolondon\staff\helpers\Security as SecurityHelper;
 
 /**
  * Class Employer
@@ -37,7 +35,7 @@ class Employer extends Element
      */
     public static function getTypeGenerator(): string
     {
-        return EmployerType::class;
+        return EmployerGenerator::class;
     }
 
     /**
@@ -53,10 +51,12 @@ class Employer extends Element
             'name' => static::getName(),
             'fields' => self::class . '::getFieldDefinitions',
             'description' => 'This is the interface implemented by all employers.',
-            'resolveType' => self::class . '::resolveElementTypeName',
+            'resolveType' => function(EmployerElement $value) {
+                return $value->getGqlTypeName();
+            }
         ]));
 
-        EmployerType::generateTypes();
+        EmployerGenerator::generateTypes();
 
         return $type;
     }
@@ -74,34 +74,43 @@ class Employer extends Element
      */
     public static function getFieldDefinitions(): array
     {
-        return TypeManager::prepareFieldDefinitions(array_merge(parent::getFieldDefinitions(), self::getConditionalFields(), [
+        $parentFields = parent::getFieldDefinitions();
+        unset($parentFields['slug']);
+
+        $securedFields = [
+            'crn' => [
+                'name' => 'crn',
+                'type' => Type::id(),
+                'description' => 'The company registration number.',
+                'resolve' => function ($source, array $arguments, $context, ResolveInfo $resolveInfo) {
+                    return SecurityHelper::resolve($source, $resolveInfo);
+                }
+            ],
             'name' => [
                 'name' => 'name',
                 'type' => Type::string(),
                 'description' => 'The company name.',
+                'resolve' => function ($source, array $arguments, $context, ResolveInfo $resolveInfo) {
+                    return SecurityHelper::resolve($source, $resolveInfo);
+                }
             ],
-            'staffologyId' => [
-                'name' => 'staffologyId',
-                'type' => Type::string(),
-                'description' => 'The employer id from staffology, needed for API calls.'
+            'slug' => [
+                'name' => 'slug',
+                'type' => Type::nonNull(Type::string()),
+                'description' => 'The company slug.',
+                'resolve' => function ($source, array $arguments, $context, ResolveInfo $resolveInfo) {
+                    return SecurityHelper::resolve($source, $resolveInfo);
+                }
             ],
-            'crn' => [
-                'name' => 'crn',
-                'type' => Type::string(),
-                'description' => 'The company registration number.',
-            ],
+        ];
+
+        $fields = [
             'address' => [
-                'name' => 'address',
-                'type' => Address::getType(),
-                'description' => 'The address object.',
+              'name' => 'address',
+              'type' => Type::string(),
             ],
-            'hmrcDetails' => [
-                'name' => 'hmrcDetails',
-                'type' => HmrcDetails::getType(),
-                'description' => 'Get the HMRC Details.',
-            ],
-            'startYear' => [
-                'name' => 'startYear',
+            'addressId' => [
+                'name' => 'addressId',
                 'type' => Type::string(),
             ],
             'currentYear' => [
@@ -112,21 +121,30 @@ class Employer extends Element
                 'name' => 'employeeCount',
                 'type' => Type::int(),
             ],
-            'defaultPayOptions' => [
-                'name' => 'defaultPayOptions',
-                'type' => PayOptions::getType(),
-                'description' => 'Get the default pay options',
+            'staffologyId' => [
+                'name' => 'staffologyId',
+                'type' => Type::nonNull(Type::id()),
+                'description' => 'The employer id from staffology, needed for API calls.'
             ],
+            'startYear' => [
+                'name' => 'startYear',
+                'type' => Type::string(),
+            ],
+            'logoUrl' => [
+                'name' => 'logoUrl',
+                'type' => Type::string(),
+                'resolve' => function ($source, array $arguments, $context, ResolveInfo $resolveInfo) {
+                    return SecurityHelper::resolve($source, $resolveInfo);
+                }
+            ],
+            'currentPayRun' => [
+                'name' => 'currentPayRun',
+                'type' => PayRun::getType(),
+                'description' => 'Current open pay run'
+            ]
+        ];
 
-        ]), self::getName());
-    }
-
-    /**
-     * @inheritdoc
-     */
-    protected static function getConditionalFields(): array
-    {
-        return [];
+        return TypeManager::prepareFieldDefinitions(array_merge($parentFields, $securedFields, $fields), self::getName());
     }
 
 }

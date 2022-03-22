@@ -32,7 +32,7 @@ modules:
       migrations: []
       plugins:
         staff-management:
-          class: '\percipiolondon\craftstaff\Craftstaff'
+          class: '\percipiolondon\staff\Staff'
           handle: staff-management
       cleanup: true
       transaction: true

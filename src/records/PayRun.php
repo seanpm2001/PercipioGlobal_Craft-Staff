@@ -8,34 +8,18 @@
  * @copyright Copyright (c) 2021 Percipio
  */
 
-namespace percipiolondon\craftstaff\records;
+namespace percipiolondon\staff\records;
 
-use percipiolondon\craftstaff\Craftstaff;
+use percipiolondon\staff\Staff;
 
 use Craft;
 use craft\db\ActiveRecord;
-use percipiolondon\craftstaff\db\Table;
+use percipiolondon\staff\db\Table;
 
 /**
- * PayRun Record
+ * @property int $employerId
+ * @property int $totalsId;
  *
- * ActiveRecord is the base class for classes representing relational data in terms of objects.
- *
- * Active Record implements the [Active Record design pattern](http://en.wikipedia.org/wiki/Active_record).
- * The premise behind Active Record is that an individual [[ActiveRecord]] object is associated with a specific
- * row in a database table. The object's attributes are mapped to the columns of the corresponding table.
- * Referencing an Active Record attribute is equivalent to accessing the corresponding table column for that record.
- *
- * http://www.yiiframework.com/doc-2.0/guide-db-active-record.html
- *
- * @author    Percipio
- * @package   Craftstaff
- * @since     1.0.0-alpha.1
- */
-
-/**
- * PayRun record
- * @property int $siteId;
  * @property string $staffologyId;
  * @property string $taxYear;
  * @property int $taxMonth;
@@ -47,13 +31,11 @@ use percipiolondon\craftstaff\db\Table;
  * @property \DateTime $paymentDate;
  * @property int $employeeCount;
  * @property int $subContractorCount;
- * @property string $totals;
  * @property string $state;
  * @property boolean $isClosed;
  * @property \DateTime $dateClosed;
  * @property string $pdf
  * @property string $url
- * @property int $employerId
  */
 
 class PayRun extends ActiveRecord
@@ -75,6 +57,6 @@ class PayRun extends ActiveRecord
      */
     public static function tableName()
     {
-        return Table::STAFF_PAYRUN;
+        return Table::PAYRUN;
     }
 }

@@ -1,59 +1,29 @@
 <?php
 
-namespace percipiolondon\craftstaff\helpers;
+namespace percipiolondon\staff\helpers;
 
 use jamesedmonston\graphqlauthentication\GraphqlAuthentication;
-use percipiolondon\craftstaff\Craftstaff;
+use percipiolondon\staff\Staff;
 
 class Gql extends \craft\helpers\Gql
 {
     public static function canQueryEmployers(): bool
     {
-//        if(\Craft::$app->getGql()->getActiveSchema()->name === 'Full Schema') {
-//            return true;
-//        } else {
-            // access:employers
-//            $restrictionService = GraphqlAuthentication::$restrictionService;
-//
-//            if ($restrictionService->shouldRestrictRequests()) {
-//
-//                $user = GraphqlAuthentication::$tokenService->getUserFromToken();
-//
-//                if (!Craftstaff::$plugin->userPermissions->applyCanParam("access:employers", $user->id) ) {
-//                    return false;
-//                }
-//
-//                return true;
-//            }
-
             return true;
-
     }
 
     public static function canQueryEmployees(): bool
     {
-
         return true;
-
     }
 
     public static function canQueryPayruns(): bool
     {
-
         return true;
-
     }
 
     public static function canQueryPayrunEntries(): bool
     {
-
         return true;
-
-    }
-
-    public static function canQueryWidgets(): bool
-    {
-        $allowedEntities = self::extractAllowedEntitiesFromSchema();
-        return isset($allowedEntities['widgets']);
     }
 }

@@ -1,14 +1,14 @@
 <?php
 
-namespace percipiolondon\craftstaff\gql\types;
+namespace percipiolondon\staff\gql\types;
 
 use craft\gql\types\DateTime;
 
 use GraphQL\Type\Definition\Type;
 
-use percipiolondon\craftstaff\gql\base\GqlTypeTrait;
-use percipiolondon\craftstaff\gql\types\TieredPensionRate;
-use percipiolondon\craftstaff\gql\types\WorkerGroup;
+use percipiolondon\staff\gql\base\GqlTypeTrait;
+use percipiolondon\staff\gql\types\TieredPensionRate;
+use percipiolondon\staff\gql\types\WorkerGroup;
 
 
 /**

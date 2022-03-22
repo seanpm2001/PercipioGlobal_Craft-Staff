@@ -8,38 +8,18 @@
  * @copyright Copyright (c) 2021 Percipio
  */
 
-namespace percipiolondon\craftstaff\records;
+namespace percipiolondon\staff\records;
 
-use percipiolondon\craftstaff\Craftstaff;
+use percipiolondon\staff\Staff;
 
 use Craft;
 use DateTime;
 use craft\db\ActiveRecord;
-use percipiolondon\craftstaff\db\Table;
+use percipiolondon\staff\db\Table;
 
 /**
- * Company Record
- *
- * ActiveRecord is the base class for classes representing relational data in terms of objects.
- *
- * Active Record implements the [Active Record design pattern](http://en.wikipedia.org/wiki/Active_record).
- * The premise behind Active Record is that an individual [[ActiveRecord]] object is associated with a specific
- * row in a database table. The object's attributes are mapped to the columns of the corresponding table.
- * Referencing an Active Record attribute is equivalent to accessing the corresponding table column for that record.
- *
- * http://www.yiiframework.com/doc-2.0/guide-db-active-record.html
- *
- * @author    Percipio
- * @package   CompanyManagement
- * @since     0.1.0
- */
-
-/**
- * UserPermission record.
- *
  * @property int id
  * @property int name
- *
  */
 class Permission extends ActiveRecord
 {
@@ -60,6 +40,6 @@ class Permission extends ActiveRecord
      */
     public static function tableName()
     {
-        return Table::STAFF_PERMISSIONS;
+        return Table::PERMISSIONS;
     }
 }

@@ -1,14 +1,14 @@
 <?php
 
-namespace percipiolondon\craftstaff\gql\types\elements;
+namespace percipiolondon\staff\gql\types\elements;
 
 use craft\gql\types\elements\Element;
 use craft\helpers\Json;
 
 use GraphQL\Type\Definition\ResolveInfo;
 
-use percipiolondon\craftstaff\elements\Employee as EmployeeElement;
-use percipiolondon\craftstaff\gql\interfaces\elements\Employee as EmployeeInterface;
+use percipiolondon\staff\elements\Employee as EmployeeElement;
+use percipiolondon\staff\gql\interfaces\elements\Employee as EmployeeInterface;
 
 /**
  * Class Employee
@@ -38,29 +38,15 @@ class Employee extends Element
         /** @var EmployeeElement $source */
         $fieldName = $resolveInfo->fieldName;
 
-        switch($fieldName) {
-            case 'personalDetails':
-                return Json::decodeIfJson($source->personalDetails);
-
-            case 'employmentDetails':
-                return Json::decodeIfJson($source->employmentDetails);
-
-            case 'autoEnrolment':
-                return Json::decodeIfJson($source->autoEnrolment);
-
-            case 'rightToWork':
-                return Json::decodeIfJson($source->rightToWork);
-
-            case 'leaveSettings':
-                return Json::decodeIfJson($source->leaveSettings);
-
-            case 'bankDetails':
-                return Json::decodeIfJson($source->bankDetails);
-
-            case 'payOptions':
-                return Json::decodeIfJson($source->payOptions);
-        }
-
-        return parent::resolve($source, $arguments, $context, $resolveInfo);
+        return match ($fieldName) {
+            'personalDetails' => Json::decodeIfJson($source->personalDetails),
+            'employmentDetails' => Json::decodeIfJson($source->employmentDetails),
+            'autoEnrolment' => Json::decodeIfJson($source->autoEnrolment),
+            'rightToWork' => Json::decodeIfJson($source->rightToWork),
+            'leaveSettings' => Json::decodeIfJson($source->leaveSettings),
+            'bankDetails' => Json::decodeIfJson($source->bankDetails),
+            'payOptions' => Json::decodeIfJson($source->payOptions),
+            default => parent::resolve($source, $arguments, $context, $resolveInfo),
+        };
     }
 }

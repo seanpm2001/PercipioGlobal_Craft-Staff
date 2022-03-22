@@ -1,15 +1,15 @@
 <?php
 
-namespace percipiolondon\craftstaff\gql\types;
+namespace percipiolondon\staff\gql\types;
 
 use craft\gql\types\DateTime;
 
-use percipiolondon\craftstaff\gql\base\GqlTypeTrait;
-use percipiolondon\craftstaff\gql\types\StarterDetails;
-use percipiolondon\craftstaff\gql\types\DirectorShipDetails;
-use percipiolondon\craftstaff\gql\types\LeaverDetails;
-use percipiolondon\craftstaff\gql\types\CisDetails;
-use percipiolondon\craftstaff\gql\types\Department;
+use percipiolondon\staff\gql\base\GqlTypeTrait;
+use percipiolondon\staff\gql\types\StarterDetails;
+use percipiolondon\staff\gql\types\DirectorShipDetails;
+use percipiolondon\staff\gql\types\LeaverDetails;
+use percipiolondon\staff\gql\types\CisDetails;
+use percipiolondon\staff\gql\types\Department;
 use GraphQL\Type\Definition\Type;
 
 

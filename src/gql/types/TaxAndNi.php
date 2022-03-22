@@ -1,8 +1,8 @@
 <?php
 
-namespace percipiolondon\craftstaff\gql\types;
+namespace percipiolondon\staff\gql\types;
 
-use percipiolondon\craftstaff\gql\base\GqlTypeTrait;
+use percipiolondon\staff\gql\base\GqlTypeTrait;
 use GraphQL\Type\Definition\Type;
 
 /**

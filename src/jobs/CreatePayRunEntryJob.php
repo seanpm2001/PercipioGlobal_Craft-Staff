@@ -1,99 +1,60 @@
 <?php
 
-namespace percipiolondon\craftstaff\jobs;
+namespace percipiolondon\staff\jobs;
 
 use Craft;
+use craft\helpers\App;
 use craft\queue\BaseJob;
-use percipiolondon\craftstaff\records\Employee;
-use percipiolondon\craftstaff\records\PayRunEntry as PayRunEntryRecord;
-use percipiolondon\craftstaff\elements\PayRunEntry;
+use percipiolondon\staff\helpers\Logger;
+use percipiolondon\staff\records\Employee;
+use percipiolondon\staff\records\PayRunEntry as PayRunEntryRecord;
+use percipiolondon\staff\elements\PayRunEntry;
 use craft\helpers\Queue;
+use percipiolondon\staff\Staff;
 
 class CreatePayRunEntryJob extends Basejob
 {
-    public $headers;
-    public $payRunEntries;
-    public $payRunId;
-    public $employerId;
+    public $criteria;
 
     public function execute($queue): void
     {
-        try {
-            $client = new \GuzzleHttp\Client();
+        $logger = new Logger();
 
-            foreach($this->payRunEntries as $payRunEntryData) {
+        $api = App::parseEnv(Staff::$plugin->getSettings()->apiKeyStaffology);
+        $credentials = base64_encode('staff:'.$api);
+        $headers = [
+            'headers' => [
+                'Authorization' => 'Basic ' . $credentials,
+            ],
+        ];
+        $client = new \GuzzleHttp\Client();
 
-                $payRunEntry = PayRunEntryRecord::findOne(['staffologyId' => $payRunEntryData['id']]);
+        $current = 0;
+        $total = count($this->criteria['payRunEntries']);
 
-                // SET PAY RUN ENTRY IF IT DOESN'T EXIST
-                if (!$payRunEntry) {
+        foreach($this->criteria['payRunEntries'] as $payRunEntryData) {
 
-                    $base_url = "https://api.staffology.co.uk/" . $payRunEntryData['url'];
-                    $response = $client->get($base_url, $this->headers);
-                    $payRunEntryData = json_decode($response->getBody()->getContents(), true);
+            $current++;
+            $progress = "[".$current."/".$total."] ";
 
-                    $this->_savePayRunEntry($payRunEntryData);
-                }
+            $logger->stdout($progress."↧ Fetching pay run entry of " . $payRunEntryData['name'] . '...', $logger::RESET);
+            $logger->stdout(" done" . PHP_EOL, $logger::FG_GREEN);
+
+            $base_url = "https://api.staffology.co.uk/" . $payRunEntryData['url'];
+
+            try {
+                $response = $client->get($base_url, $headers);
+                $result = json_decode($response->getBody()->getContents(), true);
+
+                Staff::$plugin->payRuns->savePayRunEntry($result, $this->criteria['employer'], $this->criteria['payRun']->id);
+                Staff::$plugin->payRuns->fetchPaySlip($result, $this->criteria['employer']);
+            } catch (\Exception $e) {
+
+                $logger->stdout(PHP_EOL, $logger::RESET);
+                $logger->stdout($e->getMessage() . PHP_EOL, $logger::FG_RED);
+                Craft::error($e->getMessage(), __METHOD__);
+
             }
-        } catch (\Exception $e) {
-            Craft::error("Something went wrong: {$e->getMessage()}", __METHOD__);
-        } catch (\Throwable $e) {
-            Craft::error("Something went wrong: {$e->getMessage()}", __METHOD__);
-        }
-    }
-
-    private function _savePayRunEntry($payRunEntryData)
-    {
-        $payRunEntry = new PayRunEntry();
-
-        $employee = Employee::findOne(['staffologyId' => $payRunEntryData['employee']['id']]);
-
-        $payRunEntry->siteId = Craft::$app->getSites()->currentSite->id;
-        $payRunEntry->employerId = $this->employerId;
-        $payRunEntry->employeeId = $employee->id ?? null;
-        $payRunEntry->payRunId = $this->payRunId;
-        $payRunEntry->staffologyId = $payRunEntryData['id'] ?? null;
-        $payRunEntry->taxYear = $payRunEntryData['taxYear'] ?? null;
-        $payRunEntry->startDate = $payRunEntryData['startDate'] ?? null;
-        $payRunEntry->endDate = $payRunEntryData['endDate'] ?? null;
-        $payRunEntry->note = $payRunEntryData['note'] ?? '';
-        $payRunEntry->bacsSubReference = $payRunEntryData['bacsSubReference'] ?? '';
-        $payRunEntry->bacsHashcode = $payRunEntryData['bacsHashcode'] ?? '';
-        $payRunEntry->percentageOfWorkingDaysPaidAsNormal = $payRunEntryData['percentageOfWorkingDaysPaidAsNormal'] ?? null;
-        $payRunEntry->workingDaysNotPaidAsNormal = $payRunEntryData['workingDaysNotPaidAsNormal'] ?? null;
-        $payRunEntry->payPeriod = $payRunEntryData['payPeriod'] ?? null;
-        $payRunEntry->ordinal = $payRunEntryData['ordinal'] ?? null;
-        $payRunEntry->period = $payRunEntryData['period'] ?? null;
-        $payRunEntry->isNewStarter = $payRunEntryData['isNewStarter'] ?? null;
-        $payRunEntry->unpaidAbsence = $payRunEntryData['unpaidAbsence'] ?? null;
-        $payRunEntry->hasAttachmentOrders = $payRunEntryData['hasAttachmentOrders'];
-        $payRunEntry->paymentDate = $payRunEntryData['paymentDate'] ?? null;
-        $payRunEntry->priorPayrollCode = $payRunEntryData['priorPayrollCode'] ?? '';
-        $payRunEntry->payOptions = $payRunEntryData['payOptions'] ?? '';
-        $payRunEntry->pensionSummary = $payRunEntryData['pensionSummary'] ?? '';
-        $payRunEntry->totals = $payRunEntryData['totals'] ?? '';
-        $payRunEntry->periodOverrides = $payRunEntryData['periodOverrides'] ?? '';
-        $payRunEntry->totalsYtd = $payRunEntryData['totalsYtd'] ?? '';
-        $payRunEntry->totalsYtdOverrides = $payRunEntryData['totalsYtdOverrides'] ?? '';
-        $payRunEntry->forcedCisVatAmount = $payRunEntryData['forcedCisVatAmount'] ?? null;
-        $payRunEntry->holidayAccured = $payRunEntryData['holidayAccured'] ?? null;
-        $payRunEntry->state = $payRunEntryData['state'] ?? '';
-        $payRunEntry->isClosed = $payRunEntryData['isClosed'] ?? null;
-        $payRunEntry->manualNi = $payRunEntryData['manualNi'] ?? null;
-        $payRunEntry->nationalInsuranceCalculation = $payRunEntryData['nationalInsuranceCalculation'] ?? '';
-        $payRunEntry->aeNotEnroledWarning = $payRunEntryData['aeNotEnroledWarning'] ?? null;
-        $payRunEntry->fps = $payRunEntryData['fps'] ?? '';
-        $payRunEntry->receivingOffsetPay = $payRunEntryData['receivingOffsetPay'] ?? null;
-        $payRunEntry->paymentAfterLearning = $payRunEntryData['paymentAfterLearning'] ?? null;
-        $payRunEntry->umbrellaPayment = $payRunEntryData['umbrellaPayment'] ?? '';
-        $payRunEntry->employee = $payRunEntryData['employee'] ?? '';
-//        $payRunEntry->pdf = $payRunEntryData['pdf'];
-
-        $elementsService = Craft::$app->getElements();
-        $success = $elementsService->saveElement($payRunEntry);
-
-        if(!$success){
-            Craft::error($payRunEntry->errors);
         }
     }
 
@@ -101,7 +62,7 @@ class CreatePayRunEntryJob extends Basejob
     {
         return sprintf(
             'Fetching Pay Run Entries from "%s"',
-            $this->employerId
+            $this->criteria['employer']['id']
         );
     }
 }
