@@ -290,7 +290,6 @@ class PayRun extends Element
     private function _saveRecord($isNew)
     {
         $logger = new Logger();
-        $logger->stdout(PHP_EOL.PHP_EOL.$this->id.PHP_EOL.PHP_EOL);
 
         try {
             if (!$isNew) {
