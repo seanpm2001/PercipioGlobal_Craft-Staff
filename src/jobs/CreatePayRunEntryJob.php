@@ -47,7 +47,10 @@ class CreatePayRunEntryJob extends Basejob
                 $result = json_decode($response->getBody()->getContents(), true);
 
                 Staff::$plugin->payRuns->savePayRunEntry($result, $this->criteria['employer'], $this->criteria['payRun']->id);
-                Staff::$plugin->payRuns->fetchPaySlip($result, $this->criteria['employer']);
+
+                if(!App::parseEnv('$HUB_DEV_MODE')) {
+                    Staff::$plugin->payRuns->fetchPaySlip($result, $this->criteria['employer']);
+                }
             } catch (\Exception $e) {
 
                 $logger->stdout(PHP_EOL, $logger::RESET);

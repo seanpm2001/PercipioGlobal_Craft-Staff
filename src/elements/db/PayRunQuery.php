@@ -169,6 +169,10 @@ class PayRunQuery extends ElementQuery
             $this->subQuery->andWhere(Db::parseParam('staff_payrun.state', $this->state));
         }
 
+        if ($this->url) {
+            $this->subQuery->andWhere(Db::parseParam('staff_payrun.url', $this->url));
+        }
+
         return parent::beforePrepare();
     }
 }
