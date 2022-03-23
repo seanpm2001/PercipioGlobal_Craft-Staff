@@ -10,15 +10,15 @@
     const store = usePayRunStore()
     const interval = ref(null)
 
-    onMounted(() => {
-        interval.value = setInterval(() => {
-            getQueue()
-        }, 5000)
-    }) 
+    // onMounted(() => {
+    //     interval.value = setInterval(() => {
+    //         getQueue()
+    //     }, 5000)
+    // }) 
 
-    onUnmounted(() => {
-        clearInterval(interval.value)
-    })
+    // onUnmounted(() => {
+    //     clearInterval(interval.value)
+    // })
 </script>
 
 <template>
