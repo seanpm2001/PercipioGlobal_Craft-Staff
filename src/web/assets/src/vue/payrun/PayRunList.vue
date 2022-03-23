@@ -17,12 +17,21 @@
         { pollInterval: 5000 }
     )
     const store = usePayRunStore()
-    const { queue } = storeToRefs(store)
 
 
     const getLatestSync = (payruns) => {
-        const sorted = payruns.sort((a, b) => (a.dateSynced < b.dateSynced) ? 1 : -1)
-        return sorted[0]?.dateSynced
+
+        // return '-'
+
+        if(!payruns){
+            return 'unknown'
+        }
+
+        const sorted = payruns.map(pr => pr.dateSynced).sort((a, b) => a < b)
+        return sorted.length > 0 ? sorted[0] : 'unknown'
+
+        // payruns.sort((a, b) => (a.dateSynced < b.dateSynced) ? 1 : -1)
+        // return sorted[0]?.dateSynced
     }
 
 </script>
