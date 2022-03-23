@@ -1,6 +1,6 @@
-import{g as r,d as n,x as m,y as d,z as i,o as t,c as a,f as l,t as p,B as c,a as y}from"./vendor.6feb70cb.js";import{u,g as f}from"./useApolloClient.c8aae7ed.js";const N=r`
+import{g as o,d as s,w as m,o as t,c as a,f as n,t as d,x as i,a as p}from"./vendor.c43b4d0a.js";import{u as l}from"./useApolloClient.a9f4758e.js";const T=o`
     query Payruns($employerId: [ID]) {
-        payruns(employerId: $employerId) {
+        payruns(employerId: $employerId, orderBy: "startDate desc") {
             id,
             employerId
             taxYear
@@ -18,7 +18,7 @@ import{g as r,d as n,x as m,y as d,z as i,o as t,c as a,f as l,t as p,B as c,a a
             }
         }
     }
-`,P=r`
+`,h=o`
     query Payrun($id: [QueryArgument]) {
         payrun(id: $id) {
             id,
@@ -36,5 +36,5 @@ import{g as r,d as n,x as m,y as d,z as i,o as t,c as a,f as l,t as p,B as c,a a
             }
         }
     }
-`,U=e=>e&&parseFloat(e).toFixed(2).replace(/\d(?=(\d{3})+\.)/g,"$&,"),_={class:"mt-4 md:mt-0 text-xs inline-flex mr-2 flex-grow",style:{"margin-bottom":"0"}},g=c(" Last Synced: "),x={key:0,class:"flex items-center pl-1"},D=y("span",{style:{"margin-bottom":"0"}},"Queue is running to sync",-1),S=[D],Y={key:1,class:"pl-1"},j=n({props:{date:String},setup(e){const s=u(),o=m(null);return d(()=>{o.value=setInterval(()=>{f()},5e3)}),i(()=>{clearInterval(o.value)}),(I,T)=>(t(),a("span",_,[g,l(s).queue!=0?(t(),a("span",x,S)):(t(),a("span",Y,p(e.date),1))]))}});export{N as P,j as _,P as a,U as f};
-//# sourceMappingURL=status--synced.ac449643.js.map
+`,I=e=>e&&parseFloat(e).toFixed(2).replace(/\d(?=(\d{3})+\.)/g,"$&,"),c={class:"mt-4 md:mt-0 text-xs inline-flex mr-2 flex-grow",style:{"margin-bottom":"0"}},y=i(" Last Synced: "),f={key:0,class:"flex items-center pl-1"},u=p("span",{style:{"margin-bottom":"0"}},"Queue is running to sync",-1),_=[u],D={key:1,class:"pl-1"},N=s({props:{date:String},setup(e){const r=l();return m(null),(x,g)=>(t(),a("span",c,[y,n(r).queue!=0?(t(),a("span",f,_)):(t(),a("span",D,d(e.date),1))]))}});export{T as P,N as _,h as a,I as f};
+//# sourceMappingURL=status--synced.d2a253df.js.map
