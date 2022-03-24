@@ -198,6 +198,7 @@ class PayRunController extends Controller
         $query->from(['log' => Table::PAYRUN_IMPORTS])
             ->select(['filename', 'rowCount', 'uploadedBy', 'payRunId', 'status', 'log.dateCreated', 'user.username', 'user.firstName', 'user.lastName'])
             ->innerJoin(['user' => \craft\db\Table::USERS],'`user`.`id` = `uploadedBy`')
+            ->where(['payRunId' => $payRunId])
             ->orderBy(['dateCreated' => SORT_DESC]);
 
         return $this->asJson([
