@@ -1,6 +1,7 @@
 <script setup lang="ts">
+    import { reactive } from 'vue'
+
     import { useQuery } from '@vue/apollo-composable'
-    import { storeToRefs } from 'pinia'
 
     import { fetchPayRuns } from '~/js/composables/useAxiosClient'
     import { usePayRunStore } from '~/stores/payrun'
@@ -10,28 +11,39 @@
     import LoadingList from '~/vue/molecules/listitems/listitem--loading.vue'
     import StatusSynced from '~/vue/molecules/status/status--synced.vue'
 
-    const employerId = window.location.href.split("/").pop()
-    const { result, loading } = useQuery(
+    const variables = reactive({ 
+        taxYear: window.location.href.split('/').pop(),
+        employerId: window.location.href.split('/').at(-2)
+    })
+
+    const { result, loading, refetch } = useQuery(
         PAYRUNS, 
-        { employerId: employerId }, 
+        variables, 
         { pollInterval: 5000 }
     )
+
     const store = usePayRunStore()
 
+    const getLatestSync = (payruns: any) => {
 
-    const getLatestSync = (payruns) => {
-
-        // return '-'
-
-        if(!payruns){
+        if (!payruns) {
             return 'unknown'
         }
 
         const sorted = payruns.map(pr => pr.dateSynced).sort((a, b) => a < b)
         return sorted.length > 0 ? sorted[0] : 'unknown'
 
-        // payruns.sort((a, b) => (a.dateSynced < b.dateSynced) ? 1 : -1)
-        // return sorted[0]?.dateSynced
+    }
+
+    const updateYear = (selectedYear: string) => {
+
+        const baseUrl = new URL(window.location.href)
+        const path = baseUrl.pathname.split('/')
+        path.pop()
+        baseUrl.pathname = path.join('/') + '/' + selectedYear
+        window.history.pushState({}, '', baseUrl)
+
+        variables.taxYear = selectedYear
     }
 
 </script>
@@ -49,7 +61,7 @@
         <div class="mt-4 md:mt-0 flex" style="margin-bottom:0">
             <StatusSynced :date="getLatestSync(result.payruns)" />
             <button 
-                @click="fetchPayRuns(result.payruns[0]?.employerId)" 
+                @click="fetchPayRuns(result.payruns[0]?.employerId, variables.taxYear)" 
                 :disabled="store.loadingFetched" 
                 class="cursor-pointer inline-flex items-center justify-center rounded-md border border-transparent bg-indigo-600 disabled:bg-indigo-400 disabled:cursor-not-allowed px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 sm:w-auto" 
                 style="margin-bottom:0"
@@ -62,7 +74,22 @@
             </button>
         </div>
     </div>
-    <div class="mt-8 flex flex-col w-full" v-if="result">
+
+    <div class="mt-8 ml-auto grid grid-cols-4" v-if="result">
+        <div class="col-start-4 flex justify-end">
+            <span class="mb-1 mr-2 font-bold">Choose a payroll year:</span>
+            <select class="py-1 px-1 rounded-md bg-gray-100 border-2 border-indigo-600 text-right" @change="updateYear($event?.target?.value)">
+                <option value="Year2022" :selected="variables.taxYear === 'Year2022'">2022</option>
+                <option value="Year2021" :selected="variables.taxYear === 'Year2021'">2021</option>
+                <option value="Year2020" :selected="variables.taxYear === 'Year2020'">2020</option>
+                <option value="Year2019" :selected="variables.taxYear === 'Year2019'">2019</option>
+                <option value="Year2018" :selected="variables.taxYear === 'Year2018'">2018</option>
+            </select>
+        </div>
+    </div>
+
+
+    <div class="mt-2 flex flex-col w-full" v-if="result">
         <div class="-my-2 overflow-x-auto w-full">
             <div class="inline-block min-w-full py-2 align-middle">
                 <div class="overflow-hidden shadow border border-solid border-gray-300 md:rounded-lg">
