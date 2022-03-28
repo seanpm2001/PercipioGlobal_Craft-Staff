@@ -62,7 +62,16 @@
             </button>
         </div>
     </div>
-    <div class="mt-8 flex flex-col w-full" v-if="result">
+
+    <div class="flex mt-8 ml-auto">
+        <span class="mb-0 mr-2">Choose a payroll year:</span>
+        <select class="py-1 px-1 rounded-md bg-gray-100 w-full border-2 border-indigo-600">
+            <option val="Year2021">2021</option>
+        </select>
+    </div>
+
+
+    <div class="mt-2 flex flex-col w-full" v-if="result">
         <div class="-my-2 overflow-x-auto w-full">
             <div class="inline-block min-w-full py-2 align-middle">
                 <div class="overflow-hidden shadow border border-solid border-gray-300 md:rounded-lg">
