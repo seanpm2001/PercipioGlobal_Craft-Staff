@@ -1,4 +1,6 @@
 <script setup lang="ts">
+    import { reactive } from 'vue'
+
     import { useQuery } from '@vue/apollo-composable'
 
     import { fetchPayRuns } from '~/js/composables/useAxiosClient'
@@ -10,18 +12,24 @@
     import StatusSynced from '~/vue/molecules/status/status--synced.vue'
 
     const employerId = window.location.href.split('/').at(-2)
-    const currentYear = window.location.href.split('/').pop()
+    const taxYear = reactive({
+        current: window.location.href.split('/').pop()
+    })
 
     const { result, loading } = useQuery(
         PAYRUNS, 
-        { employerId: employerId, taxYear: currentYear }, 
+        { 
+            employerId: employerId, 
+            taxYear: taxYear.current 
+        }, 
         { pollInterval: 5000 }
     )
+
     const store = usePayRunStore()
 
     const getLatestSync = (payruns: any) => {
 
-        if(!payruns){
+        if (!payruns) {
             return 'unknown'
         }
 
@@ -30,15 +38,19 @@
 
     }
 
-    const updateYear = (taxYear: string) => {
+    const updateYear = (selectedYear: string) => {
 
         const baseUrl = new URL(window.location.href)
         const path = baseUrl.pathname.split('/')
         path.pop()
-        baseUrl.pathname = path.join('/') + '/' + taxYear
-
+        baseUrl.pathname = path.join('/') + '/' + selectedYear
         window.history.pushState({}, '', baseUrl)
+
+        taxYear.current = selectedYear
+        
     }
+
+    
 
 </script>
 
@@ -55,7 +67,7 @@
         <div class="mt-4 md:mt-0 flex" style="margin-bottom:0">
             <StatusSynced :date="getLatestSync(result.payruns)" />
             <button 
-                @click="fetchPayRuns(result.payruns[0]?.employerId, currentYear)" 
+                @click="fetchPayRuns(result.payruns[0]?.employerId, taxYear.current)" 
                 :disabled="store.loadingFetched" 
                 class="cursor-pointer inline-flex items-center justify-center rounded-md border border-transparent bg-indigo-600 disabled:bg-indigo-400 disabled:cursor-not-allowed px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 sm:w-auto" 
                 style="margin-bottom:0"
@@ -73,11 +85,11 @@
         <div class="col-start-4 flex justify-end">
             <span class="mb-1 mr-2 font-bold">Choose a payroll year:</span>
             <select class="py-1 px-1 rounded-md w-20 bg-gray-100 border-2 border-indigo-600 text-right" @change="updateYear($event?.target?.value)">
-                <option value="Year2022" :selected="currentYear === 'Year2022'">2022</option>
-                <option value="Year2021" :selected="currentYear === 'Year2021'">2021</option>
-                <option value="Year2020" :selected="currentYear === 'Year2020'">2020</option>
-                <option value="Year2019" :selected="currentYear === 'Year2019'">2019</option>
-                <option value="Year2018" :selected="currentYear === 'Year2018'">2018</option>
+                <option value="Year2022" :selected="taxYear.current === 'Year2022'">2022</option>
+                <option value="Year2021" :selected="taxYear.current === 'Year2021'">2021</option>
+                <option value="Year2020" :selected="taxYear.current === 'Year2020'">2020</option>
+                <option value="Year2019" :selected="taxYear.current === 'Year2019'">2019</option>
+                <option value="Year2018" :selected="taxYear.current === 'Year2018'">2018</option>
             </select>
         </div>
     </div>
