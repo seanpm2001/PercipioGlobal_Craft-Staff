@@ -17,7 +17,7 @@
 
     const { result, loading } = useQuery(
         PAYRUNS, 
-        { employerId: employerId }, 
+        { employerId: employerId, taxYear: currentYear }, 
         { pollInterval: 5000 }
     )
     const store = usePayRunStore()
