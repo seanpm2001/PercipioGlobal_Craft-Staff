@@ -12,16 +12,12 @@
     const employerId = window.location.href.split('/').at(-2)
     const currentYear = window.location.href.split('/').pop()
 
-    console.log(employerId)
-    console.log(currentYear)
-
     const { result, loading } = useQuery(
         PAYRUNS, 
         { employerId: employerId }, 
         { pollInterval: 5000 }
     )
     const store = usePayRunStore()
-
 
     const getLatestSync = (payruns: any) => {
 
@@ -32,6 +28,16 @@
         const sorted = payruns.map(pr => pr.dateSynced).sort((a, b) => a < b)
         return sorted.length > 0 ? sorted[0] : 'unknown'
 
+    }
+
+    const updateYear = (taxYear: string) => {
+
+        const baseUrl = new URL(window.location.href)
+        const path = baseUrl.pathname.split('/')
+        path.pop()
+        baseUrl.pathname = path.join('/') + '/' + taxYear
+
+        window.history.pushState({}, '', baseUrl)
     }
 
 </script>
@@ -66,12 +72,12 @@
     <div class="mt-8 ml-auto grid grid-cols-4">
         <div class="col-start-4 flex justify-end">
             <span class="mb-1 mr-2 font-bold">Choose a payroll year:</span>
-            <select class="py-1 px-1 rounded-md w-20 bg-gray-100 border-2 border-indigo-600 text-right">
-                <option value="Year2022">2022</option>
-                <option value="Year2021">2021</option>
-                <option value="Year2019">2020</option>
-                <option value="Year2018">2019</option>
-                <option value="Year2017">2018</option>
+            <select class="py-1 px-1 rounded-md w-20 bg-gray-100 border-2 border-indigo-600 text-right" @change="updateYear($event?.target?.value)">
+                <option value="Year2022" :selected="currentYear === 'Year2022'">2022</option>
+                <option value="Year2021" :selected="currentYear === 'Year2021'">2021</option>
+                <option value="Year2020" :selected="currentYear === 'Year2020'">2020</option>
+                <option value="Year2019" :selected="currentYear === 'Year2019'">2019</option>
+                <option value="Year2018" :selected="currentYear === 'Year2018'">2018</option>
             </select>
         </div>
     </div>
