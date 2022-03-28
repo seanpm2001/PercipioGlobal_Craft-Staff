@@ -152,12 +152,12 @@ class PayRunController extends Controller
         Staff::$plugin->payRuns->getCsvTemplate($payRunId);
     }
 
-    public function actionFetchPayRuns(int $employerId): Response
+    public function actionFetchPayRuns(int $employerId, string $taxYear = ''): Response
     {
         $this->requireLogin();
         $this->requireAcceptsJson();
 
-        Staff::$plugin->payRuns->fetchPayRunByEmployer($employerId);
+        Staff::$plugin->payRuns->fetchPayRunByEmployer($employerId, $taxYear);
 
         return $this->asJson([
             'success' => true
