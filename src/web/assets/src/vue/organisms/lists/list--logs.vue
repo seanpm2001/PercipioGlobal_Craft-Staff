@@ -37,6 +37,11 @@
 
                     <!-- CONTENT -->
                     <LoadingList v-if="!payrun" />
+
+                    <div class="grid grid-cols-7 border-b border-solid border-gray-200 py-4 px-3 text-center" v-if="payrun && store.logs.length === 0">
+                        <div class="col-span-7">There are currently no logs for this pay run</div>
+                    </div>
+
                     <LogListItem  v-for="log in store.logs" :key="log.id" :log="log" />
                 </div>
             </div>

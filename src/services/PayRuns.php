@@ -68,7 +68,7 @@ class PayRuns extends Component
 
 
     /* GETTERS */
-    public function getOpenPayRunByEmployer(int $employerId) : ElementInterface
+    public function getLastPayRunByEmployer(int $employerId) : ElementInterface|null
     {
         return PayRun::find()
             ->employerId($employerId)

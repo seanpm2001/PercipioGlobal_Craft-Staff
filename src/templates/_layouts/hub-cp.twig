@@ -16,6 +16,7 @@
 
 {% js %}
     window.api = {{ {
+        "baseUrl": craft.app.sites.currentSite.baseUrl,
         "cpUrl": cpUrl(),
         "csrf": craft.app.request.csrfToken
     }|json_encode|raw }}

@@ -17,12 +17,21 @@
         { pollInterval: 5000 }
     )
     const store = usePayRunStore()
-    const { queue } = storeToRefs(store)
 
 
     const getLatestSync = (payruns) => {
-        const sorted = payruns.sort((a, b) => (a.dateSynced < b.dateSynced) ? 1 : -1)
-        return sorted[0]?.dateSynced
+
+        // return '-'
+
+        if(!payruns){
+            return 'unknown'
+        }
+
+        const sorted = payruns.map(pr => pr.dateSynced).sort((a, b) => a < b)
+        return sorted.length > 0 ? sorted[0] : 'unknown'
+
+        // payruns.sort((a, b) => (a.dateSynced < b.dateSynced) ? 1 : -1)
+        // return sorted[0]?.dateSynced
     }
 
 </script>
@@ -69,6 +78,10 @@
                     </div>
 
                     <LoadingList v-if="loading" />
+
+                    <div class="grid grid-cols-7 border-b border-solid border-gray-200 py-4 px-3 text-center" v-if="!loading && result.payruns.length === 0">
+                        <div class="col-span-7">There are currently no pay runs for this employer</div>
+                    </div>
 
                     <!-- CONTENT -->
                     <PayRunList :payrun-data="result.payruns" />

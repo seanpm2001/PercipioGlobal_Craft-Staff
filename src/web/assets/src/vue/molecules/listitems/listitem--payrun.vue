@@ -16,7 +16,7 @@
     >
         <div class="flex items-center whitespace-nowrap py-4 pl-4 pr-3 text-sm font-medium text-indigo-800 sm:pl-6">
             <span :class="[
-                'rounded-full w-5 h-5 fond-bold flex items-center justify-center',
+                'rounded-full w-5 h-5 fond-bold flex items-center justify-center mb-0',
                 payrun.state == 'Open' ? 'border-2 border-solid border-emrald-500 text-emerald-500': '',
                 payrun.state == 'Closed' ? 'border-2 border-solid border-green-500 text-white bg-emerald-500': '',
                 payrun.state == 'Finalised' ? 'border-2 border-solid border-green-500 text-white bg-emerald-500': ''
