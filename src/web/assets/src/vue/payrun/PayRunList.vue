@@ -47,10 +47,8 @@
         window.history.pushState({}, '', baseUrl)
 
         taxYear.current = selectedYear
-        
-    }
 
-    
+    }
 
 </script>
 
