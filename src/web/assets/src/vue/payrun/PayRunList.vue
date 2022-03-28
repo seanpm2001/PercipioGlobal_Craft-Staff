@@ -1,6 +1,5 @@
 <script setup lang="ts">
     import { useQuery } from '@vue/apollo-composable'
-    import { storeToRefs } from 'pinia'
 
     import { fetchPayRuns } from '~/js/composables/useAxiosClient'
     import { usePayRunStore } from '~/stores/payrun'
@@ -10,7 +9,12 @@
     import LoadingList from '~/vue/molecules/listitems/listitem--loading.vue'
     import StatusSynced from '~/vue/molecules/status/status--synced.vue'
 
-    const employerId = window.location.href.split("/").pop()
+    const employerId = window.location.href.split('/').at(-2)
+    const currentYear = window.location.href.split('/').pop()
+
+    console.log(employerId)
+    console.log(currentYear)
+
     const { result, loading } = useQuery(
         PAYRUNS, 
         { employerId: employerId }, 
@@ -19,9 +23,7 @@
     const store = usePayRunStore()
 
 
-    const getLatestSync = (payruns) => {
-
-        // return '-'
+    const getLatestSync = (payruns: any) => {
 
         if(!payruns){
             return 'unknown'
@@ -30,8 +32,6 @@
         const sorted = payruns.map(pr => pr.dateSynced).sort((a, b) => a < b)
         return sorted.length > 0 ? sorted[0] : 'unknown'
 
-        // payruns.sort((a, b) => (a.dateSynced < b.dateSynced) ? 1 : -1)
-        // return sorted[0]?.dateSynced
     }
 
 </script>
@@ -63,11 +63,17 @@
         </div>
     </div>
 
-    <div class="flex mt-8 ml-auto">
-        <span class="mb-0 mr-2">Choose a payroll year:</span>
-        <select class="py-1 px-1 rounded-md bg-gray-100 w-full border-2 border-indigo-600">
-            <option val="Year2021">2021</option>
-        </select>
+    <div class="mt-8 ml-auto grid grid-cols-4">
+        <div class="col-start-4 flex justify-end">
+            <span class="mb-1 mr-2 font-bold">Choose a payroll year:</span>
+            <select class="py-1 px-1 rounded-md w-20 bg-gray-100 border-2 border-indigo-600 text-right">
+                <option value="Year2022">2022</option>
+                <option value="Year2021">2021</option>
+                <option value="Year2019">2020</option>
+                <option value="Year2018">2019</option>
+                <option value="Year2017">2018</option>
+            </select>
+        </div>
     </div>
 
 
