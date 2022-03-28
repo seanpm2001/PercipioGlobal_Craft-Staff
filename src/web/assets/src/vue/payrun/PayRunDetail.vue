@@ -1,7 +1,6 @@
 <script setup lang="ts">
     import { useQuery } from '@vue/apollo-composable'
     import { reactive, ref } from 'vue'
-    import { storeToRefs } from 'pinia'
 
     import { fetchPayRun } from '~/js/composables/useAxiosClient'
     import { usePayRunStore } from '~/stores/payrun'
