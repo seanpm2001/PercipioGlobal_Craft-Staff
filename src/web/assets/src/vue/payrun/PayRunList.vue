@@ -11,7 +11,6 @@
     import LoadingList from '~/vue/molecules/listitems/listitem--loading.vue'
     import StatusSynced from '~/vue/molecules/status/status--synced.vue'
 
-    const employerId = window.location.href.split('/').at(-2)
     const variables = reactive({ 
         taxYear: window.location.href.split('/').pop(),
         employerId: window.location.href.split('/').at(-2)
