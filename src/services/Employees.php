@@ -13,22 +13,24 @@ namespace percipiolondon\staff\services;
 use Craft;
 use craft\base\Component;
 
-use craft\elements\User;
+use percipiolondon\staff\records\Address;
+use percipiolondon\staff\records\Countries;
+use percipiolondon\staff\records\LeaverDetails;
+use percipiolondon\staff\records\LeaveSettings;
+use percipiolondon\staff\records\StarterDetails;
 use percipiolondon\staff\helpers\Logger;
 use percipiolondon\staff\helpers\Security as SecurityHelper;
 use percipiolondon\staff\elements\Employee;
 use percipiolondon\staff\jobs\CreateEmployeeJob;
 
+use percipiolondon\staff\records\DirectorshipDetails;
 use percipiolondon\staff\records\EmploymentDetails;
-use percipiolondon\staff\records\Permission;
 use percipiolondon\staff\records\PersonalDetails;
-use percipiolondon\staff\records\Employee as EmployeeRecord;
 use percipiolondon\staff\records\Employer as EmployerRecord;
 
 use percipiolondon\staff\Staff;
 use percipiolondon\staff\jobs\FetchEmployeesListJob;
 
-use yii\base\BaseObject;
 use yii\db\Exception;
 
 /**
@@ -51,6 +53,73 @@ class Employees extends Component
 
 
     /* GETTERS */
+    public function getEmploymentDetailsById(int $employmentDetailsId): array
+    {
+        $employmentDetails = EmploymentDetails::findOne($employmentDetailsId);
+
+        if(!$employmentDetails){
+            return [];
+        }
+
+        $employmentDetails = $employmentDetails->toArray();
+
+        // directorship details
+        $directorshipDetails = DirectorshipDetails::findOne($employmentDetails['directorshipDetailsId']);
+        if ($directorshipDetails) {
+            $employmentDetails['directorshipDetails'] = $directorshipDetails->toArray();
+        }
+
+        // starter details
+        $starterDetails = StarterDetails::findOne($employmentDetails['starterDetailsId']);
+
+        if ($starterDetails) {
+            $employmentDetails['starterDetails'] = $starterDetails->toArray();
+        }
+
+        // leaver details
+        $leaverDetails = LeaverDetails::findOne($employmentDetails['leaverDetailsId']);
+        if ($leaverDetails) {
+            $employmentDetails['leaverDetails'] = $leaverDetails->toArray();
+        }
+
+        return $employmentDetails;
+    }
+
+    public function getLeaveSettingsById(int $leaveSettingsId): array
+    {
+        $leaveSettings = LeaveSettings::findOne($leaveSettingsId);
+
+        if(!$leaveSettings){
+            return [];
+        }
+
+        return $leaveSettings->toArray();
+    }
+
+    public function getPersonalDetailssById(int $personalDetailsId): array
+    {
+        $personalDetails = PersonalDetails::findOne($personalDetailsId);
+
+        if(!$personalDetails){
+            return [];
+        }
+
+        $personalDetails = $personalDetails->toArray();
+
+        // address
+        $address = Address::findOne($personalDetails['addressId']);
+        if ($address) {
+            $address = $address->toArray();
+
+            //country
+            $country = Countries::findOne($address['countryId']);
+            $address['country'] = $country['name'] ?? '';
+
+            $personalDetails['address'] = $address;
+        }
+
+        return $personalDetails;
+    }
 
 
 
@@ -101,9 +170,11 @@ class Employees extends Component
             //foreign keys
             $personalDetailsId = $employeeRecord->personalDetailsId ?? null;
             $employmentDetailsId = $employeeRecord->employmentDetailsId ?? null;
+            $leaveSettingsId = $employeeRecord->leaveSettingsId ?? null;
 
             $personalDetails = $this->savePersonalDetails($employee['personalDetails'], $personalDetailsId);
             $employmentDetails = $this->saveEmploymentDetails($employee['employmentDetails'], $employmentDetailsId);
+            $leaveSettings = $this->saveLeaveSettings($employee['leaveSettings'], $leaveSettingsId);
             $employerRecord = EmployerRecord::findOne(['staffologyId' => $employer['id']]);
 
             $employeeRecord->employerId = $employerRecord['id'] ?? null;
@@ -111,7 +182,7 @@ class Employees extends Component
             $employeeRecord->siteId = Craft::$app->getSites()->currentSite->id;
             $employeeRecord->personalDetailsId = $personalDetails->id ?? null;
             $employeeRecord->employmentDetailsId = $employmentDetails->id ?? null;
-            $employeeRecord->leaveSettingsId = $employee['leaveSettings'] ?? null;
+            $employeeRecord->leaveSettingsId = $leaveSettings->id ?? null;
             $employeeRecord->status = $employee['status'] ?? '';
             $employeeRecord->niNumber = $employee['personalDetails']['niNumber'] ?? null;
             $employeeRecord->userId = null;
@@ -158,7 +229,12 @@ class Employees extends Component
         } else {
             $record = new EmploymentDetails();
         }
-        
+
+        $starterDetailsId = $record->starterDetailsId ?? null;
+
+        $starterDetails = $this->saveStarterDetails($employmentDetails['starterDetails'], $starterDetailsId);
+
+        $record->starterDetailsId = $starterDetails->id ?? null;
         $record->cisSubContractor = $employmentDetails['cisSubCopntractor'] ?? null;
         $record->payrollCode = SecurityHelper::encrypt($employmentDetails['payrollCode'] ?? '');
         $record->jobTitle = SecurityHelper::encrypt($employmentDetails['jobTitle'] ?? '');
@@ -181,10 +257,77 @@ class Employees extends Component
 
         return $record;
     }
-    
+
+    public function saveLeaveSettings(array $leaveSettings, int $leaveSettingsId = null): LeaveSettings
+    {
+        if($leaveSettingsId) {
+            $record = LeaveSettings::findOne($leaveSettingsId);
+
+            if (!$record) {
+                throw new Exception('Invalid leave settings ID: ' . $leaveSettingsId);
+            }
+
+        } else {
+            $record = new LeaveSettings();
+        }
+
+        $record->useDefaultHolidayType = $leaveSettings['useDefaultHolidayType'] ?? null;
+        $record->useDefaultAllowanceResetDate = $leaveSettings['useDefaultAllowanceResetDate'] ?? null;
+        $record->useDefaultAllowance = $leaveSettings['useDefaultAllowance'] ?? null;
+        $record->useDefaultAccruePaymentInLieu = $leaveSettings['useDefaultAccruePaymentInLieu'] ?? null;
+        $record->useDefaultAccruePaymentInLieuRate = $leaveSettings['useDefaultAccruePaymentInLieuRate'] ?? null;
+        $record->useDefaultAccruePaymentInLieuAllGrossPay = $leaveSettings['useDefaultAccruePaymentInLieuAllGrossPay'] ?? null;
+        $record->useDefaultAccruePaymentInLieuPayAutomatically = $leaveSettings['useDefaultAccruePaymentInLieuPayAutomatically'] ?? null;
+        $record->useDefaultAccrueHoursPerDay = $leaveSettings['useDefaultAccrueHoursPerDay'] ?? null;
+        $record->allowanceResetDate = $leaveSettings['allowanceResetDate'] ?? null;
+        $record->allowance = $leaveSettings['allowance'] ?? null;
+        $record->adjustment = $leaveSettings['adjustment'] ?? null;
+        $record->allowanceUsed = $leaveSettings['allowanceUsed'] ?? null;
+        $record->allowanceUsedPreviousPeriod = $leaveSettings['allowanceUsedPreviousPeriod'] ?? null;
+        $record->allowanceRemaining = $leaveSettings['allowanceRemaining'] ?? null;
+        $record->holidayType = $leaveSettings['holidayType'] ?? null;
+        $record->accrueSetAmount = $leaveSettings['accrueSetAmount'] ?? null;
+        $record->accrueHoursPerDay = $leaveSettings['accrueHoursPerDay'] ?? null;
+        $record->showAllowanceOnPayslip = $leaveSettings['showAllowanceOnPayslip'] ?? null;
+        $record->showAhpOnPayslip = $leaveSettings['showAhpOnPayslip'] ?? null;
+        $record->accruePaymentInLieuRate = $leaveSettings['accruePaymentInLieuRate'] ?? null;
+        $record->accruePaymentInLieuAllGrossPay = $leaveSettings['accruePaymentInLieuAllGrossPay'] ?? null;
+        $record->accruePaymentInLieuPayAutomatically = $leaveSettings['accruePaymentInLieuPayAutomatically'] ?? null;
+        $record->accruedPaymentLiability = $leaveSettings['accruedPaymentLiability'] ?? null;
+        $record->accruedPaymentAdjustment = $leaveSettings['accruedPaymentAdjustment'] ?? null;
+        $record->accruedPaymentPaid = $leaveSettings['accruedPaymentPaid'] ?? null;
+        $record->accruedPaymentBalance = $leaveSettings['accruedPaymentBalance'] ?? null;
+
+        $record->save();
+
+        return $record;
+    }
+
+    public function saveStarterDetails(array $starterDetails, int $staterDetailsId = null): StarterDetails
+    {
+        if($staterDetailsId) {
+            $record = StarterDetails::findOne($staterDetailsId);
+
+            if (!$record) {
+                throw new Exception('Invalid starter details ID: ' . $staterDetailsId);
+            }
+
+        } else {
+            $record = new StarterDetails();
+        }
+
+        $record->startDate = $starterDetails['startDate'] ?? null;
+        $record->starterDeclaration = $starterDetails['starterDeclaration'] ?? null;
+        // overseasEmployerDetailsId
+        // pensionerPayrollId
+
+        $record->save();
+
+        return $record;
+    }
+
     public function savePersonalDetails(array $personalDetails, int $personalDetailsId = null): PersonalDetails
     {
-
         if($personalDetailsId) {
             $record = PersonalDetails::findOne($personalDetailsId);
 

@@ -50,6 +50,10 @@ class Employee extends Element
     public $sourceSystemId;
     public $isDirector;
 
+    private $_employmentDetails;
+    private $_leaveSettings;
+    private $_personalDetails;
+
     // Static Methods
     // =========================================================================
 
@@ -125,6 +129,71 @@ class Employee extends Element
 
     // Public Methods
     // =========================================================================
+    /**
+     * Returns the employment details
+     *
+     * @return array|null
+     * @throws InvalidConfigException if [[employerId]] is set but invalid
+     */
+    public function getEmploymentDetails()
+    {
+        if ($this->_employmentDetails === null) {
+            if ($this->employmentDetailsId === null) {
+                return null;
+            }
+
+            if (($this->_employmentDetails = Staff::$plugin->employees->getEmploymentDetailsById($this->employmentDetailsId)) === null) {
+                // The author is probably soft-deleted. Just no author is set
+                $this->_employmentDetails = false;
+            }
+        }
+
+        return $this->_employmentDetails ?: null;
+    }
+
+    /**
+     * Returns the leave settings
+     *
+     * @return array|null
+     * @throws InvalidConfigException if [[employerId]] is set but invalid
+     */
+    public function getLeaveSettings()
+    {
+        if ($this->_leaveSettings === null) {
+            if ($this->leaveSettingsId === null) {
+                return null;
+            }
+
+            if (($this->_leaveSettings = Staff::$plugin->employees->getLeaveSettingsById($this->leaveSettingsId)) === null) {
+                // The author is probably soft-deleted. Just no author is set
+                $this->_leaveSettings = false;
+            }
+        }
+
+        return $this->_leaveSettings ?: null;
+    }
+
+    /**
+     * Returns the personal details
+     *
+     * @return array|null
+     * @throws InvalidConfigException if [[employerId]] is set but invalid
+     */
+    public function getPersonalDetails()
+    {
+        if ($this->_personalDetails === null) {
+            if ($this->personalDetailsId === null) {
+                return null;
+            }
+
+            if (($this->_personalDetails = Staff::$plugin->employees->getPersonalDetailssById($this->personalDetailsId)) === null) {
+                // The author is probably soft-deleted. Just no author is set
+                $this->_personalDetails = false;
+            }
+        }
+
+        return $this->_personalDetails ?: null;
+    }
 
     /**
      * Returns the validation rules for attributes.
@@ -260,6 +329,7 @@ class Employee extends Element
             $record->staffologyId = $this->staffologyId;
             $record->personalDetailsId = $this->personalDetailsId;
             $record->employmentDetailsId = $this->employmentDetailsId;
+            $record->leaveSettingsId = $this->leaveSettingsId;
             $record->status = $this->status;
             $record->sourceSystemId = $this->sourceSystemId;
             $record->niNumber = SecurityHelper::encrypt($this->niNumber ?? '');

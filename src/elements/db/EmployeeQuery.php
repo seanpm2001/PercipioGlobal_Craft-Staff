@@ -118,7 +118,7 @@ class EmployeeQuery extends ElementQuery
             'staff_employees.personalDetailsId',
             'staff_employees.employmentDetailsId',
 //            'staff_employees.autoEnrolmentId',
-//            'staff_employees.leaveSettingsId',
+            'staff_employees.leaveSettingsId',
 //            'staff_employees.rightToWorkId',
 //            'staff_employees.bankDetailsId',
             'staff_employees.status',
