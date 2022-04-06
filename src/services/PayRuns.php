@@ -40,7 +40,9 @@ use Craft;
 use craft\base\Component;
 use percipiolondon\staff\records\PayRunLog;
 use percipiolondon\staff\records\PayRunTotals;
+use percipiolondon\staff\records\PensionSummary;
 use percipiolondon\staff\records\PersonalDetails;
+use percipiolondon\staff\records\WorkerGroup;
 use percipiolondon\staff\Staff;
 use craft\helpers\Json;
 use yii\db\Exception;
@@ -582,10 +584,12 @@ class PayRuns extends Component
             $totalsId = $payRunEntryRecord->totalsId ?? null;
             $totalsYtdId = $payRunEntryRecord->totalsYtdId ?? null;
             $payOptionsId = $payRunEntryRecord->payOptionsId ?? null;
+            $pensionSummaryId = $payRunEntryRecord->pensionSummaryId ?? null;
 
             $totals = $this->saveTotals($payRunEntryData['totals'], $totalsId);
             $totalsYtd = $this->saveTotals($payRunEntryData['totalsYtd'], $totalsYtdId);
             $payOptions = $this->savePayOptions($payRunEntryData['payOptions'], $payOptionsId);
+            $pensionSummary = $payRunEntryData['pensionSummary'] ?? null ? $this->savePensionSummary($payRunEntryData['pensionSummary'], $pensionSummaryId) : null;
             $employee = EmployeeRecord::findOne(['staffologyId' => $payRunEntryData['employee']['id'] ?? null]);
 
             $employerRecord = is_int($employer['id'] ?? null) ? $employer : EmployerRecord::findOne(['staffologyId' => $employer['id'] ?? null]);
@@ -597,6 +601,7 @@ class PayRuns extends Component
             $payRunEntryRecord->payOptionsId = $payOptions->id ?? null;
             $payRunEntryRecord->totalsId = $totals->id ?? null;
             $payRunEntryRecord->totalsYtdId = $totalsYtd->id ?? null;
+            $payRunEntryRecord->pensionSummaryId = $pensionSummary->id ?? null;
             $payRunEntryRecord->staffologyId = $payRunEntryData['id'] ?? null;
             $payRunEntryRecord->taxYear = $payRunEntryData['taxYear'] ?? null;
             $payRunEntryRecord->startDate = $payRunEntryData['startDate'] ?? null;
@@ -867,6 +872,69 @@ class PayRuns extends Component
         return $record;
     }
 
+    public function savePensionSummary(array $pensionSummary, int $pensionSummaryId = null): PensionSummary
+    {
+        if($pensionSummaryId) {
+            $record = PensionSummary::findOne($pensionSummaryId);
+
+            if (!$record) {
+                throw new Exception('Invalid fps fields ID: ' . $pensionSummaryId);
+            }
+
+        }else{
+            $record = new PensionSummary();
+        }
+
+        $workerGroupId = $record['workerGroupId'] ?? null;
+
+        $workerGroup = $pensionSummary['workerGroup'] ? $this->saveWorkerGroup($pensionSummary['workerGroup'], $workerGroupId) : null;
+
+        $record->workerGroupId = $workerGroup->id ?? null;
+        $record->name = SecurityHelper::encrypt($pensionSummary['name'] ?? '');
+        $record->startDate = SecurityHelper::encrypt($pensionSummary['startDate'] ?? '');
+        $record->pensionRule = $pensionSummary['pensionRule'] ?? '';
+        $record->employeePensionContributionMultiplier = SecurityHelper::encrypt($pensionSummary['employeePensionContributionMultiplier'] ?? '');
+        $record->additionalVoluntaryContribution = SecurityHelper::encrypt($pensionSummary['additionalVoluntaryContribution'] ?? '');
+        $record->avcIsPercentage = $fpsFields['avcIsPercentage'] ?? null;
+        $record->autoEnrolled = $fpsFields['autoEnrolled'] ?? null;
+        $record->papdisPensionProviderId = $fpsFields['papdisPensionProviderId'] ?? null;
+        $record->papdisEmployerId = $fpsFields['papdisEmployerId'] ?? null;
+
+        $record->save();
+
+        return $record;
+    }
+
+    public function saveWorkerGroup(array $workerGroup, int $workerGroupId = null): WorkerGroup
+    {
+        if($workerGroupId) {
+            $record = WorkerGroup::findOne($workerGroupId);
+
+            if (!$record) {
+                throw new Exception('Invalid worker group ID: ' . $workerGroupId);
+            }
+
+        }else{
+            $record = new WorkerGroup();
+        }
+
+        $record->staffologyId = $workerGroup['workerGroupId'] ?? null;
+        $record->name = SecurityHelper::encrypt($workerGroup['name'] ?? '');
+        $record->contributionLevelType = $workerGroup['contributionLevelType'] ?? null;
+        $record->employeeContribution = SecurityHelper::encrypt($workerGroup['employeeContribution'] ?? '');
+        $record->employeeContributionIsPercentage = $workerGroup['employeeContributionIsPercentage'] ?? null;
+        $record->employerContribution = SecurityHelper::encrypt($workerGroup['employerContribution'] ?? '');
+        $record->employerContributionIsPercentage = $workerGroup['employerContributionIsPercentage'] ?? null;
+        $record->employerContributionTopUpPercentage = SecurityHelper::encrypt($workerGroup['employerContributionTopUpPercentage'] ?? '');
+        $record->customThreshold = $workerGroup['customThreshold'] ?? null;
+        $record->lowerLimit = SecurityHelper::encrypt($workerGroup['lowerLimit'] ?? '');
+        $record->upperLimit = SecurityHelper::encrypt($workerGroup['upperLimit'] ?? '');
+
+        $record->save();
+
+        return $record;
+    }
+
 
 
 
@@ -881,7 +949,6 @@ class PayRuns extends Component
 
             $api = App::parseEnv(Staff::$plugin->getSettings()->apiKeyStaffology);
             $base_url = 'https://api.staffology.co.uk/employers/'.$employer['staffologyId'].'/payrun/'.$payPeriod.'/importpay?linesOnly=true';
-//            $base_url = 'https://api.staffology.co.uk/employers/'.$employer['staffologyId'].'/payrun/'.$payRunEntry['taxYear'].'/'.$payRunEntry['payPeriod'].'/'.$payRunEntry['period'].'/'.$payRunEntry['staffologyId'];
             $credentials = base64_encode('staff:'.$api);
             $client = new \GuzzleHttp\Client([
                 'headers' => [

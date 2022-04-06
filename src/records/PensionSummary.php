@@ -17,27 +17,19 @@ use craft\db\ActiveRecord;
 use percipiolondon\staff\db\Table;
 
 /**
- * @property string $title;
- * @property int $code;
- * @property double $defaultValue;
- * @property boolean $isDeduction;
- * @property boolean $isNiable;
- * @property boolean $isTaxable;
- * @property boolean $isPensionable;
- * @property boolean $isAttachable;
- * @property boolean $isRealTimeClass1aNiable;
- * @property boolean $isNotContributingToHolidayPay;
- * @property boolean $isQualifyingEarningsForAe;
- * @property boolean $isNotTierable;
- * @property boolean $isTcp_Tcls;
- * @property boolean $isTcp_Pp;
- * @property boolean $isTcp_Op;
- * @property boolean $isFlexiDd_DeathBenefit;
- * @property boolean $isFlexiDd_Pension;
- * @property string $calculationType;
- * @property double $hourlyRateMultiplier;
- * @property boolean $isSystemCode;
- * @property boolean $isControlCode;
+ * @property int workerGroupId;
+ * @property int pensionId;
+ * @property int pensionSchemeId;
+ *
+ * @property string name;
+ * @property string startDate;
+ * @property string pensionRule;
+ * @property double employeePensionContributionMultiplier;
+ * @property double additionalVoluntaryContribution;
+ * @property boolean avcIsPercentage;
+ * @property boolean autoEnrolled;
+ * @property int papdisPensionProviderId;
+ * @property int papdisEmployerId;
  */
 
 class PensionSummary extends ActiveRecord

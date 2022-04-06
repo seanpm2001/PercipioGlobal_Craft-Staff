@@ -258,7 +258,7 @@ class Employers extends Component
 
         $address = $employer['address'] ? Staff::$plugin->addresses->saveAddress($employer['address'], $addressId) : null;
         $payOptions = $employer['defaultPayOptions'] ? Staff::$plugin->payRuns->savePayOptions($employer['defaultPayOptions'], $defaultPayOptionsId) : null;
-        $hmrcDetails = $employer['hmrcDetails'] ? $this->saveHmrcDetails($employer['hmrcDetails'], $emp->id, $hmrcDetailsId) : null;
+        $hmrcDetails = $employer['hmrcDetails'] ? $this->saveHmrcDetails($employer['hmrcDetails'], $hmrcDetailsId) : null;
 
         $emp->addressId = $address->id ?? null;
         $emp->defaultPayOptionsId = $payOptions->id ?? null;
@@ -293,7 +293,7 @@ class Employers extends Component
         }
     }
 
-    public function saveHmrcDetails(array $hmrcDetails, int $employerId, int $hmrcDetailsId = null): HmrcDetails
+    public function saveHmrcDetails(array $hmrcDetails, int $hmrcDetailsId = null): HmrcDetails
     {
         if($hmrcDetailsId) {
             $record = HmrcDetails::findOne($hmrcDetailsId);
@@ -306,7 +306,6 @@ class Employers extends Component
             $record = new HmrcDetails();
         }
 
-        $record->employerId = $employerId;
         $record->officeNumber = SecurityHelper::encrypt($hmrcDetails['officeNumber'] ?? '');
         $record->payeReference = SecurityHelper::encrypt($hmrcDetails['payeReference'] ?? '');
         $record->accountsOfficeReference = SecurityHelper::encrypt($hmrcDetails['accountsOfficeReference'] ?? '');

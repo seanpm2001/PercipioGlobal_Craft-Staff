@@ -53,6 +53,34 @@ class Employees extends Component
 
 
     /* GETTERS */
+    public function getEmployeeById(int $employeeId): array
+    {
+        $employee = Employee::findOne($employeeId);
+
+        if(!$employee){
+            return [];
+        }
+
+        $employee = $employee->toArray();
+
+        $personalDetails = $this->getPersonalDetailssById($employee['personalDetailsId']);
+        if ($personalDetails){
+            $employee['personalDetails'] = $personalDetails;
+        }
+
+        $leaveSettings = $this->getLeaveSettingsById($employee['leaveSettingsId']);
+        if ($leaveSettings){
+            $employee['leaveSettings'] = $leaveSettings;
+        }
+
+        $employmentDetails = $this->getEmploymentDetailsById($employee['employmentDetailsId']);
+        if ($employmentDetails){
+            $employee['employmentDetails'] = $employmentDetails;
+        }
+
+        return $employee;
+    }
+
     public function getEmploymentDetailsById(int $employmentDetailsId): array
     {
         $employmentDetails = EmploymentDetails::findOne($employmentDetailsId);

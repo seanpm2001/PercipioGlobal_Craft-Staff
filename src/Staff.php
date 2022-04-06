@@ -36,7 +36,6 @@ use percipiolondon\staff\elements\Employer as EmployerElement;
 use percipiolondon\staff\elements\Employee as EmployeeElement;
 use percipiolondon\staff\elements\PayRun as PayRunElement;
 use percipiolondon\staff\elements\PayRunEntry as PayRunEntryElement;
-use percipiolondon\staff\elements\HardingUser as HardingUserElement;
 use percipiolondon\staff\gql\queries\Employer as EmployerQueries;
 use percipiolondon\staff\gql\queries\Employee as EmployeeQueries;
 use percipiolondon\staff\gql\queries\PayRun as PayRunQueries;

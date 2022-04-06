@@ -35,6 +35,7 @@ class Security
     {
         $fieldName = $resolveInfo->fieldName;
         $value = self::decrypt($source[$fieldName] ?? '', $type = 'string');
-        return $value ?? null;
+        return empty($value) && $value !== 0 ?
+             null : $value;
     }
 }

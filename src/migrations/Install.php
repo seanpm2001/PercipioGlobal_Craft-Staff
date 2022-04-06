@@ -706,8 +706,6 @@ class Install extends Migration
                 'dateUpdated' => $this->dateTime()->notNull(),
                 'uid' => $this->uid(),
                 //FK
-                //internal
-                'employerId' => $this->integer()->notNull(), // create FK to Employer [id]
                 //fields
                 'officeNumber' => $this->string(),
                 'payeReference' => $this->string(),
@@ -1076,8 +1074,6 @@ class Install extends Migration
                 'dateUpdated' => $this->dateTime()->notNull(),
                 'uid' => $this->uid(),
                 //FK
-                //intern
-                'payRunEntryId' => $this->integer(), //create FK to PayRunEntry [id]
                 //staffology
                 'pensionId' => $this->integer(), // create FK to Pension [id]
                 'pensionSchemeId' => $this->integer(), // create FK to PensionSchema [id]
@@ -1500,8 +1496,6 @@ class Install extends Migration
 
         $this->createIndex(null, Table::FAMILY_DETAILS, "employeeId", false);
 
-        $this->createIndex(null, Table::HMRC_DETAILS, "employerId", false);
-
         $this->createIndex(null, Table::ITEMS, "staffologyId", true);
 
         $this->createIndex(null, Table::LEAVE_SETTINGS, "employeeId", false);
@@ -1535,7 +1529,6 @@ class Install extends Migration
         $this->createIndex(null, Table::PENSION_SELECTION, "pensionSchemeId", false);
         $this->createIndex(null, Table::PENSION_SELECTION, "staffologyId", true);
 
-        $this->createIndex(null, Table::PENSION_SUMMARY, "payRunEntryId", false);
         $this->createIndex(null, Table::PENSION_SUMMARY, "pensionId", false);
         $this->createIndex(null, Table::PENSION_SUMMARY, "pensionSchemeId", false);
         $this->createIndex(null, Table::PENSION_SUMMARY, "workerGroupId", false);
@@ -1567,7 +1560,7 @@ class Install extends Migration
         $this->createIndex(null, Table::VALUE_OVERRIDE, "payRunEntryId", true);
 
         $this->createIndex(null, Table::WORKER_GROUP, "pensionSchemeId", false);
-        $this->createIndex(null, Table::WORKER_GROUP, "staffologyId", true);
+        $this->createIndex(null, Table::WORKER_GROUP, "staffologyId", false);
     }
 
     /**
@@ -1617,11 +1610,11 @@ class Install extends Migration
         $this->addForeignKey(null, Table::PAYRUN_ENTRIES, ['payRunId'], Table::PAYRUN, ['id'], 'CASCADE', 'CASCADE');
         $this->addForeignKey(null, Table::PAYRUN_ENTRIES, ['priorPayrollCodeId'], Table::PAY_CODES, ['id']);
         $this->addForeignKey(null, Table::PAYRUN_ENTRIES, ['payOptionsId'], Table::PAY_OPTIONS, ['id']);
-        $this->addForeignKey(null, Table::PAYRUN_ENTRIES, ['pensionSummaryId'], Table::PENSION_SUMMARY, ['id']);
         $this->addForeignKey(null, Table::PAYRUN_ENTRIES, ['totalsId'], Table::PAYRUN_TOTALS, ['id']);
         $this->addForeignKey(null, Table::PAYRUN_ENTRIES, ['totalsYtdId'], Table::PAYRUN_TOTALS, ['id']);
         $this->addForeignKey(null, Table::PAYRUN_ENTRIES, ['nationalInsuranceCalculationId'], Table::NATIONAL_INSURANCE_CALCULATION, ['id']);
         $this->addForeignKey(null, Table::PAYRUN_ENTRIES, ['umbrellaPaymentId'], Table::UMBRELLA_PAYMENT, ['id']);
+        $this->addForeignKey(null, Table::PAYRUN_ENTRIES, ['pensionSummaryId'], Table::PENSION_SUMMARY, ['id']);
         $this->addForeignKey(null, Table::PAYRUN_ENTRIES, ['employee'], Table::ITEMS, ['id']);
         $this->addForeignKey(null, Table::PAYRUN_ENTRIES, ['fpsId'], Table::ITEMS, ['id']);
 
@@ -1700,9 +1693,6 @@ class Install extends Migration
         //FAMILY_DETAILS
         $this->addForeignKey(null, Table::FAMILY_DETAILS, ['employeeId'], Table::EMPLOYEES, ['id'], 'CASCADE', 'CASCADE');
 
-        //HMRC_DETAILS
-        $this->addForeignKey(null, Table::HMRC_DETAILS, ['employerId'], Table::EMPLOYERS, ['id'], 'CASCADE', 'CASCADE');
-
         //LEAVE_SETTINGS
         $this->addForeignKey(null, Table::LEAVE_SETTINGS, ['employeeId'], Table::EMPLOYEES, ['id'], 'CASCADE', 'CASCADE');
         $this->addForeignKey(null, Table::LEAVE_SETTINGS, ['employerId'], Table::EMPLOYERS, ['id'], 'CASCADE', 'CASCADE');
@@ -1743,7 +1733,6 @@ class Install extends Migration
         $this->addForeignKey(null, Table::PENSION_SELECTION, ['pensionSchemeId'], Table::PENSION_SCHEME, ['id']);
 
         //PENSION_SUMMARY
-        $this->addForeignKey(null, Table::PENSION_SUMMARY, ['payRunEntryId'], Table::PAYRUN_ENTRIES, ['id'], 'CASCADE', 'CASCADE');
         $this->addForeignKey(null, Table::PENSION_SUMMARY, ['pensionId'], Table::PENSIONS, ['id']);
         $this->addForeignKey(null, Table::PENSION_SUMMARY, ['pensionSchemeId'], Table::PENSION_SCHEME, ['id']);
         $this->addForeignKey(null, Table::PENSION_SUMMARY, ['workerGroupId'], Table::WORKER_GROUP, ['id']);

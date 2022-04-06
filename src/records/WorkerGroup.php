@@ -17,24 +17,24 @@ use craft\db\ActiveRecord;
 use percipiolondon\staff\db\Table;
 
 /**
- * @property int $pensionId;
+ * @property int pensionId;
  *
- * @property string $staffologyId;
- * @property string $name;
- * @property string $contributionLevelType;
- * @property double $employeeContribution;
- * @property boolean $employeeContributionIsPercentage;
- * @property double $employerContribution;
- * @property boolean $employerContributionIsPercentage;
- * @property double $employerContributionTopUpPercentage;
- * @property boolean $customThreshold;
- * @property double $lowerLimit;
- * @property double $upperLimit;
- * @property string $papdisGroup;
- * @property string $papdisSubGroup;
- * @property string $localAuthorityNumber;
- * @property string $schoolEmployerType;
- * @property string $workerGroupId;
+ * @property string staffologyId;
+ * @property string name;
+ * @property string contributionLevelType;
+ * @property double employeeContribution;
+ * @property boolean employeeContributionIsPercentage;
+ * @property double employerContribution;
+ * @property boolean employerContributionIsPercentage;
+ * @property double employerContributionTopUpPercentage;
+ * @property boolean customThreshold;
+ * @property double lowerLimit;
+ * @property double upperLimit;
+ * @property string papdisGroup;
+ * @property string papdisSubGroup;
+ * @property string localAuthorityNumber;
+ * @property string schoolEmployerType;
+ * @property string workerGroupId;
  */
 
 class WorkerGroup extends ActiveRecord

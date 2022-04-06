@@ -21,6 +21,7 @@ use percipiolondon\staff\helpers\Logger;
 use percipiolondon\staff\records\PayRunEntry as PayRunEntryRecord;
 
 use percipiolondon\staff\Staff;
+use yii\base\InvalidConfigException;
 use yii\db\Exception;
 
 /**
@@ -75,7 +76,9 @@ class PayRunEntry extends Element
     public $employee;
     public $pdf;
 
+    private $_totals;
     private $_employee;
+    private $_pensionSummary;
 
     // Static Methods
     // =========================================================================
@@ -152,6 +155,27 @@ class PayRunEntry extends Element
 
     // Public Methods
     // =========================================================================
+    /**
+     * Returns the payrun totals.
+     *
+     * @return array|null
+     * @throws InvalidConfigException if [[totalId]] is set but invalid
+     */
+    public function getTotals()
+    {
+        if ($this->_totals === null) {
+            if ($this->totalsId === null) {
+                return null;
+            }
+
+            if (($this->_totals = Staff::$plugin->payRuns->getTotalsById($this->totalsId)) === null) {
+                // The author is probably soft-deleted. Just no author is set
+                $this->_totals = false;
+            }
+        }
+
+        return $this->_totals ?: null;
+    }
 
     /**
      * Returns the employer
@@ -174,6 +198,29 @@ class PayRunEntry extends Element
 
         return $this->_employee ?: null;
     }
+
+    /**
+     * Returns the employer
+     *
+     * @return string|null
+     * @throws InvalidConfigException if [[employerId]] is set but invalid
+     */
+    public function getPensionSummary()
+    {
+        if ($this->_pensionSummary === null) {
+            if ($this->pensionSummaryId === null) {
+                return null;
+            }
+
+            if (($this->_pensionSummary = Staff::$plugin->pensions->getPensionSummaryById($this->pensionSummaryId)) === null) {
+                // The author is probably soft-deleted. Just no author is set
+                $this->_pensionSummary = false;
+            }
+        }
+
+        return $this->_pensionSummary ?: null;
+    }
+
 
     /**
      * Returns the validation rules for attributes.
@@ -297,6 +344,7 @@ class PayRunEntry extends Element
             $record->payOptionsId = $this->payOptionsId ?? null;
             $record->totalsId = $this->totalsId ?? null;
             $record->totalsYtdId = $this->totalsYtdId ?? null;
+            $record->pensionSummaryId = $this->pensionSummaryId ?? null;
             $record->staffologyId = $this->staffologyId;
             $record->taxYear = $this->taxYear;
             $record->startDate = $this->startDate;

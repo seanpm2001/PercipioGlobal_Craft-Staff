@@ -32,19 +32,46 @@ class Employee
     public static function getFieldDefinitions(): array
     {
         return [
-            'id' => [
-                'name' => 'id',
-                'type' => Type::string(),
-                'description' => 'The staffology employee id',
+            'staffologyId' => [
+                'name' => 'staffologyId',
+                'type' => Type::nonNull(Type::id()),
+                'description' => 'The employee id from staffology, needed for API calls.'
             ],
-            'name' => [
-                'name' => 'name',
-                'type' => Type::string(),
+            'employerId' => [
+                'name' => 'employerId',
+                'type' => Type::id(),
+                'description' => 'The id of the employer this employee works for.',
             ],
-            'url' => [
-                'name' => 'name',
-                'type' => Type::string(),
+            'userId' => [
+                'name' => 'userId',
+                'type' => Type::id(),
+                'description' => 'The user ID.',
             ],
+            'status' => [
+                'name' => 'status',
+                'type' => Type::string(),
+                'description' => 'The employee status.'
+            ],
+            'isDirector' => [
+                'name' => 'isDirector',
+                'type' => Type::boolean(),
+                'description' => 'Is this employer a employer'
+            ],
+            'employmentDetails' => [
+                'name' => 'employmentDetails',
+                'type' => EmploymentDetails::getType(),
+                'description' => 'The employment details info of an employee'
+            ],
+            'leaveSettings' => [
+                'name' => 'leaveSettings',
+                'type' => LeaveSettings::getType(),
+                'description' => 'The leave setting details info of an employee'
+            ],
+            'personalDetails' => [
+                'name' => 'personalDetails',
+                'type' => PersonalDetails::getType(),
+                'description' => 'The personal details of an employee'
+            ]
         ];
     }
 

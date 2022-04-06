@@ -6,6 +6,7 @@ use percipiolondon\staff\services\Addresses;
 use percipiolondon\staff\services\Employees;
 use percipiolondon\staff\services\Employers;
 use percipiolondon\staff\services\PayRuns;
+use percipiolondon\staff\services\Pensions;
 use percipiolondon\staff\services\UserPermissions;
 
 trait Services
@@ -27,6 +28,9 @@ trait Services
             ],
             'payRuns' => [
                 'class' => PayRuns::class,
+            ],
+            'pensions' => [
+                'class' => Pensions::class,
             ],
         ]);
     }
