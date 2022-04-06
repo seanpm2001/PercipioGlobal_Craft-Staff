@@ -193,6 +193,11 @@ class PayRunEntry extends Element
                 'type' => Type::boolean(),
                 'description' => 'If the pay is being topped up due to an applied Leave having the offset value set to true then this will be set to true.',
             ],
+            'employer' => [
+                'name' => 'employer',
+                'type' => Type::string(),
+                'description' => 'The company name of where the pay run belongs to'
+            ]
         ];
 
         return TypeManager::prepareFieldDefinitions(array_merge($parentFields, $securedFields, $fields), self::getName());

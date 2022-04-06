@@ -136,7 +136,7 @@ class PayRun extends Element
     /**
      * Returns the payrun totals.
      *
-     * @return PayRunTotals|null
+     * @return array|null
      * @throws InvalidConfigException if [[totalId]] is set but invalid
      */
     public function getTotals()
@@ -156,7 +156,7 @@ class PayRun extends Element
     }
 
     /**
-     * Returns the payrun totals.
+     * Returns the employer
      *
      * @return string|null
      * @throws InvalidConfigException if [[employerId]] is set but invalid

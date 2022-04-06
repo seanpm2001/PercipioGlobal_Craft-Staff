@@ -14,8 +14,6 @@ use craft\base\ElementInterface;
 use craft\helpers\App;
 use craft\queue\QueueInterface;
 use GuzzleHttp\Exception\GuzzleException;
-use percipiolondon\staff\db\Table;
-use percipiolondon\staff\elements\Employer;
 use percipiolondon\staff\elements\PayRun;
 use percipiolondon\staff\elements\PayRunEntry;
 use percipiolondon\staff\helpers\Logger;
@@ -31,6 +29,7 @@ use percipiolondon\staff\jobs\CreatePayRunEntryJob;
 use percipiolondon\staff\records\Employee as EmployeeRecord;
 use percipiolondon\staff\records\Employer as EmployerRecord;
 use percipiolondon\staff\records\EmploymentDetails;
+use percipiolondon\staff\records\FpsFields;
 use percipiolondon\staff\records\PayCode as PayCodeRecord;
 use percipiolondon\staff\records\PayLine as PayLineRecord;
 use percipiolondon\staff\records\PayOption as PayOptionRecord;
@@ -45,7 +44,6 @@ use percipiolondon\staff\records\PersonalDetails;
 use percipiolondon\staff\Staff;
 use craft\helpers\Json;
 use yii\db\Exception;
-use yii\db\Query;
 use yii\queue\redis\Queue as RedisQueue;
 
 /**
@@ -679,10 +677,9 @@ class PayRuns extends Component
             }
         }
     }
-    
+
     public function saveTotals(array $totals, int $totalsId = null): PayRunTotals
     {
-
         if($totalsId) {
             $record = PayRunTotals::findOne($totalsId);
 
@@ -781,13 +778,18 @@ class PayRuns extends Component
             $record = new PayOptionRecord();
         }
 
+        $fpsFieldsId = $record['fpsFieldsId'] ?? null;
+
+        $fpsFields = $payOptions['fpsFields'] ? $this->saveFpsFields($payOptions['fpsFields'], $fpsFieldsId) : null;
+
+        $record->fpsFieldsId = $fpsFields->id ?? null;
         $record->period = $payOptions['period'] ?? null;
         $record->ordinal = $payOptions['ordinal'] ?? null;
         $record->payAmount = SecurityHelper::encrypt($totals['payAmount'] ?? '');
         $record->basis = $payOptions['basis'] ?? 'Monthly';
         $record->nationalMinimumWage = $payOptions['nationalMinimumWage'] ?? null;
         $record->payAmountMultiplier = $payOptions['payAmountMultiplier'] ?? null;
-        $record->baseHourlyRate = SecurityHelper::encrypt($totals['baseHourlyRate'] ?? '');
+        $record->baseHourlyRate = SecurityHelper::encrypt($totals['baseHourlyRate'] ?? '0');
         $record->autoAdjustForLeave = $payOptions['autoAdjustForLeave'] ?? null;
         $record->method = $payOptions['method'] ?? null;
         $record->payCode = $payOptions['payCode'] ?? null;
@@ -841,6 +843,30 @@ class PayRuns extends Component
 
         $record->save();
     }
+
+    public function saveFpsFields(array $fpsFields, int $fpsFieldsId = null): FpsFields
+    {
+        if($fpsFieldsId) {
+            $record = FpsFields::findOne($fpsFieldsId);
+
+            if (!$record) {
+                throw new Exception('Invalid fps fields ID: ' . $fpsFieldsId);
+            }
+
+        }else{
+            $record = new FpsFields();
+        }
+
+        $record->offPayrollWorker = $fpsFields['offPayrollWorker'] ?? null;
+        $record->irregularPaymentPattern = $fpsFields['irregularPaymentPattern'] ?? null;
+        $record->nonIndividual = $fpsFields['nonIndividual'] ?? null;
+        $record->hoursNormallyWorked = $fpsFields['hoursNormallyWorked'] ?? null;
+
+        $record->save();
+
+        return $record;
+    }
+
 
 
 

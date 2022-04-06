@@ -20,6 +20,7 @@ use percipiolondon\staff\elements\db\PayRunEntryQuery;
 use percipiolondon\staff\helpers\Logger;
 use percipiolondon\staff\records\PayRunEntry as PayRunEntryRecord;
 
+use percipiolondon\staff\Staff;
 use yii\db\Exception;
 
 /**
@@ -73,6 +74,8 @@ class PayRunEntry extends Element
     public $umbrellaPaymentId;
     public $employee;
     public $pdf;
+
+    private $_employee;
 
     // Static Methods
     // =========================================================================
@@ -149,6 +152,28 @@ class PayRunEntry extends Element
 
     // Public Methods
     // =========================================================================
+
+    /**
+     * Returns the employer
+     *
+     * @return string|null
+     * @throws InvalidConfigException if [[employerId]] is set but invalid
+     */
+    public function getEmployee()
+    {
+        if ($this->_employee === null) {
+            if ($this->employeeId === null) {
+                return null;
+            }
+
+            if (($this->_employee = Staff::$plugin->employees->getEmployeeById($this->employeeId)) === null) {
+                // The author is probably soft-deleted. Just no author is set
+                $this->_employee = false;
+            }
+        }
+
+        return $this->_employee ?: null;
+    }
 
     /**
      * Returns the validation rules for attributes.
