@@ -716,10 +716,10 @@ class Install extends Migration
                 'utr' => $this->string(),
                 'coTax' => $this->string(),
                 'employmentAllowance' => $this->boolean(),
-                'employmentAllowanceMaxClaim' => $this->double(),
+                'employmentAllowanceMaxClaim' => $this->string(),
                 'smallEmployersRelief' => $this->boolean(),
                 'apprenticeshipLevy' => $this->boolean(),
-                'apprenticeshipLevyAllowance' => $this->double(),
+                'apprenticeshipLevyAllowance' => $this->string(),
                 'quarterlyPaymentSchedule' => $this->boolean(),
                 'includeEmploymentAllowanceOnMonthlyJournal' => $this->boolean(),
                 'carryForwardUnpaidLiabilities' => $this->boolean(),
@@ -1517,6 +1517,9 @@ class Install extends Migration
 
         $this->createIndex(null, Table::PAY_LINES, "payOptionsId", false);
 
+        $this->createIndex(null, Table::PAY_OPTIONS, "fpsFieldsId", false);
+        $this->createIndex(null, Table::PAY_OPTIONS, "taxAndNiId", false);
+
         $this->createIndex(null, Table::PENSION_ADMINISTRATOR, "addressId", true);
         $this->createIndex(null, Table::PENSION_ADMINISTRATOR, "staffologyId", true);
 
@@ -1718,6 +1721,10 @@ class Install extends Migration
 
         //PAY_LINES
         $this->addForeignKey(null, Table::PAY_LINES, ['payOptionsId'], Table::PAY_OPTIONS, ['id']);
+
+        //PAY_OPTIONS
+        $this->addForeignKey(null, Table::PAY_OPTIONS, ['fpsFieldsId'], Table::FPS_FIELDS, ['id']);
+        $this->addForeignKey(null, Table::PAY_OPTIONS, ['taxAndNiId'], Table::TAX_AND_NI, ['id']);
 
         //PENSION_ADMINISTRATOR
         $this->addForeignKey(null, Table::PENSION_ADMINISTRATOR, ['addressId'], Table::ADDRESSES, ['id'], 'CASCADE', 'CASCADE');
