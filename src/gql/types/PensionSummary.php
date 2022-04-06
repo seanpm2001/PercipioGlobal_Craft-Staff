@@ -6,7 +6,7 @@ use craft\gql\types\DateTime;
 
 use GraphQL\Type\Definition\Type;
 
-use percipiolondon\staff\gql\base\GqlTypeTrait;
+use craft\gql\base\GqlTypeTrait;
 use percipiolondon\staff\gql\types\TieredPensionRate;
 use percipiolondon\staff\gql\types\WorkerGroup;
 

@@ -2,9 +2,9 @@
 
 namespace percipiolondon\staff\gql\types;
 
+use craft\gql\base\GqlTypeTrait;
 use craft\gql\types\DateTime;
 
-use percipiolondon\staff\gql\base\GqlTypeTrait;
 use GraphQL\Type\Definition\Type;
 
 
