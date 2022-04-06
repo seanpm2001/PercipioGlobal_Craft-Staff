@@ -14,6 +14,11 @@ use craft\helpers\App;
 use percipiolondon\staff\db\Table;
 use percipiolondon\staff\helpers\Logger;
 use percipiolondon\staff\helpers\Security as SecurityHelper;
+use percipiolondon\staff\records\Address;
+use percipiolondon\staff\records\Countries;
+use percipiolondon\staff\records\FpsFields;
+use percipiolondon\staff\records\HmrcDetails;
+use percipiolondon\staff\records\PayOption;
 use percipiolondon\staff\Staff;
 use percipiolondon\staff\records\Employer as EmployerRecord;
 use percipiolondon\staff\elements\Employer;
@@ -22,6 +27,7 @@ use percipiolondon\staff\jobs\FetchEmployersJob;
 use Craft;
 use craft\base\Component;
 use craft\helpers\Json;
+use yii\db\Exception;
 use yii\db\Query;
 
 /**
@@ -94,6 +100,26 @@ class Employers extends Component
         return $employer;
     }
 
+    public function getPayOptionsById(int $payOptionsId): array
+    {
+        $payOptions = PayOption::findOne($payOptionsId);
+
+        if(!$payOptions){
+            return [];
+        }
+
+        $payOptions = $payOptions->toArray();
+
+        // address
+        $fpsFields = FpsFields::findOne($payOptions['fpsFieldsId']);
+        if ($fpsFields) {
+            $fpsFields = $fpsFields->toArray();
+            $payOptions['fpsFields'] = $fpsFields;
+        }
+
+        return $payOptions;
+    }
+
     public function getEmployerNameById(int $employerId): string
     {
         $employer = Employer::findOne($employerId);
@@ -103,6 +129,36 @@ class Employers extends Component
         }
 
         return '';
+    }
+
+    public function getHmrcDetails(int $hmrcDetailsId): array
+    {
+        $hmrcDetails = HmrcDetails::findOne($hmrcDetailsId);
+
+        if(!$hmrcDetails){
+            return [];
+        }
+
+        return $hmrcDetails->toArray();
+    }
+
+    public function getAddress(int $addressId): array
+    {
+        $address = Address::findOne($addressId);
+
+        if(!$address){
+            return [];
+        }
+
+        $address = $address->toArray();
+
+        //country
+        $country = Countries::findOne($address['countryId']);
+        if($country){
+            $address['country'] = $country['name'] ?? '';
+        }
+
+        return $address;
     }
 
 
@@ -194,22 +250,19 @@ class Employers extends Component
 
         if (!$emp) {
             $emp = new Employer();
-
-            $addressId = null;
-            $defaultPayOptionsId = null;
-        } else {
-
-            $addressId = $emp['addressId'];
-            $defaultPayOptionsId = $emp['defaultPayOptionsId'];
-
         }
 
-        // Attach the foreign keys
+        $addressId = $emp['addressId'] ?? null;
+        $defaultPayOptionsId = $emp['defaultPayOptionsId'] ?? null;
+        $hmrcDetailsId = $emp['hmrcDetailsId'] ?? null;
+
         $address = $employer['address'] ? Staff::$plugin->addresses->saveAddress($employer['address'], $addressId) : null;
         $payOptions = $employer['defaultPayOptions'] ? Staff::$plugin->payRuns->savePayOptions($employer['defaultPayOptions'], $defaultPayOptionsId) : null;
+        $hmrcDetails = $employer['hmrcDetails'] ? $this->saveHmrcDetails($employer['hmrcDetails'], $emp->id, $hmrcDetailsId) : null;
 
         $emp->addressId = $address->id ?? null;
         $emp->defaultPayOptionsId = $payOptions->id ?? null;
+        $emp->hmrcDetailsId = $hmrcDetails->id ?? null;
 
         $emp->siteId = Craft::$app->getSites()->currentSite->id;
         $emp->staffologyId = $employer['id'];
@@ -240,6 +293,34 @@ class Employers extends Component
         }
     }
 
+    public function saveHmrcDetails(array $hmrcDetails, int $employerId, int $hmrcDetailsId = null): HmrcDetails
+    {
+        if($hmrcDetailsId) {
+            $record = HmrcDetails::findOne($hmrcDetailsId);
+
+            if (!$record) {
+                throw new Exception('Invalid hmrc details ID: ' . $hmrcDetailsId);
+            }
+
+        } else {
+            $record = new HmrcDetails();
+        }
+
+        $record->employerId = $employerId;
+        $record->officeNumber = SecurityHelper::encrypt($hmrcDetails['officeNumber'] ?? '');
+        $record->payeReference = SecurityHelper::encrypt($hmrcDetails['payeReference'] ?? '');
+        $record->accountsOfficeReference = SecurityHelper::encrypt($hmrcDetails['accountsOfficeReference'] ?? '');
+        $record->employmentAllowance = $hmrcDetails['employmentAllowance'] ?? '';
+        $record->employmentAllowanceMaxClaim = SecurityHelper::encrypt($hmrcDetails['employmentAllowanceMaxClaim'] ?? '');
+        $record->apprenticeshipLevyAllowance = SecurityHelper::encrypt($hmrcDetails['apprenticeshipLevyAllowance'] ?? '');
+        $record->quarterlyPaymentSchedule = $hmrcDetails['quarterlyPaymentSchedule'] ?? '';
+        $record->includeEmploymentAllowanceOnMonthlyJournal = $hmrcDetails['includeEmploymentAllowanceOnMonthlyJournal'] ?? '';
+        $record->carryForwardUnpaidLiabilities = $hmrcDetails['carryForwardUnpaidLiabilities'] ?? '';
+
+        $record->save();
+
+        return $record;
+    }
 
 
 

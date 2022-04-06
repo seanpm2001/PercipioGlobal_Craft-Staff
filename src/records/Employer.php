@@ -21,6 +21,7 @@ use percipiolondon\staff\db\Table;
 *
 * @property int $addressId;
 * @property int $defaultPayOptionsId;
+* @property int $hmrcDetailsId;
 *
 * @property string $staffologyId;
 * @property string $name;

@@ -21,8 +21,8 @@ class EmployerQuery extends ElementQuery
     public $logoUrl;
     public $crn;
     public $defaultPayOptions;
+    public $hmrcDetails;
     public $addressId;
-    public $address;
     public $startYear;
     public $currentYear;
     public $employeeCount;
@@ -69,20 +69,15 @@ class EmployerQuery extends ElementQuery
         return $this;
     }
 
-    public function addressId($value)
+    public function hmrcDetails($value)
     {
-        $this->addressId = $value;
+        $this->hmrcDetails = $value;
         return $this;
     }
 
-    public function address($value)
+    public function addressId($value)
     {
-        if ($value instanceof Address) {
-            $this->addressId = [$value->id];
-        } else {
-            $this->addressId = null;
-        }
-
+        $this->addressId = $value;
         return $this;
     }
 
@@ -113,7 +108,7 @@ class EmployerQuery extends ElementQuery
             'staff_employers.addressId',
 //            'staff_employers.bankDetailsId',
             'staff_employers.defaultPayOptionsId',
-//            'staff_employers.hmrcDetailsId',
+            'staff_employers.hmrcDetailsId',
 //            'staff_employers.rtiSubmissionSettingsId',
 //            'staff_employers.autoEnrolmentSettingsId',
 //            'staff_employers.leaveSettingsId',

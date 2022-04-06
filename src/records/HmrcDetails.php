@@ -17,6 +17,7 @@ use Craft;
 use craft\db\ActiveRecord;
 
 /**
+ * @property int employerId;
  * @property string officeNumber;
  * @property string payeReference;
  * @property string accountsOfficeReference;

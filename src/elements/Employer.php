@@ -43,13 +43,16 @@ class Employer extends Element
     public $logoUrl;
     public $crn;
     public $defaultPayOptionsId;
-    public $address;
+    public $hmrcDetailsId;
     public $addressId;
     public $startYear;
     public $currentYear;
     public $employeeCount;
 
     private $_currentPayRun;
+    private $_defaultPayOptions;
+    private $_hmrcDetails;
+    private $_address;
 
     // Static Methods
     // =========================================================================
@@ -146,6 +149,69 @@ class Employer extends Element
         }
 
         return $this->_currentPayRun ?: null;
+    }
+
+    /**
+     * Returns the payrun totals.
+     *
+     * @return PayRun|null
+     */
+    public function getDefaultPayOptions()
+    {
+        if ($this->_defaultPayOptions === null) {
+            if ($this->defaultPayOptionsId === null) {
+                return null;
+            }
+
+            if (($this->_defaultPayOptions = Staff::$plugin->employers->getPayOptionsById($this->defaultPayOptionsId)) === null) {
+                // The author is probably soft-deleted. Just no author is set
+                $this->_defaultPayOptions = false;
+            }
+        }
+
+        return $this->_defaultPayOptions ?: null;
+    }
+
+    /**
+     * Returns the payrun totals.
+     *
+     * @return PayRun|null
+     */
+    public function getHmrcDetails()
+    {
+        if ($this->_hmrcDetails === null) {
+            if ($this->hmrcDetailsId === null) {
+                return null;
+            }
+
+            if (($this->_hmrcDetails = Staff::$plugin->employers->getHmrcDetails($this->hmrcDetailsId)) === null) {
+                // The author is probably soft-deleted. Just no author is set
+                $this->_hmrcDetails = false;
+            }
+        }
+
+        return $this->_hmrcDetails ?: null;
+    }
+
+    /**
+     * Returns the payrun totals.
+     *
+     * @return PayRun|null
+     */
+    public function getAddress()
+    {
+        if ($this->_address === null) {
+            if ($this->addressId === null) {
+                return null;
+            }
+
+            if (($this->_address = Staff::$plugin->employers->getAddress($this->addressId)) === null) {
+                // The author is probably soft-deleted. Just no author is set
+                $this->_address = false;
+            }
+        }
+
+        return $this->_address ?: null;
     }
 
     /**
@@ -259,6 +325,7 @@ class Employer extends Element
             $record->currentYear = $this->currentYear ?? null;
             $record->employeeCount = $this->employeeCount ?? null;
             $record->defaultPayOptionsId = $this->defaultPayOptionsId ?? null;
+            $record->hmrcDetailsId = $this->hmrcDetailsId ?? null;
 
             $success = $record->save(false);
 
