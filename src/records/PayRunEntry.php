@@ -11,7 +11,6 @@
 namespace percipiolondon\staff\records;
 
 use craft\db\ActiveRecord;
-use craft\validators\DateTimeValidator;
 use DateTime;
 
 use percipiolondon\staff\db\Table;

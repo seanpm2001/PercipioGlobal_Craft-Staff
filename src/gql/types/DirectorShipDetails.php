@@ -2,11 +2,11 @@
 
 namespace percipiolondon\staff\gql\types;
 
+use craft\base\gql\GqlTypeTrait;
+
 use craft\gql\types\DateTime;
 
 use GraphQL\Type\Definition\Type;
-
-use craft\base\gql\GqlTypeTrait;
 
 /**
  * Class DirectorShipDetails

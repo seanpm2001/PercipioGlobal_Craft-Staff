@@ -2,8 +2,8 @@
 
 namespace percipiolondon\staff\gql\types;
 
-use GraphQL\Type\Definition\Type;
 use craft\base\gql\GqlTypeTrait;
+use GraphQL\Type\Definition\Type;
 
 /**
  * Class Address
