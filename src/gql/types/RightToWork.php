@@ -3,7 +3,7 @@
 namespace percipiolondon\staff\gql\types;
 
 use GraphQL\Type\Definition\Type;
-use percipiolondon\staff\gql\base\GqlTypeTrait;
+use craft\base\gql\GqlTypeTrait;
 
 /**
  * Class RightToWork
