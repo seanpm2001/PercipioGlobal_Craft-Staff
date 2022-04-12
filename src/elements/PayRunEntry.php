@@ -12,9 +12,7 @@ namespace percipiolondon\staff\elements;
 
 use Craft;
 use craft\base\Element;
-use craft\elements\db\ElementQuery;
 use craft\elements\db\ElementQueryInterface;
-use craft\validators\DateTimeValidator;
 
 use percipiolondon\staff\elements\db\PayRunEntryQuery;
 use percipiolondon\staff\helpers\Logger;
@@ -143,7 +141,7 @@ class PayRunEntry extends Element
                 'label' => 'All payrun entries',
                 'defaultSort' => ['id', 'desc'],
                 'criteria' => ['id' => $ids],
-            ]
+            ],
         ];
     }
 
@@ -260,7 +258,6 @@ class PayRunEntry extends Element
                 if (!$record) {
                     throw new Exception('Invalid pay run entry ID: ' . $this->id);
                 }
-
             } else {
                 $record = new PayRunEntryRecord();
                 $record->id = (int)$this->id;
@@ -301,19 +298,17 @@ class PayRunEntry extends Element
 
             $success = $record->save(false);
 
-            if(!$success) {
+            if (!$success) {
                 $errors = "";
 
-                foreach($record->errors as $err) {
+                foreach ($record->errors as $err) {
                     $errors .= implode(',', $err);
                 }
 
                 $logger->stdout($errors . PHP_EOL, $logger::FG_RED);
                 Craft::error($record->errors, __METHOD__);
             }
-
         } catch (\Exception $e) {
-
             $logger->stdout(PHP_EOL, $logger::RESET);
             $logger->stdout($e->getMessage() . PHP_EOL, $logger::FG_RED);
             Craft::error($e->getMessage(), __METHOD__);

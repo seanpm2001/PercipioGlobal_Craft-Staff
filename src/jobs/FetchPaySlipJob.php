@@ -7,11 +7,7 @@ use craft\helpers\App;
 use craft\helpers\Json;
 use craft\queue\BaseJob;
 use percipiolondon\staff\helpers\Logger;
-use percipiolondon\staff\records\Employer as EmployerRecord;
-use percipiolondon\staff\records\PayRunEntry as PayRunEntryRecord;
-use percipiolondon\staff\elements\PayRunEntry;
 use percipiolondon\staff\Staff;
-use yii\db\Exception;
 
 class FetchPaySlipJob extends Basejob
 {
@@ -24,11 +20,11 @@ class FetchPaySlipJob extends Basejob
         // connection props
         $api = App::parseEnv(Staff::$plugin->getSettings()->apiKeyStaffology);
         $base_url = 'https://api.staffology.co.uk/';
-        $credentials = base64_encode('staff:'.$api);
+        $credentials = base64_encode('staff:' . $api);
         $headers = [
             'headers' => [
                 'Authorization' => 'Basic ' . $credentials,
-                'Accept' => 'application/pdf'
+                'Accept' => 'application/pdf',
             ],
         ];
         $client = new \GuzzleHttp\Client();
@@ -44,7 +40,7 @@ class FetchPaySlipJob extends Basejob
 
             $logger->stdout(" done" . PHP_EOL, $logger::FG_GREEN);
 
-            if( $paySlip ) {
+            if ($paySlip) {
                 $paySlip = Json::decodeIfJson($paySlip, true);
 
                 Staff::$plugin->payRuns->savePaySlip($paySlip, $this->criteria['payRunEntry']);
@@ -57,13 +53,10 @@ class FetchPaySlipJob extends Basejob
 //
 //                Craft::warning("SUCCESSS: ".$payslips);
 //            }
-
         } catch (\Exception $e) {
-
             $logger->stdout(PHP_EOL, $logger::RESET);
             $logger->stdout($e->getMessage() . PHP_EOL, $logger::FG_RED);
             Craft::error($e->getMessage(), __METHOD__);
-
         }
     }
 

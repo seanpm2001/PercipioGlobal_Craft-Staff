@@ -6,7 +6,6 @@ use GraphQL\Type\Definition\Type;
 
 use percipiolondon\staff\gql\base\GqlTypeTrait;
 
-
 /**
  * Class ValueOverride
  *
@@ -65,5 +64,4 @@ class ValueOverride
             ],
         ];
     }
-
 }

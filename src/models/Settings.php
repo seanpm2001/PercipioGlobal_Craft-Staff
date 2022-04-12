@@ -10,14 +10,11 @@
 
 namespace percipiolondon\staff\models;
 
-use percipiolondon\staff\Staff;
-
 use Craft;
+
 use craft\base\Model;
 use craft\behaviors\EnvAttributeParserBehavior;
-use craft\validators\ArrayValidator;
-
-use yii\behaviors\AttributeTypecastBehavior;
+use percipiolondon\staff\Staff;
 
 /**
  * Staff Settings Model
@@ -64,7 +61,7 @@ class Settings extends Model
     public function rules()
     {
         return [
-            [['pluginName', 'apiKeyStaffology'] , 'string'],
+            [['pluginName', 'apiKeyStaffology'], 'string'],
             //[['apiKeyStaffology'] , 'required'],
             ['pluginName', 'default', 'value' => 'The Hub'],
         ];
@@ -79,7 +76,7 @@ class Settings extends Model
             'parser' => [
                 'class' => EnvAttributeParserBehavior::class,
                 'attributes' => ['apiKeyStaffology'],
-            ]
+            ],
         ];
     }
 }

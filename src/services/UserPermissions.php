@@ -10,14 +10,11 @@
 
 namespace percipiolondon\staff\services;
 
-use percipiolondon\staff\Staff;
-
 use Craft;
 use craft\base\Component;
-use percipiolondon\staff\records\Employee;
+use percipiolondon\staff\models\UserPermission as UserPermissionModel;
 use percipiolondon\staff\records\Permission as PermissionRecord;
 use percipiolondon\staff\records\PermissionsUser as UserPermissionRecord;
-use percipiolondon\staff\models\UserPermission as UserPermissionModel;
 
 /**
  * UserPermission Service
@@ -49,15 +46,13 @@ class UserPermissions extends Component
     public function createPermissions($permissions, $userId, $employeeId)
     {
         foreach ($permissions as $permission) {
-
             $record = UserPermissionRecord::findOne(['permissionId' => $permission['id'], 'employeeId' => $employeeId]);
 
             Craft::info("createPermissions: user:{$userId }, employee:{$employeeId}, {$record?->employeeId}");
 
             if (!$record) {
-
                 $userPermission = new UserPermissionModel();
-                $userPermission->userId = $userId ;
+                $userPermission->userId = $userId;
                 $userPermission->employeeId = $employeeId;
                 $userPermission->permissionId = $permission['id'];
 
@@ -102,12 +97,11 @@ class UserPermissions extends Component
         $permissionsToSave = [];
 
         foreach ($permissionsIds as $permission) {
-
             if (in_array($permission, $userPermissionsIds) && !in_array($permission, $updatedPermissions)) {
                 // Delete
                 $record = UserPermissionRecord::findOne(['permissionId' => $permission, 'employeeId' => $employeeId]);
                 $record->delete();
-            } else if (!in_array($permission, $userPermissionsIds) && in_array($permission, $updatedPermissions)) {
+            } elseif (!in_array($permission, $userPermissionsIds) && in_array($permission, $updatedPermissions)) {
                 // Add
                 $permissionsToSave[] = ['id' => $permission];
             }

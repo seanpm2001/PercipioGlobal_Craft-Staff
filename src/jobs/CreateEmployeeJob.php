@@ -2,12 +2,12 @@
 
 namespace percipiolondon\staff\jobs;
 
+use Craft;
 use craft\helpers\App;
 use craft\helpers\Json;
 use craft\queue\BaseJob;
-use percipiolondon\staff\Staff;
 use percipiolondon\staff\helpers\Logger;
-use Craft;
+use percipiolondon\staff\Staff;
 
 class CreateEmployeeJob extends BaseJob
 {
@@ -19,7 +19,7 @@ class CreateEmployeeJob extends BaseJob
 
         // connection props
         $api = App::parseEnv(Staff::$plugin->getSettings()->apiKeyStaffology);
-        $credentials = base64_encode('staff:'.$api);
+        $credentials = base64_encode('staff:' . $api);
         $headers = [
             'headers' => [
                 'Authorization' => 'Basic ' . $credentials,
@@ -28,23 +28,19 @@ class CreateEmployeeJob extends BaseJob
 
         $client = new \GuzzleHttp\Client();
 
-        $logger->stdout("↧ Fetch employee info from ".$this->criteria['employee']['name'], $logger::RESET);
+        $logger->stdout("↧ Fetch employee info from " . $this->criteria['employee']['name'], $logger::RESET);
 
         try {
-
             $response = $client->get($this->criteria['employee']['url'], $headers);
             $employee = Json::decodeIfJson($response->getBody()->getContents(), true);
 
             $logger->stdout(" done" . PHP_EOL, $logger::FG_GREEN);
 
             Staff::$plugin->employees->saveEmployee($employee, $this->criteria['employee']['name'], $this->criteria['employer']);
-
         } catch (\Exception $e) {
-
             $logger->stdout(PHP_EOL, $logger::RESET);
             $logger->stdout($e->getMessage() . PHP_EOL, $logger::FG_RED);
             Craft::error($e->getMessage(), __METHOD__);
-
         }
     }
 }

@@ -10,10 +10,6 @@
 
 namespace percipiolondon\staff\records;
 
-use percipiolondon\staff\Staff;
-
-use Craft;
-use DateTime;
 use craft\db\ActiveRecord;
 use percipiolondon\staff\db\Table;
 

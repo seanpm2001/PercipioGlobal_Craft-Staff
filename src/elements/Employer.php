@@ -14,16 +14,14 @@ use Craft;
 use craft\base\Element;
 use craft\elements\db\ElementQueryInterface;
 
-use percipiolondon\staff\Staff;
-use yii\base\InvalidConfigException;
-use yii\db\Exception;
-use yii\db\Query;
-
 use percipiolondon\staff\elements\db\EmployerQuery;
 use percipiolondon\staff\helpers\Logger;
 use percipiolondon\staff\helpers\Security as SecurityHelper;
-use percipiolondon\staff\records\Employer as EmployerRecord;
 
+use percipiolondon\staff\records\Employer as EmployerRecord;
+use percipiolondon\staff\Staff;
+use yii\db\Exception;
+use yii\db\Query;
 
 /**
  * Employer Element
@@ -121,7 +119,7 @@ class Employer extends Element
                 'label' => 'All Employers',
                 'defaultSort' => ['id', 'desc'],
                 'criteria' => ['id' => $ids],
-            ]
+            ],
         ];
     }
 
@@ -201,11 +199,8 @@ class Employer extends Element
      */
     public function afterSave(bool $isNew)
     {
-
         if (!$this->propagating) {
-
             $this->_saveRecord($isNew);
-
         }
 
         return parent::afterSave($isNew);
@@ -231,19 +226,17 @@ class Employer extends Element
         return true;
     }
 
-    private function _saveRecord(bool $isNew):void
+    private function _saveRecord(bool $isNew): void
     {
         $logger = new Logger();
 
         try {
             if (!$isNew) {
-
                 $record = EmployerRecord::findOne($this->id);
 
                 if (!$record) {
                     throw new Exception('Invalid employer ID: ' . $this->id);
                 }
-
             } else {
                 $record = new EmployerRecord();
                 $record->id = (int)$this->id;
@@ -262,19 +255,17 @@ class Employer extends Element
 
             $success = $record->save(false);
 
-            if(!$success) {
+            if (!$success) {
                 $errors = "";
 
-                foreach($record->errors as $err) {
+                foreach ($record->errors as $err) {
                     $errors .= implode(',', $err);
                 }
 
                 $logger->stdout($errors . PHP_EOL, $logger::FG_RED);
                 Craft::error($record->errors, __METHOD__);
             }
-
         } catch (\Exception $e) {
-
             $logger->stdout(PHP_EOL, $logger::RESET);
             $logger->stdout($e->getMessage() . PHP_EOL, $logger::FG_RED);
             Craft::error($e->getMessage(), __METHOD__);

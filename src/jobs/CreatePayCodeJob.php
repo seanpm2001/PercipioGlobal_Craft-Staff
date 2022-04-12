@@ -2,12 +2,12 @@
 
 namespace percipiolondon\staff\jobs;
 
+use Craft;
 use craft\helpers\App;
 use craft\helpers\Json;
 use craft\queue\BaseJob;
-use percipiolondon\staff\Staff;
 use percipiolondon\staff\helpers\Logger;
-use Craft;
+use percipiolondon\staff\Staff;
 
 class CreatePayCodeJob extends BaseJob
 {
@@ -19,7 +19,7 @@ class CreatePayCodeJob extends BaseJob
 
         // connection props
         $api = App::parseEnv(Staff::$plugin->getSettings()->apiKeyStaffology);
-        $credentials = base64_encode('staff:'.$api);
+        $credentials = base64_encode('staff:' . $api);
         $headers = [
             'headers' => [
                 'Authorization' => 'Basic ' . $credentials,
@@ -31,32 +31,26 @@ class CreatePayCodeJob extends BaseJob
         $currentPayCode = 0;
         $totalPayCodes = count($this->criteria['payCodes']);
 
-        foreach($this->criteria['payCodes'] as $payCode){
-
+        foreach ($this->criteria['payCodes'] as $payCode) {
             $currentPayCode++;
-            $progress = "[".$currentPayCode."/".$totalPayCodes."] ";
+            $progress = "[" . $currentPayCode . "/" . $totalPayCodes . "] ";
 
-            $logger->stdout($progress."↧ Fetch pay code info from ".$payCode['name'], $logger::RESET);
+            $logger->stdout($progress . "↧ Fetch pay code info from " . $payCode['name'], $logger::RESET);
 
             try {
-
                 $response = $client->get($payCode['url'], $headers);
                 $result = Json::decodeIfJson($response->getBody()->getContents(), true);
 
                 $logger->stdout(" done" . PHP_EOL, $logger::FG_GREEN);
 
                 Staff::$plugin->payRuns->savePayCode($result, $this->criteria['employer']);
-
             } catch (\Exception $e) {
-
                 $logger->stdout(PHP_EOL, $logger::RESET);
                 $logger->stdout($e->getMessage() . PHP_EOL, $logger::FG_RED);
                 Craft::error($e->getMessage(), __METHOD__);
-
             }
 
             $this->setProgress($queue, $currentPayCode / $totalPayCodes);
         }
-
     }
 }

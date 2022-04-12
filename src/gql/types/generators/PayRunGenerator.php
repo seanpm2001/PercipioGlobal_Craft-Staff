@@ -51,7 +51,7 @@ class PayRunGenerator extends Generator implements GeneratorInterface, SingleGen
 
         return GqlEntityRegistry::getEntity($typeName) ?: GqlEntityRegistry::createEntity($typeName, new PayRun([
             'name' => $typeName,
-            'args' => function () use ($payRunArgs) {
+            'args' => function() use ($payRunArgs) {
                 return $payRunArgs;
             },
             'fields' => function() use ($payRunFields) {

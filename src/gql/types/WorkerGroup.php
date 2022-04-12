@@ -2,9 +2,8 @@
 
 namespace percipiolondon\staff\gql\types;
 
-use percipiolondon\staff\gql\base\GqlTypeTrait;
 use GraphQL\Type\Definition\Type;
-
+use percipiolondon\staff\gql\base\GqlTypeTrait;
 
 /**
  * Class WorkerGroup
@@ -103,5 +102,4 @@ class WorkerGroup
             ],
         ];
     }
-
 }

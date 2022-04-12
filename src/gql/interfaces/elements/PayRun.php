@@ -2,23 +2,17 @@
 
 namespace percipiolondon\staff\gql\interfaces\elements;
 
-use craft\gql\interfaces\Element;
 use craft\gql\GqlEntityRegistry;
-use craft\gql\TypeLoader;
+use craft\gql\interfaces\Element;
 use craft\gql\TypeManager;
 use craft\gql\types\DateTime;
-use craft\helpers\Gql;
-use craft\helpers\Json;
 
 use GraphQL\Type\Definition\InterfaceType;
-use GraphQL\Type\Definition\ResolveInfo;
 use GraphQL\Type\Definition\Type;
 
 use percipiolondon\staff\elements\PayRun as PayRunElement;
-use percipiolondon\staff\gql\types\PayRunTotals;
 use percipiolondon\staff\gql\types\generators\PayRunGenerator;
-use percipiolondon\staff\helpers\Security as SecurityHelper;
-
+use percipiolondon\staff\gql\types\PayRunTotals;
 
 class PayRun extends Element
 {
@@ -35,7 +29,6 @@ class PayRun extends Element
      */
     public static function getType($fields = null): Type
     {
-
         if ($type = GqlEntityRegistry::getEntity(self::getName())) {
             return $type;
         }
@@ -46,7 +39,7 @@ class PayRun extends Element
             'description' => 'This is the interface implemented for all payruns.',
             'resolveType' => function(PayRunElement $value) {
                 return $value->getGqlTypeName();
-            }
+            },
         ]));
 
         PayRunGenerator::generateTypes();
@@ -73,7 +66,7 @@ class PayRun extends Element
             'staffologyId' => [
                 'name' => 'staffologyId',
                 'type' => Type::string(),
-                'description' => 'The payruns id from staffology, needed for API calls.'
+                'description' => 'The payruns id from staffology, needed for API calls.',
             ],
             'employerId' => [
                 'name' => 'employerId',
@@ -150,8 +143,8 @@ class PayRun extends Element
             'employer' => [
                 'name' => 'employer',
                 'type' => Type::string(),
-                'description' => 'The company name of where the pay run belongs to'
-            ]
+                'description' => 'The company name of where the pay run belongs to',
+            ],
         ];
 
         return TypeManager::prepareFieldDefinitions(array_merge($parentFields, $fields), self::getName());

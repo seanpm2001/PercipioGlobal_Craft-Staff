@@ -10,10 +10,10 @@
 
 namespace percipiolondon\staff\console\controllers;
 
-use percipiolondon\staff\Staff;
-
 use Craft;
+
 use craft\console\Controller;
+use percipiolondon\staff\Staff;
 
 /**
  * EmployerController Controller
@@ -37,7 +37,6 @@ use craft\console\Controller;
  */
 class EmployerController extends Controller
 {
-
     /**
      * Fetch all the employers from staffology
      * e.g.: actions/staff-management/employer-controller/fetch

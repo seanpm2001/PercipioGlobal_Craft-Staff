@@ -10,9 +10,6 @@
 
 namespace percipiolondon\staff\records;
 
-use percipiolondon\staff\Staff;
-
-use Craft;
 use craft\db\ActiveRecord;
 use percipiolondon\staff\db\Table;
 
@@ -22,7 +19,7 @@ use percipiolondon\staff\db\Table;
  * @property int $directorshipDetailsId;
  * @property int $leaverDetailsId;
  * @property string $department;
- * 
+ *
  * @property string $cisSubContractor;
  * @property string $payrollCode;
  * @property int $jobTitle;

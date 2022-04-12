@@ -4,14 +4,8 @@ namespace percipiolondon\staff\gql\types;
 
 use craft\gql\types\DateTime;
 
-use percipiolondon\staff\gql\base\GqlTypeTrait;
-use percipiolondon\staff\gql\types\StarterDetails;
-use percipiolondon\staff\gql\types\DirectorShipDetails;
-use percipiolondon\staff\gql\types\LeaverDetails;
-use percipiolondon\staff\gql\types\CisDetails;
-use percipiolondon\staff\gql\types\Department;
 use GraphQL\Type\Definition\Type;
-
+use percipiolondon\staff\gql\base\GqlTypeTrait;
 
 /**
  * Class EmploymentDetails
@@ -137,5 +131,4 @@ class EmploymentDetails
             ],
         ];
     }
-
 }

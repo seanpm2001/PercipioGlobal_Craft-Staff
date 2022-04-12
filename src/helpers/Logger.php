@@ -89,7 +89,7 @@ class Logger
      */
     public function stdout($string)
     {
-        if(\Craft::$app instanceof ConsoleApplication){
+        if (\Craft::$app instanceof ConsoleApplication) {
             if ($this->isColorEnabled()) {
                 $args = func_get_args();
                 array_shift($args);
@@ -141,5 +141,3 @@ class Logger
         return $this->color === null ? BaseConsole::streamSupportsAnsiColors($stream) : $this->color;
     }
 }
-
-

@@ -55,7 +55,7 @@ class EmployerGenerator extends Generator implements GeneratorInterface, SingleG
 
         return GqlEntityRegistry::getEntity($typeName) ?: GqlEntityRegistry::createEntity($typeName, new Employer([
             'name' => $typeName,
-            'args' => function () use ($employerArgs) {
+            'args' => function() use ($employerArgs) {
                 return $employerArgs;
             },
             'fields' => function() use ($employerFields) {

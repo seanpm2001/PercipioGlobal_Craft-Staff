@@ -6,7 +6,6 @@ use GraphQL\Type\Definition\Type;
 
 use percipiolondon\staff\gql\base\GqlTypeTrait;
 
-
 /**
  * Class NationalInsuranceCalculation
  *
@@ -94,5 +93,4 @@ class NationalInsuranceCalculation
             ],
         ];
     }
-
 }

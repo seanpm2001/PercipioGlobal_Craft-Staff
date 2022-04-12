@@ -10,15 +10,11 @@
 
 namespace percipiolondon\staff\migrations;
 
-use craft\helpers\MigrationHelper;
-use percipiolondon\staff\db\Table;
-
 use Craft;
-use craft\config\DbConfig;
-use craft\db\ActiveRecord;
+
 use craft\db\Migration;
 use craft\db\Query;
-use yii\base\NotSupportedException;
+use percipiolondon\staff\db\Table;
 
 /**
  * Installation Migration
@@ -198,9 +194,9 @@ class Install extends Migration
                 //staffology
                 'priorPayrollCodeId' => $this->integer(), // create FK to PayCode table [id]
                 'payOptionsId' => $this->integer(), // create FK to PayOptions table [id]
-                'pensionSummaryId' => $this->integer(),// create FK to PensionSummary table [id]
+                'pensionSummaryId' => $this->integer(), // create FK to PensionSummary table [id]
                 'totalsId' => $this->integer(), // create FK to PayRunTotals table [id]
-                'totalsYtdId' => $this->integer(),// create FK to PayRunTotals table [id]
+                'totalsYtdId' => $this->integer(), // create FK to PayRunTotals table [id]
                 'nationalInsuranceCalculationId' => $this->integer(), // create FK to NationalInsuranceCalculation table [id]
                 'umbrellaPaymentId' => $this->integer(), // create FK to UmbrellaPayment table [id]
                 'employee' => $this->integer(), // create FK to Item table [id]
@@ -1067,7 +1063,7 @@ class Install extends Migration
                 'pensionSchemeId' => $this->integer(), // create FK to PensionSchema [id] //refactored from Staffology to link
                 'workerGroupId' => $this->string(), // create FK to WorkerGroup [id]
                 //fields
-                "staffologyId" => $this->integer()
+                "staffologyId" => $this->integer(),
             ]);
 
             $this->createTable(Table::PENSION_SUMMARY, [
@@ -1092,7 +1088,7 @@ class Install extends Migration
                 'avcIsPercentage' => $this->boolean(),
                 'autoEnrolled' => $this->boolean(),
                 'papdisPensionProviderId' => $this->integer(),
-                'papdisEmployerId' => $this->integer()
+                'papdisEmployerId' => $this->integer(),
             ]);
 
             $this->createTable(Table::PENSIONER_PAYROLL, [
@@ -1394,7 +1390,7 @@ class Install extends Migration
     /**
      * Creates the indexes
      */
-    public function createIndexes():void
+    public function createIndexes(): void
     {
         /** LEVEL 1 TABLES **/
         $this->createIndex(null, Table::EMPLOYERS, "addressId", true);
@@ -1782,7 +1778,7 @@ class Install extends Migration
     /**
      * Insert the default data.
      */
-    public function insertDefaultData():void
+    public function insertDefaultData(): void
     {
         $this->_createPermissions();
         $this->_defaultCountries();
@@ -1791,7 +1787,7 @@ class Install extends Migration
     /**
      * Insert default countries data.
      */
-    private function _defaultCountries():void
+    private function _defaultCountries(): void
     {
         $countries = [
             ['ENG', 'England'],
@@ -1815,7 +1811,7 @@ class Install extends Migration
     /**
      * Create the permissions for the Company Users
      */
-    private function _createPermissions():void
+    private function _createPermissions(): void
     {
         $rows = [];
 
