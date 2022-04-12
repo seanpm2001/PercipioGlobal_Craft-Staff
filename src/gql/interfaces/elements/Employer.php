@@ -7,12 +7,9 @@
 
 namespace percipiolondon\staff\gql\interfaces\elements;
 
-use craft\gql\interfaces\Element;
 use craft\gql\GqlEntityRegistry;
-use craft\gql\TypeLoader;
+use craft\gql\interfaces\Element;
 use craft\gql\TypeManager;
-use craft\helpers\Gql;
-use craft\helpers\Json;
 
 use GraphQL\Type\Definition\InterfaceType;
 use GraphQL\Type\Definition\ResolveInfo;
@@ -53,7 +50,7 @@ class Employer extends Element
             'description' => 'This is the interface implemented by all employers.',
             'resolveType' => function(EmployerElement $value) {
                 return $value->getGqlTypeName();
-            }
+            },
         ]));
 
         EmployerGenerator::generateTypes();
@@ -82,25 +79,25 @@ class Employer extends Element
                 'name' => 'crn',
                 'type' => Type::id(),
                 'description' => 'The company registration number.',
-                'resolve' => function ($source, array $arguments, $context, ResolveInfo $resolveInfo) {
+                'resolve' => function($source, array $arguments, $context, ResolveInfo $resolveInfo) {
                     return SecurityHelper::resolve($source, $resolveInfo);
-                }
+                },
             ],
             'name' => [
                 'name' => 'name',
                 'type' => Type::string(),
                 'description' => 'The company name.',
-                'resolve' => function ($source, array $arguments, $context, ResolveInfo $resolveInfo) {
+                'resolve' => function($source, array $arguments, $context, ResolveInfo $resolveInfo) {
                     return SecurityHelper::resolve($source, $resolveInfo);
-                }
+                },
             ],
             'slug' => [
                 'name' => 'slug',
                 'type' => Type::nonNull(Type::string()),
                 'description' => 'The company slug.',
-                'resolve' => function ($source, array $arguments, $context, ResolveInfo $resolveInfo) {
+                'resolve' => function($source, array $arguments, $context, ResolveInfo $resolveInfo) {
                     return SecurityHelper::resolve($source, $resolveInfo);
-                }
+                },
             ],
         ];
 
@@ -124,7 +121,7 @@ class Employer extends Element
             'staffologyId' => [
                 'name' => 'staffologyId',
                 'type' => Type::nonNull(Type::id()),
-                'description' => 'The employer id from staffology, needed for API calls.'
+                'description' => 'The employer id from staffology, needed for API calls.',
             ],
             'startYear' => [
                 'name' => 'startYear',
@@ -133,18 +130,17 @@ class Employer extends Element
             'logoUrl' => [
                 'name' => 'logoUrl',
                 'type' => Type::string(),
-                'resolve' => function ($source, array $arguments, $context, ResolveInfo $resolveInfo) {
+                'resolve' => function($source, array $arguments, $context, ResolveInfo $resolveInfo) {
                     return SecurityHelper::resolve($source, $resolveInfo);
-                }
+                },
             ],
             'currentPayRun' => [
                 'name' => 'currentPayRun',
                 'type' => PayRun::getType(),
-                'description' => 'Current open pay run'
-            ]
+                'description' => 'Current open pay run',
+            ],
         ];
 
         return TypeManager::prepareFieldDefinitions(array_merge($parentFields, $securedFields, $fields), self::getName());
     }
-
 }

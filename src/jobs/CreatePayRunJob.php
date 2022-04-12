@@ -6,12 +6,11 @@ use Craft;
 use craft\helpers\App;
 use craft\helpers\Queue;
 use craft\queue\BaseJob;
+use percipiolondon\staff\elements\PayRun;
 use percipiolondon\staff\helpers\Logger;
 use percipiolondon\staff\records\Employer as EmployerRecord;
 use percipiolondon\staff\records\PayRun as PayRunRecord;
-use percipiolondon\staff\elements\PayRun;
 use percipiolondon\staff\records\PayRunLog as PayRunLogRecord;
-use percipiolondon\staff\jobs\CreatePayRunEntryJob;
 use percipiolondon\staff\Staff;
 
 class CreatePayRunJob extends BaseJob
@@ -23,7 +22,7 @@ class CreatePayRunJob extends BaseJob
         $logger = new Logger();
 
         $api = App::parseEnv(Staff::$plugin->getSettings()->apiKeyStaffology);
-        $credentials = base64_encode('staff:'.$api);
+        $credentials = base64_encode('staff:' . $api);
         $headers = [
             'headers' => [
                 'Authorization' => 'Basic ' . $credentials,
@@ -34,13 +33,12 @@ class CreatePayRunJob extends BaseJob
 
         // FETCH DETAILED EMPLOYEE
         try {
-
             $current = 0;
             $total = count($this->criteria['payRuns']);
 
-            foreach($this->criteria['payRuns'] as $payRun) {
+            foreach ($this->criteria['payRuns'] as $payRun) {
                 $current++;
-                $progress = "[".$current."/".$total."] ";
+                $progress = "[" . $current . "/" . $total . "] ";
 
                 $employer = is_int($this->criteria['employer']['id'] ?? null) ? EmployerRecord::findOne($this->criteria['employer']['id'])->toArray() : $this->criteria['employer'];
 
@@ -52,26 +50,23 @@ class CreatePayRunJob extends BaseJob
 //                // SET PAYRUN IF IT HASN'T ALREADY BEEN FETCHED IN PAYRUNLOG
 //                if(!$payRunLog) {
 
-                    $taxYear = $payRun['metadata']['taxYear'] ?? $payRun['taxYear'] ?? '';
-                    $name = $payRun['name'] ?? '';
+                $taxYear = $payRun['metadata']['taxYear'] ?? $payRun['taxYear'] ?? '';
+                $name = $payRun['name'] ?? '';
 
-                    $logger->stdout($progress."↧ Fetching pay run info of " . $taxYear . ' / ' . $name . '...', $logger::RESET);
+                $logger->stdout($progress . "↧ Fetching pay run info of " . $taxYear . ' / ' . $name . '...', $logger::RESET);
 
-                    $response =  $client->get("https://api.staffology.co.uk".$url, $headers);
-                    $payRunData = json_decode($response->getBody()->getContents(), true);
+                $response = $client->get("https://api.staffology.co.uk" . $url, $headers);
+                $payRunData = json_decode($response->getBody()->getContents(), true);
 
-                    $logger->stdout(" done" . PHP_EOL, $logger::FG_GREEN);
+                $logger->stdout(" done" . PHP_EOL, $logger::FG_GREEN);
 
-                    Staff::$plugin->payRuns->savePayRun($payRunData, $url, $employer);
+                Staff::$plugin->payRuns->savePayRun($payRunData, $url, $employer);
 //                }
-
             }
         } catch (\Exception $e) {
-
             $logger->stdout(PHP_EOL, $logger::RESET);
             $logger->stdout($e->getMessage() . ' - ' . __METHOD__ . PHP_EOL, $logger::FG_RED);
             Craft::error($e->getMessage(), __METHOD__);
-
         }
     }
 

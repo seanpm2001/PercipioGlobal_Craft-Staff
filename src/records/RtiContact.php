@@ -29,7 +29,7 @@ class RtiContact extends ActiveRecord
      *
      * @return string the table name
      */
-    public static function tableName()
+    public static function tableName(): string
     {
         return Table::BANK_DETAILS;
     }

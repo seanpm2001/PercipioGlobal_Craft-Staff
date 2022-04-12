@@ -14,16 +14,14 @@ use Craft;
 use craft\base\Element;
 use craft\elements\db\ElementQueryInterface;
 
-use percipiolondon\staff\Staff;
-use yii\base\InvalidConfigException;
-use yii\db\Exception;
-use yii\db\Query;
-
 use percipiolondon\staff\elements\db\EmployerQuery;
 use percipiolondon\staff\helpers\Logger;
 use percipiolondon\staff\helpers\Security as SecurityHelper;
-use percipiolondon\staff\records\Employer as EmployerRecord;
 
+use percipiolondon\staff\records\Employer as EmployerRecord;
+use percipiolondon\staff\Staff;
+use yii\db\Exception;
+use yii\db\Query;
 
 /**
  * Employer Element
@@ -36,20 +34,18 @@ class Employer extends Element
     // Public Properties
     // =========================================================================
 
-    public $slug;
-    public $siteId;
-    public $staffologyId;
-    public $name;
-    public $logoUrl;
-    public $crn;
-    public $defaultPayOptionsId;
-    public $address;
-    public $addressId;
-    public $startYear;
-    public $currentYear;
-    public $employeeCount;
+    public string $slug;
+    public int $siteId;
+    public string $staffologyId;
+    public ?string $name;
+    public ?string $logoUrl;
+    public ?string $crn;
+    public ?string $address;
+    public ?string $startYear;
+    public ?string $currentYear;
+    public int $employeeCount;
 
-    private $_currentPayRun;
+    private ?string $_currentPayRun;
 
     // Static Methods
     // =========================================================================
@@ -121,7 +117,7 @@ class Employer extends Element
                 'label' => 'All Employers',
                 'defaultSort' => ['id', 'desc'],
                 'criteria' => ['id' => $ids],
-            ]
+            ],
         ];
     }
 
@@ -130,9 +126,9 @@ class Employer extends Element
     /**
      * Returns the payrun totals.
      *
-     * @return PayRun|null
+     * @return bool|string|PayRun|null
      */
-    public function getCurrentPayRun()
+    public function getCurrentPayRun(): bool|string|PayRun|null
     {
         if ($this->_currentPayRun === null) {
             if ($this->id === null) {
@@ -149,26 +145,11 @@ class Employer extends Element
     }
 
     /**
-     * Returns the validation rules for attributes.
-     *
-     * Validation rules are used by [[validate()]] to check if attribute values are valid.
-     * Child classes may override this method to declare different validation rules.
-     *
-     * More info: http://www.yiiframework.com/doc-2.0/guide-input-validation.html
-     *
-     * @return array
-     */
-    public function rules()
-    {
-        return parent::rules();
-    }
-
-    /**
      * Returns the field layout used by this element.
      *
      * @return FieldLayout|null
      */
-    public function getFieldLayout()
+    public function getFieldLayout(): ?FieldLayout
     {
         return null;
     }
@@ -201,11 +182,8 @@ class Employer extends Element
      */
     public function afterSave(bool $isNew)
     {
-
         if (!$this->propagating) {
-
             $this->_saveRecord($isNew);
-
         }
 
         return parent::afterSave($isNew);
@@ -231,19 +209,17 @@ class Employer extends Element
         return true;
     }
 
-    private function _saveRecord(bool $isNew):void
+    private function _saveRecord(bool $isNew): void
     {
         $logger = new Logger();
 
         try {
             if (!$isNew) {
-
                 $record = EmployerRecord::findOne($this->id);
 
                 if (!$record) {
                     throw new Exception('Invalid employer ID: ' . $this->id);
                 }
-
             } else {
                 $record = new EmployerRecord();
                 $record->id = (int)$this->id;
@@ -262,19 +238,17 @@ class Employer extends Element
 
             $success = $record->save(false);
 
-            if(!$success) {
+            if (!$success) {
                 $errors = "";
 
-                foreach($record->errors as $err) {
+                foreach ($record->errors as $err) {
                     $errors .= implode(',', $err);
                 }
 
                 $logger->stdout($errors . PHP_EOL, $logger::FG_RED);
                 Craft::error($record->errors, __METHOD__);
             }
-
         } catch (\Exception $e) {
-
             $logger->stdout(PHP_EOL, $logger::RESET);
             $logger->stdout($e->getMessage() . PHP_EOL, $logger::FG_RED);
             Craft::error($e->getMessage(), __METHOD__);

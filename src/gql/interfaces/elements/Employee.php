@@ -2,12 +2,9 @@
 
 namespace percipiolondon\staff\gql\interfaces\elements;
 
-use craft\gql\interfaces\Element;
 use craft\gql\GqlEntityRegistry;
-use craft\gql\TypeLoader;
+use craft\gql\interfaces\Element;
 use craft\gql\TypeManager;
-use craft\helpers\Gql;
-use craft\helpers\Json;
 
 use GraphQL\Type\Definition\InterfaceType;
 use GraphQL\Type\Definition\ResolveInfo;
@@ -38,7 +35,6 @@ class Employee extends Element
      */
     public static function getType($fields = null): Type
     {
-
         if ($type = GqlEntityRegistry::getEntity(self::getName())) {
             return $type;
         }
@@ -49,7 +45,7 @@ class Employee extends Element
             'description' => 'This is the interface implemented by all employees.',
             'resolveType' => function(EmployeeElement $value) {
                 return $value->getGqlTypeName();
-            }
+            },
         ]));
 
         EmployeeGenerator::generateTypes();
@@ -78,17 +74,17 @@ class Employee extends Element
                 'name' => 'niNumber',
                 'type' => Type::id(),
                 'description' => 'Nation insurance number.',
-                'resolve' => function ($source, array $arguments, $context, ResolveInfo $resolveInfo) {
+                'resolve' => function($source, array $arguments, $context, ResolveInfo $resolveInfo) {
                     return SecurityHelper::resolve($source, $resolveInfo);
-                }
+                },
             ],
             'slug' => [
                 'name' => 'slug',
                 'type' => Type::nonNull(Type::string()),
                 'description' => 'The company slug.',
-                'resolve' => function ($source, array $arguments, $context, ResolveInfo $resolveInfo) {
+                'resolve' => function($source, array $arguments, $context, ResolveInfo $resolveInfo) {
                     return SecurityHelper::resolve($source, $resolveInfo);
-                }
+                },
             ],
         ];
 
@@ -96,7 +92,7 @@ class Employee extends Element
             'staffologyId' => [
                 'name' => 'staffologyId',
                 'type' => Type::nonNull(Type::id()),
-                'description' => 'The employee id from staffology, needed for API calls.'
+                'description' => 'The employee id from staffology, needed for API calls.',
             ],
             'employerId' => [
                 'name' => 'employerId',
@@ -111,17 +107,16 @@ class Employee extends Element
             'status' => [
                 'name' => 'status',
                 'type' => Type::string(),
-                'description' => 'The employee status.'
+                'description' => 'The employee status.',
             ],
             'isDirector' => [
                 'name' => 'isDirector',
                 'type' => Type::boolean(),
-                'description' => 'Is this employer a employer'
-            ]
+                'description' => 'Is this employer a employer',
+            ],
 
         ];
 
         return TypeManager::prepareFieldDefinitions(array_merge($parentFields, $securedFields, $fields), self::getName());
     }
-
 }

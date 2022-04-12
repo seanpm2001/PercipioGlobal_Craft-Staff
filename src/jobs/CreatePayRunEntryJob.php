@@ -6,10 +6,6 @@ use Craft;
 use craft\helpers\App;
 use craft\queue\BaseJob;
 use percipiolondon\staff\helpers\Logger;
-use percipiolondon\staff\records\Employee;
-use percipiolondon\staff\records\PayRunEntry as PayRunEntryRecord;
-use percipiolondon\staff\elements\PayRunEntry;
-use craft\helpers\Queue;
 use percipiolondon\staff\Staff;
 
 class CreatePayRunEntryJob extends Basejob
@@ -21,7 +17,7 @@ class CreatePayRunEntryJob extends Basejob
         $logger = new Logger();
 
         $api = App::parseEnv(Staff::$plugin->getSettings()->apiKeyStaffology);
-        $credentials = base64_encode('staff:'.$api);
+        $credentials = base64_encode('staff:' . $api);
         $headers = [
             'headers' => [
                 'Authorization' => 'Basic ' . $credentials,
@@ -32,12 +28,11 @@ class CreatePayRunEntryJob extends Basejob
         $current = 0;
         $total = count($this->criteria['payRunEntries']);
 
-        foreach($this->criteria['payRunEntries'] as $payRunEntryData) {
-
+        foreach ($this->criteria['payRunEntries'] as $payRunEntryData) {
             $current++;
-            $progress = "[".$current."/".$total."] ";
+            $progress = "[" . $current . "/" . $total . "] ";
 
-            $logger->stdout($progress."↧ Fetching pay run entry of " . $payRunEntryData['name'] . '...', $logger::RESET);
+            $logger->stdout($progress . "↧ Fetching pay run entry of " . $payRunEntryData['name'] . '...', $logger::RESET);
             $logger->stdout(" done" . PHP_EOL, $logger::FG_GREEN);
 
             $base_url = "https://api.staffology.co.uk/" . $payRunEntryData['url'];
@@ -48,15 +43,13 @@ class CreatePayRunEntryJob extends Basejob
 
                 Staff::$plugin->payRunEntries->savePayRunEntry($result, $this->criteria['employer'], $this->criteria['payRun']->id);
 
-                if(!App::parseEnv('$HUB_DEV_MODE')) {
-                        Staff::$plugin->payRunEntries->fetchPaySlip($result, $this->criteria['employer']);
+                if (!App::parseEnv('$HUB_DEV_MODE')) {
+                    Staff::$plugin->payRuns->fetchPaySlip($result, $this->criteria['employer']);
                 }
             } catch (\Exception $e) {
-
                 $logger->stdout(PHP_EOL, $logger::RESET);
                 $logger->stdout($e->getMessage() . PHP_EOL, $logger::FG_RED);
                 Craft::error($e->getMessage(), __METHOD__);
-
             }
         }
     }

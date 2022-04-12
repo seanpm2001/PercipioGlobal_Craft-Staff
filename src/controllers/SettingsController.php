@@ -10,16 +10,13 @@
 namespace percipiolondon\staff\controllers;
 
 use Craft;
-use craft\elements\Entry;
 use craft\helpers\App;
-use craft\helpers\UrlHelper;
 use craft\web\Controller;
 
-use yii\web\NotFoundHttpException;
-use yii\web\Response;
-
 use percipiolondon\staff\Staff;
+use yii\web\NotFoundHttpException;
 
+use yii\web\Response;
 
 class SettingsController extends Controller
 {
@@ -84,17 +81,18 @@ class SettingsController extends Controller
      * @throws \craft\errors\MissingComponentException
      */
 
-    public function actionSavePluginSettings() {
+    public function actionSavePluginSettings()
+    {
         $this->requirePostRequest();
         $pluginHandle = Craft::$app->getRequest()->getRequiredBodyParam('pluginHandle');
         $plugin = Craft::$app->getPlugins()->getPlugin($pluginHandle);
 
-        if ( $plugin === null ) {
-            throw new NotFoundHttpExceptio('Plugin not found');
+        if ($plugin === null) {
+            throw new NotFoundHttpException('Plugin not found');
         }
 
         $settings = [
-            'apiKeyStaffology' => Craft::$app->getRequest()->getBodyParam('apiKeyStaffology')
+            'apiKeyStaffology' => Craft::$app->getRequest()->getBodyParam('apiKeyStaffology'),
         ];
 
         if (!Craft::$app->getPlugins()->savePluginSettings($plugin, $settings)) {
@@ -122,8 +120,7 @@ class SettingsController extends Controller
 
         return $this->asJson([
             'success' => true,
-            'token' => $token
+            'token' => $token,
         ]);
-
     }
 }

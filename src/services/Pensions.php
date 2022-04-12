@@ -2,11 +2,11 @@
 
 namespace percipiolondon\staff\services;
 
+use Craft;
 use craft\base\Component;
 use percipiolondon\staff\helpers\Logger;
-use percipiolondon\staff\jobs\FetchPensionSchemesJob;
 use percipiolondon\staff\jobs\CreatePensionJob;
-use Craft;
+use percipiolondon\staff\jobs\FetchPensionSchemesJob;
 
 class Pensions extends Component
 {
@@ -17,8 +17,8 @@ class Pensions extends Component
             'description' => 'Fetch pension schemes',
             'criteria' => [
                 'employee' => $employee,
-                'employer' => $employer
-            ]
+                'employer' => $employer,
+            ],
         ]));
     }
 
@@ -36,7 +36,7 @@ class Pensions extends Component
             'description' => 'Fetch pension schemes',
             'criteria' => [
                 'employers' => $employers,
-            ]
+            ],
         ]));
     }
 

@@ -6,14 +6,13 @@ use craft\base\Component;
 use percipiolondon\staff\helpers\Security as SecurityHelper;
 use percipiolondon\staff\records\Address;
 use percipiolondon\staff\records\Countries;
-use percipiolondon\staff\records\Employee;
 use yii\db\Exception;
 
 class Addresses extends Component
 {
     public function saveAddress(array $address, int $addressId = null): Address
     {
-        if($addressId) {
+        if ($addressId) {
             $record = $this->getAddressById($addressId);
 
             if (!$record) {

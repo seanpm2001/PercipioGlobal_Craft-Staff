@@ -6,10 +6,10 @@ use craft\gql\base\Query;
 
 use GraphQL\Type\Definition\Type;
 
-use percipiolondon\staff\helpers\Gql as GqlHelper;
 use percipiolondon\staff\gql\arguments\elements\Employer as EmployerArguments;
 use percipiolondon\staff\gql\interfaces\elements\Employer as EmployerInterface;
 use percipiolondon\staff\gql\resolvers\elements\Employer as EmployerResolver;
+use percipiolondon\staff\helpers\Gql as GqlHelper;
 
 class Employer extends Query
 {
@@ -18,9 +18,9 @@ class Employer extends Query
 
     public static function getQueries($checkToken = true): array
     {
-         if ($checkToken && !GqlHelper::canQueryEmployers()) {
-           return [];
-         }
+        if ($checkToken && !GqlHelper::canQueryEmployers()) {
+            return [];
+        }
 
         return [
             'employers' => [
@@ -36,7 +36,7 @@ class Employer extends Query
                 'resolve' => EmployerResolver::class . '::resolveOne',
                 'description' => 'This query is used to query for a single employer.',
                 'complexity' => GqlHelper::relatedArgumentComplexity(),
-            ]
+            ],
         ];
     }
 }

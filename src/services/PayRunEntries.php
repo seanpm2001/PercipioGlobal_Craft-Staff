@@ -60,7 +60,6 @@ class PayRunEntries extends Component
                             $savedEntries[] = $payRunEntry;
                         }
                     } catch (Exception $e) {
-
                         Craft::error($e->getMessage(), __METHOD__);
                     }
                 }
@@ -83,8 +82,8 @@ class PayRunEntries extends Component
                 'payPeriod' => $payRunEntry['payPeriod'] ?? null,
                 'periodNumber' => $payRunEntry['period'] ?? null,
                 'taxYear' => $payRunEntry['taxYear'] ?? null,
-                'payRunEntry' => $payRunEntry ?? null
-            ]
+                'payRunEntry' => $payRunEntry ?? null,
+            ],
         ]));
     }
 
@@ -171,7 +170,6 @@ class PayRunEntries extends Component
 
             return $payRunEntryRecord;
         } catch (Exception $e) {
-
             $logger = new Logger();
             $logger->stdout(PHP_EOL, $logger::RESET);
             $logger->stdout($e->getMessage() . PHP_EOL, $logger::FG_RED);
@@ -210,7 +208,6 @@ class PayRunEntries extends Component
         $employer = EmployerRecord::findOne($employer);
 
         if ($employer) {
-
             $api = App::parseEnv(Staff::$plugin->getSettings()->apiKeyStaffology);
             $base_url = 'https://api.staffology.co.uk/employers/' . $employer['staffologyId'] . '/payrun/' . $payPeriod . '/importpay?linesOnly=true';
             $credentials = base64_encode('staff:' . $api);
@@ -242,7 +239,6 @@ class PayRunEntries extends Component
 
                 return true;
             } catch (GuzzleException $e) {
-
                 Craft::error($e->getMessage(), __METHOD__);
 
                 return false;

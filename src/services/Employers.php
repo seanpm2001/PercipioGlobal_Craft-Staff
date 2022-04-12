@@ -10,18 +10,17 @@
 
 namespace percipiolondon\staff\services;
 
-use craft\helpers\App;
-use percipiolondon\staff\db\Table;
-use percipiolondon\staff\helpers\Logger;
-use percipiolondon\staff\helpers\Security as SecurityHelper;
-use percipiolondon\staff\Staff;
-use percipiolondon\staff\records\Employer as EmployerRecord;
-use percipiolondon\staff\elements\Employer;
-use percipiolondon\staff\jobs\FetchEmployersJob;
-
 use Craft;
 use craft\base\Component;
+use craft\helpers\App;
 use craft\helpers\Json;
+use percipiolondon\staff\db\Table;
+use percipiolondon\staff\elements\Employer;
+use percipiolondon\staff\helpers\Logger;
+
+use percipiolondon\staff\helpers\Security as SecurityHelper;
+use percipiolondon\staff\jobs\FetchEmployersJob;
+use percipiolondon\staff\Staff;
 use yii\db\Query;
 
 /**
@@ -69,7 +68,7 @@ class Employers extends Component
     {
         $query = new Query();
         $query->from(Table::EMPLOYERS)
-            ->where('id = '.$employerId)
+            ->where('id = ' . $employerId)
             ->one();
         $command = $query->createCommand();
         $employerQuery = $command->queryOne();
@@ -82,13 +81,13 @@ class Employers extends Component
 
         $query = new Query();
         $query->from(Table::PAY_OPTIONS)
-            ->where('id = '.$employer['defaultPayOptionsId'])
+            ->where('id = ' . $employer['defaultPayOptionsId'])
             ->one();
         $command = $query->createCommand();
         $payOptions = $command->queryOne();
 
-        if($payOptions){
-            $employer['defaultPayOptions'] = Staff::$plugin->payOptions->parsePayOptions($payOptions);
+        if ($payOptions) {
+            $employer['defaultPayOptions'] = Staff::$plugin->payRuns->parsePayOptions($payOptions);
         }
 
         return $employer;
@@ -98,7 +97,7 @@ class Employers extends Component
     {
         $employer = Employer::findOne($employerId);
 
-        if($employer){
+        if ($employer) {
             return SecurityHelper::decrypt($employer['name']);
         }
 
@@ -113,16 +112,14 @@ class Employers extends Component
         $logger = new Logger();
         $api = App::parseEnv(Staff::$plugin->getSettings()->apiKeyStaffology);
 
-        if(!$api) {
-
+        if (!$api) {
             $logger->stdout("There is no staffology API key set" . PHP_EOL, $logger::FG_RED);
             Craft::error("There is no staffology API key set");
-
-        }else{
+        } else {
 
             // connection props
             $base_url = 'https://api.staffology.co.uk/employers';
-            $credentials = base64_encode('staff:'.$api);
+            $credentials = base64_encode('staff:' . $api);
             $headers = [
                 'headers' => [
                     'Authorization' => 'Basic ' . $credentials,
@@ -135,35 +132,29 @@ class Employers extends Component
 
             // FETCH THE EMPLOYERS LIST
             try {
-
                 $response = $client->get($base_url, $headers);
 
                 $employers = Json::decodeIfJson($response->getBody()->getContents(), true);
 
                 //TESTING PURPOSE
-                if(App::parseEnv('$HUB_DEV_MODE') && App::parseEnv('$HUB_DEV_MODE') == 1){
-                    $employers = array_filter($employers, function($emp){ return $emp['name'] == 'Acme Limited (Demo)' || $emp['name'] == 'Harding Financial Ltd' ;});
+                if (App::parseEnv('$HUB_DEV_MODE') && App::parseEnv('$HUB_DEV_MODE') == 1) {
+                    $employers = array_filter($employers, function($emp) {
+                        return $emp['name'] == 'Acme Limited (Demo)' || $emp['name'] == 'Harding Financial Ltd';
+                    });
                 }
 
-                if(count($employers) > 0){
-
+                if (count($employers) > 0) {
                     $logger->stdout("End fetching list of " . count($employers) . " employers " . PHP_EOL, $logger::RESET);
 
                     return $employers;
-
                 }
 
                 $logger->stdout("There are no employers found on Staffology" . PHP_EOL, $logger::FG_RED);
                 Craft::error("There are no employers found on Staffology");
-
-
             } catch (\Exception $e) {
-
                 $logger->stdout($e->getMessage() . PHP_EOL, $logger::FG_RED);
                 Craft::error($e->getMessage(), __METHOD__);
-
             }
-
         }
 
         return [];
@@ -176,7 +167,7 @@ class Employers extends Component
             'description' => 'Fetching employers',
             'criteria' => [
                 'employers' => $employers,
-            ]
+            ],
         ]));
     }
 
@@ -198,10 +189,8 @@ class Employers extends Component
             $addressId = null;
             $defaultPayOptionsId = null;
         } else {
-
             $addressId = $emp['addressId'];
             $defaultPayOptionsId = $emp['defaultPayOptionsId'];
-
         }
 
         // Attach the foreign keys
@@ -225,14 +214,14 @@ class Employers extends Component
         $elementsService = Craft::$app->getElements();
         $success = $elementsService->saveElement($emp);
 
-        if($success){
+        if ($success) {
             $logger->stdout(" done" . PHP_EOL, $logger::FG_GREEN);
-        }else{
+        } else {
             $logger->stdout(" failed" . PHP_EOL, $logger::FG_RED);
 
             $errors = "";
 
-            foreach($emp->errors as $err) {
+            foreach ($emp->errors as $err) {
                 $errors .= implode(',', $err);
             }
 
@@ -246,7 +235,7 @@ class Employers extends Component
 
 
     /* PARSE SECURITY VALUES */
-    public function parseEmployer(array $employer) :array
+    public function parseEmployer(array $employer): array
     {
         $employer['name'] = SecurityHelper::decrypt($employer['name'] ?? '');
         $employer['crn'] = SecurityHelper::decrypt($employer['crn'] ?? '');

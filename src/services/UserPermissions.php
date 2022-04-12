@@ -10,14 +10,13 @@
 
 namespace percipiolondon\staff\services;
 
-use percipiolondon\staff\Staff;
-
 use Craft;
 use craft\base\Component;
-use percipiolondon\staff\records\Employee;
+use percipiolondon\staff\models\UserPermission as UserPermissionModel;
 use percipiolondon\staff\records\Permission as PermissionRecord;
 use percipiolondon\staff\records\PermissionsUser as UserPermissionRecord;
-use percipiolondon\staff\models\UserPermission as UserPermissionModel;
+use Throwable;
+use yii\db\StaleObjectException;
 
 /**
  * UserPermission Service
@@ -29,8 +28,8 @@ use percipiolondon\staff\models\UserPermission as UserPermissionModel;
  * https://craftcms.com/docs/plugins/services
  *
  * @author    Percipio
- * @package   CompanyManagement
- * @since     0.1.0
+ * @package   craft-staff
+ * @since     1.0.0
  */
 class UserPermissions extends Component
 {
@@ -41,23 +40,21 @@ class UserPermissions extends Component
      * @param $permissions
      * @param $userId
      * @param $employeeId
-     * @throws \Throwable
-     * @throws \yii\db\StaleObjectException
+     * @throws Throwable
+     * @throws StaleObjectException
      *
      * Save a permission set of a user to the database
      */
-    public function createPermissions($permissions, $userId, $employeeId)
+    public function createPermissions($permissions, $userId, $employeeId): void
     {
         foreach ($permissions as $permission) {
-
             $record = UserPermissionRecord::findOne(['permissionId' => $permission['id'], 'employeeId' => $employeeId]);
 
             Craft::info("createPermissions: user:{$userId }, employee:{$employeeId}, {$record?->employeeId}");
 
             if (!$record) {
-
                 $userPermission = new UserPermissionModel();
-                $userPermission->userId = $userId ;
+                $userPermission->userId = $userId;
                 $userPermission->employeeId = $employeeId;
                 $userPermission->permissionId = $permission['id'];
 
@@ -76,51 +73,8 @@ class UserPermissions extends Component
     }
 
     /**
-     * @param $updatedPermissions
-     * @param $userId
-     * @throws \Throwable
-     * @throws \yii\db\StaleObjectException
-     */
-    public function updatePermissions($updatedPermissions, $userId, $employeeId)
-    {
-        $permissions = PermissionRecord::find()->asArray()->all();
-        $permissionsIds = [];
-
-        $updatedPermissions = '' === $updatedPermissions || null === $updatedPermissions ? [] : $updatedPermissions;
-
-        foreach ($permissions as $permission) {
-            $permissionsIds[] = $permission['id'];
-        }
-
-        $userPermissions = UserPermissionRecord::findAll(['employeeId' => $employeeId]);
-        $userPermissionsIds = [];
-
-        foreach ($userPermissions as $permission) {
-            $userPermissionsIds[] = $permission->permissionId;
-        }
-
-        $permissionsToSave = [];
-
-        foreach ($permissionsIds as $permission) {
-
-            if (in_array($permission, $userPermissionsIds) && !in_array($permission, $updatedPermissions)) {
-                // Delete
-                $record = UserPermissionRecord::findOne(['permissionId' => $permission, 'employeeId' => $employeeId]);
-                $record->delete();
-            } else if (!in_array($permission, $userPermissionsIds) && in_array($permission, $updatedPermissions)) {
-                // Add
-                $permissionsToSave[] = ['id' => $permission];
-            }
-        }
-
-        $this->createPermissions($permissionsToSave, $userId, $employeeId);
-    }
-
-    /**
      * @param string $permission
      * @param int $userId
-     * @param int $employeeId
-     * @param int $employerId
      * @return bool
      */
     public function applyCanParam(string $permission, int $userId): bool

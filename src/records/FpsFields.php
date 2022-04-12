@@ -10,11 +10,10 @@
 
 namespace percipiolondon\staff\records;
 
-use percipiolondon\staff\Staff;
-
-use Craft;
 use craft\db\ActiveRecord;
+
 use percipiolondon\staff\db\Table;
+use percipiolondon\staff\Staff;
 
 /**
  * Employer Record
@@ -57,7 +56,7 @@ class FpsFields extends ActiveRecord
      *
      * @return string the table name
      */
-    public static function tableName()
+    public static function tableName(): string
     {
         return Table::FPS_FIELDS;
     }

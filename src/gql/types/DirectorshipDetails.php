@@ -2,19 +2,18 @@
 
 namespace percipiolondon\staff\gql\types;
 
+use craft\gql\base\GqlTypeTrait;
 use craft\gql\types\DateTime;
 
 use GraphQL\Type\Definition\Type;
 
-use percipiolondon\staff\gql\base\GqlTypeTrait;
-
 /**
- * Class DirectorShipDetails
+ * Class DirectorshipDetails
  *
  * @author Percipio Global Ltd. <support@percipio.london>
  * @since 1.0.0
  */
-class DirectorShipDetails
+class DirectorshipDetails
 {
     use GqlTypeTrait;
 
@@ -54,5 +53,4 @@ class DirectorShipDetails
             ],
         ];
     }
-
 }

@@ -2,13 +2,13 @@
 
 namespace percipiolondon\staff\console\controllers;
 
+use Craft;
 use craft\console\Controller;
 use craft\helpers\App;
 use craft\queue\QueueInterface;
 use percipiolondon\staff\Staff;
 use yii\helpers\Console;
 use yii\queue\redis\Queue as RedisQueue;
-use Craft;
 
 class FetchController extends Controller
 {
@@ -34,7 +34,6 @@ class FetchController extends Controller
         $this->stdout("" . PHP_EOL, Console::RESET);
         $this->stdout("--------------------------------- Done fetching from Staffology" . PHP_EOL, Console::FG_CYAN);
         $this->stdout("" . PHP_EOL, Console::RESET);
-
     }
 
     private function _runQueue()

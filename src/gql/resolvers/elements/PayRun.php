@@ -9,7 +9,6 @@ use percipiolondon\staff\helpers\Gql as GqlHelper;
 
 class PayRun extends ElementResolver
 {
-
     public static function prepareQuery($source, array $arguments, $fieldName = null)
     {
         if ($source === null) {
@@ -32,5 +31,4 @@ class PayRun extends ElementResolver
 
         return $query;
     }
-
 }
