@@ -1,7 +1,6 @@
 <script setup lang="ts">
     import { useQuery } from '@vue/apollo-composable'
-    import { ref } from 'vue'
-    import { storeToRefs } from 'pinia'
+    import { reactive, ref } from 'vue'
 
     import { fetchPayRun } from '~/js/composables/useAxiosClient'
     import { usePayRunStore } from '~/stores/payrun'
@@ -14,7 +13,11 @@
     import FormImport from '~/vue/organisms/forms/form--import.vue'
     import ListLogs from '~/vue/organisms/lists/list--logs.vue'
 
-    const payRunId = window.location.href.split("/").pop()
+    const payRunId = window.location.href.split('/').pop()
+    const taxYear = reactive({
+        current: window.location.href.split('/').at(-2)
+    })
+
     const { result, loading } = useQuery(
         PAYRUN, 
         { id: payRunId },
@@ -28,9 +31,6 @@
         const popout = window.open(url)
     }
 
-    // const fetchPayRun = () => {}
-
-
     const handleClose = () => {
         error.value = ''
     }  
@@ -42,7 +42,7 @@
     <div class="md:flex items-start">
         <div class="flex-grow pr-4" style="margin-bottom:0">
             <div class="flex items-center">
-                <a :href="`/admin/staff-management/pay-runs/${result?.payrun?.employerId}`" title="Go back to overview" class="inline-flex no-underline items-center px-2.5 py-1.5 rounded-full text-sm text-indigo-700 bg-indigo-100 hover:bg-indigo-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500" style="margin-bottom:0">&larr;</a>
+                <a :href="`/admin/staff-management/pay-runs/${result?.payrun?.employerId}/${taxYear.current}`" title="Go back to overview" class="inline-flex no-underline items-center px-2.5 py-1.5 rounded-full text-sm text-indigo-700 bg-indigo-100 hover:bg-indigo-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500" style="margin-bottom:0">&larr;</a>
                 <h1 class="ml-2 text-xl font-semibold text-gray-900">{{ result?.payrun?.taxYear }} / {{ result?.payrun?.period }}</h1>
             </div>
             <p class="mt-2 text-sm text-gray-700">Download the current pay run CSV using the Download button below. When uploading, ensure table headings and the file format (CSV) remain unchanged.</p>

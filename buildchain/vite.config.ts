@@ -18,10 +18,10 @@ export default defineConfig(({command}) => ({
         sourcemap: true,
         rollupOptions: {
             input: {
-                employers: '/src/js/employers.ts',
-                payruns: '/src/js/payruns.ts',
-                details: '/src/js/payrunDetails.ts',
-                staff: '/src/js/staff.ts',
+                employers: './src/js/employers.ts',
+                payruns: './src/js/payruns.ts',
+                details: './src/js/payrunDetails.ts',
+                staff: './src/js/staff.ts',
             },
             output: {
                 sourcemap: true
@@ -49,9 +49,9 @@ export default defineConfig(({command}) => ({
             template: 'treemap',
             sourcemap: true,
         }),
-        eslintPlugin({
+        /* eslintPlugin({
             cache: false,
-        }),
+        }), */
     ],
     publicDir: '../src/web/assets/public',
     resolve: {
