@@ -336,7 +336,7 @@ class PayRunController extends Controller
 
     protected function saveEntriesToStaffology(int $payRunId, array $entries): bool
     {
-        $savedEntries = Staff::$plugin->payRuns->setPayRunEntry($entries);
+        $savedEntries = Staff::$plugin->payRunEntries->setPayRunEntry($entries);
 
         $updatedEntries = [];
         $payPeriod = null;
@@ -416,7 +416,7 @@ class PayRunController extends Controller
             ];
         }
 
-        return Staff::$plugin->payRuns->updatePayRunEntry($payPeriod, $employer, $payRunId, $updatedEntries);
+        return Staff::$plugin->payRunEntries->updatePayRunEntry($payPeriod, $employer, $payRunId, $updatedEntries);
     }
 
     /**

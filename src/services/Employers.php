@@ -88,7 +88,7 @@ class Employers extends Component
         $payOptions = $command->queryOne();
 
         if($payOptions){
-            $employer['defaultPayOptions'] = Staff::$plugin->payRuns->parsePayOptions($payOptions);
+            $employer['defaultPayOptions'] = Staff::$plugin->payOptions->parsePayOptions($payOptions);
         }
 
         return $employer;
@@ -206,7 +206,8 @@ class Employers extends Component
 
         // Attach the foreign keys
         $address = $employer['address'] ? Staff::$plugin->addresses->saveAddress($employer['address'], $addressId) : null;
-        $payOptions = $employer['defaultPayOptions'] ? Staff::$plugin->payRuns->savePayOptions($employer['defaultPayOptions'], $defaultPayOptionsId) : null;
+        $payOptions = $employer['defaultPayOptions'] ? Staff::$plugin->payOptions->savePayOptions($employer['defaultPayOptions'], $defaultPayOptionsId) : null;
+        $hmrcDetails = $employer['hmrcDetails'] ? $this->saveHmrcDetails($employer['hmrcDetails'], $hmrcDetailsId) : null;
 
         $emp->addressId = $address->id ?? null;
         $emp->defaultPayOptionsId = $payOptions->id ?? null;

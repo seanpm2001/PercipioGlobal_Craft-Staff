@@ -47,7 +47,7 @@ class FetchPaySlipJob extends Basejob
             if( $paySlip ) {
                 $paySlip = Json::decodeIfJson($paySlip, true);
 
-                Staff::$plugin->payRuns->savePaySlip($paySlip, $this->criteria['payRunEntry']);
+                Staff::$plugin->payRunEntries->savePaySlip($paySlip, $this->criteria['payRunEntry']);
             }
 
 //            $payslips = $response->getBody()->getContents();
