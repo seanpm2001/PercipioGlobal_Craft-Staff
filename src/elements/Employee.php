@@ -35,19 +35,13 @@ class Employee extends Element
     // Public Properties
     // =========================================================================
 
-    public $staffologyId;
-    public $employerId;
-    public $userId;
-    public $personalDetailsId;
-    public $employmentDetailsId;
+    public string $staffologyId;
+    public int $employerId;
+    public int $userId;
     public $autoEnrolment;
-    public $leaveSettingsId;
     public $rightToWork;
-    public $bankDetailsId;
     public $status;
-    public $autoEnrolmentId;
-    public $niNumber;
-    public $sourceSystemId;
+    public string|null $niNumber;
     public $isDirector;
 
     // Static Methods
@@ -127,26 +121,11 @@ class Employee extends Element
     // =========================================================================
 
     /**
-     * Returns the validation rules for attributes.
-     *
-     * Validation rules are used by [[validate()]] to check if attribute values are valid.
-     * Child classes may override this method to declare different validation rules.
-     *
-     * More info: http://www.yiiframework.com/doc-2.0/guide-input-validation.html
-     *
-     * @return array
-     */
-    public function rules()
-    {
-        return parent::rules();
-    }
-
-    /**
      * Returns the field layout used by this element.
      *
      * @return FieldLayout|null
      */
-    public function getFieldLayout()
+    public function getFieldLayout(): ?FieldLayout
     {
         return null;
     }
@@ -204,7 +183,7 @@ class Employee extends Element
         return true;
     }
 
-    private function _saveRecord($isNew)
+    private function _saveRecord($isNew): void
     {
         try {
             $record = EmployeeRecord::findOne($this->id);

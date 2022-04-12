@@ -8,12 +8,12 @@ use craft\gql\types\DateTime;
 use GraphQL\Type\Definition\Type;
 
 /**
- * Class DirectorShipDetails
+ * Class DirectorshipDetails
  *
  * @author Percipio Global Ltd. <support@percipio.london>
  * @since 1.0.0
  */
-class DirectorShipDetails
+class DirectorshipDetails
 {
     use GqlTypeTrait;
 

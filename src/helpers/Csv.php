@@ -20,7 +20,7 @@ class Csv
         return $exporter->export()->send($filename . '.csv');
     }
 
-    public static function csvArrayToPayRunEntry(array $entries)
+    public static function csvArrayToPayRunEntry(array $entries): void
     {
         $payRunEntry = PayRunEntryRecord::findOne($entry['id'] ?? null);
 

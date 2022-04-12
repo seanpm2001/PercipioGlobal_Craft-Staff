@@ -41,7 +41,7 @@ class Item
             ],
             'metadata' => [
                 'name' => 'metadata',
-                'type' => Type::object(),
+                'type' => Type::array(),
             ],
             'url' => [
                 'name' => 'url',
