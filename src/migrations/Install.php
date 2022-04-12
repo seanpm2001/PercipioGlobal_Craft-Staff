@@ -82,11 +82,6 @@ class Install extends Migration
                 //intern
                 'employerId' => $this->integer()->notNull(), // create FK to Employer [id]
                 'userId' => $this->integer(), // create FK to Craft User [id]
-                //staffology
-//                'employmentDetailsId' => $this->integer(), // create FK to EmploymentDetails table [id]
-//                'autoEnrolmentId' => $this->integer(), // create FK to AutoEnrolment table [id]
-//                'leaveSettingsId' => $this->integer(), // create FK to LeaveSettings table [id]
-//                'rightToWorkId' => $this->integer(), // create FK to RightToWork [id]
                 //fields
                 'staffologyId' => $this->string(255)->notNull(),
                 'isDirector' => $this->boolean(),
@@ -125,208 +120,189 @@ class Install extends Migration
                 'slug' => $this->string(255)->notNull(),
             ]);
 
-//            $this->createTable(Table::PAYRUN_IMPORTS, [
-//                'id' => $this->primaryKey(),
-//                'dateCreated' => $this->dateTime()->notNull(),
-//                'dateUpdated' => $this->dateTime()->notNull(),
-//                'uid' => $this->uid(),
-//                //FK
-//                //intern
-//                'payRunId' => $this->integer()->notNull(), // create FK to PayRun [id]
-//                'uploadedBy' => $this->integer()->notNull(), // create FK to User [id]
-//                'approvedBy' => $this->integer(), // create FK to User [id]
-//                //fields
-//                'filepath' => $this->string(255)->notNull()->defaultValue(''),
-//                'filename' => $this->string(255)->notNull()->defaultValue(''),
-//                'rowCount' => $this->integer()->defaultValue(0),
-//                'status' => $this->enum('status', ['Succeeded', 'Failed']),
-//                'dateApproved' => $this->dateTime(),
-//            ]);
-//
-//            $this->createTable(Table::PAYRUN, [
-//                'id' => $this->primaryKey(),
-//                'dateCreated' => $this->dateTime()->notNull(),
-//                'dateUpdated' => $this->dateTime()->notNull(),
-//                'uid' => $this->uid(),
-//                //FK
-//                //intern
-//                'employerId' => $this->integer()->notNull()->defaultValue(null), // create FK to Employer [id]
-//                //staffology
-//                'totalsId' => $this->integer()->notNull(), // create FK to PayRunTotals [id]
-//                //fields
-//                'taxYear' => $this->string(255)->notNull()->defaultValue(''),
-//                'taxMonth' => $this->integer()->notNull()->defaultValue(0),
-//                'payPeriod' => $this->string(255)->notNull()->defaultValue(''),
-//                'ordinal' => $this->integer()->notNull()->defaultValue(1),
-//                'period' => $this->integer()->notNull()->defaultValue(1),
-//                'startDate' => $this->dateTime()->notNull(),
-//                'endDate' => $this->dateTime()->notNull(),
-//                'paymentDate' => $this->dateTime()->notNull(),
-//                'employeeCount' => $this->integer()->notNull()->defaultValue(0),
-//                'subContractorCount' => $this->integer()->notNull()->defaultValue(0),
-//                'state' => $this->string(255)->notNull()->defaultValue(''),
-//                'isClosed' => $this->boolean()->notNull(),
-//                'dateClosed' => $this->dateTime(),
-//                'autoPilotCloseDate' => $this->string(),
-//                'url' => $this->string()->defaultValue(''),
-//            ]);
-//
-//            $this->createTable(Table::PAYRUN_ENTRIES, [
-//                'id' => $this->primaryKey(),
-//                'dateCreated' => $this->dateTime()->notNull(),
-//                'dateUpdated' => $this->dateTime()->notNull(),
-//                'uid' => $this->uid(),
-//                // FK
-//                //intern
-//                'employeeId' => $this->integer()->notNull(),
-//                'employerId' => $this->integer()->notNull()->defaultValue(null),
-//                'payRunId' => $this->integer()->notNull()->defaultValue(0),
-//                //staffology
-//                'priorPayrollCodeId' => $this->integer(), // create FK to PayCode table [id]
-//                'payOptionsId' => $this->integer(), // create FK to PayOptions table [id]
-//                'pensionSummaryId' => $this->integer(),// create FK to PensionSummary table [id]
-//                'totalsId' => $this->integer(), // create FK to PayRunTotals table [id]
-//                'totalsYtdId' => $this->integer(),// create FK to PayRunTotals table [id]
-//                'nationalInsuranceCalculationId' => $this->integer(), // create FK to NationalInsuranceCalculation table [id]
-//                'umbrellaPaymentId' => $this->integer(), // create FK to UmbrellaPayment table [id]
-//                'employee' => $this->integer(), // create FK to Item table [id]
-//                'fpsId' => $this->integer(), // create FK to Item table [id]
-//                //            'periodOverridesId' => $this->integer(), // VALUE_OVERRIDE has a FK that links to this PAYRUN_ENTRY, `field` stores periodOverrides
-//                //            'totalsYtdOverridesId' => $this->integer(),  // VALUE_OVERRIDE has a FK that links to this PAYRUN_ENTRY, `field` stores totalsYtdOverrides
-//                // fields
-//                "staffologyId" => $this->string(255)->notNull(), // staffology: id
-//                'taxYear' => $this->string(255)->defaultValue(''),
-//                'startDate' => $this->dateTime(),
-//                'endDate' => $this->dateTime(),
-//                'note' => $this->mediumText(),
-//                'bacsSubReference' => $this->string(255)->defaultValue(''),
-//                'bacsHashcode' => $this->string(255)->defaultValue(''),
-//                'percentageOfWorkingDaysPaidAsNormal' => $this->double()->defaultValue(0),
-//                'workingDaysNotPaidAsNormal' => $this->double()->defaultValue(0),
-//                'payPeriod' => $this->string(255)->defaultValue(''),
-//                'ordinal' => $this->integer()->defaultValue(1),
-//                'period' => $this->integer()->defaultValue(1),
-//                'isNewStarter' => $this->boolean(),
-//                'unpaidAbsence' => $this->boolean(),
-//                'hasAttachmentOrders' => $this->boolean(),
-//                'paymentDate' => $this->dateTime(),
-//                'forcedCisVatAmount' => $this->double()->defaultValue(0),
-//                'holidayAccrued' => $this->double()->defaultValue(0),
-//                'state' => $this->string(255)->defaultValue('Open'),
-//                'isClosed' => $this->boolean(),
-//                'manualNi' => $this->boolean(),
-//                'payrollCodeChanged' => $this->boolean(),
-//                'aeNotEnroledWarning' => $this->boolean(),
-//                'receivingOffsetPay' => $this->boolean(),
-//                'paymentAfterLearning' => $this->boolean(),
-//                'pdf' => $this->mediumText(),
-//            ]);
-//
-//            $this->createTable(Table::PAYRUN_LOG, [
-//                'id' => $this->primaryKey(),
-//                'dateCreated' => $this->dateTime()->notNull(),
-//                'dateUpdated' => $this->dateTime()->notNull(),
-//                'uid' => $this->uid(),
-//                // FK
-//                //intern
-//                'employerId' => $this->integer()->notNull()->defaultValue(0),
-//                'payRunId' => $this->integer()->notNull()->defaultValue(0),
-//                // fields
-//                'employeeCount' => $this->integer()->notNull()->defaultValue(0),
-//                'taxYear' => $this->string(255)->notNull()->defaultValue(''),
-//                'lastPeriodNumber' => $this->integer()->notNull()->defaultValue(0),
-//                'url' => $this->string(255)->notNull()->defaultValue(0),
-//            ]);
-//
-//            $this->createTable(Table::PENSIONS, [
-//                'id' => $this->primaryKey(),
-//                'dateCreated' => $this->dateTime()->notNull(),
-//                'dateUpdated' => $this->dateTime()->notNull(),
-//                'uid' => $this->uid(),
-//                //FK
-//                //intern (also present in staffology call, but needs to be refactored)
-//                'employeeId' => $this->integer(), //create FK to Employees [id]
-//                'pensionSchemeId' => $this->integer(), //create FK to PensionScheme [id] --> also present in staffology but needs to be refactored
-//                'workerGroupId' => $this->integer(), //create FK to WorkerGroup [id] --> also present in staffology but needs to be refactored
-//                //staffology
-//                'teachersPensionDetailsId' => $this->integer(), //create FK to TeacherPensionDetails [id]
-//                'forcedTier' => $this->string(), //create FK to TierPensionRate [name]
-//                //fields
-//                "staffologyId" => $this->string(), // staffology: id
-//                'contributionLevelType' => $this->enum('contributionLevelType', ['UserDefined', 'StatutoryMinimum', 'Nhs2015', 'Tp2020']),
-//                'startDate' => $this->string(),
-//                'memberReferenceNumber' => $this->string(),
-//                'overrideContributions' => $this->boolean(),
-//                'employeeContribution' => $this->double(),
-//                'employeeContributionIsPercentage' => $this->boolean(),
-//                'employerContribution' => $this->double(),
-//                'employerContributionIsPercentage' => $this->boolean(),
-//                'employerContributionTopUpPercentage' => $this->double(),
-//                'isAeQualifyingScheme' => $this->double(),
-//                'isTeachersPension' => $this->double(),
-//                'aeStatusAtJoining' => $this->enum('contributionLevelType', ['Eligible', 'NonEligible', 'Entitled', 'NoDuties']),
-//                'additionalVoluntaryContribution' => $this->double(),
-//                'avcIsPercentage' => $this->boolean(),
-//                'exitViaProvider' => $this->boolean(),
-//                'forceEnrolment' => $this->boolean(),
-//                'autoEnrolled' => $this->boolean(),
-//            ]);
-//
-//            $this->createTable(Table::PERMISSIONS, [
-//                'id' => $this->primaryKey(),
-//                'dateCreated' => $this->dateTime()->notNull(),
-//                'dateUpdated' => $this->dateTime()->notNull(),
-//                'uid' => $this->uid(),
-//                //fields
-//                'name' => $this->string(255)->notNull()->defaultValue(''),
-//            ]);
-//
-//            $this->createTable(Table::PERMISSIONS_USERS, [
-//                'id' => $this->primaryKey(),
-//                'dateCreated' => $this->dateTime()->notNull(),
-//                'dateUpdated' => $this->dateTime()->notNull(),
-//                'uid' => $this->uid(),
-//                //FK
-//                //internal
-//                'permissionId' => $this->integer()->notNull()->defaultValue(0),
-//                'userId' => $this->integer()->defaultValue(null),
-//                'employeeId' => $this->integer()->notNull()->defaultValue(0),
-//            ]);
-//
-//            $this->createTable(Table::REQUESTS, [
-//                'id' => $this->primaryKey(),
-//                'dateCreated' => $this->dateTime()->notNull(),
-//                'dateUpdated' => $this->dateTime()->notNull(),
-//                'uid' => $this->uid(),
-//                //FK
-//                'employerId' => $this->integer()->notNull(),
-//                'employeeId' => $this->integer()->notNull(),
-//                'administerId' => $this->integer()->notNull(),
-//                //fields
-//                'dateAdministered' => $this->dateTime()->notNull(),
-//                'data' => $this->longText(),
-//                'section' => $this->string()->notNull(),
-//                'element' => $this->string()->notNull(),
-//                'status' => $this->string()->notNull(),
-//                'note' => $this->mediumText(),
-//            ]);
-//
-//            $this->createTable(Table::HISTORY, [
-//                'id' => $this->primaryKey(),
-//                'dateCreated' => $this->dateTime()->notNull(),
-//                'dateUpdated' => $this->dateTime()->notNull(),
-//                'uid' => $this->uid(),
-//                //FK
-//                //internal
-//                'employerId' => $this->integer()->notNull(), //create FK to Employer [id]
-//                'employeeId' => $this->integer()->notNull(), //create FK to Employee [id]
-//                'administerId' => $this->integer(), //create FK to Craft User [id] // This can be null
-//                //fields
-//                'message' => $this->string(255)->notNull(),
-//                'type' => $this->string()->notNull(),
-//            ]);
-//
-//
+            $this->createTable(Table::PAYRUN_IMPORTS, [
+                'id' => $this->primaryKey(),
+                'dateCreated' => $this->dateTime()->notNull(),
+                'dateUpdated' => $this->dateTime()->notNull(),
+                'uid' => $this->uid(),
+                //FK
+                //intern
+                'payRunId' => $this->integer()->notNull(), // create FK to PayRun [id]
+                'uploadedBy' => $this->integer()->notNull(), // create FK to User [id]
+                'approvedBy' => $this->integer(), // create FK to User [id]
+                //fields
+                'filepath' => $this->string(255)->notNull()->defaultValue(''),
+                'filename' => $this->string(255)->notNull()->defaultValue(''),
+                'rowCount' => $this->integer()->defaultValue(0),
+                'status' => $this->enum('status', ['Succeeded', 'Failed']),
+                'dateApproved' => $this->dateTime(),
+            ]);
+
+            $this->createTable(Table::PAYRUN, [
+                'id' => $this->primaryKey(),
+                'dateCreated' => $this->dateTime()->notNull(),
+                'dateUpdated' => $this->dateTime()->notNull(),
+                'uid' => $this->uid(),
+                //FK
+                //intern
+                'employerId' => $this->integer()->notNull()->defaultValue(null), // create FK to Employer [id]
+                //fields
+                'taxYear' => $this->string(255)->notNull()->defaultValue(''),
+                'taxMonth' => $this->integer()->notNull()->defaultValue(0),
+                'payPeriod' => $this->string(255)->notNull()->defaultValue(''),
+                'ordinal' => $this->integer()->notNull()->defaultValue(1),
+                'period' => $this->integer()->notNull()->defaultValue(1),
+                'startDate' => $this->dateTime()->notNull(),
+                'endDate' => $this->dateTime()->notNull(),
+                'paymentDate' => $this->dateTime()->notNull(),
+                'employeeCount' => $this->integer()->notNull()->defaultValue(0),
+                'subContractorCount' => $this->integer()->notNull()->defaultValue(0),
+                'state' => $this->string(255)->notNull()->defaultValue(''),
+                'isClosed' => $this->boolean()->notNull(),
+                'dateClosed' => $this->dateTime(),
+                'autoPilotCloseDate' => $this->string(),
+                'url' => $this->string()->defaultValue(''),
+            ]);
+
+            $this->createTable(Table::PAYRUN_ENTRIES, [
+                'id' => $this->primaryKey(),
+                'dateCreated' => $this->dateTime()->notNull(),
+                'dateUpdated' => $this->dateTime()->notNull(),
+                'uid' => $this->uid(),
+                // FK
+                //intern
+                'employeeId' => $this->integer()->notNull(),
+                'employerId' => $this->integer()->notNull()->defaultValue(null),
+                'payRunId' => $this->integer()->notNull()->defaultValue(0),
+                // fields
+                "staffologyId" => $this->string(255)->notNull(), // staffology: id
+                'taxYear' => $this->string(255)->defaultValue(''),
+                'startDate' => $this->dateTime(),
+                'endDate' => $this->dateTime(),
+                'note' => $this->mediumText(),
+                'bacsSubReference' => $this->string(255)->defaultValue(''),
+                'bacsHashcode' => $this->string(255)->defaultValue(''),
+                'percentageOfWorkingDaysPaidAsNormal' => $this->double()->defaultValue(0),
+                'workingDaysNotPaidAsNormal' => $this->double()->defaultValue(0),
+                'payPeriod' => $this->string(255)->defaultValue(''),
+                'ordinal' => $this->integer()->defaultValue(1),
+                'period' => $this->integer()->defaultValue(1),
+                'isNewStarter' => $this->boolean(),
+                'unpaidAbsence' => $this->boolean(),
+                'hasAttachmentOrders' => $this->boolean(),
+                'paymentDate' => $this->dateTime(),
+                'forcedCisVatAmount' => $this->double()->defaultValue(0),
+                'holidayAccrued' => $this->double()->defaultValue(0),
+                'state' => $this->string(255)->defaultValue('Open'),
+                'isClosed' => $this->boolean(),
+                'manualNi' => $this->boolean(),
+                'payrollCodeChanged' => $this->boolean(),
+                'aeNotEnroledWarning' => $this->boolean(),
+                'receivingOffsetPay' => $this->boolean(),
+                'paymentAfterLearning' => $this->boolean(),
+                'pdf' => $this->mediumText(),
+            ]);
+
+            $this->createTable(Table::PAYRUN_LOG, [
+                'id' => $this->primaryKey(),
+                'dateCreated' => $this->dateTime()->notNull(),
+                'dateUpdated' => $this->dateTime()->notNull(),
+                'uid' => $this->uid(),
+                // FK
+                //intern
+                'employerId' => $this->integer()->notNull()->defaultValue(0),
+                'payRunId' => $this->integer()->notNull()->defaultValue(0),
+                // fields
+                'employeeCount' => $this->integer()->notNull()->defaultValue(0),
+                'taxYear' => $this->string(255)->notNull()->defaultValue(''),
+                'lastPeriodNumber' => $this->integer()->notNull()->defaultValue(0),
+                'url' => $this->string(255)->notNull()->defaultValue(0),
+            ]);
+
+            $this->createTable(Table::PENSIONS, [
+                'id' => $this->primaryKey(),
+                'dateCreated' => $this->dateTime()->notNull(),
+                'dateUpdated' => $this->dateTime()->notNull(),
+                'uid' => $this->uid(),
+                //FK
+                //intern (also present in staffology call, but needs to be refactored)
+                'employeeId' => $this->integer(), //create FK to Employees [id]
+                //fields
+                "staffologyId" => $this->string(), // staffology: id
+                'contributionLevelType' => $this->enum('contributionLevelType', ['UserDefined', 'StatutoryMinimum', 'Nhs2015', 'Tp2020']),
+                'startDate' => $this->string(),
+                'memberReferenceNumber' => $this->string(),
+                'overrideContributions' => $this->boolean(),
+                'employeeContribution' => $this->double(),
+                'employeeContributionIsPercentage' => $this->boolean(),
+                'employerContribution' => $this->double(),
+                'employerContributionIsPercentage' => $this->boolean(),
+                'employerContributionTopUpPercentage' => $this->double(),
+                'isAeQualifyingScheme' => $this->double(),
+                'isTeachersPension' => $this->double(),
+                'aeStatusAtJoining' => $this->enum('contributionLevelType', ['Eligible', 'NonEligible', 'Entitled', 'NoDuties']),
+                'additionalVoluntaryContribution' => $this->double(),
+                'avcIsPercentage' => $this->boolean(),
+                'exitViaProvider' => $this->boolean(),
+                'forceEnrolment' => $this->boolean(),
+                'autoEnrolled' => $this->boolean(),
+            ]);
+
+            $this->createTable(Table::PERMISSIONS, [
+                'id' => $this->primaryKey(),
+                'dateCreated' => $this->dateTime()->notNull(),
+                'dateUpdated' => $this->dateTime()->notNull(),
+                'uid' => $this->uid(),
+                //fields
+                'name' => $this->string(255)->notNull()->defaultValue(''),
+            ]);
+
+            $this->createTable(Table::PERMISSIONS_USERS, [
+                'id' => $this->primaryKey(),
+                'dateCreated' => $this->dateTime()->notNull(),
+                'dateUpdated' => $this->dateTime()->notNull(),
+                'uid' => $this->uid(),
+                //FK
+                //internal
+                'permissionId' => $this->integer()->notNull()->defaultValue(0), //create FK to Permissions [id]
+                'userId' => $this->integer()->defaultValue(null), //create FK to User [id]
+                'employeeId' => $this->integer()->notNull()->defaultValue(0), //create FK to Employees [id]
+            ]);
+
+            $this->createTable(Table::REQUESTS, [
+                'id' => $this->primaryKey(),
+                'dateCreated' => $this->dateTime()->notNull(),
+                'dateUpdated' => $this->dateTime()->notNull(),
+                'uid' => $this->uid(),
+                //FK
+                'employerId' => $this->integer()->notNull(), //create FK to Employers [id]
+                'employeeId' => $this->integer()->notNull(), //create FK to Employees [id]
+                'administerId' => $this->integer()->notNull(), //create FK to User [id]
+                //fields
+                'dateAdministered' => $this->dateTime()->notNull(),
+                'data' => $this->longText(),
+                'section' => $this->string()->notNull(),
+                'element' => $this->string()->notNull(),
+                'status' => $this->string()->notNull(),
+                'note' => $this->mediumText(),
+            ]);
+
+            $this->createTable(Table::HISTORY, [
+                'id' => $this->primaryKey(),
+                'dateCreated' => $this->dateTime()->notNull(),
+                'dateUpdated' => $this->dateTime()->notNull(),
+                'uid' => $this->uid(),
+                //FK
+                //internal
+                'employerId' => $this->integer()->notNull(), //create FK to Employer [id]
+                'employeeId' => $this->integer()->notNull(), //create FK to Employee [id]
+                'administerId' => $this->integer(), //create FK to Craft User [id] // This can be null
+                //fields
+                'message' => $this->string(255)->notNull(),
+                'type' => $this->string()->notNull(),
+            ]);
+
+
 //            // LINKAGE
             $this->createTable(Table::ADDRESSES, [
                 'id' => $this->primaryKey(),
@@ -345,69 +321,69 @@ class Install extends Migration
                 'address5' => $this->string(),
                 'zipCode' => $this->string(),
             ]);
-//
-//            $this->createTable(Table::AUTO_ENROLMENT, [
-//                'id' => $this->primaryKey(),
-//                'dateCreated' => $this->dateTime()->notNull(),
-//                'dateUpdated' => $this->dateTime()->notNull(),
-//                'uid' => $this->uid(),
-//                //FK
-//                //intern
-//                'employeeId' => $this->integer(), // create FK to Employee [id]
-//                //staffology
-//                'lastAssessment' => $this->integer(), // create FK to AutoEnrolmentAssesment [id]
-//                //fields
-//                'state' => $this->enum('state', ['Automatic', 'OptOut', 'OptIn', 'VoluntaryJoiner', 'ContractualPension', 'CeasedMembership', 'Leaver', 'Excluded', 'Enrol']),
-//                'stateDate' => $this->dateTime(),
-//                'ukWorker' => $this->enum('status', ['No', 'Yes', 'Ordinarily']),
-//                'daysToDeferAssessment' => $this->integer(),
-//                'postponementData' => $this->dateTime(),
-//                'deferByMonthsNotDays' => $this->boolean(),
-//                'exempt' => $this->boolean(),
-//                'aeExclusionCode' => $this->enum('code', ['NotKnown', 'NotAWorker', 'NotWorkingInUk', 'NoOrdinarilyWorkingInUk', 'OutsideOfAgeRange', 'SingleEmployee', 'CeasedActiveMembershipInPast12Mo', 'CeasedActiveMembership', 'ReceivedWulsInPast12Mo', 'ReceivedWuls', 'Leaving', 'TaxProtection', 'CisSubContractor']),
-//                'aePostponementLetterSent' => $this->boolean(),
-//            ]);
-//
-//            $this->createTable(Table::AUTO_ENROLMENT_ASSESSMENT, [
-//                'id' => $this->primaryKey(),
-//                'dateCreated' => $this->dateTime()->notNull(),
-//                'dateUpdated' => $this->dateTime()->notNull(),
-//                'uid' => $this->uid(),
-//                //FK
-//                //staffology
-//                'actionId' => $this->integer(), // create FK AutoEnrolmentAssesmentAction [id]
-//                'employeeItemId' => $this->integer(), // create FK Item [id]
-//                //fields
-//                "staffologyId" => $this->integer(),
-//                'assessmentDate' => $this->dateTime(),
-//                'employeeState' => $this->enum('state', ['Automatic', 'OptOut', 'OptIn', 'VoluntaryJoiner', 'ContractualPension', 'CeasedMembership', 'Leaver', 'Excluded', 'Enrol']),
-//                'age' => $this->integer(),
-//                'ukWorker' => $this->enum('status', ['No', 'Yes', 'Ordinarily']),
-//                'payPeriod' => $this->enum('period', ['Custom', 'Monthly', 'FourWeekly', 'Fortnightly', 'Weekly', 'Daily']),
-//                'ordinal' => $this->integer(),
-//                'earningsInPeriod' => $this->double(),
-//                'qualifyingEarningsInPeriod' => $this->double(),
-//                'aeExclusionCode' => $this->enum('code', ['NotKnown', 'NotAWorker', 'NotWorkingInUk', 'NoOrdinarilyWorkingInUk', 'OutsideOfAgeRange', 'SingleEmployee', 'CeasedActiveMembershipInPast12Mo', 'CeasedActiveMembership', 'ReceivedWulsInPast12Mo', 'ReceivedWuls', 'Leaving', 'TaxProtection', 'CisSubContractor']),
-//                'status' => $this->enum('status', ['Eligible', 'NonEligible', 'Entitled', 'NoDuties']),
-//                'reason' => $this->string(),
-//                'assessmentId' => $this->uid(),
-//            ]);
-//
-//            $this->createTable(Table::AUTO_ENROLMENT_ASSESSMENT_ACTION, [
-//                'id' => $this->primaryKey(),
-//                'dateCreated' => $this->dateTime()->notNull(),
-//                'dateUpdated' => $this->dateTime()->notNull(),
-//                'uid' => $this->uid(),
-//                //fields
-//                'action' => $this->enum('status', ['NoChange', 'Enrol', 'Exit', 'Inconclusive', 'Postpone']),
-//                'employeeState' => $this->enum('state', ['Automatic', 'OptOut', 'OptIn', 'VoluntaryJoiner', 'ContractualPension', 'CeasedMembership', 'Leaver', 'Excluded', 'Enrol']),
-//                'actionCompleted' => $this->boolean(),
-//                'actionCompletedMessage' => $this->string(),
-//                'requiredLetter' => $this->enum('status', ['B1', 'B2', 'B3']),
-//                'pensionSchemeId' => $this->string(),
-//                'workerGroupId' => $this->string(),
-//                'letterNotYetSent' => $this->boolean(),
-//            ]);
+
+            $this->createTable(Table::AUTO_ENROLMENT, [
+                'id' => $this->primaryKey(),
+                'dateCreated' => $this->dateTime()->notNull(),
+                'dateUpdated' => $this->dateTime()->notNull(),
+                'uid' => $this->uid(),
+                //FK
+                //intern
+                'employeeId' => $this->integer(), // create FK to Employee [id]
+                //fields
+                'state' => $this->enum('state', ['Automatic', 'OptOut', 'OptIn', 'VoluntaryJoiner', 'ContractualPension', 'CeasedMembership', 'Leaver', 'Excluded', 'Enrol']),
+                'stateDate' => $this->dateTime(),
+                'ukWorker' => $this->enum('status', ['No', 'Yes', 'Ordinarily']),
+                'daysToDeferAssessment' => $this->integer(),
+                'postponementData' => $this->dateTime(),
+                'deferByMonthsNotDays' => $this->boolean(),
+                'exempt' => $this->boolean(),
+                'aeExclusionCode' => $this->enum('code', ['NotKnown', 'NotAWorker', 'NotWorkingInUk', 'NoOrdinarilyWorkingInUk', 'OutsideOfAgeRange', 'SingleEmployee', 'CeasedActiveMembershipInPast12Mo', 'CeasedActiveMembership', 'ReceivedWulsInPast12Mo', 'ReceivedWuls', 'Leaving', 'TaxProtection', 'CisSubContractor']),
+                'aePostponementLetterSent' => $this->boolean(),
+            ]);
+
+            $this->createTable(Table::AUTO_ENROLMENT_ASSESSMENT, [
+                'id' => $this->primaryKey(),
+                'dateCreated' => $this->dateTime()->notNull(),
+                'dateUpdated' => $this->dateTime()->notNull(),
+                'uid' => $this->uid(),
+                //FK
+                //staffology
+                'autoEnrolmentId' => $this->integer(), // create FK AutoEnrolment [id]
+                //fields
+                "staffologyId" => $this->integer(),
+                'assessmentDate' => $this->dateTime(),
+                'employeeState' => $this->enum('state', ['Automatic', 'OptOut', 'OptIn', 'VoluntaryJoiner', 'ContractualPension', 'CeasedMembership', 'Leaver', 'Excluded', 'Enrol']),
+                'age' => $this->integer(),
+                'ukWorker' => $this->enum('status', ['No', 'Yes', 'Ordinarily']),
+                'payPeriod' => $this->enum('period', ['Custom', 'Monthly', 'FourWeekly', 'Fortnightly', 'Weekly', 'Daily']),
+                'ordinal' => $this->integer(),
+                'earningsInPeriod' => $this->double(),
+                'qualifyingEarningsInPeriod' => $this->double(),
+                'aeExclusionCode' => $this->enum('code', ['NotKnown', 'NotAWorker', 'NotWorkingInUk', 'NoOrdinarilyWorkingInUk', 'OutsideOfAgeRange', 'SingleEmployee', 'CeasedActiveMembershipInPast12Mo', 'CeasedActiveMembership', 'ReceivedWulsInPast12Mo', 'ReceivedWuls', 'Leaving', 'TaxProtection', 'CisSubContractor']),
+                'status' => $this->enum('status', ['Eligible', 'NonEligible', 'Entitled', 'NoDuties']),
+                'reason' => $this->string(),
+                'assessmentId' => $this->uid(),
+            ]);
+
+            $this->createTable(Table::AUTO_ENROLMENT_ASSESSMENT_ACTION, [
+                'id' => $this->primaryKey(),
+                'dateCreated' => $this->dateTime()->notNull(),
+                'dateUpdated' => $this->dateTime()->notNull(),
+                'uid' => $this->uid(),
+                //FK
+                //intern
+                'autoEnrolmentAssessmentId' => $this->integer(), //create FK to AutoEnrolmentAssessement [id]
+                //fields
+                'action' => $this->enum('status', ['NoChange', 'Enrol', 'Exit', 'Inconclusive', 'Postpone']),
+                'employeeState' => $this->enum('state', ['Automatic', 'OptOut', 'OptIn', 'VoluntaryJoiner', 'ContractualPension', 'CeasedMembership', 'Leaver', 'Excluded', 'Enrol']),
+                'actionCompleted' => $this->boolean(),
+                'actionCompletedMessage' => $this->string(),
+                'requiredLetter' => $this->enum('status', ['B1', 'B2', 'B3']),
+                'pensionSchemeId' => $this->string(),
+                'workerGroupId' => $this->string(),
+                'letterNotYetSent' => $this->boolean(),
+            ]);
 
             $this->createTable(Table::AUTO_ENROLMENT_SETTINGS, [
                 'id' => $this->primaryKey(),
@@ -417,8 +393,6 @@ class Install extends Migration
                 //FK
                 //intern
                 'employerId' => $this->integer(), //create FK to Employer [id]
-                //staffology
-                'defaultPensionId' => $this->integer(), // create FK to PensionSelection [id]
                 //fields
                 "staffologyId" => $this->string(),
                 'stagingDate' => $this->string(),
@@ -450,29 +424,29 @@ class Install extends Migration
                 'sortCode' => $this->string(),
                 'note' => $this->mediumText(),
             ]);
-//
-//            $this->createTable(Table::CIS_DETAILS, [
-//                'id' => $this->primaryKey(),
-//                'dateCreated' => $this->dateTime()->notNull(),
-//                'dateUpdated' => $this->dateTime()->notNull(),
-//                'uid' => $this->uid(),
-//                //FK
-//                //intern
-//                'employmentDetailsId' => $this->integer(), //create FK EmploymentDetails [id]
-//                //staffology
+
+            $this->createTable(Table::CIS_DETAILS, [
+                'id' => $this->primaryKey(),
+                'dateCreated' => $this->dateTime()->notNull(),
+                'dateUpdated' => $this->dateTime()->notNull(),
+                'uid' => $this->uid(),
+                //FK
+                //intern
+                'employmentDetailsId' => $this->integer(), //create FK EmploymentDetails [id]
+                //staffology
 //                'verificationId' => $this->integer(), // create FK CisVerificationDetails [id]
-//                //fields
-//                'type' => $this->enum('type', ['SoleTrader', 'Partnership', 'Company', 'Trust']),
-//                'utr' => $this->string(),
-//                'tradingName' => $this->string(),
-//                'companyUtr' => $this->string(),
-//                'companyNumber' => $this->string(),
-//                'vatRegistered' => $this->boolean(),
-//                'vatNumber' => $this->string(),
-//                'vatRate' => $this->double(),
-//                'reverseChargeVAT' => $this->boolean(),
-//            ]);
-//
+                //fields
+                'type' => $this->enum('type', ['SoleTrader', 'Partnership', 'Company', 'Trust']),
+                'utr' => $this->string(),
+                'tradingName' => $this->string(),
+                'companyUtr' => $this->string(),
+                'companyNumber' => $this->string(),
+                'vatRegistered' => $this->boolean(),
+                'vatNumber' => $this->string(),
+                'vatRate' => $this->double(),
+                'reverseChargeVAT' => $this->boolean(),
+            ]);
+
 //            $this->createTable(Table::CIS_PARTNERSHIP, [
 //                'id' => $this->primaryKey(),
 //                'dateCreated' => $this->dateTime()->notNull(),
@@ -547,65 +521,71 @@ class Install extends Migration
                 'sortOrder' => $this->integer(),
             ]);
 
-//            $this->createTable(Table::CUSTOM_PAY_CODES, [
-//                'id' => $this->primaryKey(),
-//                'dateCreated' => $this->dateTime()->notNull(),
-//                'dateUpdated' => $this->dateTime()->notNull(),
-//                'uid' => $this->uid(),
-//                //FK
-//                //intern
-//                'employerId' => $this->integer(), //create FK to Employer [id]
-//                'payRunEntryId' => $this->integer(), //create FK to PayRunEntry [id]
-//                //fields
-//                'title' => $this->string()->notNull(),
-//                'code' => $this->string()->notNull(),
-//                'defaultValue' => $this->string(),
-//                'isDeduction' => $this->boolean(),
-//                'isNiable' => $this->boolean(),
-//                'isTaxable' => $this->boolean(),
-//                'isPensionable' => $this->boolean(),
-//                'isAttachable' => $this->boolean(),
-//                'isRealTimeClass1aNiable' => $this->boolean(),
-//                'isNotContributingToHolidayPay' => $this->boolean(),
-//                'isQualifyingEarningsForAe' => $this->boolean(),
-//                'isNotTierable' => $this->boolean(),
-//                'isTcp_Tcls' => $this->boolean(),
-//                'isTcp_Pp' => $this->boolean(),
-//                'isTcp_Op' => $this->boolean(),
-//                'isFlexiDd_DeathBenefit' => $this->boolean(),
-//                'isFlexiDd_Pension' => $this->boolean(),
-//                'calculationType' => $this->enum('calculationType', ['FixedAmount', 'PercentageOfGross', 'PercentageOfNet', 'MultipleOfHourlyRate']),
-//                'multiplierType' => $this->enum('multiplierType', ['None', 'Hours', 'Days']),
-//                'hourlyRateMultiplier' => $this->double(),
-//                'isSystemCode' => $this->boolean(),
-//                'isControlCode' => $this->boolean(),
-//            ]);
-//
-//            $this->createTable(Table::DEPARTMENT, [
-//                'id' => $this->primaryKey(),
-//                'dateCreated' => $this->dateTime()->notNull(),
-//                'dateUpdated' => $this->dateTime()->notNull(),
-//                'uid' => $this->uid(),
-//                //fields
-//                'code' => $this->string(),
-//                'title' => $this->string(),
-//                // @DISCUSS - needed? Could use better things
-//                'color' => $this->string(),
-//                // @DISCUSS - needed? Can query this ourselves
-//                'employeeCount' => $this->integer(),
-//            ]);
-//
-//            $this->createTable(Table::DIRECTORSHIP_DETAILS, [
-//                'id' => $this->primaryKey(),
-//                'dateCreated' => $this->dateTime()->notNull(),
-//                'dateUpdated' => $this->dateTime()->notNull(),
-//                'uid' => $this->uid(),
-//                //fields
-//                'isDirector' => $this->boolean(),
-//                'startDate' => $this->dateTime(),
-//                'leaveDate' => $this->dateTime(),
-//                'niAlternativeMethod' => $this->boolean(),
-//            ]);
+            $this->createTable(Table::CUSTOM_PAY_CODES, [
+                'id' => $this->primaryKey(),
+                'dateCreated' => $this->dateTime()->notNull(),
+                'dateUpdated' => $this->dateTime()->notNull(),
+                'uid' => $this->uid(),
+                //FK
+                //intern
+                'employerId' => $this->integer(), //create FK to Employer [id]
+                'payRunEntryId' => $this->integer(), //create FK to PayRunEntry [id]
+                //fields
+                'title' => $this->string()->notNull(),
+                'code' => $this->string()->notNull(),
+                'defaultValue' => $this->string(),
+                'isDeduction' => $this->boolean(),
+                'isNiable' => $this->boolean(),
+                'isTaxable' => $this->boolean(),
+                'isPensionable' => $this->boolean(),
+                'isAttachable' => $this->boolean(),
+                'isRealTimeClass1aNiable' => $this->boolean(),
+                'isNotContributingToHolidayPay' => $this->boolean(),
+                'isQualifyingEarningsForAe' => $this->boolean(),
+                'isNotTierable' => $this->boolean(),
+                'isTcp_Tcls' => $this->boolean(),
+                'isTcp_Pp' => $this->boolean(),
+                'isTcp_Op' => $this->boolean(),
+                'isFlexiDd_DeathBenefit' => $this->boolean(),
+                'isFlexiDd_Pension' => $this->boolean(),
+                'calculationType' => $this->enum('calculationType', ['FixedAmount', 'PercentageOfGross', 'PercentageOfNet', 'MultipleOfHourlyRate']),
+                'multiplierType' => $this->enum('multiplierType', ['None', 'Hours', 'Days']),
+                'hourlyRateMultiplier' => $this->double(),
+                'isSystemCode' => $this->boolean(),
+                'isControlCode' => $this->boolean(),
+            ]);
+
+            $this->createTable(Table::DEPARTMENT, [
+                'id' => $this->primaryKey(),
+                'dateCreated' => $this->dateTime()->notNull(),
+                'dateUpdated' => $this->dateTime()->notNull(),
+                'uid' => $this->uid(),
+                //FK
+                //intern
+                'employmentDetailsId' => $this->integer(), // Create FK to EmploymentDetails [id]
+                //fields
+                'code' => $this->string(),
+                'title' => $this->string(),
+                // @DISCUSS - needed? Could use better things
+                'color' => $this->string(),
+                // @DISCUSS - needed? Can query this ourselves
+                'employeeCount' => $this->integer(),
+            ]);
+
+            $this->createTable(Table::DIRECTORSHIP_DETAILS, [
+                'id' => $this->primaryKey(),
+                'dateCreated' => $this->dateTime()->notNull(),
+                'dateUpdated' => $this->dateTime()->notNull(),
+                'uid' => $this->uid(),
+                //FK
+                //intern
+                'employmentDetailsId' => $this->integer(), // Create FK to EmploymentDetails [id]
+                //fields
+                'isDirector' => $this->boolean(),
+                'startDate' => $this->dateTime(),
+                'leaveDate' => $this->dateTime(),
+                'niAlternativeMethod' => $this->boolean(),
+            ]);
 
             $this->createTable(Table::EMPLOYER_SETTINGS, [
                 'id' => $this->primaryKey(),
@@ -626,12 +606,6 @@ class Install extends Migration
                 'uid' => $this->uid(),
                 //FK
                 'employeeId' => $this->integer(), // create FK to Employee [id]
-                //stafology
-                'cisId' => $this->integer(), //create FK to CisDetails [id]
-                'starterDetailsId' => $this->integer(), //create FK to StarterDetails [id]
-                'directorshipDetailsId' => $this->integer(), //create FK to DirectorshipDetails [id]
-                'leaverDetailsId' => $this->integer(), //create FK to LeaverDetails [id]
-                'department' => $this->string(), //create FK to Department [code]
                 //fields
                 'cisSubContractor' => $this->boolean(),
                 'payrollCode' => $this->string(),
@@ -675,18 +649,21 @@ class Install extends Migration
 //                'passportNumber' => $this->string(255),
 //                'relationshipStatus' => $this->enum('relationshipStatus', ['Cohabitate', 'Partner', 'Spouse', 'Child', 'Sibling', 'Parent', 'Other']),
 //            ]);
-//
-//            $this->createTable(Table::FPS_FIELDS, [
-//                'id' => $this->primaryKey(),
-//                'dateCreated' => $this->dateTime()->notNull(),
-//                'dateUpdated' => $this->dateTime()->notNull(),
-//                'uid' => $this->uid(),
-//                //fields
-//                'offPayrollWorker' => $this->boolean(),
-//                'irregularPaymentPattern' => $this->boolean(),
-//                'nonIndividual' => $this->boolean(),
-//                'hoursNormallyWorked' => $this->enum('hours', ['LessThan16', 'MoreThan16', 'MoreThan24', 'MoreThan30', 'NotRegular']),
-//            ]);
+
+            $this->createTable(Table::FPS_FIELDS, [
+                'id' => $this->primaryKey(),
+                'dateCreated' => $this->dateTime()->notNull(),
+                'dateUpdated' => $this->dateTime()->notNull(),
+                'uid' => $this->uid(),
+                //FK
+                //intern
+                'payRunEntryId' => $this->integer(), //Create FK to PayRunEntries [id]
+                //fields
+                'offPayrollWorker' => $this->boolean(),
+                'irregularPaymentPattern' => $this->boolean(),
+                'nonIndividual' => $this->boolean(),
+                'hoursNormallyWorked' => $this->enum('hours', ['LessThan16', 'MoreThan16', 'MoreThan24', 'MoreThan30', 'NotRegular']),
+            ]);
 
             $this->createTable(Table::HMRC_DETAILS, [
                 'id' => $this->primaryKey(),
@@ -713,24 +690,27 @@ class Install extends Migration
                 'carryForwardUnpaidLiabilities' => $this->boolean(),
             ]);
 
-//            $this->createTable(Table::ITEMS, [
-//                'id' => $this->primaryKey(),
-//                'dateCreated' => $this->dateTime()->notNull(),
-//                'dateUpdated' => $this->dateTime()->notNull(),
-//                'uid' => $this->uid(),
-//                //fields
-//                "staffologyId" => $this->string(),
-//                'name' => $this->string(),
-//                'metadata' => $this->longText(),
-//                'url' => $this->string(),
-//            ]);
+            $this->createTable(Table::ITEMS, [
+                'id' => $this->primaryKey(),
+                'dateCreated' => $this->dateTime()->notNull(),
+                'dateUpdated' => $this->dateTime()->notNull(),
+                'uid' => $this->uid(),
+                //FK
+                //intern
+                'autoEnrolmentAssessmentId' => $this->integer(), //create FK AutoEnrolmentAssesment [id]
+                //fields
+                "staffologyId" => $this->string(),
+                'name' => $this->string(),
+                'metadata' => $this->longText(),
+                'url' => $this->string(),
+            ]);
 
             $this->createTable(Table::LEAVE_SETTINGS, [
                 'id' => $this->primaryKey(),
                 'dateCreated' => $this->dateTime()->notNull(),
                 'dateUpdated' => $this->dateTime()->notNull(),
                 'uid' => $this->uid(),
-                //fk
+                //FK
                 //intern
                 'employeeId' => $this->integer(), //create FK to Employee [id] //can be null, since leave settings are also for employer
                 'employerId' => $this->integer(), //create FK to Employer [id] //can be null, since leave settings are also for employee
@@ -763,46 +743,46 @@ class Install extends Migration
                 'accruedPaymentBalance' => $this->double(),
             ]);
 
-//            $this->createTable(Table::LEAVER_DETAILS, [
-//                'id' => $this->primaryKey(),
-//                'dateCreated' => $this->dateTime()->notNull(),
-//                'dateUpdated' => $this->dateTime()->notNull(),
-//                'uid' => $this->uid(),
-//                //FK
-//                //intern
-//                'employmentDetailsId' => $this->integer(), //create FK in EmploymentDetails [id]
-//                //fields
-//                'hasLeft' => $this->boolean(),
-//                'leaveDate' => $this->dateTime(),
-//                'isDeceased' => $this->boolean(),
-//                'paymentAfterLeaving' => $this->boolean(),
-//                'p45Sent' => $this->boolean(),
-//            ]);
-//
-//            $this->createTable(Table::NATIONAL_INSURANCE_CALCULATION, [
-//                'id' => $this->primaryKey(),
-//                'dateCreated' => $this->dateTime()->notNull(),
-//                'dateUpdated' => $this->dateTime()->notNull(),
-//                'uid' => $this->uid(),
-//                //FK
-//                //intern
-//                'payRunEntryId' => $this->integer(), //create FK to PayRunEntry
-//                //fields
-//                'earningsUptoIncludingLEL' => $this->double(),
-//                'earningsAboveLELUptoIncludingPT' => $this->double(),
-//                'earningsAbovePTUptoIncludingST' => $this->double(),
-//                'earningsAbovePTUptoIncludingUEL' => $this->double(),
-//                'earningsAboveSTUptoIncludingUEL' => $this->double(),
-//                'earningsAboveUEL' => $this->double(),
-//                'employeeNiGross' => $this->double(),
-//                'employeeNiRebate' => $this->double(),
-//                'employerNiGross' => $this->double(),
-//                'employerNiRebate' => $this->double(),
-//                'employeeNi' => $this->double(),
-//                'employerNi' => $this->double(),
-//                'netNi' => $this->double(),
-//            ]);
-//
+            $this->createTable(Table::LEAVER_DETAILS, [
+                'id' => $this->primaryKey(),
+                'dateCreated' => $this->dateTime()->notNull(),
+                'dateUpdated' => $this->dateTime()->notNull(),
+                'uid' => $this->uid(),
+                //FK
+                //intern
+                'employmentDetailsId' => $this->integer(), //create FK in EmploymentDetails [id]
+                //fields
+                'hasLeft' => $this->boolean(),
+                'leaveDate' => $this->dateTime(),
+                'isDeceased' => $this->boolean(),
+                'paymentAfterLeaving' => $this->boolean(),
+                'p45Sent' => $this->boolean(),
+            ]);
+
+            $this->createTable(Table::NATIONAL_INSURANCE_CALCULATION, [
+                'id' => $this->primaryKey(),
+                'dateCreated' => $this->dateTime()->notNull(),
+                'dateUpdated' => $this->dateTime()->notNull(),
+                'uid' => $this->uid(),
+                //FK
+                //intern
+                'payRunEntryId' => $this->integer(), //create FK to PayRunEntry
+                //fields
+                'earningsUptoIncludingLEL' => $this->double(),
+                'earningsAboveLELUptoIncludingPT' => $this->double(),
+                'earningsAbovePTUptoIncludingST' => $this->double(),
+                'earningsAbovePTUptoIncludingUEL' => $this->double(),
+                'earningsAboveSTUptoIncludingUEL' => $this->double(),
+                'earningsAboveUEL' => $this->double(),
+                'employeeNiGross' => $this->double(),
+                'employeeNiRebate' => $this->double(),
+                'employerNiGross' => $this->double(),
+                'employerNiRebate' => $this->double(),
+                'employeeNi' => $this->double(),
+                'employerNi' => $this->double(),
+                'netNi' => $this->double(),
+            ]);
+
 //            $this->createTable(Table::NOTE, [
 //                'id' => $this->primaryKey(),
 //                'dateCreated' => $this->dateTime()->notNull(),
@@ -892,10 +872,10 @@ class Install extends Migration
                 //FK
                 //intern
                 'employerId' => $this->integer(), // create FK to Employers [id]
+                'payRunEntryId' => $this->integer(), // create FK to PayRunEntries [id]
                 //staffology
-                'taxAndNiId' => $this->integer(), // create FK to TaxAndNi [id]
-                'fpsFieldsId' => $this->integer(), // create FK to fpsFields [id]
-                //            'regularPayLinesId' => $this->integer(), //included in the PayLines with this id
+//                'taxAndNiId' => $this->integer(), // create FK to TaxAndNi [id]
+//                'fpsFieldsId' => $this->integer(), // create FK to fpsFields [id]
                 //fields
                 'period' => $this->enum('period', ['Custom', 'Monthly', 'FourWeekly', 'Fortnightly', 'Weekly', 'Daily']),
                 'ordinal' => $this->integer(),
@@ -912,71 +892,75 @@ class Install extends Migration
                 'mapsMiles' => $this->integer(),
             ]);
 
-//            $this->createTable(Table::PAYRUN_TOTALS, [
-//                'id' => $this->primaryKey(),
-//                'dateCreated' => $this->dateTime()->notNull(),
-//                'dateUpdated' => $this->dateTime()->notNull(),
-//                'uid' => $this->uid(),
-//                // FK
-//                // fields
-//                'basicPay' => $this->string(),
-//                'gross' => $this->string(),
-//                'grossForNi' => $this->string(),
-//                'grossNotSubjectToEmployersNi' => $this->string(),
-//                'grossForTax' => $this->string(),
-//                'employerNi' => $this->string(),
-//                'employeeNi' => $this->string(),
-//                'employerNiOffPayroll' => $this->double(),
-//                'realTimeClass1ANi' => $this->double(),
-//                'tax' => $this->string(),
-//                'netPay' => $this->string(),
-//                'adjustments' => $this->string(),
-//                'additions' => $this->string(),
-//                'deductions' => $this->string(),
-//                'takeHomePay' => $this->string(),
-//                'nonTaxOrNICPmt' => $this->string(),
-//                'itemsSubjectToClass1NIC' => $this->double(),
-//                'dednsFromNetPay' => $this->double(),
-//                'tcp_Tcls' => $this->double(),
-//                'tcp_Pp' => $this->double(),
-//                'tcp_Op' => $this->double(),
-//                'flexiDd_Death' => $this->double(),
-//                'flexiDd_Death_NonTax' => $this->double(),
-//                'flexiDd_Pension' => $this->double(),
-//                'flexiDd_Pension_NonTax' => $this->double(),
-//                'smp' => $this->double(),
-//                'spp' => $this->double(),
-//                'sap' => $this->double(),
-//                'shpp' => $this->double(),
-//                'spbp' => $this->double(),
-//                'ssp' => $this->double(),
-//                'studentLoanRecovered' => $this->string(),
-//                'postgradLoanRecovered' => $this->string(),
-//                'pensionableEarnings' => $this->string(),
-//                'pensionablePay' => $this->string(),
-//                'nonTierablePay' => $this->string(),
-//                'employeePensionContribution' => $this->string(),
-//                'employeePensionContributionAvc' => $this->string(),
-//                'employerPensionContribution' => $this->string(),
-//                'empeePenContribnsNotPaid' => $this->string(),
-//                'empeePenContribnsPaid' => $this->string(),
-//                'attachmentOrderDeductions' => $this->string(),
-//                'cisDeduction' => $this->string(),
-//                'cisVat' => $this->string(),
-//                'cisUmbrellaFee' => $this->string(),
-//                'cisUmbrellaFeePostTax' => $this->string(),
-//                'pbik' => $this->double(),
-//                'mapsMiles' => $this->integer(),
-//                'umbrellaFee' => $this->string(),
-//                'appLevyDeduction' => $this->double(),
-//                'paymentAfterLeaving' => $this->double(),
-//                'taxOnPaymentAfterLeaving' => $this->double(),
-//                'nilPaid' => $this->integer(),
-//                'leavers' => $this->integer(),
-//                'starters' => $this->integer(),
-//                'totalCost' => $this->string(),
-//            ]);
-//
+            $this->createTable(Table::PAYRUN_TOTALS, [
+                'id' => $this->primaryKey(),
+                'dateCreated' => $this->dateTime()->notNull(),
+                'dateUpdated' => $this->dateTime()->notNull(),
+                'uid' => $this->uid(),
+                // FK
+                //internal
+                'payRunId' => $this->integer(), // Create FK to PayRun [id]
+                'payRunEntryId' => $this->integer(), // Create FK to PayRunEntries [id]
+                // fields
+                'basicPay' => $this->string(),
+                'gross' => $this->string(),
+                'grossForNi' => $this->string(),
+                'grossNotSubjectToEmployersNi' => $this->string(),
+                'grossForTax' => $this->string(),
+                'employerNi' => $this->string(),
+                'employeeNi' => $this->string(),
+                'employerNiOffPayroll' => $this->double(),
+                'realTimeClass1ANi' => $this->double(),
+                'tax' => $this->string(),
+                'netPay' => $this->string(),
+                'adjustments' => $this->string(),
+                'additions' => $this->string(),
+                'deductions' => $this->string(),
+                'takeHomePay' => $this->string(),
+                'nonTaxOrNICPmt' => $this->string(),
+                'itemsSubjectToClass1NIC' => $this->double(),
+                'dednsFromNetPay' => $this->double(),
+                'tcp_Tcls' => $this->double(),
+                'tcp_Pp' => $this->double(),
+                'tcp_Op' => $this->double(),
+                'flexiDd_Death' => $this->double(),
+                'flexiDd_Death_NonTax' => $this->double(),
+                'flexiDd_Pension' => $this->double(),
+                'flexiDd_Pension_NonTax' => $this->double(),
+                'smp' => $this->double(),
+                'spp' => $this->double(),
+                'sap' => $this->double(),
+                'shpp' => $this->double(),
+                'spbp' => $this->double(),
+                'ssp' => $this->double(),
+                'studentLoanRecovered' => $this->string(),
+                'postgradLoanRecovered' => $this->string(),
+                'pensionableEarnings' => $this->string(),
+                'pensionablePay' => $this->string(),
+                'nonTierablePay' => $this->string(),
+                'employeePensionContribution' => $this->string(),
+                'employeePensionContributionAvc' => $this->string(),
+                'employerPensionContribution' => $this->string(),
+                'empeePenContribnsNotPaid' => $this->string(),
+                'empeePenContribnsPaid' => $this->string(),
+                'attachmentOrderDeductions' => $this->string(),
+                'cisDeduction' => $this->string(),
+                'cisVat' => $this->string(),
+                'cisUmbrellaFee' => $this->string(),
+                'cisUmbrellaFeePostTax' => $this->string(),
+                'pbik' => $this->double(),
+                'mapsMiles' => $this->integer(),
+                'umbrellaFee' => $this->string(),
+                'appLevyDeduction' => $this->double(),
+                'paymentAfterLeaving' => $this->double(),
+                'taxOnPaymentAfterLeaving' => $this->double(),
+                'nilPaid' => $this->integer(),
+                'leavers' => $this->integer(),
+                'starters' => $this->integer(),
+                'totalCost' => $this->string(),
+                'isYtd' => $this->boolean(),
+            ]);
+
 //            $this->createTable(Table::PENSION_ADMINISTRATOR, [
 //                'id' => $this->primaryKey(),
 //                'dateCreated' => $this->dateTime()->notNull(),
@@ -1028,11 +1012,12 @@ class Install extends Migration
                 'uid' => $this->uid(),
                 //FK
                 //intern
-                'employerId' => $this->integer(), // create FK to Employer [id]
+//                'employerId' => $this->integer(), // create FK to Employer [id]
+//                'pensionId' => $this->integer(), // create FK to Pension [id]
                 //staffology
-                'providerId' => $this->integer(), // create FK to PensionProvider [id]
-                'administratorId' => $this->integer(), // create FK to PensionAdministrator [id]
-                'bankDetailsId' => $this->integer(), // create FK to BankDetailsId [id]
+//                'providerId' => $this->integer(), // create FK to PensionProvider [id]
+//                'administratorId' => $this->integer(), // create FK to PensionAdministrator [id]
+//                'bankDetailsId' => $this->integer(), // create FK to BankDetailsId [id]
                 //            'customPayCodes' => $this->integer(),  // Added an internal relation table CustomPayCodes to store this [id] into
                 //fields
                 "staffologyId" => $this->string(),
@@ -1045,45 +1030,46 @@ class Install extends Migration
                 'useCustomPayCodes' => $this->boolean(),
             ]);
 
-//            $this->createTable(Table::PENSION_SELECTION, [
-//                'id' => $this->primaryKey(),
-//                'dateCreated' => $this->dateTime()->notNull(),
-//                'dateUpdated' => $this->dateTime()->notNull(),
-//                'uid' => $this->uid(),
-//                //FK
-//                //intern
-//                'employerId' => $this->integer(), // create FK to Employer [id]
-//                'autoEnrollmentSettingsId' => $this->integer(), // create FK to AutoEnrollmentSettings [id]
-//                //staffology
-//                'pensionSchemeId' => $this->integer(), // create FK to PensionSchema [id] //refactored from Staffology to link
-//                'workerGroupId' => $this->string(), // create FK to WorkerGroup [id]
-//                //fields
-//                "staffologyId" => $this->integer()
-//            ]);
-//
-//            $this->createTable(Table::PENSION_SUMMARY, [
-//                'id' => $this->primaryKey(),
-//                'dateCreated' => $this->dateTime()->notNull(),
-//                'dateUpdated' => $this->dateTime()->notNull(),
-//                'uid' => $this->uid(),
-//                //FK
-//                //staffology
+            $this->createTable(Table::PENSION_SELECTION, [
+                'id' => $this->primaryKey(),
+                'dateCreated' => $this->dateTime()->notNull(),
+                'dateUpdated' => $this->dateTime()->notNull(),
+                'uid' => $this->uid(),
+                //FK
+                //intern
+                'autoEnrollmentSettingsId' => $this->integer(), // create FK to AutoEnrollmentSettings [id]
+                'employerId' => $this->integer(), // create FK to Employer [id]
+                //staffology
+                'pensionSchemeId' => $this->integer(), // create FK to PensionSchema [id] //refactored from Staffology to link
+                'workerGroupId' => $this->string(), // create FK to WorkerGroup [id]
+                //fields
+                "staffologyId" => $this->integer()
+            ]);
+
+            $this->createTable(Table::PENSION_SUMMARY, [
+                'id' => $this->primaryKey(),
+                'dateCreated' => $this->dateTime()->notNull(),
+                'dateUpdated' => $this->dateTime()->notNull(),
+                'uid' => $this->uid(),
+                //FK
+                //intern
+                'payRunEntryId' => $this->integer(), // create FK to PensionSummary [id]
+                //staffology
 //                'pensionId' => $this->integer(), // create FK to Pension [id]
 //                'pensionSchemeId' => $this->integer(), // create FK to PensionSchema [id]
 //                'workerGroupId' => $this->integer(), // create FK to WorkerGroup [id]
-//                //            'tiersId' => $this->integer(), // includes in the TieredPensionRate with pensionSummaryId
-//                //fields
-//                'name' => $this->string(),
-//                'startDate' => $this->string(),
-//                'pensionRule' => $this->enum('pensionRule', ['ReliefAtSource', 'SalarySacrifice', 'NetPayArrangement'])->notNull(),
-//                'employeePensionContributionMultiplier' => $this->double(),
-//                'additionalVoluntaryContribution' => $this->double(),
-//                'avcIsPercentage' => $this->boolean(),
-//                'autoEnrolled' => $this->boolean(),
-//                'papdisPensionProviderId' => $this->integer(),
-//                'papdisEmployerId' => $this->integer()
-//            ]);
-//
+                //fields
+                'name' => $this->string(),
+                'startDate' => $this->string(),
+                'pensionRule' => $this->enum('pensionRule', ['ReliefAtSource', 'SalarySacrifice', 'NetPayArrangement'])->notNull(),
+                'employeePensionContributionMultiplier' => $this->double(),
+                'additionalVoluntaryContribution' => $this->double(),
+                'avcIsPercentage' => $this->boolean(),
+                'autoEnrolled' => $this->boolean(),
+                'papdisPensionProviderId' => $this->integer(),
+                'papdisEmployerId' => $this->integer()
+            ]);
+
 //            $this->createTable(Table::PENSIONER_PAYROLL, [
 //                'id' => $this->primaryKey(),
 //                'dateCreated' => $this->dateTime()->notNull(),
@@ -1122,21 +1108,21 @@ class Install extends Migration
                 'passportNumber' => $this->string(255)->notNull(),
             ]);
 
-//            $this->createTable(Table::RIGHT_TO_WORK, [
-//                'id' => $this->primaryKey(),
-//                'dateCreated' => $this->dateTime()->notNull(),
-//                'dateUpdated' => $this->dateTime()->notNull(),
-//                'uid' => $this->uid(),
-//                //FK
-//                'employeeId' => $this->integer(), //create FK to Employee table [id]
-//                //fields
-//                'checked' => $this->boolean(),
-//                'documentType' => $this->enum('type', ['Other', 'Visa', 'Passport', 'BirthCertificate', 'IdentityCard', 'Sharecode']),
-//                'documentRef' => $this->string(),
-//                'documentExpiry' => $this->dateTime(),
-//                'note' => $this->mediumText(),
-//            ]);
-//
+            $this->createTable(Table::RIGHT_TO_WORK, [
+                'id' => $this->primaryKey(),
+                'dateCreated' => $this->dateTime()->notNull(),
+                'dateUpdated' => $this->dateTime()->notNull(),
+                'uid' => $this->uid(),
+                //FK
+                'employeeId' => $this->integer(), //create FK to Employee table [id]
+                //fields
+                'checked' => $this->boolean(),
+                'documentType' => $this->enum('type', ['Other', 'Visa', 'Passport', 'BirthCertificate', 'IdentityCard', 'Sharecode']),
+                'documentRef' => $this->string(),
+                'documentExpiry' => $this->dateTime(),
+                'note' => $this->mediumText(),
+            ]);
+
 //            $this->createTable(Table::RTI_AGENT, [
 //                'id' => $this->primaryKey(),
 //                'dateCreated' => $this->dateTime()->notNull(),
@@ -1216,20 +1202,21 @@ class Install extends Migration
                 'overrideTimestampValue' => $this->string(),
             ]);
 
-//            $this->createTable(Table::STARTER_DETAILS, [
-//                'id' => $this->primaryKey(),
-//                'dateCreated' => $this->dateTime()->notNull(),
-//                'dateUpdated' => $this->dateTime()->notNull(),
-//                'uid' => $this->uid(),
-//                //FK
-//                //intern
+            $this->createTable(Table::STARTER_DETAILS, [
+                'id' => $this->primaryKey(),
+                'dateCreated' => $this->dateTime()->notNull(),
+                'dateUpdated' => $this->dateTime()->notNull(),
+                'uid' => $this->uid(),
+                //FK
+                //intern
+                'employmentDetailsId' => $this->integer(), // create FK to employmentDetails [id]
 //                'overseasEmployerDetailsId' => $this->integer(), // create FK to OverseasEmployerDetails [id]
 //                'pensionerPayrollId' => $this->integer(), // create FK to pensionerPayrollId [id]
-//                //fields
-//                'startDate' => $this->dateTime()->notNull(),
-//                'starterDeclaration' => $this->enum('declaration', ['A', 'B', 'C', 'Unknown'])->notNull(),
-//            ]);
-//
+                //fields
+                'startDate' => $this->dateTime()->notNull(),
+                'starterDeclaration' => $this->enum('declaration', ['A', 'B', 'C', 'Unknown'])->notNull(),
+            ]);
+
 //            $this->createTable(Table::TAX_AND_NI, [
 //                'id' => $this->primaryKey(),
 //                'dateCreated' => $this->dateTime()->notNull(),
@@ -1247,52 +1234,55 @@ class Install extends Migration
 //                'taxCode' => $this->string(),
 //                'week1Month1' => $this->boolean(),
 //            ]);
-//
-//            $this->createTable(Table::TEACHER_PENSION_DETAILS, [
-//                'id' => $this->primaryKey(),
-//                'dateCreated' => $this->dateTime()->notNull(),
-//                'dateUpdated' => $this->dateTime()->notNull(),
-//                'uid' => $this->uid(),
-//                //FK
-//                //intern
-//                'pensionId' => $this->integer(), //create FK to Pensions [id]
-//                //fields
-//                'employmentType' => $this->enum('type', ['FullTime', 'PartTimeRegular', 'IrregularPartTime', 'IrregularPartTime_In']),
-//                'fullTimeSalary' => $this->integer(),
-//                'partTimeSalaryPaid' => $this->integer(),
-//            ]);
-//
-//            $this->createTable(Table::TIER_PENSION_RATE, [
-//                'id' => $this->primaryKey(),
-//                'dateCreated' => $this->dateTime()->notNull(),
-//                'dateUpdated' => $this->dateTime()->notNull(),
-//                'uid' => $this->uid(),
-//                //fields
-//                'name' => $this->string(),
-//                'description' => $this->string(),
-//                'rangeStart' => $this->double(),
-//                'rate' => $this->double(),
-//            ]);
-//
-//            $this->createTable(Table::UMBRELLA_PAYMENT, [
-//                'id' => $this->primaryKey(),
-//                'dateCreated' => $this->dateTime()->notNull(),
-//                'dateUpdated' => $this->dateTime()->notNull(),
-//                'uid' => $this->uid(),
-//                //FK
-//                //intern
-//                'payRunEntryId' => $this->integer(), //create FK to PayRunEntry [id]
-//                // fields
-//                'payrollCode' => $this->string(),
-//                'chargePerTimesheet' => $this->double(),
-//                'invoiceValue' => $this->double(),
-//                'mapsMiles' => $this->integer(),
-//                'otherExpenses' => $this->double(),
-//                'numberOfTimesheets' => $this->integer(),
-//                'hoursWorked' => $this->double(),
-//                'grossDeduction' => $this->double(),
-//                'grossAddition' => $this->double(),
-//            ]);
+
+            $this->createTable(Table::TEACHER_PENSION_DETAILS, [
+                'id' => $this->primaryKey(),
+                'dateCreated' => $this->dateTime()->notNull(),
+                'dateUpdated' => $this->dateTime()->notNull(),
+                'uid' => $this->uid(),
+                //FK
+                //intern
+                'pensionId' => $this->integer(), //create FK to Pensions [id]
+                //fields
+                'employmentType' => $this->enum('type', ['FullTime', 'PartTimeRegular', 'IrregularPartTime', 'IrregularPartTime_In']),
+                'fullTimeSalary' => $this->integer(),
+                'partTimeSalaryPaid' => $this->integer(),
+            ]);
+
+            $this->createTable(Table::TIER_PENSION_RATE, [
+                'id' => $this->primaryKey(),
+                'dateCreated' => $this->dateTime()->notNull(),
+                'dateUpdated' => $this->dateTime()->notNull(),
+                'uid' => $this->uid(),
+                //FK
+                //intern
+                'pensionId' => $this->integer(), //create FK to Pensions [id]
+                //fields
+                'name' => $this->string(),
+                'description' => $this->string(),
+                'rangeStart' => $this->double(),
+                'rate' => $this->double(),
+            ]);
+
+            $this->createTable(Table::UMBRELLA_PAYMENT, [
+                'id' => $this->primaryKey(),
+                'dateCreated' => $this->dateTime()->notNull(),
+                'dateUpdated' => $this->dateTime()->notNull(),
+                'uid' => $this->uid(),
+                //FK
+                //intern
+                'payRunEntryId' => $this->integer(), //create FK to PayRunEntry [id]
+                // fields
+                'payrollCode' => $this->string(),
+                'chargePerTimesheet' => $this->double(),
+                'invoiceValue' => $this->double(),
+                'mapsMiles' => $this->integer(),
+                'otherExpenses' => $this->double(),
+                'numberOfTimesheets' => $this->integer(),
+                'hoursWorked' => $this->double(),
+                'grossDeduction' => $this->double(),
+                'grossAddition' => $this->double(),
+            ]);
 
             $this->createTable(Table::UMBRELLA_SETTINGS, [
                 'id' => $this->primaryKey(),
@@ -1344,33 +1334,34 @@ class Install extends Migration
 //                // custom
 //                'field' => $this->enum('type', ['periodOverrides', 'totalsYtdOverrides']),
 //            ]);
-//
-//            $this->createTable(Table::WORKER_GROUP, [
-//                'id' => $this->primaryKey(),
-//                'dateCreated' => $this->dateTime()->notNull(),
-//                'dateUpdated' => $this->dateTime()->notNull(),
-//                'uid' => $this->uid(),
-//                //FK
-//                //intern
-//                'pensionSchemeId' => $this->integer(), // create FK to PensionScheme [id]
-//                // fields
-//                "staffologyId" => $this->string(), // staffology: id
-//                'name' => $this->string()->notNull(),
-//                'contributionLevelType' => $this->enum('type', ['UserDefined', 'StatutoryMinimum', 'Nhs2015', 'Tp2020']),
-//                'employeeContribution' => $this->double(),
-//                'employeeContributionIsPercentage' => $this->boolean(),
-//                'employerContribution' => $this->double(),
-//                'employerContributionIsPercentage' => $this->boolean(),
-//                'employerContributionTopUpPercentage' => $this->double(),
-//                'customThreshold' => $this->boolean(),
-//                'lowerLimit' => $this->double(),
-//                'upperLimit' => $this->double(),
-//                'papdisGroup' => $this->string(),
-//                'papdisSubGroup' => $this->string(),
-//                'localAuthorityNumber' => $this->string(),
-//                'schoolEmployerType' => $this->string(),
-//                'workerGroupId' => $this->string(),
-//            ]);
+
+            $this->createTable(Table::WORKER_GROUP, [
+                'id' => $this->primaryKey(),
+                'dateCreated' => $this->dateTime()->notNull(),
+                'dateUpdated' => $this->dateTime()->notNull(),
+                'uid' => $this->uid(),
+                //FK
+                //intern
+                'pensionId' => $this->integer(), // create FK to Pensions [id]
+                'pensionSchemeId' => $this->integer(), // create FK to PensionScheme [id]
+                // fields
+                "staffologyId" => $this->string(), // staffology: id
+                'name' => $this->string()->notNull(),
+                'contributionLevelType' => $this->enum('type', ['UserDefined', 'StatutoryMinimum', 'Nhs2015', 'Tp2020']),
+                'employeeContribution' => $this->double(),
+                'employeeContributionIsPercentage' => $this->boolean(),
+                'employerContribution' => $this->double(),
+                'employerContributionIsPercentage' => $this->boolean(),
+                'employerContributionTopUpPercentage' => $this->double(),
+                'customThreshold' => $this->boolean(),
+                'lowerLimit' => $this->double(),
+                'upperLimit' => $this->double(),
+                'papdisGroup' => $this->string(),
+                'papdisSubGroup' => $this->string(),
+                'localAuthorityNumber' => $this->string(),
+                'schoolEmployerType' => $this->string(),
+                'workerGroupId' => $this->string(),
+            ]);
 
             $tableCreated = true;
         }
@@ -1396,6 +1387,9 @@ class Install extends Migration
         $this->createIndex(null, Table::EMPLOYER_SETTINGS, "employerId", true);
         $this->createIndex(null, Table::HMRC_DETAILS, "employerId", true);
         $this->createIndex(null, Table::LEAVE_SETTINGS, "employerId", true);
+
+        $this->createIndex(null, Table::PAYRUN_TOTALS, "payRunId", false);
+        $this->createIndex(null, Table::PAYRUN_TOTALS, "payRunEntryId", false);
     }
 
     /**
@@ -1405,21 +1399,88 @@ class Install extends Migration
      */
     protected function addForeignKeys()
     {
-        //Employees [id]
-        $this->addForeignKey(null, Table::ADDRESSES, ['employeeId'], Table::EMPLOYERS, ['id'], 'CASCADE', 'CASCADE');
-        $this->addForeignKey(null, Table::BANK_DETAILS, ['employeeId'], Table::EMPLOYERS, ['id'], 'CASCADE', 'CASCADE');
-        $this->addForeignKey(null, Table::PERSONAL_DETAILS, ['employeeId'], Table::EMPLOYERS, ['id'], 'CASCADE', 'CASCADE');
+        // BASE
+        // Employees [id]
+        $this->addForeignKey(null, Table::AUTO_ENROLMENT, ['employeeId'], Table::EMPLOYEES, ['id'], 'CASCADE', 'CASCADE');
+        $this->addForeignKey(null, Table::ADDRESSES, ['employeeId'], Table::EMPLOYEES, ['id'], 'CASCADE', 'CASCADE');
+        $this->addForeignKey(null, Table::BANK_DETAILS, ['employeeId'], Table::EMPLOYEES, ['id'], 'CASCADE', 'CASCADE');
+        $this->addForeignKey(null, Table::HISTORY, ['employeeId'], Table::EMPLOYEES, ['id'], 'CASCADE', 'CASCADE');
+        $this->addForeignKey(null, Table::LEAVE_SETTINGS, ['employeeId'], Table::EMPLOYEES, ['id'], 'CASCADE', 'CASCADE');
+        $this->addForeignKey(null, Table::PAYRUN_ENTRIES, ['employeeId'], Table::EMPLOYEES, ['id'], 'CASCADE', 'CASCADE');
+        $this->addForeignKey(null, Table::PENSIONS, ['employeeId'], Table::EMPLOYEES, ['id'], 'CASCADE', 'CASCADE');
+        $this->addForeignKey(null, Table::PERMISSIONS_USERS, ['employeeId'], Table::EMPLOYEES, ['id'], 'CASCADE', 'CASCADE');
+        $this->addForeignKey(null, Table::PERSONAL_DETAILS, ['employeeId'], Table::EMPLOYEES, ['id'], 'CASCADE', 'CASCADE');
+        $this->addForeignKey(null, Table::REQUESTS, ['employeeId'], Table::EMPLOYEES, ['id'], 'CASCADE', 'CASCADE');
+        $this->addForeignKey(null, Table::RIGHT_TO_WORK, ['employeeId'], Table::EMPLOYEES, ['id'], 'CASCADE', 'CASCADE');
 
         //Employer [id]
         $this->addForeignKey(null, Table::ADDRESSES, ['employerId'], Table::EMPLOYERS, ['id'], 'CASCADE', 'CASCADE');
         $this->addForeignKey(null, Table::AUTO_ENROLMENT_SETTINGS, ['employerId'], Table::EMPLOYERS, ['id'], 'CASCADE', 'CASCADE');
         $this->addForeignKey(null, Table::BANK_DETAILS, ['employerId'], Table::EMPLOYERS, ['id'], 'CASCADE', 'CASCADE');
+        $this->addForeignKey(null, Table::CUSTOM_PAY_CODES, ['employerId'], Table::EMPLOYERS, ['id'], 'CASCADE', 'CASCADE');
         $this->addForeignKey(null, Table::EMPLOYER_SETTINGS, ['employerId'], Table::EMPLOYERS, ['id'], 'CASCADE', 'CASCADE');
+        $this->addForeignKey(null, Table::HISTORY, ['employerId'], Table::EMPLOYERS, ['id'], 'CASCADE', 'CASCADE');
         $this->addForeignKey(null, Table::HMRC_DETAILS, ['employerId'], Table::EMPLOYERS, ['id'], 'CASCADE', 'CASCADE');
         $this->addForeignKey(null, Table::LEAVE_SETTINGS, ['employerId'], Table::EMPLOYERS, ['id'], 'CASCADE', 'CASCADE');
+        $this->addForeignKey(null, Table::PAYRUN, ['employerId'], Table::EMPLOYERS, ['id'], 'CASCADE', 'CASCADE');
+        $this->addForeignKey(null, Table::PAYRUN_ENTRIES, ['employerId'], Table::EMPLOYERS, ['id'], 'CASCADE', 'CASCADE');
+        $this->addForeignKey(null, Table::PAYRUN_LOG, ['employerId'], Table::EMPLOYERS, ['id'], 'CASCADE', 'CASCADE');
+        $this->addForeignKey(null, Table::PENSION_SELECTION, ['employerId'], Table::EMPLOYERS, ['id'], 'CASCADE', 'CASCADE');
+        $this->addForeignKey(null, Table::REQUESTS, ['employerId'], Table::EMPLOYERS, ['id'], 'CASCADE', 'CASCADE');
+
+        //Employment [id]
+        $this->addForeignKey(null, Table::CIS_DETAILS, ['employmentDetailsId'], Table::EMPLOYMENT_DETAILS, ['id'], 'CASCADE', 'CASCADE');
+        $this->addForeignKey(null, Table::DEPARTMENT, ['employmentDetailsId'], Table::EMPLOYMENT_DETAILS, ['id'], 'CASCADE', 'CASCADE');
+        $this->addForeignKey(null, Table::DIRECTORSHIP_DETAILS, ['employmentDetailsId'], Table::EMPLOYMENT_DETAILS, ['id'], 'CASCADE', 'CASCADE');
+        $this->addForeignKey(null, Table::LEAVER_DETAILS, ['employmentDetailsId'], Table::EMPLOYMENT_DETAILS, ['id'], 'CASCADE', 'CASCADE');
+        $this->addForeignKey(null, Table::STARTER_DETAILS, ['employmentDetailsId'], Table::EMPLOYMENT_DETAILS, ['id'], 'CASCADE', 'CASCADE');
 
         //Country [id]
-        $this->addForeignKey(null, Table::ADDRESSES, ['countryId'], Table::EMPLOYERS, ['id']);
+        $this->addForeignKey(null, Table::ADDRESSES, ['countryId'], Table::COUNTRIES, ['id']);
+
+        //Pay Run [id]
+        $this->addForeignKey(null, Table::PAYRUN_TOTALS, ['payRunId'], Table::PAYRUN, ['id'], 'CASCADE', 'CASCADE');
+        $this->addForeignKey(null, Table::PAYRUN_ENTRIES, ['payRunId'], Table::PAYRUN, ['id'], 'CASCADE', 'CASCADE');
+        $this->addForeignKey(null, Table::PAYRUN_IMPORTS, ['payRunId'], Table::PAYRUN, ['id'], 'CASCADE', 'CASCADE');
+        $this->addForeignKey(null, Table::PAYRUN_LOG, ['payRunId'], Table::PAYRUN, ['id'], 'CASCADE', 'CASCADE');
+
+        //Pay Run Entries [id]
+        $this->addForeignKey(null, Table::CUSTOM_PAY_CODES, ['payRunEntryId'], Table::PAYRUN_ENTRIES, ['id'], 'CASCADE', 'CASCADE');
+        $this->addForeignKey(null, Table::FPS_FIELDS, ['payRunEntryId'], Table::PAYRUN_ENTRIES, ['id'], 'CASCADE', 'CASCADE');
+        $this->addForeignKey(null, Table::PAY_OPTIONS, ['payRunEntryId'], Table::PAYRUN_ENTRIES, ['id'], 'CASCADE', 'CASCADE');
+        $this->addForeignKey(null, Table::NATIONAL_INSURANCE_CALCULATION, ['payRunEntryId'], Table::PAYRUN_ENTRIES, ['id'], 'CASCADE', 'CASCADE');
+        $this->addForeignKey(null, Table::PAYRUN_TOTALS, ['payRunEntryId'], Table::PAYRUN_ENTRIES, ['id'], 'CASCADE', 'CASCADE');
+        $this->addForeignKey(null, Table::PENSION_SUMMARY, ['payRunEntryId'], Table::PAYRUN_ENTRIES, ['id'], 'CASCADE', 'CASCADE');
+        $this->addForeignKey(null, Table::UMBRELLA_PAYMENT, ['payRunEntryId'], Table::PAYRUN_ENTRIES, ['id'], 'CASCADE', 'CASCADE');
+
+        //Pensions [id]
+        $this->addForeignKey(null, Table::PENSIONS, ['pensionId'], Table::PENSIONS, ['id'], 'CASCADE', 'CASCADE');
+        $this->addForeignKey(null, Table::TEACHER_PENSION_DETAILS, ['pensionId'], Table::PENSIONS, ['id'], 'CASCADE', 'CASCADE');
+        $this->addForeignKey(null, Table::TIER_PENSION_RATE, ['pensionId'], Table::PENSIONS, ['id'], 'CASCADE', 'CASCADE');
+        $this->addForeignKey(null, Table::WORKER_GROUP, ['pensionId'], Table::PENSIONS, ['id'], 'CASCADE', 'CASCADE');
+
+        //Permissions [id]
+        $this->addForeignKey(null, Table::PERMISSIONS_USERS, ['permissionId'], Table::PERMISSIONS, ['id'], 'CASCADE', 'CASCADE');
+
+        // LINKAGE
+        //Auto Enrolment [id]
+        $this->addForeignKey(null, Table::AUTO_ENROLMENT_ASSESSMENT, ['autoEnrolmentId'], Table::AUTO_ENROLMENT, ['id'], 'CASCADE', 'CASCADE');
+
+        //Auto Enrolment Assessment [id]
+        $this->addForeignKey(null, Table::ITEMS, ['autoEnrolmentAssessmentId'], Table::AUTO_ENROLMENT_ASSESSMENT, ['id'], 'CASCADE', 'CASCADE');
+        $this->addForeignKey(null, Table::AUTO_ENROLMENT_ASSESSMENT_ACTION, ['autoEnrolmentAssessmentId'], Table::AUTO_ENROLMENT_ASSESSMENT, ['id'], 'CASCADE', 'CASCADE');
+
+        //Auto Enrolment Settings
+        $this->addForeignKey(null, Table::PENSION_SELECTION, ['autoEnrollmentSettingsId'], Table::AUTO_ENROLMENT_SETTINGS, ['id'], 'CASCADE', 'CASCADE');
+
+        // CRAFT
+        // User [id]
+        $this->addForeignKey(null, Table::EMPLOYEES, ['userId'], \craft\db\Table::USERS, ['id']);
+        $this->addForeignKey(null, Table::HISTORY, ['approvedBy'], \craft\db\Table::USERS, ['id']);
+        $this->addForeignKey(null, Table::PAYRUN_IMPORTS, ['approvedBy'], \craft\db\Table::USERS, ['id']);
+        $this->addForeignKey(null, Table::PAYRUN_IMPORTS, ['uploadedBy'], \craft\db\Table::USERS, ['id']);
+        $this->addForeignKey(null, Table::PAYRUN_IMPORTS, ['userId'], \craft\db\Table::USERS, ['id']);
+        $this->addForeignKey(null, Table::REQUESTS, ['administerId'], \craft\db\Table::USERS, ['id']);
     }
 
     /**
