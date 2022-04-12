@@ -62,56 +62,6 @@ class PayRunEntry extends ActiveRecord
     // Public Static Methods
     // =========================================================================
 
-//    public function rules()
-//    {
-//        return [
-//            [[
-//                'payRunId',
-//                'employerId',
-//                'ordinal',
-//                'period',
-//            ], 'number', 'intOnly' => true], [[
-//                'percentageOfWorkingDaysPaidAsNormal',
-//                'workingDaysNotPaidAsNormal',
-//                'forcedCisVatAmount',
-//                'holidayAccured',
-//            ], 'double'],
-//            [['startDate', 'endDate', 'paymentDate'], DateTimeValidator::class],
-    ////            ['state', 'exists', 'targetAttribute' => ['Open', 'SubmittedForProcessing', 'Processing', 'AwaitingApproval', 'Approved', 'Finalised']],
-//            [[
-//                'staffologyId',
-//                'taxYear',
-//                'note',
-//                'bacsSubReference',
-//                'bacsHashcode',
-//                'payPeriod',
-//                'priorPayrollCode',
-//                'payOptions',
-//                'pensionSummary',
-//                'totals',
-//                'periodOverrides',
-//                'totalsYtd',
-//                'totalsYtdOverrides',
-//                'state',
-//                'nationalInsuranceCalculation',
-//                'fps',
-//                'umbrellaPayment',
-//                'pdf',
-//            ], 'string'],
-//            [[
-//                'unpaidAbsence',
-//                'unpaidAbsence',
-//                'hasAttachmentOrders',
-//                'isClosed',
-//                'manualNi',
-//                'payrollCodeChanged',
-//                'aeNotEnroledWarning',
-//                'receivingOffsetPay',
-//                'paymentAfterLearning',
-//            ], 'boolean'],
-//        ];
-//    }
-
     /**
     * Declares the name of the database table associated with this AR class.
     * By default this method returns the class name as the table name by calling [[Inflector::camel2id()]]
@@ -124,7 +74,7 @@ class PayRunEntry extends ActiveRecord
     *
     * @return string $the table name
     */
-    public static function tableName()
+    public static function tableName(): string
     {
         return Table::PAYRUN_ENTRIES;
     }

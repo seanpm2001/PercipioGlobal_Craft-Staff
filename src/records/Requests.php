@@ -25,7 +25,7 @@ use percipiolondon\staff\db\Table;
  * @property string $note;
  */
 
-class Request extends ActiveRecord
+class Requests extends ActiveRecord
 {
     // Public Static Methods
     // =========================================================================
@@ -42,7 +42,7 @@ class Request extends ActiveRecord
      *
      * @return string the table name
      */
-    public static function tableName()
+    public static function tableName(): string
     {
         return Table::REQUESTS;
     }

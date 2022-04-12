@@ -2,7 +2,7 @@
 
 namespace percipiolondon\staff\models;
 
-use craft\base\model;
+use craft\base\Model;
 
 class Address extends Model
 {

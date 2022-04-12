@@ -37,7 +37,7 @@ class RtiEmployeeName extends ActiveRecord
      *
      * @return string the table name
      */
-    public static function tableName()
+    public static function tableName(): string
     {
         return Table::RTI_EMPLOYEE_NAME;
     }

@@ -88,7 +88,7 @@ class SettingsController extends Controller
         $plugin = Craft::$app->getPlugins()->getPlugin($pluginHandle);
 
         if ($plugin === null) {
-            throw new NotFoundHttpExceptio('Plugin not found');
+            throw new NotFoundHttpException('Plugin not found');
         }
 
         $settings = [
