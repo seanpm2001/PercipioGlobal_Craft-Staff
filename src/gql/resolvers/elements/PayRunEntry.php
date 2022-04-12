@@ -4,7 +4,6 @@ namespace percipiolondon\staff\gql\resolvers\elements;
 
 use craft\gql\base\ElementResolver;
 
-use GraphQL\Type\Definition\ResolveInfo;
 
 use percipiolondon\staff\elements\PayRunEntry as PayRunEntryElement;
 use percipiolondon\staff\helpers\Gql as GqlHelper;

@@ -10,15 +10,11 @@
 
 namespace percipiolondon\staff\migrations;
 
-use craft\helpers\MigrationHelper;
-use percipiolondon\staff\db\Table;
-
 use Craft;
-use craft\config\DbConfig;
-use craft\db\ActiveRecord;
+
 use craft\db\Migration;
 use craft\db\Query;
-use yii\base\NotSupportedException;
+use percipiolondon\staff\db\Table;
 
 /**
  * Installation Migration
@@ -1174,11 +1170,11 @@ class Install extends Migration
 //                'employeeId' => $this->integer(), // create FK to Employee [id]
 //                'addressId' => $this->integer(), // create FK to Address [id]
 //                //fields
-////                'line' => $this->longText(),
+            ////                'line' => $this->longText(),
 //                'postcode_v1' => $this->string(), //staffology api call --> postcode
 //                'postcode_v2' => $this->string(), //staffology api call --> postCode
 //                'ukPostcode' => $this->string(),
-////                'country' => $this->string(),
+            ////                'country' => $this->string(),
 //            ]);
 //
 //            $this->createTable(Table::RTI_EMPLOYEE_NAME, [
@@ -1383,7 +1379,7 @@ class Install extends Migration
     /**
      * Creates the indexes
      */
-    public function createIndexes():void
+    public function createIndexes(): void
     {
         /** LEVEL 1 TABLES **/
 
@@ -1425,7 +1421,7 @@ class Install extends Migration
     /**
      * Insert the default data.
      */
-    public function insertDefaultData():void
+    public function insertDefaultData(): void
     {
         $this->_createPermissions();
         $this->_defaultCountries();
@@ -1434,7 +1430,7 @@ class Install extends Migration
     /**
      * Insert default countries data.
      */
-    private function _defaultCountries():void
+    private function _defaultCountries(): void
     {
         $countries = [
             ['ENG', 'England'],
@@ -1458,7 +1454,7 @@ class Install extends Migration
     /**
      * Create the permissions for the Company Users
      */
-    private function _createPermissions():void
+    private function _createPermissions(): void
     {
         $rows = [];
 

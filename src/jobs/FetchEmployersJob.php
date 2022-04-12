@@ -2,12 +2,12 @@
 
 namespace percipiolondon\staff\jobs;
 
+use Craft;
 use craft\helpers\App;
 use craft\helpers\Json;
 use craft\queue\BaseJob;
-use percipiolondon\staff\Staff;
 use percipiolondon\staff\helpers\Logger;
-use Craft;
+use percipiolondon\staff\Staff;
 
 class FetchEmployersJob extends BaseJob
 {
@@ -22,7 +22,7 @@ class FetchEmployersJob extends BaseJob
 
         // connection props
         $api = App::parseEnv(Staff::$plugin->getSettings()->apiKeyStaffology);
-        $credentials = base64_encode('staff:'.$api);
+        $credentials = base64_encode('staff:' . $api);
         $headers = [
             'headers' => [
                 'Authorization' => 'Basic ' . $credentials,
@@ -31,12 +31,11 @@ class FetchEmployersJob extends BaseJob
 
         $client = new \GuzzleHttp\Client();
 
-        foreach($this->criteria['employers'] as $employer) {
-
+        foreach ($this->criteria['employers'] as $employer) {
             $currentEmployer++;
-            $progress = "[".$currentEmployer."/".$totalEmployers."] ";
+            $progress = "[" . $currentEmployer . "/" . $totalEmployers . "] ";
 
-            $logger->stdout($progress."↧ Fetch employer info from ".$employer['name']." (".$employer['id'].")", $logger::RESET);
+            $logger->stdout($progress . "↧ Fetch employer info from " . $employer['name'] . " (" . $employer['id'] . ")", $logger::RESET);
 
             try {
                 $response = $client->get($employer['url'], $headers);
@@ -47,17 +46,13 @@ class FetchEmployersJob extends BaseJob
                 Staff::$plugin->employers->saveEmployer($result);
                 Staff::$plugin->payRuns->fetchPayCodesList($employer);
                 Staff::$plugin->employees->fetchEmployeesByEmployer($employer);
-
             } catch (\Exception $e) {
-
                 $logger->stdout(PHP_EOL, $logger::RESET);
                 $logger->stdout($e->getMessage() . PHP_EOL, $logger::FG_RED);
                 Craft::error($e->getMessage(), __METHOD__);
-
             }
 
             $this->setProgress($queue, $currentEmployer / $totalEmployers);
         }
-
     }
 }

@@ -96,7 +96,7 @@ class Totals extends Component
         Craft::error($record->errors, __METHOD__);
     }
 
-    public function parseTotals(array $totals) :array
+    public function parseTotals(array $totals): array
     {
         $totals['basicPay'] = SecurityHelper::decrypt($totals['basicPay'] ?? '');
         $totals['gross'] = SecurityHelper::decrypt($totals['gross'] ?? '');

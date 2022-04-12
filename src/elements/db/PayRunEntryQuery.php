@@ -2,13 +2,8 @@
 
 namespace percipiolondon\staff\elements\db;
 
-use craft\db\Query;
-use craft\db\QueryAbortedException;
-use craft\db\Table;
 use craft\elements\db\ElementQuery;
 use craft\helpers\Db;
-
-use yii\db\Connection;
 
 class PayRunEntryQuery extends ElementQuery
 {

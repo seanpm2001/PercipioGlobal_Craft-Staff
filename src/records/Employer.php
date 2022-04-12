@@ -10,18 +10,13 @@
 
 namespace percipiolondon\staff\records;
 
-use percipiolondon\staff\Staff;
-
-use Craft;
 use craft\db\ActiveRecord;
 use percipiolondon\staff\db\Table;
 
 /**
 * @property string $slug;
-*
 * @property int $addressId;
 * @property int $defaultPayOptionsId;
-*
 * @property string $staffologyId;
 * @property string $name;
 * @property string $logoUrl;
@@ -36,7 +31,7 @@ class Employer extends ActiveRecord
     // Public Static Methods
     // =========================================================================
 
-    public static function tableName()
+    public static function tableName(): string
     {
         return Table::EMPLOYERS;
     }

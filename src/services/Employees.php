@@ -13,22 +13,18 @@ namespace percipiolondon\staff\services;
 use Craft;
 use craft\base\Component;
 
-use craft\elements\User;
+use percipiolondon\staff\elements\Employee;
 use percipiolondon\staff\helpers\Logger;
 use percipiolondon\staff\helpers\Security as SecurityHelper;
-use percipiolondon\staff\elements\Employee;
 use percipiolondon\staff\jobs\CreateEmployeeJob;
 
-use percipiolondon\staff\records\EmploymentDetails;
-use percipiolondon\staff\records\Permission;
-use percipiolondon\staff\records\PersonalDetails;
-use percipiolondon\staff\records\Employee as EmployeeRecord;
-use percipiolondon\staff\records\Employer as EmployerRecord;
-
-use percipiolondon\staff\Staff;
 use percipiolondon\staff\jobs\FetchEmployeesListJob;
+use percipiolondon\staff\records\Employer as EmployerRecord;
+use percipiolondon\staff\records\EmploymentDetails;
 
-use yii\base\BaseObject;
+use percipiolondon\staff\records\PersonalDetails;
+use percipiolondon\staff\Staff;
+
 use yii\db\Exception;
 
 /**
@@ -61,10 +57,9 @@ class Employees extends Component
         $queue->push(new FetchEmployeesListJob([
             'description' => 'Fetch the employees',
             'criteria' => [
-                'employer' => $employer
-            ]
+                'employer' => $employer,
+            ],
         ]));
-
     }
 
     public function fetchEmployee(array $employee, array $employer)
@@ -74,8 +69,8 @@ class Employees extends Component
             'description' => 'Save employees',
             'criteria' => [
                 'employee' => $employee,
-                'employer' => $employer
-            ]
+                'employer' => $employer,
+            ],
         ]));
     }
 
@@ -88,12 +83,11 @@ class Employees extends Component
     public function saveEmployee(array $employee, string $employeeName, array $employer)
     {
         $logger = new Logger();
-        $logger->stdout("✓ Save employee " .$employeeName . '...', $logger::RESET);
+        $logger->stdout("✓ Save employee " . $employeeName . '...', $logger::RESET);
 
         $employeeRecord = Employee::findOne(['staffologyId' => $employee['id']]);
 
         try {
-
             if (!$employeeRecord) {
                 $employeeRecord = new Employee();
             }
@@ -121,40 +115,36 @@ class Employees extends Component
             $elementsService = Craft::$app->getElements();
             $success = $elementsService->saveElement($employeeRecord);
 
-            if($success){
+            if ($success) {
                 $logger->stdout(" done" . PHP_EOL, $logger::FG_GREEN);
-            }else{
+            } else {
                 $logger->stdout(" failed" . PHP_EOL, $logger::FG_RED);
 
                 $errors = "";
 
-                foreach($employeeRecord->errors as $err) {
+                foreach ($employeeRecord->errors as $err) {
                     $errors .= implode(',', $err);
                 }
 
                 $logger->stdout($errors . PHP_EOL, $logger::FG_RED);
                 Craft::error($employeeRecord->errors, __METHOD__);
             }
-
         } catch (\Exception $e) {
-
             $logger = new Logger();
             $logger->stdout(PHP_EOL, $logger::RESET);
             $logger->stdout($e->getMessage() . PHP_EOL, $logger::FG_RED);
             Craft::error($e->getMessage(), __METHOD__);
         }
-
     }
 
     public function saveEmploymentDetails(array $employmentDetails, int $employmentDetailsId = null): EmploymentDetails
     {
-        if($employmentDetailsId) {
+        if ($employmentDetailsId) {
             $record = EmploymentDetails::findOne($employmentDetailsId);
 
             if (!$record) {
                 throw new Exception('Invalid personal details ID: ' . $employmentDetailsId);
             }
-
         } else {
             $record = new EmploymentDetails();
         }
@@ -184,8 +174,7 @@ class Employees extends Component
     
     public function savePersonalDetails(array $personalDetails, int $personalDetailsId = null): PersonalDetails
     {
-
-        if($personalDetailsId) {
+        if ($personalDetailsId) {
             $record = PersonalDetails::findOne($personalDetailsId);
 
             if (!$record) {
@@ -194,7 +183,6 @@ class Employees extends Component
 
             //foreign keys
             $addressId = $record->addressId;
-
         } else {
             $record = new PersonalDetails();
 

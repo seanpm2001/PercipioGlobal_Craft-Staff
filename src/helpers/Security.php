@@ -9,7 +9,7 @@ class Security
 {
     public static function encrypt(string|null $data): string|null
     {
-        if($data === '' || $data === null){
+        if ($data === '' || $data === null) {
             return $data;
         }
 
@@ -18,7 +18,7 @@ class Security
 
     public static function decrypt(string|null $data, $type = 'string'): string|float|int|bool|null
     {
-        if($data === '' || $data === null){
+        if ($data === '' || $data === null) {
             return $data;
         }
 

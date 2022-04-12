@@ -10,10 +10,7 @@
 
 namespace percipiolondon\staff\records;
 
-use Craft;
 use craft\db\ActiveRecord;
-use craft\validators\DateTimeValidator;
-use DateTime;
 
 use percipiolondon\staff\db\Table;
 
@@ -29,7 +26,6 @@ use percipiolondon\staff\db\Table;
 
 class PayRunImport extends ActiveRecord
 {
-
     /**
      * Declares the name of the database table associated with this AR class.
      * By default this method returns the class name as the table name by calling [[Inflector::camel2id()]]
@@ -42,7 +38,7 @@ class PayRunImport extends ActiveRecord
      *
      * @return string $the table name
      */
-    public static function tableName()
+    public static function tableName(): string
     {
         return Table::PAYRUN_IMPORTS;
     }

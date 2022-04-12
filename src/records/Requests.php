@@ -10,39 +10,22 @@
 
 namespace percipiolondon\staff\records;
 
-use percipiolondon\staff\Staff;
-
-use Craft;
 use craft\db\ActiveRecord;
 use percipiolondon\staff\db\Table;
 
 /**
- * @property int $pensionSchemeId;
- * @property int $workerGroupId;
- * @property int $teachersPensionDetails;
- * @property string $forcedTier;
- *
- * @property string $staffologyId;
- * @property string $contributionLevelType;
- * @property string $startDate;
- * @property string $memberReferenceNumber;
- * @property boolean $overrideContributions;
- * @property double $employeeContribution;
- * @property boolean $employeeContributionIsPercentage;
- * @property double $employerContribution;
- * @property boolean $employerContributionIsPercentage;
- * @property double $employerContributionTopUpPercentage;
- * @property double $isAeQualifyingScheme;
- * @property double $isTeachersPension;
- * @property string $aeStatusAtJoining;
- * @property double $additionalVoluntaryContribution;
- * @property boolean $avcIsPercentage;
- * @property boolean $exitViaProvider;
- * @property boolean $forceEnrolment;
- * @property boolean $autoEnrolled;
+ * @property \DateTime $dateAdministered;
+ * @property int $employerId;
+ * @property int $employeeId;
+ * @property string $administerId;
+ * @property string $data;
+ * @property string $section;
+ * @property string $element;
+ * @property string $status;
+ * @property string $note;
  */
 
-class Pension extends ActiveRecord
+class Requests extends ActiveRecord
 {
     // Public Static Methods
     // =========================================================================
@@ -59,8 +42,8 @@ class Pension extends ActiveRecord
      *
      * @return string the table name
      */
-    public static function tableName()
+    public static function tableName(): string
     {
-        return Table::PENSION;
+        return Table::REQUESTS;
     }
 }

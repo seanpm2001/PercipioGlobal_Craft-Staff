@@ -2,6 +2,7 @@
 
 namespace percipiolondon\staff\controllers;
 
+use Craft;
 use craft\helpers\ArrayHelper;
 use craft\web\Controller;
 use League\Csv\AbstractCsv;
@@ -14,17 +15,14 @@ use percipiolondon\staff\elements\PayRun;
 use percipiolondon\staff\helpers\Security as SecurityHelper;
 use percipiolondon\staff\records\PayLine as PayLineRecord;
 use percipiolondon\staff\records\PayRunImport;
-use percipiolondon\staff\Staff;
 
-use Craft;
-use yii\base\BaseObject;
+use percipiolondon\staff\Staff;
 use yii\web\NotFoundHttpException;
 use yii\web\Response;
 use yii\web\UploadedFile;
 
 class PayRunController extends Controller
 {
-
     /**
      * Payrun display
      *
@@ -69,7 +67,7 @@ class PayRunController extends Controller
 
         $employer = Employer::findOne($employerId);
 
-        if(!$employer){
+        if (!$employer) {
             throw new NotFoundHttpException();
         }
 
@@ -77,7 +75,7 @@ class PayRunController extends Controller
         $employerName = SecurityHelper::decrypt($employer['name']) ?? '';
 
         $pluginName = Staff::$settings->pluginName;
-        $templateTitle = Craft::t('staff-management', 'Pay Runs > '.$employerName);
+        $templateTitle = Craft::t('staff-management', 'Pay Runs > ' . $employerName);
 
         $variables['controllerHandle'] = 'payruns';
         $variables['pluginName'] = Staff::$settings->pluginName;
@@ -110,7 +108,7 @@ class PayRunController extends Controller
         $employer = Employer::findOne($employerId);
         $payRun = PayRun::findOne($payRunId);
 
-        if(!$employer || !$payRun){
+        if (!$employer || !$payRun) {
             throw new NotFoundHttpException();
         }
 
@@ -120,7 +118,7 @@ class PayRunController extends Controller
         $period = $payRun['period'] ?? '';
         
         $pluginName = Staff::$settings->pluginName;
-        $templateTitle = Craft::t('staff-management', 'Pay Runs > '.$employerName. ' > '.$taxYear.' / '.$period);
+        $templateTitle = Craft::t('staff-management', 'Pay Runs > ' . $employerName . ' > ' . $taxYear . ' / ' . $period);
 
         $variables['controllerHandle'] = 'payruns';
         $variables['pluginName'] = Staff::$settings->pluginName;
@@ -145,7 +143,7 @@ class PayRunController extends Controller
 
         $payRun = PayRun::findOne($payRunId);
 
-        if(!$payRun){
+        if (!$payRun) {
             throw new NotFoundHttpException();
         }
 
@@ -160,7 +158,7 @@ class PayRunController extends Controller
         Staff::$plugin->payRuns->fetchPayRunByEmployer($employerId, $taxYear);
 
         return $this->asJson([
-            'success' => true
+            'success' => true,
         ]);
     }
 
@@ -172,7 +170,7 @@ class PayRunController extends Controller
         Staff::$plugin->payRuns->fetchPayRunByPayRunId($payRunId, true);
 
         return $this->asJson([
-            'success' => true
+            'success' => true,
         ]);
     }
 
@@ -189,7 +187,7 @@ class PayRunController extends Controller
         ]);
     }
 
-    public function actionGetPayRunLogs(int $payRunId) : Response
+    public function actionGetPayRunLogs(int $payRunId): Response
     {
         $this->requireLogin();
         $this->requireAcceptsJson();
@@ -202,7 +200,7 @@ class PayRunController extends Controller
             ->orderBy(['dateCreated' => SORT_DESC]);
 
         return $this->asJson([
-            'logs' => $query->all()
+            'logs' => $query->all(),
         ]);
     }
 
@@ -233,7 +231,7 @@ class PayRunController extends Controller
 
         if ($file !== null) {
             $filename = uniqid($file->name, true);
-            $filePath = Craft::$app->getPath()->getTempPath().DIRECTORY_SEPARATOR.$filename;
+            $filePath = Craft::$app->getPath()->getTempPath() . DIRECTORY_SEPARATOR . $filename;
             $file->saveAs($filePath, false);
             // Also save the file to the cache as a backup way to access it
             $cache = Craft::$app->getCache();
@@ -290,19 +288,19 @@ class PayRunController extends Controller
         if ($headers !== null) {
             $entries = $this->importCsvApi9($csv, $headers, $payRunId);
 
-            if(count($entries) > 0){
+            if (count($entries) > 0) {
                 $importLog->rowCount = count($entries);
 
                 $success = $this->saveEntriesToStaffology($payRunId, $entries);
 
-                if($success){
+                if ($success) {
                     $importLog->status = 'Succeeded';
                     Craft::$app->getSession()->setNotice(Craft::t('staff-management', 'Imports from CSV started.'));
                 } else {
                     $importLog->status = 'Failed';
                     $error = 'Staffology contains different pay codes than what existed when this CSV template was downloaded. Click "Refresh Pay Run" and download the new Pay Run Template.';
                 }
-            }else{
+            } else {
                 $importLog->status = 'Failed';
                 $error = "There is an error in the CSV template you are trying to upload. Have you altered a column heading or added any additional columns? Download the latest pay run template to check against your file.";
             }
@@ -320,7 +318,7 @@ class PayRunController extends Controller
         $period = $payRun['period'] ?? '';
 
         $pluginName = Staff::$settings->pluginName;
-        $templateTitle = Craft::t('staff-management', 'Pay Runs > '.$employerName. ' > '.$taxYear.' / '.$period);
+        $templateTitle = Craft::t('staff-management', 'Pay Runs > ' . $employerName . ' > ' . $taxYear . ' / ' . $period);
 
         $variables['controllerHandle'] = 'payruns';
         $variables['pluginName'] = Staff::$settings->pluginName;
@@ -342,14 +340,15 @@ class PayRunController extends Controller
         $payPeriod = null;
         $employer = null;
 
-        foreach($savedEntries as $entry) {
-
+        foreach ($savedEntries as $entry) {
             $entry = $entry->toArray();
 
             $payPeriod = $entry['payPeriod'] ?? null;
             $employer = $entry['employerId'] ?? null;
 
-            $csvEntry = array_filter($entries, function($csv) use ($entry){  return $csv['id'] == $entry['id']; });
+            $csvEntry = array_filter($entries, function($csv) use ($entry) {
+                return $csv['id'] == $entry['id'];
+            });
 
             $csvEntry = reset($csvEntry) ?? [];
             $payRollCode = $csvEntry['payrollCode'] ?? null;
@@ -365,17 +364,17 @@ class PayRunController extends Controller
             unset($csvEntry['netPay']);
             unset($csvEntry['totalCost']);
 
-            foreach($payLines as $payLine) {
+            foreach ($payLines as $payLine) {
                 $payLine = $payLine->toArray();
                 $code = $payLine['code'] ?? SecurityHelper::decrypt($payLine['value'] ?? '');
 
-                if($payLine && array_key_exists($code, $csvEntry)){
+                if ($payLine && array_key_exists($code, $csvEntry)) {
                     $value = $csvEntry[$payLine['code'] ?? SecurityHelper::decrypt($payLine['value'] ?? '')];
 
                     //overwrite values
                     $payLine['value'] = $value;
                     $payLine['rate'] = SecurityHelper::decrypt($payLine['rate'] ?? '');
-                    $payLine['description'] = $csvEntry['description_'.$payLine['code'] ?? $payLine['description'] ?? ''];
+                    $payLine['description'] = $csvEntry['description_' . $payLine['code'] ?? $payLine['description'] ?? ''];
 
                     //reset in csvEntry to check which ones are new to save later on
                     $csvEntry[$payLine['code']] = '';
@@ -387,23 +386,21 @@ class PayRunController extends Controller
                     unset($payLine['uid']);
                     unset($payLine['payOptionsId']);
 
-                    if($payLine['value'] != ''){
+                    if ($payLine['value'] != '') {
                         //save
                         $regularPayLines[] = $payLine;
                     }
                 }
             }
 
-            foreach(array_filter($csvEntry) as $key => $defaultPayCode) {
-
-                if(strpos($key, 'description') === false && strlen($defaultPayCode) > 0){
-
+            foreach (array_filter($csvEntry) as $key => $defaultPayCode) {
+                if (strpos($key, 'description') === false && strlen($defaultPayCode) > 0) {
                     $payLine = [];
                     $payLine['code'] = $key;
                     $payLine['value'] = $defaultPayCode;
 
-                    if(array_key_exists('description_'.$key, $csvEntry)){
-                        $payLine['description'] = $csvEntry['description_'.$key];
+                    if (array_key_exists('description_' . $key, $csvEntry)) {
+                        $payLine['description'] = $csvEntry['description_' . $key];
                     }
 
                     $regularPayLines[] = $payLine;
@@ -412,7 +409,7 @@ class PayRunController extends Controller
 
             $updatedEntries[] = [
                 'payrollCode' => $payRollCode,
-                'lines' => $regularPayLines
+                'lines' => $regularPayLines,
             ];
         }
 
@@ -429,7 +426,7 @@ class PayRunController extends Controller
     {
         $csvEntries = Staff::$plugin->payRuns->getCsvData($payRunId, true);
 
-        if(count($csvEntries) > 0){
+        if (count($csvEntries) > 0) {
             $columns = array_keys($csvEntries[0]);
 
             $stmt = (new Statement())
@@ -451,7 +448,6 @@ class PayRunController extends Controller
 
                 $index = 0;
                 foreach ($columns as $importField) {
-
                     if (isset($columns[$index], $headers[$columns[$index]])) {
                         $entry[$importField] = empty($row[$headers[$columns[$index]]])
                             ? null
@@ -463,17 +459,15 @@ class PayRunController extends Controller
                     $index++;
                 }
 
-                if(!$errors) {
+                if (!$errors) {
                     $entries[] = $entry;
                 }
             }
 
 
             return $entries;
-
         }
 
         return [];
-
     }
 }

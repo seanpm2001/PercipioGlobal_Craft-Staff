@@ -15,13 +15,13 @@ use craft\base\Element;
 use craft\db\Query;
 use craft\elements\db\ElementQueryInterface;
 
+use percipiolondon\staff\elements\db\PayRunQuery;
+use percipiolondon\staff\helpers\Logger;
+use percipiolondon\staff\records\PayRun as PayRunRecord;
+
 use percipiolondon\staff\Staff;
 use yii\base\InvalidConfigException;
 use yii\db\Exception;
-
-use percipiolondon\staff\helpers\Logger;
-use percipiolondon\staff\records\PayRun as PayRunRecord;
-use percipiolondon\staff\elements\db\PayRunQuery;
 
 /**
  * PayRun Element
@@ -126,7 +126,7 @@ class PayRun extends Element
                 'label' => 'All payruns',
                 'defaultSort' => ['id', 'desc'],
                 'criteria' => ['id' => $ids],
-            ]
+            ],
         ];
     }
 
@@ -298,7 +298,6 @@ class PayRun extends Element
                 if (!$record) {
                     throw new Exception('Invalid pay run ID: ' . $this->id);
                 }
-
             } else {
                 $record = new PayRunRecord();
                 $record->id = (int)$this->id;
@@ -324,17 +323,16 @@ class PayRun extends Element
 
             $success = $record->save(false);
 
-            if(!$success) {
+            if (!$success) {
                 $errors = "";
 
-                foreach($record->errors as $err) {
+                foreach ($record->errors as $err) {
                     $errors .= implode(',', $err);
                 }
 
                 $logger->stdout($errors . PHP_EOL, $logger::FG_RED);
                 Craft::error($record->errors, __METHOD__);
             }
-
         } catch (\Exception $e) {
             $logger->stdout(PHP_EOL, $logger::RESET);
             $logger->stdout($e->getMessage() . PHP_EOL, $logger::FG_RED);

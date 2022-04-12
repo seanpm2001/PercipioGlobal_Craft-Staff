@@ -2,13 +2,12 @@
 
 namespace percipiolondon\staff\controllers;
 
-use Craft;
 use craft\web\Controller;
 use percipiolondon\staff\Staff;
 
 class EmployerController extends Controller
 {
-    public function actionFetchOne(string $employer):void
+    public function actionFetchOne(string $employer): void
     {
         // Fetch defaults
         Staff::$plugin->payRuns->fetchPayCodesList([$employer]);
@@ -16,7 +15,7 @@ class EmployerController extends Controller
 
         Staff::$plugin->employers->fetchEmployers([$employer]);
     }
-    public function actionFetch(array $employers):void
+    public function actionFetch(array $employers): void
     {
         // Fetch defaults
         Staff::$plugin->payRuns->fetchPayCodesList($employers);

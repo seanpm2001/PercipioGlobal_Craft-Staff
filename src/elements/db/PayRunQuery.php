@@ -2,13 +2,8 @@
 
 namespace percipiolondon\staff\elements\db;
 
-use craft\db\Query;
-use craft\db\QueryAbortedException;
-use craft\db\Table;
 use craft\elements\db\ElementQuery;
 use craft\helpers\Db;
-
-use yii\db\Connection;
 
 class PayRunQuery extends ElementQuery
 {
@@ -135,7 +130,6 @@ class PayRunQuery extends ElementQuery
 
     protected function beforePrepare(): bool
     {
-
         $this->joinElementTable('staff_payrun');
 
         $this->query->select([
@@ -154,7 +148,7 @@ class PayRunQuery extends ElementQuery
             'staff_payrun.isClosed',
             'staff_payrun.dateClosed',
             'staff_payrun.url',
-            'staff_payrun.employerId'
+            'staff_payrun.employerId',
         ]);
 
         if ($this->employerId) {

@@ -16,9 +16,9 @@ use craft\db\Query;
 use craft\elements\db\ElementQueryInterface;
 use craft\elements\User;
 
+use percipiolondon\staff\elements\db\EmployeeQuery;
 use percipiolondon\staff\helpers\Logger;
 use percipiolondon\staff\helpers\Security as SecurityHelper;
-use percipiolondon\staff\elements\db\EmployeeQuery;
 use percipiolondon\staff\records\Employee as EmployeeRecord;
 use percipiolondon\staff\records\Permission;
 use percipiolondon\staff\records\PersonalDetails;
@@ -35,19 +35,13 @@ class Employee extends Element
     // Public Properties
     // =========================================================================
 
-    public $staffologyId;
-    public $employerId;
-    public $userId;
-    public $personalDetailsId;
-    public $employmentDetailsId;
+    public string $staffologyId;
+    public int $employerId;
+    public int $userId;
     public $autoEnrolment;
-    public $leaveSettingsId;
     public $rightToWork;
-    public $bankDetailsId;
     public $status;
-    public $autoEnrolmentId;
-    public $niNumber;
-    public $sourceSystemId;
+    public string|null $niNumber;
     public $isDirector;
 
     // Static Methods
@@ -119,7 +113,7 @@ class Employee extends Element
                 'label' => 'All Employees',
                 'defaultSort' => ['id', 'desc'],
                 'criteria' => ['id' => $ids],
-            ]
+            ],
         ];
     }
 
@@ -127,26 +121,11 @@ class Employee extends Element
     // =========================================================================
 
     /**
-     * Returns the validation rules for attributes.
-     *
-     * Validation rules are used by [[validate()]] to check if attribute values are valid.
-     * Child classes may override this method to declare different validation rules.
-     *
-     * More info: http://www.yiiframework.com/doc-2.0/guide-input-validation.html
-     *
-     * @return array
-     */
-    public function rules()
-    {
-        return parent::rules();
-    }
-
-    /**
      * Returns the field layout used by this element.
      *
      * @return FieldLayout|null
      */
-    public function getFieldLayout()
+    public function getFieldLayout(): ?FieldLayout
     {
         return null;
     }
@@ -204,7 +183,7 @@ class Employee extends Element
         return true;
     }
 
-    private function _saveRecord($isNew)
+    private function _saveRecord($isNew): void
     {
         try {
             $record = EmployeeRecord::findOne($this->id);
@@ -215,7 +194,6 @@ class Employee extends Element
                 if (!$record) {
                     throw new Exception('Invalid employee ID: ' . $this->id);
                 }
-
             } else {
                 $record = new EmployeeRecord();
                 $record->id = (int)$this->id;
@@ -224,13 +202,12 @@ class Employee extends Element
             $personalDetails = PersonalDetails::findOne($this->personalDetailsId);
 
             // user creation
-            if($personalDetails) {
-
+            if ($personalDetails) {
                 $email = SecurityHelper::decrypt($personalDetails['email']) ?? '';
                 $user = User::findOne(['email' => $email]);
 
                 // check if user exists, if so, skip this step
-                if(!$user && $email) {
+                if (!$user && $email) {
 
                     //create user
                     $user = new User();
@@ -241,11 +218,11 @@ class Employee extends Element
 
                     $success = Craft::$app->elements->saveElement($user, true);
 
-                    if(!$success){
+                    if (!$success) {
                         throw new Exception("The user couldn't be created");
                     }
 
-                    Craft::info("Craft Staff: new user creation: ".$user->id);
+                    Craft::info("Craft Staff: new user creation: " . $user->id);
 
                     // assign user to group
                     $group = Craft::$app->getUserGroups()->getGroupByHandle('hardingUsers');
@@ -268,9 +245,9 @@ class Employee extends Element
 
             $record->save();
 
-            if($isNew) {
+            if ($isNew) {
                 //assign permissions to employee
-                if($this->isDirector) {
+                if ($this->isDirector) {
                     $permissions = Permission::find()->all();
                 } else {
                     $permissions = [Permission::findOne(['name' => 'access:employer'])];
@@ -278,9 +255,7 @@ class Employee extends Element
 
                 Staff::$plugin->userPermissions->createPermissions($permissions, $this->userId, $this->id);
             }
-
         } catch (\Exception $e) {
-
             $logger = new Logger();
             $logger->stdout(PHP_EOL, $logger::RESET);
             $logger->stdout($e->getMessage() . PHP_EOL, $logger::FG_RED);

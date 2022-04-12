@@ -15,20 +15,23 @@ use craft\base\Component;
 use craft\base\ElementInterface;
 use craft\helpers\App;
 use craft\queue\QueueInterface;
+use percipiolondon\staff\elements\Employer;
 use percipiolondon\staff\elements\PayRun;
+use percipiolondon\staff\elements\PayRunEntry;
 use percipiolondon\staff\helpers\Csv as CsvHelper;
 use percipiolondon\staff\helpers\Logger;
 use percipiolondon\staff\helpers\Security as SecurityHelper;
 use percipiolondon\staff\jobs\CreatePayCodeJob;
 use percipiolondon\staff\jobs\CreatePayRunEntryJob;
+
 use percipiolondon\staff\jobs\CreatePayRunJob;
 use percipiolondon\staff\jobs\FetchPayCodesListJob;
-use percipiolondon\staff\jobs\FetchPaySchedulesJob;
 use percipiolondon\staff\records\Employee as EmployeeRecord;
 use percipiolondon\staff\records\Employer as EmployerRecord;
 use percipiolondon\staff\records\EmploymentDetails;
 use percipiolondon\staff\records\PayCode as PayCodeRecord;
 use percipiolondon\staff\records\PayLine as PayLineRecord;
+
 use percipiolondon\staff\records\PayRun as PayRunRecord;
 use percipiolondon\staff\records\PayRunEntry as PayRunEntryRecord;
 use percipiolondon\staff\records\PayRunLog;
@@ -36,7 +39,6 @@ use percipiolondon\staff\records\PayRunTotals;
 use percipiolondon\staff\records\PersonalDetails;
 use percipiolondon\staff\Staff;
 use yii\db\Exception;
-use yii\db\Query;
 use yii\queue\redis\Queue as RedisQueue;
 
 /**
@@ -59,11 +61,7 @@ class PayRuns extends Component
 
 
     /* GETTERS */
-    /**
-     * @param int $employerId
-     * @return ElementInterface|null
-     */
-    public function getLastPayRunByEmployer(int $employerId): ?ElementInterface
+    public function getLastPayRunByEmployer(int $employerId): ElementInterface|null
     {
         return PayRun::find()
             ->employerId($employerId)
@@ -71,10 +69,6 @@ class PayRuns extends Component
             ->one();
     }
 
-    /**
-     * @param int $totalsId
-     * @return array
-     */
     public function getTotalsById(int $totalsId): array
     {
         $payRunTotals = PayRunTotals::findOne($totalsId);
@@ -127,14 +121,13 @@ class PayRuns extends Component
         //create pay codes for all entries
         $payCodeKeys = array_map(function($code) {
             return $code['code'];
-        }, $payCodes);
+        },$payCodes);
         sort($payCodeKeys);
 
         $csvEntries = [];
 
         //fill in data
         foreach ($payRunEntries as $entry) {
-
             $employee = EmployeeRecord::findOne($entry['employeeId'] ?? null);
             $employee = $employee ? $employee->toArray() : [];
 
@@ -180,7 +173,6 @@ class PayRuns extends Component
                 $payLine = $this->_parsePayLines($payLine);
 
                 if ($payLine && in_array($payLine['code'], $payCodeKeys, true)) {
-
                     $payRunEntry[$payLine['code']] = (float)($payLine['value'] ?? '');
                     $payRunEntry['description_' . $payLine['code']] = $payLine['description'] ?? '';
                 }
@@ -283,8 +275,8 @@ class PayRuns extends Component
             'description' => 'Save pay codes',
             'criteria' => [
                 'payCodes' => $payCodes,
-                'employer' => $employer
-            ]
+                'employer' => $employer,
+            ],
         ]));
     }
 
@@ -297,8 +289,8 @@ class PayRuns extends Component
         $queue->push(new FetchPayCodesListJob([
             'description' => 'Fetch pay codes',
             'criteria' => [
-                'employer' => $employer
-            ]
+                'employer' => $employer,
+            ],
         ]));
     }
 
@@ -316,7 +308,7 @@ class PayRuns extends Component
             'criteria' => [
                 'payRuns' => $payRuns,
                 'employer' => $employer,
-            ]
+            ],
         ]));
 
         if ($startQueue) {
@@ -346,7 +338,6 @@ class PayRuns extends Component
         $employer = Staff::$plugin->employers->getEmployerById($employerId);
 
         if ($employer) {
-
             $id = $employer['staffologyId'] ?? '';
             $taxYear = $taxYear === '' ? $employer['currentYear'] : $taxYear;
             $payPeriod = $employer['defaultPayOptions']['period'] ?? 'Monthly';
@@ -363,12 +354,10 @@ class PayRuns extends Component
             $client = new \GuzzleHttp\Client();
 
             try {
-
                 $response = $client->get("https://api.staffology.co.uk/" . $url, $headers);
                 $payRunData = json_decode($response->getBody()->getContents(), true);
 
                 if ($payRunData) {
-
                     $employer['id'] = $employer['staffologyId'];
 
                     $this->fetchPayCodesList($employer);
@@ -383,7 +372,6 @@ class PayRuns extends Component
                     }
                 }
             } catch (\Exception $e) {
-
                 $logger->stdout(PHP_EOL, $logger::RESET);
                 $logger->stdout($e->getMessage() . PHP_EOL, $logger::FG_RED);
                 Craft::error($e->getMessage(), __METHOD__);
@@ -403,7 +391,7 @@ class PayRuns extends Component
             'criteria' => [
                 'payRuns' => $payRuns,
                 'employer' => $employer,
-            ]
+            ],
         ]));
     }
 
@@ -419,14 +407,13 @@ class PayRuns extends Component
         $employer = EmployerRecord::findOne($employerId);
 
         if ($payRun && $employer) {
-
             $queue = Craft::$app->getQueue();
             $queue->push(new CreatePayRunJob([
                 'description' => 'Fetch pay runs',
                 'criteria' => [
                     'payRuns' => [$payRun],
                     'employer' => $employer->toArray(),
-                ]
+                ],
             ]));
 
             if ($startQueue) {
@@ -463,7 +450,6 @@ class PayRuns extends Component
         $success = $payCodeRecord->save();
 
         if ($success) {
-
             $logger->stdout(" done" . PHP_EOL, $logger::FG_GREEN);
         } else {
             $logger->stdout(" failed" . PHP_EOL, $logger::FG_RED);
@@ -537,7 +523,7 @@ class PayRuns extends Component
                         'payRun' => $payRunRecord,
                         'payRunEntries' => $payRun['entries'],
                         'employer' => $employer,
-                    ]
+                    ],
                 ]));
 
                 $logger->stdout(" done" . PHP_EOL, $logger::FG_GREEN);
@@ -556,7 +542,6 @@ class PayRuns extends Component
                 Craft::error($payRunRecord->errors, __METHOD__);
             }
         } catch (\Exception $e) {
-
             $logger = new Logger();
             $logger->stdout(PHP_EOL, $logger::RESET);
             $logger->stdout($e->getMessage() . PHP_EOL, $logger::FG_RED);
@@ -590,7 +575,6 @@ class PayRuns extends Component
         $success = $payRunLog->save(true);
 
         if ($success) {
-
             $logger->stdout(" done" . PHP_EOL, $logger::FG_GREEN);
         } else {
             $logger->stdout(" failed" . PHP_EOL, $logger::FG_RED);

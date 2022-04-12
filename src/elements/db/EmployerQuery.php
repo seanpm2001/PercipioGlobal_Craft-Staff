@@ -2,15 +2,10 @@
 
 namespace percipiolondon\staff\elements\db;
 
-use craft\db\Query;
-use craft\db\QueryAbortedException;
 use craft\elements\db\ElementQuery;
 use craft\helpers\Db;
 
-use percipiolondon\staff\db\Table;
 use percipiolondon\staff\models\Address;
-
-use yii\db\Connection;
 
 class EmployerQuery extends ElementQuery
 {
