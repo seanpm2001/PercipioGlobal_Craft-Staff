@@ -3,6 +3,8 @@ import { setContext } from '@apollo/client/link/context'
 import { getToken } from '~/js/composables/useAxiosClient'
 import { getUrl } from './useAxiosClient'
 
+//const ENDPOINT = window.api.baseUrl ?? 'https://localhost:3600/'
+
 // HTTP connection to the API
 const httpLink = new HttpLink({
     uri: async () => await getUrl(),

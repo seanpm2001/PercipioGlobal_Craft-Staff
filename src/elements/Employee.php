@@ -225,9 +225,9 @@ class Employee extends Element
 
             // user creation
             if($personalDetails) {
-                $user = User::findOne(['email' => $personalDetails['email']]);
 
                 $email = SecurityHelper::decrypt($personalDetails['email']) ?? '';
+                $user = User::findOne(['email' => $email]);
 
                 // check if user exists, if so, skip this step
                 if(!$user && $email) {

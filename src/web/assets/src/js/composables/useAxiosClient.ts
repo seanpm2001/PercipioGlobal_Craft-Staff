@@ -4,14 +4,16 @@ import { usePayRunStore } from '~/stores/payrun'
 const ENDPOINT = window.api.cpUrl ?? 'https://localhost:3600'
 
 
-export const fetchPayRuns = (employerId: string) => {
+export const fetchPayRuns = (employerId: string, taxYear: string) => {
 
     const store = usePayRunStore()
     store.loadingFetched = true
 
+    const url = taxYear ? `${ENDPOINT}/staff-management/pay-runs/fetch-pay-runs/${employerId}/${taxYear}` : `${ENDPOINT}/staff-management/pay-runs/fetch-pay-runs/${employerId}`
+
     axios({
         method: 'get',
-        url: `${ENDPOINT}/staff-management/pay-runs/fetch-pay-runs/${employerId}`,
+        url: url,
     })
     .then(() => {
         store.loadingFetched = false

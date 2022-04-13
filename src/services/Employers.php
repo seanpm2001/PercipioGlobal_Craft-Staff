@@ -142,7 +142,7 @@ class Employers extends Component
 
                 //TESTING PURPOSE
                 if(App::parseEnv('$HUB_DEV_MODE') && App::parseEnv('$HUB_DEV_MODE') == 1){
-                    $employers = array_filter($employers, function($emp){ return $emp['name'] == 'Acme Limited (Demo)';});
+                    $employers = array_filter($employers, function($emp){ return $emp['name'] == 'Acme Limited (Demo)' || $emp['name'] == 'Harding Financial Ltd' ;});
                 }
 
                 if(count($employers) > 0){

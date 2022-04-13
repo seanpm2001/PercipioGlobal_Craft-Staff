@@ -152,12 +152,12 @@ class PayRunController extends Controller
         Staff::$plugin->payRuns->getCsvTemplate($payRunId);
     }
 
-    public function actionFetchPayRuns(int $employerId): Response
+    public function actionFetchPayRuns(int $employerId, string $taxYear = ''): Response
     {
         $this->requireLogin();
         $this->requireAcceptsJson();
 
-        Staff::$plugin->payRuns->fetchPayRunByEmployer($employerId);
+        Staff::$plugin->payRuns->fetchPayRunByEmployer($employerId, $taxYear);
 
         return $this->asJson([
             'success' => true
@@ -198,6 +198,7 @@ class PayRunController extends Controller
         $query->from(['log' => Table::PAYRUN_IMPORTS])
             ->select(['filename', 'rowCount', 'uploadedBy', 'payRunId', 'status', 'log.dateCreated', 'user.username', 'user.firstName', 'user.lastName'])
             ->innerJoin(['user' => \craft\db\Table::USERS],'`user`.`id` = `uploadedBy`')
+            ->where(['payRunId' => $payRunId])
             ->orderBy(['dateCreated' => SORT_DESC]);
 
         return $this->asJson([
@@ -458,6 +459,7 @@ class PayRunController extends Controller
                     } else {
                         $errors = true;
                     }
+
                     $index++;
                 }
 
@@ -465,6 +467,7 @@ class PayRunController extends Controller
                     $entries[] = $entry;
                 }
             }
+
 
             return $entries;
 

@@ -2,7 +2,7 @@ import { gql } from 'graphql-tag'
 
 export const EMPLOYERS = gql`
     query Employers {
-        employers {
+        employers(orderBy: "name desc") {
             id
             crn
             name

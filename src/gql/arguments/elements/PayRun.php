@@ -22,17 +22,22 @@ class PayRun extends HardingArguments
             'staffologyId' => [
                 'name' => 'staffologyId',
                 'type' => Type::listOf(Type::id()),
-                'description' => 'Narrows the query results based on the payrun’ staffology ID.',
+                'description' => 'Narrows the query results based on the pay run’ staffology ID.',
             ],
             'isClosed' => [
                 'name' => 'isClosed',
                 'type' => Type::boolean(),
-                'description' => 'Narrows the query results based if the payrun is closed.',
+                'description' => 'Narrows the query results based if the pay run is closed.',
             ],
             'state' => [
                 'name' => 'state',
                 'type' => Type::listOf(Type::string()),
-                'description' => 'Narrows the query results based on the payrun state.',
+                'description' => 'Narrows the query results based on the pay run state.',
+            ],
+            'taxYear' => [
+                'name' => 'taxYear',
+                'type' => Type::listOf(Type::string()),
+                'description' => 'Narrows the query results based on the pay run tax year.',
             ],
         ]);
     }

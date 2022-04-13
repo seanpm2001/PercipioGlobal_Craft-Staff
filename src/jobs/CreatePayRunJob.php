@@ -39,11 +39,11 @@ class CreatePayRunJob extends BaseJob
             $total = count($this->criteria['payRuns']);
 
             foreach($this->criteria['payRuns'] as $payRun) {
-
                 $current++;
                 $progress = "[".$current."/".$total."] ";
 
                 $employer = is_int($this->criteria['employer']['id'] ?? null) ? EmployerRecord::findOne($this->criteria['employer']['id'])->toArray() : $this->criteria['employer'];
+
 
                 $url = strpos($payRun['url'], 'api.staffology') > 0 ? str_replace("https://api.staffology.co.uk", "", $payRun['url']) : $payRun['url'];
 //
@@ -69,7 +69,7 @@ class CreatePayRunJob extends BaseJob
         } catch (\Exception $e) {
 
             $logger->stdout(PHP_EOL, $logger::RESET);
-            $logger->stdout($e->getMessage() . PHP_EOL, $logger::FG_RED);
+            $logger->stdout($e->getMessage() . ' - ' . __METHOD__ . PHP_EOL, $logger::FG_RED);
             Craft::error($e->getMessage(), __METHOD__);
 
         }
