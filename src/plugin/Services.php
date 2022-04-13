@@ -5,6 +5,7 @@ namespace percipiolondon\staff\plugin;
 use percipiolondon\staff\services\Addresses;
 use percipiolondon\staff\services\Employees;
 use percipiolondon\staff\services\Employers;
+use percipiolondon\staff\services\PayOptions;
 use percipiolondon\staff\services\PayRunEntries;
 use percipiolondon\staff\services\PayRuns;
 use percipiolondon\staff\services\Pensions;
@@ -29,7 +30,7 @@ trait Services
                 'class' => UserPermissions::class,
             ],
             'payOptions' => [
-                'class' => PayRuns::class,
+                'class' => PayOptions::class,
             ],
             'payRuns' => [
                 'class' => PayRuns::class,

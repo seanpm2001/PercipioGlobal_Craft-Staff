@@ -1516,6 +1516,7 @@ class Install extends Migration
         $this->createIndex(null, Table::RTI_AGENT, 'rtiSubmissionSettingsId', false);
         $this->createIndex(null, Table::RTI_CONTACT, 'rtiSubmissionSettingsId', false);
 
+
         //Starter Details [id]
         $this->createIndex(null, Table::OVERSEAS_EMPLOYER_DETAILS, 'starterDetailsId', false);
         $this->createIndex(null, Table::PENSIONER_PAYROLL, 'starterDetailsId', false);
@@ -1523,7 +1524,7 @@ class Install extends Migration
         //Worker Group [id]
         $this->createIndex(null, Table::PENSION_SUMMARY, 'workerGroupId', false);
 
-        // CRAFT
+        /** CRAFT **/
         // User [id]
         $this->createIndex(null, Table::EMPLOYEES, 'userId', false);
         $this->createIndex(null, Table::HISTORY, 'administerId', false);
@@ -1531,6 +1532,18 @@ class Install extends Migration
         $this->createIndex(null, Table::PAY_RUN_IMPORTS, 'uploadedBy', false);
         $this->createIndex(null, Table::PERMISSIONS_USERS, 'userId', false);
         $this->createIndex(null, Table::REQUESTS, 'administerId', false);
+
+        /** STAFFOLOGY **/
+        $this->createIndex(null, Table::EMPLOYEES, 'staffologyId', true);
+        $this->createIndex(null, Table::EMPLOYEES, 'staffologyId', true);
+//        $this->createIndex(null, Table::PENSIONS, 'staffologyId', true);
+        $this->createIndex(null, Table::PAY_RUN_ENTRIES, 'staffologyId', true);
+        $this->createIndex(null, Table::ITEMS, 'staffologyId', true);
+//        $this->createIndex(null, Table::PENSION_ADMINISTRATOR, 'staffologyId', true);
+//        $this->createIndex(null, Table::PENSION_PROVIDER, 'staffologyId', true);
+//        $this->createIndex(null, Table::PENSION_SCHEME, 'staffologyId', true);
+//        $this->createIndex(null, Table::PENSION_SELECTION, 'staffologyId', true);
+        $this->createIndex(null, Table::WORKER_GROUP, 'staffologyId', true);
     }
 
     /**
@@ -1685,7 +1698,7 @@ class Install extends Migration
         //Worker Group [id]
         $this->addForeignKey(null, Table::PENSION_SUMMARY, ['workerGroupId'], Table::WORKER_GROUP, ['id']);
 
-        // CRAFT
+        /** CRAFT **/
         // Elements [id]
         $this->addForeignKey(null, Table::EMPLOYEES, ['id'], CraftTable::ELEMENTS, ['id'], 'CASCADE', 'CASCADE' );
         $this->addForeignKey(null, Table::EMPLOYERS, ['id'], CraftTable::ELEMENTS, ['id'], 'CASCADE', 'CASCADE' );

@@ -38,7 +38,6 @@ class Employer extends Element
     public ?string $name;
     public ?string $logoUrl;
     public ?string $crn;
-    public ?string $address;
     public ?string $startYear;
     public ?string $currentYear;
     public int $employeeCount;
@@ -228,11 +227,9 @@ class Employer extends Element
             $record->name = SecurityHelper::encrypt($this->name ?? '');
             $record->crn = SecurityHelper::encrypt($this->crn ?? '');
             $record->logoUrl = SecurityHelper::encrypt($this->logoUrl ?? '');
-            $record->addressId = $this->addressId ?? null;
             $record->startYear = $this->startYear ?? null;
             $record->currentYear = $this->currentYear ?? null;
             $record->employeeCount = $this->employeeCount ?? null;
-            $record->defaultPayOptionsId = $this->defaultPayOptionsId ?? null;
 
             $success = $record->save(false);
 

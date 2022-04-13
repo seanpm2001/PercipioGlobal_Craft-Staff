@@ -185,21 +185,7 @@ class Employers extends Component
 
         if (!$emp) {
             $emp = new Employer();
-
-            $addressId = null;
-            $defaultPayOptionsId = null;
-        } else {
-            $addressId = $emp['addressId'];
-            $defaultPayOptionsId = $emp['defaultPayOptionsId'];
         }
-
-        // Attach the foreign keys
-        $address = $employer['address'] ? Staff::$plugin->addresses->saveAddress($employer['address'], $addressId) : null;
-        $payOptions = $employer['defaultPayOptions'] ? Staff::$plugin->payOptions->savePayOptions($employer['defaultPayOptions'], $defaultPayOptionsId) : null;
-        $hmrcDetails = $employer['hmrcDetails'] ? $this->saveHmrcDetails($employer['hmrcDetails'], $hmrcDetailsId) : null;
-
-        $emp->addressId = $address->id ?? null;
-        $emp->defaultPayOptionsId = $payOptions->id ?? null;
 
         $emp->siteId = Craft::$app->getSites()->currentSite->id;
         $emp->staffologyId = $employer['id'];
@@ -216,6 +202,12 @@ class Employers extends Component
 
         if ($success) {
             $logger->stdout(" done" . PHP_EOL, $logger::FG_GREEN);
+
+            // Save FKs
+            Staff::$plugin->addresses->saveAddressByEmployer($employer['address'], $emp->id);
+            Staff::$plugin->payOptions->savePayOptionsByEmployer($employer['defaultPayOptions'], $emp->id);
+//            $this->saveHmrcDetails($employer['hmrcDetails'], $emp->id);
+
         } else {
             $logger->stdout(" failed" . PHP_EOL, $logger::FG_RED);
 

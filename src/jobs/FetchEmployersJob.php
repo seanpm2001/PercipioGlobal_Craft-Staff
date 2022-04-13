@@ -44,8 +44,8 @@ class FetchEmployersJob extends BaseJob
                 $logger->stdout(" done" . PHP_EOL, $logger::FG_GREEN);
 
                 Staff::$plugin->employers->saveEmployer($result);
-                Staff::$plugin->payRuns->fetchPayCodesList($employer);
-                Staff::$plugin->employees->fetchEmployeesByEmployer($employer);
+//                Staff::$plugin->payRuns->fetchPayCodesList($employer);
+//                Staff::$plugin->employees->fetchEmployeesByEmployer($employer);
             } catch (\Exception $e) {
                 $logger->stdout(PHP_EOL, $logger::RESET);
                 $logger->stdout($e->getMessage() . PHP_EOL, $logger::FG_RED);
