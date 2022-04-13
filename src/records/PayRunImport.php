@@ -40,6 +40,6 @@ class PayRunImport extends ActiveRecord
      */
     public static function tableName(): string
     {
-        return Table::PAYRUN_IMPORTS;
+        return Table::PAY_RUN_IMPORTS;
     }
 }

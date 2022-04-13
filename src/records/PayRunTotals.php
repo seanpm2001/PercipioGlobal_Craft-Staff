@@ -82,6 +82,6 @@ class PayRunTotals extends ActiveRecord
      */
     public static function tableName(): string
     {
-        return Table::PAYRUN_TOTALS;
+        return Table::PAY_RUN_TOTALS;
     }
 }

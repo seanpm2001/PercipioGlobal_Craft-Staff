@@ -42,6 +42,6 @@ class PayRunLog extends ActiveRecord
      */
     public static function tableName(): string
     {
-        return Table::PAYRUN_LOG;
+        return Table::PAY_RUN_LOG;
     }
 }
