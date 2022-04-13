@@ -6,13 +6,17 @@ use craft\db\ActiveRecord;
 use percipiolondon\staff\db\Table;
 
 /**
- * @property string $bankName;
- * @property string $bankBranch;
- * @property string $bankReference;
- * @property string $accountName;
- * @property string $accountNumber;
- * @property string $sortCode;
- * @property string $note;
+ * @property string employerId;
+ * @property string employeeId;
+ * @property string pensionSchemeId;
+ *
+ * @property string bankName;
+ * @property string bankBranch;
+ * @property string bankReference;
+ * @property string accountName;
+ * @property string accountNumber;
+ * @property string sortCode;
+ * @property string note;
  */
 
 class BankDetails extends ActiveRecord

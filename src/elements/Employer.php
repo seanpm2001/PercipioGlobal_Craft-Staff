@@ -34,8 +34,6 @@ class Employer extends Element
     // Public Properties
     // =========================================================================
 
-    public string $slug;
-    public int $siteId;
     public string $staffologyId;
     public ?string $name;
     public ?string $logoUrl;

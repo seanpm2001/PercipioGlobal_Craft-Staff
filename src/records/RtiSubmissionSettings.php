@@ -6,18 +6,17 @@ use craft\db\ActiveRecord;
 use percipiolondon\staff\db\Table;
 
 /**
- * @property string $contact;
- * @property string $agent;
+ * @property int employerId;
  *
- * @property string $senderType;
- * @property string $senderId;
- * @property string $password;
- * @property boolean $excludeNilPaid;
- * @property boolean $includeHashCrossRef;
- * @property boolean $autoSubmitFps;
- * @property boolean $testInLive;
- * @property boolean $useTestGateway;
- * @property string $overrideTimestampValue;
+ * @property string senderType;
+ * @property string senderId;
+ * @property string password;
+ * @property boolean excludeNilPaid;
+ * @property boolean includeHashCrossRef;
+ * @property boolean autoSubmitFps;
+ * @property boolean testInLive;
+ * @property boolean useTestGateway;
+ * @property string overrideTimestampValue;
  */
 
 class RtiSubmissionSettings extends ActiveRecord

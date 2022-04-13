@@ -6,10 +6,12 @@ use craft\db\ActiveRecord;
 use percipiolondon\staff\db\Table;
 
 /**
- * @property string $firstName;
- * @property string $lastName;
- * @property string $email;
- * @property string $telephone;
+ * @property int rtiSubmissionSettingsId;
+ *
+ * @property string firstName;
+ * @property string lastName;
+ * @property string email;
+ * @property string telephone;
  */
 
 class RtiContact extends ActiveRecord

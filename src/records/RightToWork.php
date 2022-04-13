@@ -14,11 +14,13 @@ use craft\db\ActiveRecord;
 use percipiolondon\staff\db\Table;
 
 /**
- * @property boolean $checked;
- * @property string $documentType;
- * @property string $documentRef;
- * @property \DateTime $documentExpiry;
- * @property string $note;
+ * @property int employeeId;
+ *
+ * @property boolean checked;
+ * @property string documentType;
+ * @property string documentRef;
+ * @property \DateTime documentExpiry;
+ * @property string note;
  */
 
 class RightToWork extends ActiveRecord

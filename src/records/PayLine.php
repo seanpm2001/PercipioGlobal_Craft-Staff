@@ -14,15 +14,15 @@ use craft\db\ActiveRecord;
 use percipiolondon\staff\db\Table;
 
 /**
- * @property int $payOptionsId;
+ * @property int payOptionsId;
  *
- * @property string $value;
- * @property double $rate;
- * @property double $multiplier;
- * @property string $description;
- * @property string $attachmentOrderId;
- * @property string $pensionId;
- * @property string $code;
+ * @property string value;
+ * @property double rate;
+ * @property double multiplier;
+ * @property string description;
+ * @property string attachmentOrderId;
+ * @property string pensionId;
+ * @property string code;
  */
 
 class PayLine extends ActiveRecord

@@ -14,10 +14,14 @@ use craft\db\ActiveRecord;
 use percipiolondon\staff\db\Table;
 
 /**
- * @property string $itemId;
- * @property string $name;
- * @property string $metadata;
- * @property string $url;
+ * @property int autoEnrolmentAssessmentId;
+ * @property int noteId;
+ * @property int cisSubcontractorId;
+ *
+ * @property string itemId;
+ * @property string name;
+ * @property string metadata;
+ * @property string url;
  */
 
 class Item extends ActiveRecord

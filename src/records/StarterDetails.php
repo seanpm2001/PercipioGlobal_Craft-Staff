@@ -14,10 +14,12 @@ use craft\db\ActiveRecord;
 use percipiolondon\staff\db\Table;
 
 /**
- * @property \DateTime $startDate;
- * @property string $starterDeclaration;
- * @property int $overseasEmployerDetails;
- * @property int $pensionerPayroll;
+ * @property int employmentDetailsId;
+ *
+ * @property \DateTime startDate;
+ * @property string starterDeclaration;
+ * @property int overseasEmployerDetails;
+ * @property int pensionerPayroll;
  */
 
 class StarterDetails extends ActiveRecord

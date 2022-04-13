@@ -6,13 +6,15 @@ use craft\db\ActiveRecord;
 use percipiolondon\staff\db\Table;
 
 /**
- * @property string $action;
- * @property string $employeeState;
- * @property boolean $actionCompleted;
- * @property string $actionCompletedMessage;
- * @property string $requiredLetter;
- * @property string $pensionSchemeId;
- * @property string $workerGroupId;
+ * @property int autoEnrolmentAssessmentId;
+ *
+ * @property string action;
+ * @property string employeeState;
+ * @property boolean actionCompleted;
+ * @property string actionCompletedMessage;
+ * @property string requiredLetter;
+ * @property string pensionSchemeId;
+ * @property string workerGroupId;
  */
 
 class AutoEnrolmentAssesmentAction extends ActiveRecord

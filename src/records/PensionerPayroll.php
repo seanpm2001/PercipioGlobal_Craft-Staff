@@ -14,9 +14,11 @@ use craft\db\ActiveRecord;
 use percipiolondon\staff\db\Table;
 
 /**
- * @property boolean $inReceiptOfPension;
- * @property boolean $bereaved;
- * @property double $amount;
+ * @property int starterDetailsId;
+ *
+ * @property boolean inReceiptOfPension;
+ * @property boolean bereaved;
+ * @property double amount;
  */
 
 class PensionerPayroll extends ActiveRecord

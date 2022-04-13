@@ -16,13 +16,12 @@ use percipiolondon\staff\db\Table;
 
 /**
  * @property int payRunEntryId;
- * @property int pensionId;
  *
  * @property string type;
- * @property double $value;
- * @property double $originalValue;
- * @property string $note;
- * @property string $attachmentOrderId;
+ * @property double value;
+ * @property double originalValue;
+ * @property string note;
+ * @property string attachmentOrderId;
  */
 
 class ValueOverride extends ActiveRecord

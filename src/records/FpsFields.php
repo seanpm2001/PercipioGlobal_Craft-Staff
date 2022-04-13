@@ -33,10 +33,13 @@ use percipiolondon\staff\Staff;
  */
 
 /**
- * @property string $offPayrollWorker;
- * @property boolean $irregularPaymentPattern;
- * @property boolean $nonIndividual;
- * @property string $hoursNormallyWorked;
+ * @property int payRunEntryId;
+ * @property int payOptionsId;
+ *
+ * @property string offPayrollWorker;
+ * @property boolean irregularPaymentPattern;
+ * @property boolean nonIndividual;
+ * @property string hoursNormallyWorked;
  */
 
 class FpsFields extends ActiveRecord

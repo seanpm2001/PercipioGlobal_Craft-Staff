@@ -6,17 +6,17 @@ use craft\db\ActiveRecord;
 use percipiolondon\staff\db\Table;
 
 /**
- * @property int $defaultPension;
+ * @property int employerId;
  *
- * @property string $stagingDate;
- * @property string $cyclicalReenrolmentDate;
- * @property string $previousCyclicalReenrolmentDate;
- * @property boolean $pensionSameAsDefault;
- * @property int $daysToDeferAssessment;
- * @property boolean $deferByMonthsNotDays;
- * @property int $deferEnrolmentBy;
- * @property string $deferEnrolmentByPeriodType;
- * @property boolean $includeNonPensionedEmployeesInSubmission;
+ * @property string stagingDate;
+ * @property string cyclicalReenrolmentDate;
+ * @property string previousCyclicalReenrolmentDate;
+ * @property boolean pensionSameAsDefault;
+ * @property int daysToDeferAssessment;
+ * @property boolean deferByMonthsNotDays;
+ * @property int deferEnrolmentBy;
+ * @property string deferEnrolmentByPeriodType;
+ * @property boolean includeNonPensionedEmployeesInSubmission;
  */
 
 class AutoEnrolmentSettings extends ActiveRecord

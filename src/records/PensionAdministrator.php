@@ -14,11 +14,11 @@ use craft\db\ActiveRecord;
 use percipiolondon\staff\db\Table;
 
 /**
- * @property int $address;
+ * @property int pensionSchemeId;
  *
- * @property string $name;
- * @property string $email;
- * @property string $telephone;
+ * @property string name;
+ * @property string email;
+ * @property string telephone;
  */
 
 class PensionAdministrator extends ActiveRecord

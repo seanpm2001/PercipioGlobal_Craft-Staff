@@ -6,10 +6,12 @@ use craft\db\ActiveRecord;
 use percipiolondon\staff\db\Table;
 
 /**
- * @property boolean $isDirector;
- * @property \DateTime $startDate;
- * @property \DateTime $leaveDate;
- * @property boolean $niAlternativeMethod;
+ * @property int employmentDetailsId;
+ *
+ * @property boolean isDirector;
+ * @property \DateTime startDate;
+ * @property \DateTime leaveDate;
+ * @property boolean niAlternativeMethod;
  */
 
 class DirectorshipDetails extends ActiveRecord

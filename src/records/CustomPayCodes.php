@@ -14,8 +14,12 @@ use craft\db\ActiveRecord;
 use percipiolondon\staff\db\Table;
 
 /**
- * @property string $payCodeCode;
- * @property int $pensionId;
+ * @property int employerId;
+ * @property int payRunEntryId;
+ * @property int pensionSchemeId;
+ *
+ * @property string payCodeCode;
+ * @property int pensionId;
  */
 
 class CustomPayCodes extends ActiveRecord

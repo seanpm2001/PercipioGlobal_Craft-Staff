@@ -14,11 +14,13 @@ use craft\db\ActiveRecord;
 use percipiolondon\staff\db\Table;
 
 /**
- * @property boolean $hasLeft;
- * @property \DateTime $leaveDate;
- * @property boolean $isDeceased;
- * @property boolean $paymentAfterLeaving;
- * @property boolean $p45Sent;
+ * @property int employmentDetailsId;
+ *
+ * @property boolean hasLeft;
+ * @property \DateTime leaveDate;
+ * @property boolean isDeceased;
+ * @property boolean paymentAfterLeaving;
+ * @property boolean p45Sent;
  */
 
 class LeaverDetails extends ActiveRecord

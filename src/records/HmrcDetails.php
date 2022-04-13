@@ -15,6 +15,8 @@ use craft\db\ActiveRecord;
 use percipiolondon\staff\db\Table;
 
 /**
+ * @property int employerId;
+ *
  * @property string officeNumber;
  * @property string payeReference;
  * @property string accountsOfficeReference;

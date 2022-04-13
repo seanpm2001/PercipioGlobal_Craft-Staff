@@ -14,22 +14,22 @@ use craft\db\ActiveRecord;
 use percipiolondon\staff\db\Table;
 
 /**
- * @property int $taxAndNiId;
- * @property int $fpsFieldsId;
+ * @property int employerId;
+ * @property int payRunEntryId;
  *
- * @property string $period;
- * @property int $ordinal;
- * @property double $payAmount;
- * @property string $basis;
- * @property boolean $nationalMinimumWage;
- * @property double $payAmountMultiplier;
- * @property double $baseHourlyRate;
- * @property boolean $autoAdjustForLeave;
- * @property string $method;
- * @property string $payCode;
- * @property boolean $withholdTaxRefundIfPayIsZero;
- * @property string $mileageVehicleType;
- * @property int $mapsMiles;
+ * @property string period;
+ * @property int ordinal;
+ * @property double payAmount;
+ * @property string basis;
+ * @property boolean nationalMinimumWage;
+ * @property double payAmountMultiplier;
+ * @property double baseHourlyRate;
+ * @property boolean autoAdjustForLeave;
+ * @property string method;
+ * @property string payCode;
+ * @property boolean withholdTaxRefundIfPayIsZero;
+ * @property string mileageVehicleType;
+ * @property int mapsMiles;
  */
 
 class PayOption extends ActiveRecord

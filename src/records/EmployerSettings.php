@@ -6,7 +6,9 @@ use craft\db\ActiveRecord;
 use percipiolondon\staff\db\Table;
 
 /**
- * @property string $allowNegativePay;
+ * @property int employerId;
+ *
+ * @property string allowNegativePay;
  */
 
 class EmployerSettings extends ActiveRecord

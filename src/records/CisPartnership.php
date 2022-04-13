@@ -6,8 +6,10 @@ use craft\db\ActiveRecord;
 use percipiolondon\staff\db\Table;
 
 /**
- * @property string $name;
- * @property string $utr;
+ * @property integer cisSubcontractorId;
+ *
+ * @property string name;
+ * @property string utr;
  */
 
 class CisPartnership extends ActiveRecord

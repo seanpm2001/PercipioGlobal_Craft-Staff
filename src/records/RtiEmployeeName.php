@@ -14,10 +14,12 @@ use craft\db\ActiveRecord;
 use percipiolondon\staff\db\Table;
 
 /**
- * @property string $ttl;
- * @property string $fore;
- * @property string $initials;
- * @property string $sur;
+ * @property int cisSubcontractorId;
+ *
+ * @property string ttl;
+ * @property string fore;
+ * @property string initials;
+ * @property string sur;
  */
 
 class RtiEmployeeName extends ActiveRecord

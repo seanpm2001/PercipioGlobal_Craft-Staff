@@ -14,25 +14,24 @@ use craft\db\ActiveRecord;
 use percipiolondon\staff\db\Table;
 
 /**
- * @property int $employeeId;
- * @property int $addressId;
+ * @property int employeeId;
  *
- * @property string $maritalStatus;
- * @property string $title;
- * @property string $firstName;
- * @property string $middleName;
- * @property string $lastName;
- * @property string $email;
- * @property string $emailPayslip;
- * @property boolean $passwordProtectPayslip;
- * @property string $pdfPassword;
- * @property string $telephone;
- * @property string $mobile;
+ * @property string maritalStatus;
+ * @property string title;
+ * @property string firstName;
+ * @property string middleName;
+ * @property string lastName;
+ * @property string email;
+ * @property string emailPayslip;
+ * @property boolean passwordProtectPayslip;
+ * @property string pdfPassword;
+ * @property string telephone;
+ * @property string mobile;
  * @property \DateTime dateOfBirth;
- * @property int $statePensionAge;
- * @property string $gender;
- * @property string $niNumber;
- * @property string $passportNumber;
+ * @property int statePensionAge;
+ * @property string gender;
+ * @property string niNumber;
+ * @property string passportNumber;
  */
 
 class PersonalDetails extends ActiveRecord

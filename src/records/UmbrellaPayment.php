@@ -14,15 +14,17 @@ use craft\db\ActiveRecord;
 use percipiolondon\staff\db\Table;
 
 /**
- * @property string $payrollCode;
- * @property double $chargePerTimesheet;
- * @property double $invoiceValue;
- * @property int $mapsMiles;
- * @property double $otherExpenses;
- * @property int $numberOfTimesheets;
- * @property double $hoursWorked;
- * @property double $grossDeduction;
- * @property double $grossAddition;
+ * @property int payRunEntryId;
+ *
+ * @property string payrollCode;
+ * @property double chargePerTimesheet;
+ * @property double invoiceValue;
+ * @property int mapsMiles;
+ * @property double otherExpenses;
+ * @property int numberOfTimesheets;
+ * @property double hoursWorked;
+ * @property double grossDeduction;
+ * @property double grossAddition;
 
  */
 

@@ -14,10 +14,12 @@ use craft\db\ActiveRecord;
 use percipiolondon\staff\db\Table;
 
 /**
- * @property boolean $overseasEmployer;
- * @property string $overseasSecondmentStatus;
- * @property boolean $eeaCitizen;
- * @property boolean $epm6Scheme;
+ * @property int starterDetailsId;
+ *
+ * @property boolean overseasEmployer;
+ * @property string overseasSecondmentStatus;
+ * @property boolean eeaCitizen;
+ * @property boolean epm6Scheme;
  */
 
 class OverseasEmployerDetails extends ActiveRecord

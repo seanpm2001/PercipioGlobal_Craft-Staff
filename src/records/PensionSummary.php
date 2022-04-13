@@ -14,27 +14,30 @@ use craft\db\ActiveRecord;
 use percipiolondon\staff\db\Table;
 
 /**
- * @property string $title;
- * @property int $code;
- * @property double $defaultValue;
- * @property boolean $isDeduction;
- * @property boolean $isNiable;
- * @property boolean $isTaxable;
- * @property boolean $isPensionable;
- * @property boolean $isAttachable;
- * @property boolean $isRealTimeClass1aNiable;
- * @property boolean $isNotContributingToHolidayPay;
- * @property boolean $isQualifyingEarningsForAe;
- * @property boolean $isNotTierable;
- * @property boolean $isTcp_Tcls;
- * @property boolean $isTcp_Pp;
- * @property boolean $isTcp_Op;
- * @property boolean $isFlexiDd_DeathBenefit;
- * @property boolean $isFlexiDd_Pension;
- * @property string $calculationType;
- * @property double $hourlyRateMultiplier;
- * @property boolean $isSystemCode;
- * @property boolean $isControlCode;
+ * @property int payRunEntryId;
+ * @property int workerGroupId;
+ *
+ * @property string title;
+ * @property int code;
+ * @property double defaultValue;
+ * @property boolean isDeduction;
+ * @property boolean isNiable;
+ * @property boolean isTaxable;
+ * @property boolean isPensionable;
+ * @property boolean isAttachable;
+ * @property boolean isRealTimeClass1aNiable;
+ * @property boolean isNotContributingToHolidayPay;
+ * @property boolean isQualifyingEarningsForAe;
+ * @property boolean isNotTierable;
+ * @property boolean isTcp_Tcls;
+ * @property boolean isTcp_Pp;
+ * @property boolean isTcp_Op;
+ * @property boolean isFlexiDd_DeathBenefit;
+ * @property boolean isFlexiDd_Pension;
+ * @property string calculationType;
+ * @property double hourlyRateMultiplier;
+ * @property boolean isSystemCode;
+ * @property boolean isControlCode;
  */
 
 class PensionSummary extends ActiveRecord
