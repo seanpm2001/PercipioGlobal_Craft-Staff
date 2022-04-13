@@ -106,10 +106,6 @@ class Employer extends Element
               'name' => 'address',
               'type' => Type::string(),
             ],
-            'addressId' => [
-                'name' => 'addressId',
-                'type' => Type::string(),
-            ],
             'currentYear' => [
                 'name' => 'currentYear',
                 'type' => Type::string(),

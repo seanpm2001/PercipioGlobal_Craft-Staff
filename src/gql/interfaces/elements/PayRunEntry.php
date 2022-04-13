@@ -83,7 +83,12 @@ class PayRunEntry extends Element
             'employerId' => [
                 'name' => 'employerId',
                 'type' => Type::int(),
-                'description' => 'The id of the employer this payruns is for.',
+                'description' => 'The id of the employer this pay run entry is from.',
+            ],
+            'employeeId' => [
+                'name' => 'employeeId',
+                'type' => Type::int(),
+                'description' => 'The id of the employee this pay run entry is for.',
             ],
             'taxYear' => [
                 'name' => 'taxYear',
