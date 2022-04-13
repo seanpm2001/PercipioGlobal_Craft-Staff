@@ -1,7 +1,7 @@
 import axios from 'axios'
 import { usePayRunStore } from '~/stores/payrun'
 
-const ENDPOINT = window.api.cpUrl ?? 'https://localhost:8003'
+const ENDPOINT = window.api.cpUrl ?? 'https://localhost:3600'
 
 
 export const fetchPayRuns = (employerId: string) => {
@@ -78,5 +78,23 @@ export const getToken = async (): Promise<string|null> => {
     })
 
     return token.value || null
+
+}
+
+export const getUrl = async (): Promise<string|null> => {
+
+    const url = {
+        api: null,
+    }
+
+    await axios({
+        method: 'get',
+        url: `${ENDPOINT}/staff-management/settings/get-api-url`,
+    })
+    .then( (response) => {
+        url.api = response?.data?.api ? response.data.api : null
+    })
+
+    return url.api || null
 
 }

@@ -133,7 +133,7 @@ class Staff extends Plugin
                 'assetClass' => StaffAsset::class,
                 'useDevServer' => true,
                 'devServerPublic' => 'http://localhost:3050',
-                'serverPublic' => 'http://localhost:8001',
+                'serverPublic' => 'http://localhost:3600',
                 'errorEntry' => 'src/js/payrun.ts',
                 'devServerInternal' => 'http://craft-staff-buildchain:3050',
                 'checkDevServer' => true,

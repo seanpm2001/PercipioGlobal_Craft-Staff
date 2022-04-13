@@ -118,11 +118,25 @@ class SettingsController extends Controller
         $this->requireLogin();
         $this->requireAcceptsJson();
 
-        $token = App::env('GQL_TOKEN') ?: null;
+        $token = App::env('HARDING_API') ?: null;
 
         return $this->asJson([
             'success' => true,
             'token' => $token
+        ]);
+
+    }
+
+    public function actionGetApiUrl(): Response
+    {
+        $this->requireLogin();
+        $this->requireAcceptsJson();
+
+        $apiUrl = App::env('HARDING_API_URL') ?: 'http://localhost:3600';
+
+        return $this->asJson([
+            'success' => true,
+            'api' => $apiUrl,
         ]);
 
     }
