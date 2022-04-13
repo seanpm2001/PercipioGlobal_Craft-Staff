@@ -258,7 +258,7 @@ class PayRunController extends Controller
         //PARSE CSV
         try {
             $csv = Reader::createFromPath($filePath);
-            $csv->setDelimiter(';');
+            $csv->setDelimiter(',');
             $headers = array_flip($csv->fetchOne(0));
         } catch (\Exception $e) {
             // If this throws an exception, try to read the CSV file from the data cache
@@ -268,7 +268,7 @@ class PayRunController extends Controller
             if ($cachedFile !== false) {
                 $csv = Reader::createFromString($cachedFile);
                 try {
-                    $csv->setDelimiter(';');
+                    $csv->setDelimiter(',');
                 } catch (Exception $e) {
                     Craft::error($e, __METHOD__);
                 }
