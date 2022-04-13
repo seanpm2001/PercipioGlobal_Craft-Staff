@@ -75,6 +75,6 @@ class PayRunEntry extends ActiveRecord
     */
     public static function tableName(): string
     {
-        return Table::PAYRUN_ENTRIES;
+        return Table::PAY_RUN_ENTRIES;
     }
 }

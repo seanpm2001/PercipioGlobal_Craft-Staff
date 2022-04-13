@@ -193,7 +193,7 @@ class PayRunController extends Controller
         $this->requireAcceptsJson();
 
         $query = new \yii\db\Query();
-        $query->from(['log' => Table::PAYRUN_IMPORTS])
+        $query->from(['log' => Table::PAY_RUN_IMPORTS])
             ->select(['filename', 'rowCount', 'uploadedBy', 'payRunId', 'status', 'log.dateCreated', 'user.username', 'user.firstName', 'user.lastName'])
             ->innerJoin(['user' => \craft\db\Table::USERS],'`user`.`id` = `uploadedBy`')
             ->where(['payRunId' => $payRunId])
