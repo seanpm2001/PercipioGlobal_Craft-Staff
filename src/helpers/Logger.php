@@ -133,11 +133,11 @@ class Logger
      * ANSI color is enabled only if [[color]] is set true or is not set
      * and the terminal supports ANSI color.
      *
-     * @param bool|resource $stream the stream to check.
+     * @param mixed $stream the stream to check.
      * @return bool Whether to enable ANSI style in output.
      */
-    public function isColorEnabled(bool $stream = \STDOUT): ?bool
+    public function isColorEnabled(mixed $stream = null): ?bool
     {
-        return $this->color ?? BaseConsole::streamSupportsAnsiColors($stream);
+        return $this->color ?? BaseConsole::streamSupportsAnsiColors($stream ?? \STDOUT);
     }
 }
