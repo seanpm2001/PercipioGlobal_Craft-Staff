@@ -11,6 +11,24 @@ class EmployerQuery extends ElementQuery
 {
     public $staffologyId;
     public $crn;
+    public $defaultPayOptions;
+    public $hmrcDetails;
+    public $addressId;
+    public $startYear;
+    public $currentYear;
+    public $employeeCount;
+
+    public function slug($value)
+    {
+        $this->slug = $value;
+        return $this;
+    }
+
+    public function siteId($value)
+    {
+        $this->siteId = $value;
+        return $this;
+    }
 
     public function staffologyId($value)
     {
@@ -21,6 +39,42 @@ class EmployerQuery extends ElementQuery
     public function crn($value)
     {
         $this->crn = $value;
+        return $this;
+    }
+
+    public function defaultPayOptions($value)
+    {
+        $this->defaultPayOptions = $value;
+        return $this;
+    }
+
+    public function hmrcDetails($value)
+    {
+        $this->hmrcDetails = $value;
+        return $this;
+    }
+
+    public function addressId($value)
+    {
+        $this->addressId = $value;
+        return $this;
+    }
+
+    public function startYear($value)
+    {
+        $this->startYear = $value;
+        return $this;
+    }
+
+    public function currentYear($value)
+    {
+        $this->currentYear = $value;
+        return $this;
+    }
+
+    public function employeeCount($value)
+    {
+        $this->employeeCount = $value;
         return $this;
     }
 

@@ -3,7 +3,9 @@
 namespace percipiolondon\staff\gql\types;
 
 use craft\gql\base\GqlTypeTrait;
+use GraphQL\Type\Definition\ResolveInfo;
 use GraphQL\Type\Definition\Type;
+use percipiolondon\staff\helpers\Security;
 
 /**
  * Class Address
@@ -31,30 +33,53 @@ class Address
     public static function getFieldDefinitions(): array
     {
         return [
-            'line1' => [
-                'name' => 'line1',
+            'address1' => [
+                'name' => 'address1',
                 'type' => Type::string(),
                 'description' => 'Line 1 of the address type',
+                'resolve' => function ($source, array $arguments, $context, ResolveInfo $resolveInfo) {
+                    return Security::resolve($source, $resolveInfo, 'string');
+                },
             ],
-            'line2' => [
-                'name' => 'line2',
+            'address2' => [
+                'name' => 'address2',
                 'type' => Type::string(),
                 'description' => 'Line 2 of the address type',
+                'resolve' => function ($source, array $arguments, $context, ResolveInfo $resolveInfo) {
+                    return Security::resolve($source, $resolveInfo, 'string');
+                },
             ],
-            'line3' => [
-                'name' => 'line3',
+            'address3' => [
+                'name' => 'address3',
                 'type' => Type::string(),
                 'description' => 'Line 3 of the address type',
+                'resolve' => function ($source, array $arguments, $context, ResolveInfo $resolveInfo) {
+                    return Security::resolve($source, $resolveInfo, 'string');
+                },
             ],
-            'line4' => [
-                'name' => 'line4',
+            'address4' => [
+                'name' => 'address4',
                 'type' => Type::string(),
                 'description' => 'Line 4 of the address type',
+                'resolve' => function ($source, array $arguments, $context, ResolveInfo $resolveInfo) {
+                    return Security::resolve($source, $resolveInfo, 'string');
+                },
             ],
-            'postCode' => [
-                'name' => 'postCode',
+            'address5' => [
+                'name' => 'address5',
+                'type' => Type::string(),
+                'description' => 'Line 4 of the address type',
+                'resolve' => function ($source, array $arguments, $context, ResolveInfo $resolveInfo) {
+                    return Security::resolve($source, $resolveInfo, 'string');
+                },
+            ],
+            'zipCode' => [
+                'name' => 'zipCode',
                 'type' => Type::string(),
                 'description' => 'Post code of the address type',
+                'resolve' => function ($source, array $arguments, $context, ResolveInfo $resolveInfo) {
+                    return Security::resolve($source, $resolveInfo, 'string');
+                },
             ],
             'country' => [
                 'name' => 'country',

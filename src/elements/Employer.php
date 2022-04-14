@@ -40,9 +40,13 @@ class Employer extends Element
     public ?string $crn;
     public ?string $startYear;
     public ?string $currentYear;
-    public int $employeeCount;
+    public $defaultPayOptions;
+    public ?string $employeeCount;
 
-    private ?string $_currentPayRun;
+    private $_currentPayRun;
+    private $_defaultPayOptions;
+    private $_hmrcDetails;
+    private $_address;
 
     // Static Methods
     // =========================================================================
@@ -134,11 +138,80 @@ class Employer extends Element
 
             if (($this->_currentPayRun = Staff::$plugin->payRuns->getLastPayRunByEmployer($this->id)) === null) {
                 // The author is probably soft-deleted. Just no author is set
-                $this->_currentPayRun = false;
+                $this->_currentPayRun = null;
             }
         }
 
         return $this->_currentPayRun ?: null;
+    }
+
+    /**
+     * Returns the payrun totals.
+     *
+     * @return PayRun|null
+     */
+    public function getDefaultPayOptions()
+    {
+        if ($this->_defaultPayOptions === null) {
+
+            if (($this->_defaultPayOptions = Staff::$plugin->payOptions->getPayOptionsByEmployer($this->id)) === null) {
+                // The author is probably soft-deleted. Just no author is set
+                $this->_defaultPayOptions = null;
+            }
+        }
+
+        return $this->_defaultPayOptions ?: null;
+    }
+
+    /**
+     * Returns the payrun totals.
+     *
+     * @return PayRun|null
+     */
+    public function getHmrcDetails()
+    {
+        if ($this->_hmrcDetails === null) {
+
+            if (($this->_hmrcDetails = Staff::$plugin->employers->getHmrcDetailsByEmployer($this->id)) === null) {
+                // The author is probably soft-deleted. Just no author is set
+                $this->_hmrcDetails = null;
+            }
+        }
+
+        return $this->_hmrcDetails ?: null;
+    }
+
+    /**
+     * Returns the payrun totals.
+     *
+     * @return PayRun|null
+     */
+    public function getAddress()
+    {
+        if ($this->_address === null) {
+
+            if (($this->_address = Staff::$plugin->employers->getAddressByEmployer($this->id)) === null) {
+                // The author is probably soft-deleted. Just no author is set
+                $this->_address = false;
+            }
+        }
+
+        return $this->_address ?: null;
+    }
+
+    /**
+     * Returns the validation rules for attributes.
+     *
+     * Validation rules are used by [[validate()]] to check if attribute values are valid.
+     * Child classes may override this method to declare different validation rules.
+     *
+     * More info: http://www.yiiframework.com/doc-2.0/guide-input-validation.html
+     *
+     * @return array
+     */
+    public function rules()
+    {
+        return parent::rules();
     }
 
     /**

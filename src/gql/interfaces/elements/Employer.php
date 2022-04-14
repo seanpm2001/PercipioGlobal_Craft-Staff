@@ -16,8 +16,11 @@ use GraphQL\Type\Definition\ResolveInfo;
 use GraphQL\Type\Definition\Type;
 
 use percipiolondon\staff\elements\Employer as EmployerElement;
+use percipiolondon\staff\gql\types\Address;
 use percipiolondon\staff\gql\types\generators\EmployerGenerator;
+use percipiolondon\staff\gql\types\PayOptions;
 use percipiolondon\staff\helpers\Security as SecurityHelper;
+use percipiolondon\staff\gql\types\HmrcDetails;
 
 /**
  * Class Employer
@@ -102,10 +105,6 @@ class Employer extends Element
         ];
 
         $fields = [
-            'address' => [
-              'name' => 'address',
-              'type' => Type::string(),
-            ],
             'currentYear' => [
                 'name' => 'currentYear',
                 'type' => Type::string(),
@@ -133,8 +132,23 @@ class Employer extends Element
             'currentPayRun' => [
                 'name' => 'currentPayRun',
                 'type' => PayRun::getType(),
-                'description' => 'Current open pay run',
+                'description' => 'Current open pay run'
             ],
+            'address' => [
+                'name' => 'address',
+                'type' => Address::getType(),
+                'description' => 'The address.',
+            ],
+            'defaultPayOptions' => [
+                'name' => 'defaultPayOptions',
+                'type' => PayOptions::getType(),
+                'description' => 'The companies default pay options'
+            ],
+            'hmrcDetails' => [
+                'name' => 'hmrcDetails',
+                'type' => HmrcDetails::getType(),
+                'description' => 'The companies hmrc details'
+            ]
         ];
 
         return TypeManager::prepareFieldDefinitions(array_merge($parentFields, $securedFields, $fields), self::getName());

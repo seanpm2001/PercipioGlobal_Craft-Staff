@@ -103,4 +103,16 @@ class Addresses extends Component
 
         return $record;
     }
+
+    public function parseAddress(array $address): array
+    {
+        $address['address1'] = SecurityHelper::decrypt($address['address1']);
+        $address['address2'] = SecurityHelper::decrypt($address['address2']);
+        $address['address3'] = SecurityHelper::decrypt($address['address3']);
+        $address['address4'] = SecurityHelper::decrypt($address['address4']);
+        $address['address5'] = SecurityHelper::decrypt($address['address5']);
+        $address['zipCode'] = SecurityHelper::decrypt($address['zipCode']);
+
+        return $address;
+    }
 }

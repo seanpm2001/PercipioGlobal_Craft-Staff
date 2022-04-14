@@ -11,6 +11,18 @@ use yii\db\Exception;
 
 class Totals extends Component
 {
+    public function getTotalsByPayRun(int $payRunId) : array
+    {
+        $payRunTotals = PayRunTotals::findOne(['payRunId' => $payRunId]);
+        return $payRunTotals ? $payRunTotals->toArray() : [];
+    }
+
+    public function getTotalsByPayRunEntry(int $payRunEntryId) : array
+    {
+        $payRunTotals = PayRunTotals::findOne(['payRunEntryId' => $payRunEntryId]);
+        return $payRunTotals ? $payRunTotals->toArray() : [];
+    }
+
     public function savePayRunTotals(array $totals, int $payRunId = null, bool $isYtd = false): PayRunTotals
     {
         $record = PayRunTotals::findOne(['payRunId' => $payRunId]);

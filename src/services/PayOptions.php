@@ -18,6 +18,11 @@ use yii\db\Exception;
  */
 class PayOptions extends Component
 {
+    public function getPayOptionsByEmployer(int $employerId): PayOptionRecord
+    {
+        return PayOptionRecord::findOne(['employerId' => $employerId]);
+    }
+
     /**
      * @param array $payOptions
      * @param int|null $employerId

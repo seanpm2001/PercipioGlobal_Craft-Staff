@@ -40,8 +40,12 @@ class Employee extends Element
     public ?int $userId;
     public ?string $status;
     public ?string $niNumber;
-    public ?array $personalDetails;
+    public $personalDetails;
     public ?bool $isDirector;
+
+    private $_employmentDetails;
+    private $_leaveSettings;
+    private $_personalDetails;
 
     // Static Methods
     // =========================================================================
@@ -118,6 +122,62 @@ class Employee extends Element
 
     // Public Methods
     // =========================================================================
+    /**
+     * Returns the employment details
+     *
+     * @return array|null
+     * @throws InvalidConfigException if [[employerId]] is set but invalid
+     */
+    public function getEmploymentDetails()
+    {
+        if ($this->_employmentDetails === null) {
+
+            if (($this->_employmentDetails = Staff::$plugin->employees->getEmploymentDetailsByEmployee($this->id)) === null) {
+                // The author is probably soft-deleted. Just no author is set
+                $this->_employmentDetails = false;
+            }
+        }
+
+        return $this->_employmentDetails ?: null;
+    }
+
+    /**
+     * Returns the leave settings
+     *
+     * @return array|null
+     * @throws InvalidConfigException if [[employerId]] is set but invalid
+     */
+    public function getLeaveSettings()
+    {
+        if ($this->_leaveSettings === null) {
+
+            if (($this->_leaveSettings = Staff::$plugin->employees->getLeaveSettingsByEmployee($this->id)) === null) {
+                // The author is probably soft-deleted. Just no author is set
+                $this->_leaveSettings = false;
+            }
+        }
+
+        return $this->_leaveSettings ?: null;
+    }
+
+    /**
+     * Returns the personal details
+     *
+     * @return array|null
+     * @throws InvalidConfigException if [[employerId]] is set but invalid
+     */
+    public function getPersonalDetails()
+    {
+        if ($this->_personalDetails === null) {
+
+            if (($this->_personalDetails = Staff::$plugin->employees->getPersonalDetailsByEmployee($this->id)) === null) {
+                // The author is probably soft-deleted. Just no author is set
+                $this->_personalDetails = false;
+            }
+        }
+
+        return $this->_personalDetails ?: null;
+    }
 
     /**
      * Returns the field layout used by this element.
@@ -194,7 +254,7 @@ class Employee extends Element
 
             // user creation
             if ($this->personalDetails) {
-                $email = SecurityHelper::decrypt($this->personalDetails['email'] ?? '');
+                $email = $this->personalDetails['email'] ?? '';
                 $user = User::findOne(['email' => $email]);
 
                 // check if user exists, if so, skip this step

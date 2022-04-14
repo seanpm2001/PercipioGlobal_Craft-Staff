@@ -135,19 +135,16 @@ class PayRun extends Element
     /**
      * Returns the payrun totals.
      *
-     * @return PayRunTotals|null
+     * @return array|null
      * @throws InvalidConfigException if [[totalId]] is set but invalid
      */
     public function getTotals()
     {
         if ($this->_totals === null) {
-            if ($this->totalsId === null) {
-                return null;
-            }
 
-            if (($this->_totals = Staff::$plugin->payRuns->getTotalsById($this->totalsId)) === null) {
+            if (($this->_totals = Staff::$plugin->totals->getTotalsByPayRun($this->id)) === null) {
                 // The author is probably soft-deleted. Just no author is set
-                $this->_totals = false;
+                $this->_totals = null;
             }
         }
 
@@ -155,7 +152,7 @@ class PayRun extends Element
     }
 
     /**
-     * Returns the payrun totals.
+     * Returns the employer
      *
      * @return string|null
      * @throws InvalidConfigException if [[employerId]] is set but invalid

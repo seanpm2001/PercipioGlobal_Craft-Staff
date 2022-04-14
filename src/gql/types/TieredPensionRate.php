@@ -5,6 +5,7 @@ namespace percipiolondon\staff\gql\types;
 use craft\gql\base\GqlTypeTrait;
 use GraphQL\Type\Definition\Type;
 
+
 /**
  * Class TieredPensionRate
  *

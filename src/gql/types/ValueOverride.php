@@ -5,6 +5,9 @@ namespace percipiolondon\staff\gql\types;
 use craft\gql\base\GqlTypeTrait;
 use GraphQL\Type\Definition\Type;
 
+use craft\gql\base\GqlTypeTrait;
+
+
 /**
  * Class ValueOverride
  *

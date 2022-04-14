@@ -6,13 +6,14 @@ use craft\gql\GqlEntityRegistry;
 use craft\gql\interfaces\Element;
 use craft\gql\TypeManager;
 use craft\gql\types\DateTime;
-
 use GraphQL\Type\Definition\InterfaceType;
 use GraphQL\Type\Definition\ResolveInfo;
 use GraphQL\Type\Definition\Type;
-
 use percipiolondon\staff\elements\PayRunEntry as PayRunEntryElement;
+use percipiolondon\staff\gql\types\Employee;
 use percipiolondon\staff\gql\types\generators\PayRunEntryGenerator;
+use percipiolondon\staff\gql\types\PayRunTotals;
+use percipiolondon\staff\gql\types\PensionSummary;
 use percipiolondon\staff\helpers\Security as SecurityHelper;
 
 class PayRunEntry extends Element
@@ -192,6 +193,26 @@ class PayRunEntry extends Element
                 'name' => 'receivingOffsetPay',
                 'type' => Type::boolean(),
                 'description' => 'If the pay is being topped up due to an applied Leave having the offset value set to true then this will be set to true.',
+            ],
+            'employer' => [
+                'name' => 'employer',
+                'type' => Type::string(),
+                'description' => 'The company name of where the pay run belongs to'
+            ],
+            'employee' => [
+                'name' => 'employee',
+                'type' => Employee::getType(),
+                'description' => 'The employee of where the pay run entry belongs to'
+            ],
+            'pensionSummary' => [
+                'name' => 'pensionSummary',
+                'type' => PensionSummary::getType(),
+                'description' => 'The employee pension summary'
+            ],
+            'totals' => [
+                'name' => 'totals',
+                'type' => PayRunTotals::getType(),
+                'description' => 'Totals of the payrun.',
             ],
         ];
 

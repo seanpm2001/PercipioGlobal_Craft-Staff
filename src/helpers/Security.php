@@ -26,6 +26,7 @@ class Security
 
         return match ($type) {
             'int' => (int) $data,
+            'float' => (float) $data,
             default => (string) $data,
         };
     }
@@ -34,7 +35,7 @@ class Security
     {
         $fieldName = $resolveInfo->fieldName;
         $value = self::decrypt($source[$fieldName] ?? '', $type = 'string');
-        return empty($value) ?
+        return empty($value) && $value !== 0 ?
              null : $value;
     }
 }

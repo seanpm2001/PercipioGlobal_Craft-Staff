@@ -14,6 +14,31 @@ use yii\db\Exception;
 
 class Pensions extends Component
 {
+
+    /* GETTERS */
+
+    public function getPensionSummaryByPayRunEntryId(int $payRunEntryId): array
+    {
+        $pensionSummary = PensionSummary::findOne(['payRunEntryId' => $payRunEntryId]);
+
+        if(!$pensionSummary){
+            return [];
+        }
+
+        $pensionSummary = $pensionSummary->toArray();
+
+        // worker group
+        $workerGroup = WorkerGroup::findOne($pensionSummary['workerGroupId']);
+        if ($workerGroup) {
+            $workerGroup = $workerGroup->toArray();
+            $pensionSummary['workerGroup'] = $workerGroup;
+        }
+
+        return $pensionSummary;
+    }
+
+
+    /* FETCHES */
     public function fetchPension(array $employee, string $employer)
     {
         $queue = Craft::$app->getQueue();
@@ -24,13 +49,6 @@ class Pensions extends Component
                 'employer' => $employer,
             ],
         ]));
-    }
-
-    public function savePension(array $pension)
-    {
-        $logger = new Logger();
-        $logger->stdout("✓ Save pension ...", $logger::RESET);
-        $logger->stdout(" done" . PHP_EOL, $logger::FG_GREEN);
     }
 
     public function fetchPensionSchemes(array $employers)
@@ -44,13 +62,21 @@ class Pensions extends Component
         ]));
     }
 
+
+    /* SAVES */
+    public function savePension(array $pension)
+    {
+        $logger = new Logger();
+        $logger->stdout("✓ Save pension ...", $logger::RESET);
+        $logger->stdout(" done" . PHP_EOL, $logger::FG_GREEN);
+    }
+
     public function savePensionScheme(array $pensionScheme)
     {
         $logger = new Logger();
         $logger->stdout("✓ Save pension scheme ...", $logger::RESET);
         $logger->stdout(" done" . PHP_EOL, $logger::FG_GREEN);
     }
-
 
     /**
      * @param array $pensionSummary

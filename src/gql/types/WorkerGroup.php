@@ -3,7 +3,9 @@
 namespace percipiolondon\staff\gql\types;
 
 use craft\gql\base\GqlTypeTrait;
+use GraphQL\Type\Definition\ResolveInfo;
 use GraphQL\Type\Definition\Type;
+use percipiolondon\staff\helpers\Security;
 
 /**
  * Class WorkerGroup
@@ -43,6 +45,9 @@ class WorkerGroup
             'employeeContribution' => [
                 'name' => 'employeeContribution',
                 'type' => Type::float(),
+                'resolve' => function ($source, array $arguments, $context, ResolveInfo $resolveInfo) {
+                    return Security::resolve($source, $resolveInfo, 'string');
+                },
             ],
             'employeeContributionIsPercentage' => [
                 'name' => 'employeeContributionIsPercentage',
@@ -51,6 +56,9 @@ class WorkerGroup
             'employerContribution' => [
                 'name' => 'employerContribution',
                 'type' => Type::float(),
+                'resolve' => function ($source, array $arguments, $context, ResolveInfo $resolveInfo) {
+                    return Security::resolve($source, $resolveInfo, 'float');
+                },
             ],
             'employerContributionIsPercentage' => [
                 'name' => 'employerContributionIsPercentage',
@@ -60,6 +68,9 @@ class WorkerGroup
                 'name' => 'employerContributionTopUpPercentage',
                 'type' => Type::float(),
                 'description' => 'Increase Employer Contribution by this percentage of the Employee Contribution',
+                'resolve' => function ($source, array $arguments, $context, ResolveInfo $resolveInfo) {
+                    return Security::resolve($source, $resolveInfo, 'float');
+                },
             ],
             'customThreshold' => [
                 'name' => 'customThreshold',
@@ -68,10 +79,16 @@ class WorkerGroup
             'lowerLimit' => [
                 'name' => 'lowerLimit',
                 'type' => Type::float(),
+                'resolve' => function ($source, array $arguments, $context, ResolveInfo $resolveInfo) {
+                    return Security::resolve($source, $resolveInfo, 'float');
+                },
             ],
             'upperLimit' => [
                 'name' => 'upperLimit',
                 'type' => Type::float(),
+                'resolve' => function ($source, array $arguments, $context, ResolveInfo $resolveInfo) {
+                    return Security::resolve($source, $resolveInfo, 'float');
+                },
             ],
             'papdisGroup' => [
                 'name' => 'papdisGroup',

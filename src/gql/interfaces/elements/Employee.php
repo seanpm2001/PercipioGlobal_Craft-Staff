@@ -5,13 +5,14 @@ namespace percipiolondon\staff\gql\interfaces\elements;
 use craft\gql\GqlEntityRegistry;
 use craft\gql\interfaces\Element;
 use craft\gql\TypeManager;
-
 use GraphQL\Type\Definition\InterfaceType;
 use GraphQL\Type\Definition\ResolveInfo;
 use GraphQL\Type\Definition\Type;
-
 use percipiolondon\staff\elements\Employee as EmployeeElement;
+use percipiolondon\staff\gql\types\EmploymentDetails;
 use percipiolondon\staff\gql\types\generators\EmployeeGenerator;
+use percipiolondon\staff\gql\types\LeaveSettings;
+use percipiolondon\staff\gql\types\PersonalDetails;
 use percipiolondon\staff\helpers\Security as SecurityHelper;
 
 /**
@@ -112,8 +113,23 @@ class Employee extends Element
             'isDirector' => [
                 'name' => 'isDirector',
                 'type' => Type::boolean(),
-                'description' => 'Is this employer a employer',
+                'description' => 'Is this employer a employer'
             ],
+            'employmentDetails' => [
+                'name' => 'employmentDetails',
+                'type' => EmploymentDetails::getType(),
+                'description' => 'The employment details info of an employee'
+            ],
+            'leaveSettings' => [
+                'name' => 'leaveSettings',
+                'type' => LeaveSettings::getType(),
+                'description' => 'The leave setting details info of an employee'
+            ],
+            'personalDetails' => [
+                'name' => 'personalDetails',
+                'type' => PersonalDetails::getType(),
+                'description' => 'The personal details of an employee'
+            ]
 
         ];
 
