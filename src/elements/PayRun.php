@@ -35,24 +35,23 @@ class PayRun extends Element
     // Public Properties
     // =========================================================================
 
-    public $staffologyId;
-    public $taxYear;
-    public $taxMonth;
-    public $payPeriod;
-    public $ordinal;
-    public $period;
-    public $startDate;
-    public $endDate;
-    public $paymentDate;
-    public $employeeCount;
-    public $subContractorCount;
-    public $totalsId;
-    public $state;
-    public $isClosed;
-    public $dateClosed;
-    public $pdf;
-    public $url;
-    public $employerId;
+    public string $staffologyId;
+    public ?string $taxYear;
+    public ?string $taxMonth;
+    public ?string $payPeriod;
+    public ?string $ordinal;
+    public ?string $period;
+    public ?string $startDate;
+    public ?string $endDate;
+    public ?string $paymentDate;
+    public ?string $employeeCount;
+    public ?string $subContractorCount;
+    public ?string $state;
+    public ?\DateTime $dateClosed;
+    public ?string $pdf;
+    public ?string $url;
+    public ?bool $isClosed;
+    public ?int $employerId;
 
     private $_totals;
     private $_employer;
@@ -255,15 +254,15 @@ class PayRun extends Element
         return true;
     }
 
-    public function datetimeAttributes(): array
-    {
-        $attributes = parent::datetimeAttributes();
-        $attributes[] = 'dateClosed';
-        $attributes[] = 'paymentDate';
-        $attributes[] = 'startDate';
-        $attributes[] = 'endDate';
-        return $attributes;
-    }
+//    public function datetimeAttributes(): array
+//    {
+//        $attributes = parent::datetimeAttributes();
+//        $attributes[] = 'dateClosed';
+//        $attributes[] = 'paymentDate';
+//        $attributes[] = 'startDate';
+//        $attributes[] = 'endDate';
+//        return $attributes;
+//    }
 
     /**
      * Returns all payrun ID's
@@ -276,7 +275,7 @@ class PayRun extends Element
         $payrunIds = [];
 
         $payruns = (new Query())
-            ->from('{{%staff_payrun}}')
+            ->from('{{%staff_pay_run}}')
             ->select('id')
             ->all();
 
@@ -304,8 +303,6 @@ class PayRun extends Element
             }
 
             $record->employerId = $this->employerId ?? null;
-            $record->totalsId = $this->totalsId ?? null;
-
             $record->taxYear = $this->taxYear;
             $record->taxMonth = $this->taxMonth;
             $record->payPeriod = $this->payPeriod;

@@ -32,6 +32,23 @@ class Addresses extends Component
 
         return $this->_saveRecord($record, $address);
     }
+    /**
+     * @param array $address
+     * @param int|null $employeeId
+     * @return Address
+     */
+    public function saveAddressByEmployee(array $address, int $employeeId = null): Address
+    {
+        $record = $this->getAddressByEmployee($employeeId);
+
+        if (!$record) {
+            $record = new Address();
+        }
+
+        $record->employeeId = $employeeId;
+
+        return $this->_saveRecord($record, $address);
+    }
 
     /**
      * @param int $id
@@ -40,6 +57,15 @@ class Addresses extends Component
     public function getAddressByEmployer(int $id): ?Address
     {
         return Address::findOne(['employerId' => $id]);
+    }
+
+    /**
+     * @param int $id
+     * @return Address|null
+     */
+    public function getAddressByEmployee(int $id): ?Address
+    {
+        return Address::findOne(['employeeId' => $id]);
     }
 
     /**
@@ -65,12 +91,6 @@ class Addresses extends Component
             ->one();
 
         $record->countryId = $country->id ?? null;
-        $record->employeeId = $address->employeeId ?? null;
-        $record->cisSubcontractorId = $address->cisSubcontractorId ?? null;
-        $record->pensionAdministratorId = $address->pensionAdministratorId ?? null;
-        $record->pensionProviderId = $address->pensionProviderId ?? null;
-        $record->rtiAgentId = $address->rtiAgentId ?? null;
-        $record->rtiEmployeeAddressId = $address->employeeId ?? null;
 
         $record->address1 = SecurityHelper::encrypt($address['line1'] ?? '');
         $record->address2 = SecurityHelper::encrypt($address['line2'] ?? '');

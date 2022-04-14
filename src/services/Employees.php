@@ -12,20 +12,15 @@ namespace percipiolondon\staff\services;
 
 use Craft;
 use craft\base\Component;
-
 use percipiolondon\staff\elements\Employee;
 use percipiolondon\staff\helpers\Logger;
 use percipiolondon\staff\helpers\Security as SecurityHelper;
 use percipiolondon\staff\jobs\CreateEmployeeJob;
-
 use percipiolondon\staff\jobs\FetchEmployeesListJob;
 use percipiolondon\staff\records\Employer as EmployerRecord;
 use percipiolondon\staff\records\EmploymentDetails;
-
 use percipiolondon\staff\records\PersonalDetails;
 use percipiolondon\staff\Staff;
-
-use yii\db\Exception;
 
 /**
  * Employees Service
@@ -39,6 +34,7 @@ use yii\db\Exception;
  * @author    Percipio
  * @package   Staff
  * @since     1.0.0-alpha.1
+ * @property-read Addresses $addresses
  */
 class Employees extends Component
 {
@@ -47,7 +43,6 @@ class Employees extends Component
 
 
     /* GETTERS */
-
 
 
     /* FETCHES */
@@ -75,10 +70,6 @@ class Employees extends Component
     }
 
 
-
-
-
-
     /* SAVES */
     public function saveEmployee(array $employee, string $employeeName, array $employer)
     {
@@ -92,21 +83,13 @@ class Employees extends Component
                 $employeeRecord = new Employee();
             }
 
-            //foreign keys
-            $personalDetailsId = $employeeRecord->personalDetailsId ?? null;
-            $employmentDetailsId = $employeeRecord->employmentDetailsId ?? null;
-
-            $personalDetails = $this->savePersonalDetails($employee['personalDetails'], $personalDetailsId);
-            $employmentDetails = $this->saveEmploymentDetails($employee['employmentDetails'], $employmentDetailsId);
             $employerRecord = EmployerRecord::findOne(['staffologyId' => $employer['id']]);
 
             $employeeRecord->employerId = $employerRecord['id'] ?? null;
             $employeeRecord->staffologyId = $employee['id'];
             $employeeRecord->siteId = Craft::$app->getSites()->currentSite->id;
-            $employeeRecord->personalDetailsId = $personalDetails->id ?? null;
-            $employeeRecord->employmentDetailsId = $employmentDetails->id ?? null;
-            $employeeRecord->leaveSettingsId = $employee['leaveSettings'] ?? null;
             $employeeRecord->status = $employee['status'] ?? '';
+            $employeeRecord->personalDetails = $employee['personalDetails'] ?? null;
             $employeeRecord->niNumber = $employee['personalDetails']['niNumber'] ?? null;
             $employeeRecord->userId = null;
             $employeeRecord->isDirector = $this->isDirector ?? false;
@@ -117,6 +100,15 @@ class Employees extends Component
 
             if ($success) {
                 $logger->stdout(" done" . PHP_EOL, $logger::FG_GREEN);
+
+                //Save relations (FKs)
+                if ($employee['personalDetails'] ?? null) {
+                    $this->savePersonalDetails($employee['personalDetails'], $employeeRecord->id);
+                }
+
+                if ($employee['employmentDetails'] ?? null) {
+                    $this->saveEmploymentDetails($employee['employmentDetails'], $employeeRecord->id);
+                }
             } else {
                 $logger->stdout(" failed" . PHP_EOL, $logger::FG_RED);
 
@@ -137,18 +129,50 @@ class Employees extends Component
         }
     }
 
-    public function saveEmploymentDetails(array $employmentDetails, int $employmentDetailsId = null): EmploymentDetails
+    public function savePersonalDetails(array $personalDetails, int $employee = null): PersonalDetails
     {
-        if ($employmentDetailsId) {
-            $record = EmploymentDetails::findOne($employmentDetailsId);
+        $record = PersonalDetails::findOne(['employeeId' => $employee]);
 
-            if (!$record) {
-                throw new Exception('Invalid personal details ID: ' . $employmentDetailsId);
-            }
-        } else {
+        if (!$record) {
+            $record = new PersonalDetails();
+        }
+
+        $record->employeeId = $employee;
+        $record->maritalStatus = $personalDetails['maritalStatus'] ?? 'Unknown';
+        $record->title = SecurityHelper::encrypt($personalDetails['title'] ?? '');
+        $record->firstName = SecurityHelper::encrypt($personalDetails['firstName'] ?? '');
+        $record->middleName = SecurityHelper::encrypt($personalDetails['middleName'] ?? '');
+        $record->lastName = SecurityHelper::encrypt($personalDetails['lastName'] ?? '');
+        $record->email = SecurityHelper::encrypt($personalDetails['email'] ?? '');
+        $record->emailPayslip = $personalDetails['emailPayslip'] ?? null;
+        $record->passwordProtectPayslip = $personalDetails['passwordProtectPayslip'] ?? null;
+        $record->pdfPassword = SecurityHelper::encrypt($personalDetails['pdfPassword'] ?? '');
+        $record->telephone = SecurityHelper::encrypt($personalDetails['telephone'] ?? '');
+        $record->mobile = SecurityHelper::encrypt($personalDetails['mobile'] ?? '');
+        $record->dateOfBirth = $personalDetails['dateOfBirth'] ?? null;
+        $record->statePensionAge = $personalDetails['statePensionAge'] ?? null;
+        $record->gender = $personalDetails['gender'] ?? null;
+        $record->niNumber = SecurityHelper::encrypt($personalDetails['niNumber'] ?? '');
+        $record->passportNumber = SecurityHelper::encrypt($personalDetails['passportNumber'] ?? '');
+
+        $success = $record->save();
+
+        if ($success) {
+            Staff::$plugin->addresses->saveAddressByEmployee($personalDetails['address'] ?? [], $employee);
+        }
+
+        return $record;
+    }
+
+    public function saveEmploymentDetails(array $employmentDetails, int $employee = null): EmploymentDetails
+    {
+        $record = EmploymentDetails::findOne(['employeeId' => $employee]);
+
+        if (!$record) {
             $record = new EmploymentDetails();
         }
-        
+
+        $record->employeeId = $employee;
         $record->cisSubContractor = $employmentDetails['cisSubCopntractor'] ?? null;
         $record->payrollCode = SecurityHelper::encrypt($employmentDetails['payrollCode'] ?? '');
         $record->jobTitle = SecurityHelper::encrypt($employmentDetails['jobTitle'] ?? '');
@@ -171,56 +195,10 @@ class Employees extends Component
 
         return $record;
     }
-    
-    public function savePersonalDetails(array $personalDetails, int $personalDetailsId = null): PersonalDetails
-    {
-        if ($personalDetailsId) {
-            $record = PersonalDetails::findOne($personalDetailsId);
-
-            if (!$record) {
-                throw new Exception('Invalid personal details ID: ' . $personalDetailsId);
-            }
-
-            //foreign keys
-            $addressId = $record->addressId;
-        } else {
-            $record = new PersonalDetails();
-
-            //foreign keys
-            $addressId = null;
-        }
-
-        //foreign keys
-        $address = Staff::$plugin->addresses->saveAddress($personalDetails['address'] ?? [], $addressId);
-
-        $record->addressId = $address->id;
-
-        $record->maritalStatus = $personalDetails['maritalStatus'] ?? 'Unknown';
-        $record->title = SecurityHelper::encrypt($personalDetails['title'] ?? '');
-        $record->firstName = SecurityHelper::encrypt($personalDetails['firstName'] ?? '');
-        $record->middleName = SecurityHelper::encrypt($personalDetails['middleName'] ?? '');
-        $record->lastName = SecurityHelper::encrypt($personalDetails['lastName'] ?? '');
-        $record->email = SecurityHelper::encrypt($personalDetails['email'] ?? '');
-        $record->emailPayslip = $personalDetails['emailPayslip'] ?? null;
-        $record->passwordProtectPayslip = $personalDetails['passwordProtectPayslip'] ?? null;
-        $record->pdfPassword = SecurityHelper::encrypt($personalDetails['pdfPassword'] ?? '');
-        $record->telephone = SecurityHelper::encrypt($personalDetails['telephone'] ?? '');
-        $record->mobile = SecurityHelper::encrypt($personalDetails['mobile'] ?? '');
-        $record->dateOfBirth = $personalDetails['dateOfBirth'] ?? null;
-        $record->statePensionAge = $personalDetails['statePensionAge'] ?? null;
-        $record->gender = $personalDetails['gender'] ?? null;
-        $record->niNumber = SecurityHelper::encrypt($personalDetails['niNumber'] ?? '');
-        $record->passportNumber = SecurityHelper::encrypt($personalDetails['passportNumber'] ?? '');
-
-        $record->save();
-
-        return $record;
-    }
-
-
 
 
     /* PARSE SECURITY VALUES */
+
     public function parsePersonalDetails(array $personalDetails): array
     {
         $personalDetails['title'] = SecurityHelper::decrypt($personalDetails['title'] ?? '');

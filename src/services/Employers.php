@@ -203,10 +203,14 @@ class Employers extends Component
         if ($success) {
             $logger->stdout(" done" . PHP_EOL, $logger::FG_GREEN);
 
-            // Save FKs
-            Staff::$plugin->addresses->saveAddressByEmployer($employer['address'], $emp->id);
-            Staff::$plugin->payOptions->savePayOptionsByEmployer($employer['defaultPayOptions'], $emp->id);
-//            $this->saveHmrcDetails($employer['hmrcDetails'], $emp->id);
+            //Save relations (FKs)
+            if ($employer['address'] ?? null) {
+                Staff::$plugin->addresses->saveAddressByEmployer($employer['address'], $emp->id);
+            }
+
+            if ($employer['defaultPayOptions'] ?? null) {
+                Staff::$plugin->payOptions->savePayOptionsByEmployer($employer['defaultPayOptions'], $emp->id);
+            }
 
         } else {
             $logger->stdout(" failed" . PHP_EOL, $logger::FG_RED);

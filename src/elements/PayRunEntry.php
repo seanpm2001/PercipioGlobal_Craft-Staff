@@ -50,25 +50,16 @@ class PayRunEntry extends Element
     public $unpaidAbsence;
     public $hasAttachmentOrders;
     public $paymentDate;
-    public $priorPayrollCodeId;
-    public $payOptionsId;
-    public $pensionSummaryId;
-    public $totalsId;
     public $periodOverrides;
-    public $totalsYtdId;
-    public $totalsYtdOverrides;
     public $forcedCisVatAmount;
     public $holidayAccrued;
     public $state;
     public $isClosed;
     public $manualNi;
-    public $nationalInsuranceCalculationId;
     public $payrollCodeChanged;
     public $aeNotEnroledWarning;
-    public $fpsId;
     public $receivingOffsetPay;
     public $paymentAfterLearning;
-    public $umbrellaPaymentId;
     public $employee;
     public $pdf;
 
@@ -236,7 +227,7 @@ class PayRunEntry extends Element
         $payrunEntryIds = [];
 
         $payrunentries = (new Query())
-            ->from('{{%staff_payrun_entries}}')
+            ->from('{{%staff_pay_run_entries}}')
             ->select('id')
             ->all();
 
@@ -266,9 +257,6 @@ class PayRunEntry extends Element
             $record->employerId = $this->employerId ?? null;
             $record->employeeId = $this->employeeId ?? null;
             $record->payRunId = $this->payRunId ?? null;
-            $record->payOptionsId = $this->payOptionsId ?? null;
-            $record->totalsId = $this->totalsId ?? null;
-            $record->totalsYtdId = $this->totalsYtdId ?? null;
             $record->staffologyId = $this->staffologyId;
             $record->taxYear = $this->taxYear;
             $record->startDate = $this->startDate;

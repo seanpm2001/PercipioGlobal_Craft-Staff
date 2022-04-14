@@ -50,24 +50,13 @@ class UserPermissions extends Component
         foreach ($permissions as $permission) {
             $record = UserPermissionRecord::findOne(['permissionId' => $permission['id'], 'employeeId' => $employeeId]);
 
-            Craft::info("createPermissions: user:{$userId }, employee:{$employeeId}, {$record?->employeeId}");
-
             if (!$record) {
-                $userPermission = new UserPermissionModel();
+                $userPermission = new UserPermissionRecord();
                 $userPermission->userId = $userId;
                 $userPermission->employeeId = $employeeId;
                 $userPermission->permissionId = $permission['id'];
 
-                $userPermission->validate();
-                Craft::info("validate createPermissions: {$userPermission->validate()}");
-
-                $record = new UserPermissionRecord();
-                $record->permissionId = $userPermission->permissionId;
-                $record->userId = $userPermission->userId;
-                $record->employeeId = $userPermission->employeeId;
-                Craft::info("record createPermissions: {$record->permissionId}, {$record->userId}, {$record->employeeId} ");
-
-                Craft::info($record->save(true));
+                $userPermission->save();
             }
         }
     }
@@ -77,6 +66,7 @@ class UserPermissions extends Component
      * @param int $userId
      * @return bool
      */
+
     public function applyCanParam(string $permission, int $userId): bool
     {
         if (!$permission || $userId) {

@@ -191,78 +191,6 @@ class PayRuns extends Component
 
     /* SAVES */
 
-    /**
-     * @param array $pensionSummary
-     * @param int|null $pensionSummaryId
-     * @return PensionSummary
-     * @throws Exception
-     */
-    public function savePensionSummary(array $pensionSummary, int $pensionSummaryId = null): PensionSummary
-    {
-        if ($pensionSummaryId) {
-            $record = PensionSummary::findOne($pensionSummaryId);
-
-            if (!$record) {
-                throw new Exception('Invalid fps fields ID: ' . $pensionSummaryId);
-            }
-        } else {
-            $record = new PensionSummary();
-        }
-
-        $workerGroupId = $record['workerGroupId'] ?? null;
-
-        $workerGroup = $pensionSummary['workerGroup'] ? $this->saveWorkerGroup($pensionSummary['workerGroup'], $workerGroupId) : null;
-
-        $record->workerGroupId = $workerGroup->id ?? null;
-        $record->name = SecurityHelper::encrypt($pensionSummary['name'] ?? '');
-        $record->startDate = SecurityHelper::encrypt($pensionSummary['startDate'] ?? '');
-        $record->pensionRule = $pensionSummary['pensionRule'] ?? '';
-        $record->employeePensionContributionMultiplier = SecurityHelper::encrypt($pensionSummary['employeePensionContributionMultiplier'] ?? '');
-        $record->additionalVoluntaryContribution = SecurityHelper::encrypt($pensionSummary['additionalVoluntaryContribution'] ?? '');
-        $record->avcIsPercentage = $fpsFields['avcIsPercentage'] ?? null;
-        $record->autoEnrolled = $fpsFields['autoEnrolled'] ?? null;
-        $record->papdisPensionProviderId = $fpsFields['papdisPensionProviderId'] ?? null;
-        $record->papdisEmployerId = $fpsFields['papdisEmployerId'] ?? null;
-
-        $record->save();
-
-        return $record;
-    }
-
-    /**
-     * @param array $workerGroup
-     * @param int|null $workerGroupId
-     * @return WorkerGroup
-     * @throws Exception
-     */
-    public function saveWorkerGroup(array $workerGroup, int $workerGroupId = null): WorkerGroup
-    {
-        if ($workerGroupId) {
-            $record = WorkerGroup::findOne($workerGroupId);
-
-            if (!$record) {
-                throw new Exception('Invalid worker group ID: ' . $workerGroupId);
-            }
-        } else {
-            $record = new WorkerGroup();
-        }
-
-        $record->staffologyId = $workerGroup['workerGroupId'] ?? null;
-        $record->name = SecurityHelper::encrypt($workerGroup['name'] ?? '');
-        $record->contributionLevelType = $workerGroup['contributionLevelType'] ?? null;
-        $record->employeeContribution = SecurityHelper::encrypt($workerGroup['employeeContribution'] ?? '');
-        $record->employeeContributionIsPercentage = $workerGroup['employeeContributionIsPercentage'] ?? null;
-        $record->employerContribution = SecurityHelper::encrypt($workerGroup['employerContribution'] ?? '');
-        $record->employerContributionIsPercentage = $workerGroup['employerContributionIsPercentage'] ?? null;
-        $record->employerContributionTopUpPercentage = SecurityHelper::encrypt($workerGroup['employerContributionTopUpPercentage'] ?? '');
-        $record->customThreshold = $workerGroup['customThreshold'] ?? null;
-        $record->lowerLimit = SecurityHelper::encrypt($workerGroup['lowerLimit'] ?? '');
-        $record->upperLimit = SecurityHelper::encrypt($workerGroup['upperLimit'] ?? '');
-
-        $record->save();
-
-        return $record;
-    }
 
     /**
      * @param array $payCodes
@@ -442,6 +370,7 @@ class PayRuns extends Component
         if (!$payCodeRecord) {
             $payCodeRecord = new PayCodeRecord();
         }
+
         $payCodeRecord->title = $payCode['title'] ?? null;
         $payCodeRecord->code = $payCode['code'] ?? null;
         $payCodeRecord->employerId = $employerRecord->id ?? null;
@@ -481,19 +410,13 @@ class PayRuns extends Component
         try {
             if (!$payRunRecord) {
                 $payRunRecord = new PayRun();
-
-                //foreign keys
-                $totalsId = $payRunRecord->totalsId;
-            } else {
-                //foreign keys
-                $totalsId = null;
             }
 
             //foreign keys
-            $totals = Staff::$plugin->totals->saveTotals($payRun['totals'] ?? [], $totalsId);
+//            $totals = Staff::$plugin->totals->saveTotals($payRun['totals'] ?? [], $totalsId);
             $emp = is_int($employer['id'] ?? null) ? $employer : EmployerRecord::findOne(['staffologyId' => $employer['id'] ?? null]);
 
-            $payRunRecord->employerId = $emp['id'] ?? null;
+            $payRunRecord->employerId = $emp->id ?? null;
             $payRunRecord->taxYear = $payRun['taxYear'] ?? '';
             $payRunRecord->taxMonth = $payRun['taxMonth'] ?? null;
             $payRunRecord->payPeriod = $payRun['payPeriod'] ?? '';
@@ -504,7 +427,6 @@ class PayRuns extends Component
             $payRunRecord->paymentDate = $payRun['paymentDate'] ?? null;
             $payRunRecord->employeeCount = $payRun['employeeCount'] ?? null;
             $payRunRecord->subContractorCount = $payRun['subContractorCount'] ?? null;
-            $payRunRecord->totalsId = $totals->id ?? null;
             $payRunRecord->state = $payRun['state'] ?? '';
             $payRunRecord->isClosed = $payRun['isClosed'] ?? '';
             $payRunRecord->dateClosed = $payRun['dateClosed'] ?? null;
@@ -528,7 +450,10 @@ class PayRuns extends Component
 
                 $logger->stdout(" done" . PHP_EOL, $logger::FG_GREEN);
 
-                $this->savePayRunLog($payRun, $payRunUrl, $payRunRecord->id, $employer['id']);
+                if ($payRun['totals'] ?? null) {
+                    Staff::$plugin->totals->savePayRunTotals($payRun['totals'], $payRunRecord->id);
+                }
+//                $this->savePayRunLog($payRun, $payRunUrl, $payRunRecord->id, $employer['id']);
             } else {
                 $logger->stdout(" failed" . PHP_EOL, $logger::FG_RED);
 

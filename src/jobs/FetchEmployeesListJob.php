@@ -40,6 +40,8 @@ class FetchEmployeesListJob extends BaseJob
 
             $logger->stdout(" done" . PHP_EOL, $logger::FG_GREEN);
 
+            //@TODO: check if employees are deleted
+
             foreach ($employees as $employee) {
                 $currentEmployee++;
 

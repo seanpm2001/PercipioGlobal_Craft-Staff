@@ -6,6 +6,7 @@ use Craft;
 use craft\base\Component;
 use percipiolondon\staff\helpers\Logger;
 use percipiolondon\staff\helpers\Security as SecurityHelper;
+use percipiolondon\staff\records\FpsFields;
 use percipiolondon\staff\records\PayLine as PayLineRecord;
 use percipiolondon\staff\records\PayOption as PayOptionRecord;
 use yii\db\Exception;
@@ -36,6 +37,19 @@ class PayOptions extends Component
         return $this->_saveRecord($record, $payOptions);
     }
 
+    public function savePayOptionsByPayRunEntry(array $payOptions, int $payRunEntryId = null): PayOptionRecord
+    {
+        $record = PayOptionRecord::findOne(['payRunEntryId' => $payRunEntryId]);
+
+        if (!$record) {
+            $record = new PayOptionRecord();
+        }
+
+        $record->payRunEntryId = $payRunEntryId;
+
+        return $this->_saveRecord($record, $payOptions);
+    }
+
     /**
      * @param array $payLine
      * @param int|null $payOptionsId
@@ -53,7 +67,7 @@ class PayOptions extends Component
         $record->rate = SecurityHelper::encrypt($payLine['rate'] ?? '');
         $record->description = $payLine['description'] ?? null;
         $record->attachmentOrderId = $payLine['attachmentOrderId'] ?? null;
-        $record->pensionId = $payLine['pensionId'] ?? null;
+//        $record->pensionId = $payLine['pensionId'] ?? null;
         $record->code = $payLine['code'] ?? null;
 
         $record->save();

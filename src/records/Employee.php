@@ -16,13 +16,6 @@ use percipiolondon\staff\db\Table;
 /**
  * @property int $employerId;
  * @property int $userId;
- * @property int $personalDetailsId;
- * @property int $employmentDetailsId;
- * @property int $autoEnrolmentId;
- * @property int $leaveSettingsId;
- * @property int $rightToWorkId;
- * @property int $bankDetails;
- * @property int $payOptionsId;
  *
  * @property string $staffologyId;
  * @property boolean $isDirector

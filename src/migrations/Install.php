@@ -891,6 +891,7 @@ class Install extends Migration
                 //FK
                 //intern
                 'employerId' => $this->integer(), // create FK to Employers [id]
+                'employeeId' => $this->integer(), // create FK to Employees [id]
                 'payRunEntryId' => $this->integer(), // create FK to PayRunEntries [id]
                 //fields
                 'period' => $this->enum('period', ['Custom', 'Monthly', 'FourWeekly', 'Fortnightly', 'Weekly', 'Daily']),
@@ -1086,8 +1087,8 @@ class Install extends Migration
                 'name' => $this->string(),
                 'startDate' => $this->string(),
                 'pensionRule' => $this->enum('pensionRule', ['ReliefAtSource', 'SalarySacrifice', 'NetPayArrangement'])->notNull(),
-                'employeePensionContributionMultiplier' => $this->double(),
-                'additionalVoluntaryContribution' => $this->double(),
+                'employeePensionContributionMultiplier' => $this->string(),
+                'additionalVoluntaryContribution' => $this->string(),
                 'avcIsPercentage' => $this->boolean(),
                 'autoEnrolled' => $this->boolean(),
                 'papdisPensionProviderId' => $this->integer(),
@@ -1387,6 +1388,7 @@ class Install extends Migration
         $this->createIndex(null, Table::FAMILY_DETAILS, 'employeeId', false);
         $this->createIndex(null, Table::HISTORY, 'employeeId', false);
         $this->createIndex(null, Table::LEAVE_SETTINGS, 'employeeId', false);
+        $this->createIndex(null, Table::PAY_OPTIONS, 'employeeId', false);
         $this->createIndex(null, Table::PAY_RUN_ENTRIES, 'employeeId', false);
 //        $this->createIndex(null, Table::PENSIONS, 'employeeId', false);
         $this->createIndex(null, Table::PERMISSIONS_USERS, 'employeeId', false);
@@ -1543,7 +1545,7 @@ class Install extends Migration
 //        $this->createIndex(null, Table::PENSION_PROVIDER, 'staffologyId', true);
 //        $this->createIndex(null, Table::PENSION_SCHEME, 'staffologyId', true);
 //        $this->createIndex(null, Table::PENSION_SELECTION, 'staffologyId', true);
-        $this->createIndex(null, Table::WORKER_GROUP, 'staffologyId', true);
+        $this->createIndex(null, Table::WORKER_GROUP, 'staffologyId', false);
     }
 
     /**
@@ -1562,6 +1564,7 @@ class Install extends Migration
         $this->addForeignKey(null, Table::FAMILY_DETAILS, ['employeeId'], Table::EMPLOYEES, ['id'], 'CASCADE', 'CASCADE');
         $this->addForeignKey(null, Table::HISTORY, ['employeeId'], Table::EMPLOYEES, ['id'], 'CASCADE', 'CASCADE');
         $this->addForeignKey(null, Table::LEAVE_SETTINGS, ['employeeId'], Table::EMPLOYEES, ['id'], 'CASCADE', 'CASCADE');
+        $this->addForeignKey(null, Table::PAY_OPTIONS, ['employeeId'], Table::EMPLOYEES, ['id'], 'CASCADE', 'CASCADE');
         $this->addForeignKey(null, Table::PAY_RUN_ENTRIES, ['employeeId'], Table::EMPLOYEES, ['id'], 'CASCADE', 'CASCADE');
 //        $this->addForeignKey(null, Table::PENSIONS, ['employeeId'], Table::EMPLOYEES, ['id'], 'CASCADE', 'CASCADE');
         $this->addForeignKey(null, Table::PERMISSIONS_USERS, ['employeeId'], Table::EMPLOYEES, ['id'], 'CASCADE', 'CASCADE');

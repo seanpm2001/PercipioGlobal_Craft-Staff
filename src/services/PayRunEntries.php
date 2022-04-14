@@ -101,28 +101,13 @@ class PayRunEntries extends Component
                 $payRunEntryRecord = new PayRunEntry();
             }
 
-            //foreign keys
-            $totalsId = $payRunEntryRecord->totalsId ?? null;
-            $totalsYtdId = $payRunEntryRecord->totalsYtdId ?? null;
-            $payOptionsId = $payRunEntryRecord->payOptionsId ?? null;
-            $pensionSummaryId = $payRunEntryRecord->pensionSummaryId ?? null;
-
-            $totals = Staff::$plugin->totals->saveTotals($payRunEntryData['totals'], $totalsId);
-            $totalsYtd = Staff::$plugin->totals->saveTotals($payRunEntryData['totalsYtd'], $totalsYtdId);
-            $payOptions = Staff::$plugin->payOptions->savePayOptions($payRunEntryData['payOptions'], $payOptionsId);
-            $pensionSummary = $payRunEntryData['pensionSummary'] ?? null ? $this->savePensionSummary($payRunEntryData['pensionSummary'], $pensionSummaryId) : null;
             $employee = EmployeeRecord::findOne(['staffologyId' => $payRunEntryData['employee']['id'] ?? null]);
-
             $employerRecord = is_int($employer['id'] ?? null) ? $employer : EmployerRecord::findOne(['staffologyId' => $employer['id'] ?? null]);
 
             //save
             $payRunEntryRecord->employerId = $employerRecord['id'] ?? null;
             $payRunEntryRecord->employeeId = $employee->id ?? null;
             $payRunEntryRecord->payRunId = $payRunId ?? null;
-            $payRunEntryRecord->payOptionsId = $payOptions->id ?? null;
-            $payRunEntryRecord->totalsId = $totals->id ?? null;
-            $payRunEntryRecord->totalsYtdId = $totalsYtd->id ?? null;
-            $payRunEntryRecord->pensionSummaryId = $pensionSummary->id ?? null;
             $payRunEntryRecord->staffologyId = $payRunEntryData['id'] ?? null;
             $payRunEntryRecord->taxYear = $payRunEntryData['taxYear'] ?? null;
             $payRunEntryRecord->startDate = $payRunEntryData['startDate'] ?? null;
@@ -155,6 +140,22 @@ class PayRunEntries extends Component
 
             if ($success) {
                 $logger->stdout(" done" . PHP_EOL, $logger::FG_GREEN);
+
+                if($payRunEntryData['totals'] ?? null) {
+                    Staff::$plugin->totals->savePayRunEntryTotals($payRunEntryData['totals'], $payRunEntryRecord->id);
+                }
+
+                if($payRunEntryData['totalsYtd'] ?? null) {
+                    Staff::$plugin->totals->savePayRunEntryTotals($payRunEntryData['totalsYtd'], $payRunEntryRecord->id, true);
+                }
+
+                if($payRunEntryData['payOptions'] ?? null) {
+                    Staff::$plugin->payOptions->savePayOptionsByPayRunEntry($payRunEntryData['payOptions'], $payRunEntryRecord->id);
+                }
+
+                if($payRunEntryData['pensionSummary'] ?? null) {
+                    Staff::$plugin->pensions->savePensionSummary($payRunEntryData['pensionSummary'], $payRunEntryRecord->id);
+                }
             } else {
                 $logger->stdout(" failed" . PHP_EOL, $logger::FG_RED);
 

@@ -36,13 +36,12 @@ class Employee extends Element
     // =========================================================================
 
     public string $staffologyId;
-    public int $employerId;
-    public int $userId;
-    public $autoEnrolment;
-    public $rightToWork;
-    public $status;
-    public string|null $niNumber;
-    public $isDirector;
+    public ?int $employerId;
+    public ?int $userId;
+    public ?string $status;
+    public ?string $niNumber;
+    public ?array $personalDetails;
+    public ?bool $isDirector;
 
     // Static Methods
     // =========================================================================
@@ -188,22 +187,14 @@ class Employee extends Element
         try {
             $record = EmployeeRecord::findOne($this->id);
 
-            if ($record) {
-                $record = EmployeeRecord::findOne($this->id);
-
-                if (!$record) {
-                    throw new Exception('Invalid employee ID: ' . $this->id);
-                }
-            } else {
+            if (!$record) {
                 $record = new EmployeeRecord();
-                $record->id = (int)$this->id;
+                $record->id = $this->id;
             }
 
-            $personalDetails = PersonalDetails::findOne($this->personalDetailsId);
-
             // user creation
-            if ($personalDetails) {
-                $email = SecurityHelper::decrypt($personalDetails['email']) ?? '';
+            if ($this->personalDetails) {
+                $email = SecurityHelper::decrypt($this->personalDetails['email'] ?? '');
                 $user = User::findOne(['email' => $email]);
 
                 // check if user exists, if so, skip this step
@@ -211,8 +202,8 @@ class Employee extends Element
 
                     //create user
                     $user = new User();
-                    $user->firstName = SecurityHelper::decrypt($personalDetails['firstName']);
-                    $user->lastName = SecurityHelper::decrypt($personalDetails['lastName']);
+                    $user->firstName = SecurityHelper::decrypt($this->personalDetails['firstName']);
+                    $user->lastName = SecurityHelper::decrypt($this->personalDetails['lastName']);
                     $user->username = $email;
                     $user->email = $email;
 
@@ -235,10 +226,7 @@ class Employee extends Element
 
             $record->employerId = $this->employerId ?? null;
             $record->staffologyId = $this->staffologyId;
-            $record->personalDetailsId = $this->personalDetailsId;
-            $record->employmentDetailsId = $this->employmentDetailsId;
             $record->status = $this->status;
-            $record->sourceSystemId = $this->sourceSystemId;
             $record->niNumber = SecurityHelper::encrypt($this->niNumber ?? '');
             $record->userId = $this->userId;
             $record->isDirector = $this->isDirector;

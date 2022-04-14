@@ -11,18 +11,72 @@ use yii\db\Exception;
 
 class Totals extends Component
 {
-    public function saveTotals(array $totals, int $totalsId = null): PayRunTotals
+    public function savePayRunTotals(array $totals, int $payRunId = null, bool $isYtd = false): PayRunTotals
     {
-        if ($totalsId) {
-            $record = PayRunTotals::findOne($totalsId);
+        $record = PayRunTotals::findOne(['payRunId' => $payRunId]);
 
-            if (!$record) {
-                throw new Exception('Invalid pay run totals ID: ' . $totalsId);
-            }
-        } else {
+        if (!$record) {
             $record = new PayRunTotals();
         }
 
+        $record->payRunId = $payRunId;
+        $record->isYtd = $isYtd ?? false;
+
+        return $this->_saveRecord($record, $totals);
+    }
+
+    public function savePayRunEntryTotals(array $totals, int $payRunEntryId = null, bool $isYtd = false): PayRunTotals
+    {
+        $record = PayRunTotals::findOne(['payRunEntryId' => $payRunEntryId]);
+
+        if (!$record) {
+            $record = new PayRunTotals();
+        }
+
+        $record->payRunEntryId = $payRunEntryId;
+        $record->isYtd = $isYtd ?? false;
+
+        return $this->_saveRecord($record, $totals);
+    }
+
+    public function parseTotals(array $totals): array
+    {
+        $totals['basicPay'] = SecurityHelper::decrypt($totals['basicPay'] ?? '');
+        $totals['gross'] = SecurityHelper::decrypt($totals['gross'] ?? '');
+        $totals['grossForNi'] = SecurityHelper::decrypt($totals['grossForNi'] ?? '');
+        $totals['grossNotSubjectToEmployersNi'] = SecurityHelper::decrypt($totals['grossNotSubjectToEmployersNi'] ?? '');
+        $totals['grossForTax'] = SecurityHelper::decrypt($totals['grossForTax'] ?? '');
+        $totals['employerNi'] = SecurityHelper::decrypt($totals['employerNi'] ?? '');
+        $totals['employeeNi'] = SecurityHelper::decrypt($totals['employeeNi'] ?? '');
+        $totals['tax'] = SecurityHelper::decrypt($totals['tax'] ?? '');
+        $totals['netPay'] = SecurityHelper::decrypt($totals['netPay'] ?? '');
+        $totals['adjustments'] = SecurityHelper::decrypt($totals['adjustments'] ?? '');
+        $totals['additions'] = SecurityHelper::decrypt($totals['additions'] ?? '');
+        $totals['takeHomePay'] = SecurityHelper::decrypt($totals['takeHomePay'] ?? '');
+        $totals['nonTaxOrNICPmt'] = SecurityHelper::decrypt($totals['nonTaxOrNICPmt'] ?? '');
+        $totals['studentLoanRecovered'] = SecurityHelper::decrypt($totals['studentLoanRecovered'] ?? '');
+        $totals['postgradLoanRecovered'] = SecurityHelper::decrypt($totals['postgradLoanRecovered'] ?? '');
+        $totals['pensionableEarnings'] = SecurityHelper::decrypt($totals['pensionableEarnings'] ?? '');
+        $totals['pensionablePay'] = SecurityHelper::decrypt($totals['pensionablePay'] ?? '');
+        $totals['nonTierablePay'] = SecurityHelper::decrypt($totals['nonTierablePay'] ?? '');
+        $totals['employeePensionContribution'] = SecurityHelper::decrypt($totals['employeePensionContribution'] ?? '');
+        $totals['employeePensionContributionAvc'] = SecurityHelper::decrypt($totals['employeePensionContributionAvc'] ?? '');
+        $totals['employerPensionContribution'] = SecurityHelper::decrypt($totals['employerPensionContribution'] ?? '');
+        $totals['empeePenContribnsNotPaid'] = SecurityHelper::decrypt($totals['empeePenContribnsNotPaid'] ?? '');
+        $totals['empeePenContribnsPaid'] = SecurityHelper::decrypt($totals['empeePenContribnsPaid'] ?? '');
+        $totals['attachmentOrderDeductions'] = SecurityHelper::decrypt($totals['attachmentOrderDeductions'] ?? '');
+        $totals['cisDeduction'] = SecurityHelper::decrypt($totals['cisDeduction'] ?? '');
+        $totals['cisVat'] = SecurityHelper::decrypt($totals['cisVat'] ?? '');
+        $totals['cisUmbrellaFee'] = SecurityHelper::decrypt($totals['cisUmbrellaFee'] ?? '');
+        $totals['cisUmbrellaFeePostTax'] = SecurityHelper::decrypt($totals['cisUmbrellaFeePostTax'] ?? '');
+        $totals['umbrellaFee'] = SecurityHelper::decrypt($totals['umbrellaFee'] ?? '');
+        $totals['totalCost'] = SecurityHelper::decrypt($totals['totalCost'] ?? '');
+
+        return $totals;
+    }
+
+    private function _saveRecord(PayRunTotals $record, array $totals): ?PayRunTotals
+    {
         $record->basicPay = SecurityHelper::encrypt($totals['basicPay'] ?? '');
         $record->gross = SecurityHelper::encrypt($totals['gross'] ?? '');
         $record->grossForNi = SecurityHelper::encrypt($totals['grossForNi'] ?? '');
@@ -94,41 +148,7 @@ class Totals extends Component
         $logger = new Logger();
         $logger->stdout($errors . PHP_EOL, $logger::FG_RED);
         Craft::error($record->errors, __METHOD__);
-    }
 
-    public function parseTotals(array $totals): array
-    {
-        $totals['basicPay'] = SecurityHelper::decrypt($totals['basicPay'] ?? '');
-        $totals['gross'] = SecurityHelper::decrypt($totals['gross'] ?? '');
-        $totals['grossForNi'] = SecurityHelper::decrypt($totals['grossForNi'] ?? '');
-        $totals['grossNotSubjectToEmployersNi'] = SecurityHelper::decrypt($totals['grossNotSubjectToEmployersNi'] ?? '');
-        $totals['grossForTax'] = SecurityHelper::decrypt($totals['grossForTax'] ?? '');
-        $totals['employerNi'] = SecurityHelper::decrypt($totals['employerNi'] ?? '');
-        $totals['employeeNi'] = SecurityHelper::decrypt($totals['employeeNi'] ?? '');
-        $totals['tax'] = SecurityHelper::decrypt($totals['tax'] ?? '');
-        $totals['netPay'] = SecurityHelper::decrypt($totals['netPay'] ?? '');
-        $totals['adjustments'] = SecurityHelper::decrypt($totals['adjustments'] ?? '');
-        $totals['additions'] = SecurityHelper::decrypt($totals['additions'] ?? '');
-        $totals['takeHomePay'] = SecurityHelper::decrypt($totals['takeHomePay'] ?? '');
-        $totals['nonTaxOrNICPmt'] = SecurityHelper::decrypt($totals['nonTaxOrNICPmt'] ?? '');
-        $totals['studentLoanRecovered'] = SecurityHelper::decrypt($totals['studentLoanRecovered'] ?? '');
-        $totals['postgradLoanRecovered'] = SecurityHelper::decrypt($totals['postgradLoanRecovered'] ?? '');
-        $totals['pensionableEarnings'] = SecurityHelper::decrypt($totals['pensionableEarnings'] ?? '');
-        $totals['pensionablePay'] = SecurityHelper::decrypt($totals['pensionablePay'] ?? '');
-        $totals['nonTierablePay'] = SecurityHelper::decrypt($totals['nonTierablePay'] ?? '');
-        $totals['employeePensionContribution'] = SecurityHelper::decrypt($totals['employeePensionContribution'] ?? '');
-        $totals['employeePensionContributionAvc'] = SecurityHelper::decrypt($totals['employeePensionContributionAvc'] ?? '');
-        $totals['employerPensionContribution'] = SecurityHelper::decrypt($totals['employerPensionContribution'] ?? '');
-        $totals['empeePenContribnsNotPaid'] = SecurityHelper::decrypt($totals['empeePenContribnsNotPaid'] ?? '');
-        $totals['empeePenContribnsPaid'] = SecurityHelper::decrypt($totals['empeePenContribnsPaid'] ?? '');
-        $totals['attachmentOrderDeductions'] = SecurityHelper::decrypt($totals['attachmentOrderDeductions'] ?? '');
-        $totals['cisDeduction'] = SecurityHelper::decrypt($totals['cisDeduction'] ?? '');
-        $totals['cisVat'] = SecurityHelper::decrypt($totals['cisVat'] ?? '');
-        $totals['cisUmbrellaFee'] = SecurityHelper::decrypt($totals['cisUmbrellaFee'] ?? '');
-        $totals['cisUmbrellaFeePostTax'] = SecurityHelper::decrypt($totals['cisUmbrellaFeePostTax'] ?? '');
-        $totals['umbrellaFee'] = SecurityHelper::decrypt($totals['umbrellaFee'] ?? '');
-        $totals['totalCost'] = SecurityHelper::decrypt($totals['totalCost'] ?? '');
-
-        return $totals;
+        return null;
     }
 }
