@@ -48,6 +48,10 @@ class Employers extends Component
 
 
     /* GETTERS */
+    /**
+     * @return array
+     * @throws Exception
+     */
     public function getEmployers(): array
     {
         $query = new Query();
@@ -69,6 +73,10 @@ class Employers extends Component
         return $employers;
     }
 
+    /**
+     * @param array $employer
+     * @return array
+     */
     public function parseEmployer(array $employer): array
     {
         $employer['name'] = SecurityHelper::decrypt($employer['name'] ?? '');
@@ -79,6 +87,11 @@ class Employers extends Component
         return $employer;
     }
 
+    /**
+     * @param int $employerId
+     * @return array
+     * @throws Exception
+     */
     public function getEmployerById(int $employerId): array
     {
         $query = new Query();
@@ -108,6 +121,10 @@ class Employers extends Component
         return $employer;
     }
 
+    /**
+     * @param int $payOptionsId
+     * @return array
+     */
     public function getPayOptionsById(int $payOptionsId): array
     {
         $payOptions = PayOption::findOne($payOptionsId);
@@ -128,6 +145,10 @@ class Employers extends Component
         return $payOptions;
     }
 
+    /**
+     * @param int $employerId
+     * @return string
+     */
     public function getEmployerNameById(int $employerId): string
     {
         $employer = Employer::findOne($employerId);
@@ -139,6 +160,10 @@ class Employers extends Component
         return '';
     }
 
+    /**
+     * @param int $employerId
+     * @return array
+     */
     public function getHmrcDetailsByEmployer(int $employerId): array
     {
         $hmrcDetails = HmrcDetails::findOne(['employerId' => $employerId]);
@@ -153,6 +178,10 @@ class Employers extends Component
 
     /* FETCHES */
 
+    /**
+     * @param int $employerId
+     * @return array
+     */
     public function getAddressByEmployer(int $employerId): array
     {
         $address = Address::findOne(['employerId' => $employerId]);
@@ -172,6 +201,10 @@ class Employers extends Component
         return $address;
     }
 
+    /**
+     * @return array
+     * @throws \GuzzleHttp\Exception\GuzzleException
+     */
     public function fetchEmployerList(): array
     {
         $logger = new Logger();
@@ -228,6 +261,9 @@ class Employers extends Component
 
     /* SAVES */
 
+    /**
+     * @param array $employers
+     */
     public function fetchEmployers(array $employers)
     {
         $queue = Craft::$app->getQueue();
@@ -239,7 +275,41 @@ class Employers extends Component
         ]));
     }
 
-    public function saveEmployer(array $employer)
+    /**
+     * Checks if our database has employers that are deleted on staffology, if so, delete them on our system
+     *
+     * @param array $employers
+     */
+    public function syncEmployers(array $employers)
+    {
+        $hubEmployers = Employer::findAll();
+
+        foreach ($hubEmployers as $hubEmp) {
+
+            $exists = false;
+
+            // loop through our employers and check if the employer is still on staffology
+            foreach ($employers as $emp) {
+                if ($emp['id'] === $hubEmp['staffologyId']) {
+                    $exists = true;
+                }
+            }
+
+            // remove the employer if it doesn't exists anymore
+            if (!$exists) {
+                Craft::$app->getElements()->deleteElementById($hubEmp['id']);
+            }
+        }
+    }
+
+    /**
+     * @param array $employer
+     * @param bool $saveRelations
+     * @throws \Throwable
+     * @throws \craft\errors\ElementNotFoundException
+     * @throws \yii\base\Exception
+     */
+    public function saveEmployer(array $employer, bool $saveRelations = true)
     {
         $logger = new Logger();
         $logger->stdout("✓ Save employer " . $employer['name'] ?? null . '...', $logger::RESET);
@@ -268,11 +338,11 @@ class Employers extends Component
             $logger->stdout(" done" . PHP_EOL, $logger::FG_GREEN);
 
             //Save relations (FKs)
-            if ($employer['address'] ?? null) {
+            if (($employer['address'] ?? null) && $saveRelations) {
                 Staff::$plugin->addresses->saveAddressByEmployer($employer['address'], $emp->id);
             }
 
-            if ($employer['defaultPayOptions'] ?? null) {
+            if (($employer['defaultPayOptions'] ?? null) && $saveRelations) {
                 Staff::$plugin->payOptions->savePayOptionsByEmployer($employer['defaultPayOptions'], $emp->id);
             }
         } else {
@@ -292,6 +362,12 @@ class Employers extends Component
 
     /* PARSE SECURITY VALUES */
 
+    /**
+     * @param array $hmrcDetails
+     * @param int|null $hmrcDetailsId
+     * @return HmrcDetails
+     * @throws Exception
+     */
     public function saveHmrcDetails(array $hmrcDetails, int $hmrcDetailsId = null): HmrcDetails
     {
         if ($hmrcDetailsId) {

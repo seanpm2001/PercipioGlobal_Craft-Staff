@@ -6,6 +6,7 @@ use Craft;
 use craft\helpers\App;
 use craft\helpers\Json;
 use craft\queue\BaseJob;
+use percipiolondon\staff\elements\Employer;
 use percipiolondon\staff\helpers\Logger;
 use percipiolondon\staff\Staff;
 
@@ -31,6 +32,10 @@ class FetchEmployersJob extends BaseJob
 
         $client = new \GuzzleHttp\Client();
 
+        //Fetch existing
+        Staff::$plugin->employers->syncEmployers($this->criteria['employers']);
+
+        //Kickstart the sync process for each employer
         foreach ($this->criteria['employers'] as $employer) {
             $currentEmployer++;
             $progress = "[" . $currentEmployer . "/" . $totalEmployers . "] ";

@@ -13,6 +13,7 @@ namespace percipiolondon\staff\console\controllers;
 use Craft;
 
 use craft\console\Controller;
+use percipiolondon\staff\helpers\Logger;
 use percipiolondon\staff\Staff;
 
 /**
@@ -45,6 +46,21 @@ class EmployerController extends Controller
      */
     public function actionFetch()
     {
-        return  Staff::$plugin->employers->fetch();
+        return Staff::$plugin->employers->fetch();
+    }
+
+    public function actionTestEmployer()
+    {
+        $testEmployer = [];
+        $testEmployer['id'] = '123';
+        $testEmployer['name'] = 'Test company';
+        $testEmployer['logoUrl'] = 'http://google.com';
+        $testEmployer['crn'] = 'crn';
+        $testEmployer['startYear'] = 'startYear';
+        $testEmployer['currentYear'] = 'currentYear';
+        $testEmployer['defaultPayOptions'] = 'defaultPayOptions';
+        $testEmployer['employeeCount'] = 'employeeCount';
+
+        Staff::$plugin->employers->saveEmployer($testEmployer, false);
     }
 }
