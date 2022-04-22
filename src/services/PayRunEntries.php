@@ -8,6 +8,7 @@ use craft\helpers\App;
 use craft\helpers\Json;
 use Exception;
 use GuzzleHttp\Client;
+use percipiolondon\staff\elements\PayRun;
 use percipiolondon\staff\elements\PayRunEntry;
 use percipiolondon\staff\helpers\Logger;
 use percipiolondon\staff\helpers\Security as SecurityHelper;
@@ -72,23 +73,6 @@ class PayRunEntries extends Component
 
     /* FETCHES */
 
-    public function fetchPaySlip(array $payRunEntry, array $employer): void
-    {
-        $queue = Craft::$app->getQueue();
-        $queue->push(new FetchPaySlipJob([
-            'description' => 'Fetch Pay Slips',
-            'criteria' => [
-                'employer' => $employer,
-                'payPeriod' => $payRunEntry['payPeriod'] ?? null,
-                'periodNumber' => $payRunEntry['period'] ?? null,
-                'taxYear' => $payRunEntry['taxYear'] ?? null,
-                'payRunEntry' => $payRunEntry ?? null,
-            ],
-        ]));
-    }
-
-
-    /* SAVES */
     public function savePayRunEntry(array $payRunEntryData, array $employer, int $payRunId): ?PayRunEntry
     {
         $logger = new Logger();
@@ -141,19 +125,19 @@ class PayRunEntries extends Component
             if ($success) {
                 $logger->stdout(" done" . PHP_EOL, $logger::FG_GREEN);
 
-                if($payRunEntryData['totals'] ?? null) {
+                if ($payRunEntryData['totals'] ?? null) {
                     Staff::$plugin->totals->savePayRunEntryTotals($payRunEntryData['totals'], $payRunEntryRecord->id);
                 }
 
-                if($payRunEntryData['totalsYtd'] ?? null) {
+                if ($payRunEntryData['totalsYtd'] ?? null) {
                     Staff::$plugin->totals->savePayRunEntryTotals($payRunEntryData['totalsYtd'], $payRunEntryRecord->id, true);
                 }
 
-                if($payRunEntryData['payOptions'] ?? null) {
+                if ($payRunEntryData['payOptions'] ?? null) {
                     Staff::$plugin->payOptions->savePayOptionsByPayRunEntry($payRunEntryData['payOptions'], $payRunEntryRecord->id);
                 }
 
-                if($payRunEntryData['pensionSummary'] ?? null) {
+                if ($payRunEntryData['pensionSummary'] ?? null) {
                     Staff::$plugin->pensions->savePensionSummary($payRunEntryData['pensionSummary'], $payRunEntryRecord->id);
                 }
             } else {
@@ -178,6 +162,47 @@ class PayRunEntries extends Component
         }
 
         return null;
+    }
+
+    public function fetchPaySlip(array $payRunEntry, array $employer): void
+    {
+        $queue = Craft::$app->getQueue();
+        $queue->push(new FetchPaySlipJob([
+            'description' => 'Fetch Pay Slips',
+            'criteria' => [
+                'employer' => $employer,
+                'payPeriod' => $payRunEntry['payPeriod'] ?? null,
+                'periodNumber' => $payRunEntry['period'] ?? null,
+                'taxYear' => $payRunEntry['taxYear'] ?? null,
+                'payRunEntry' => $payRunEntry ?? null,
+            ],
+        ]));
+    }
+
+    public function syncPayRunEntries(PayRun $payRun, array $payRunEntries)
+    {
+        $logger = new Logger();
+        $logger->stdout('↧ Sync pay run entries of ' . $payRun['taxYear'] . '/' . $payRun['taxMonth'] . PHP_EOL, $logger::RESET);
+
+        $hubPayRunEntries = PayRunEntry::findAll(['payRunId' => $payRun['id']]);
+
+        foreach ($hubPayRunEntries as $hubPayRunEntry) {
+
+            $exists = false;
+
+            // loop through our employees and check if the employee is still on staffology
+            foreach ($payRunEntries as $payRunEntry) {
+                if ($payRunEntry['id'] === $hubPayRunEntry['staffologyId']) {
+                    $exists = true;
+                }
+            }
+
+            // remove the employee if it doesn't exists anymore
+            if (!$exists) {
+                $logger->stdout('✓ Delete pay run entry from ' . $payRun['taxYear'] . '/' . $payRun['taxMonth'] . PHP_EOL, $logger::FG_YELLOW);
+                Craft::$app->getElements()->deleteElementById($hubPayRunEntry['id']);
+            }
+        }
     }
 
     public function savePaySlip(array $paySlip, array $payRunEntry): void
