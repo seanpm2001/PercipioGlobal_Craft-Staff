@@ -258,9 +258,6 @@ class Employers extends Component
         return [];
     }
 
-
-    /* SAVES */
-
     /**
      * @param array $employers
      */
@@ -282,6 +279,9 @@ class Employers extends Component
      */
     public function syncEmployers(array $employers)
     {
+        $logger = new Logger();
+        $logger->stdout('↧ Sync employers'. PHP_EOL, $logger::RESET);
+
         $hubEmployers = Employer::findAll();
 
         foreach ($hubEmployers as $hubEmp) {
@@ -297,6 +297,7 @@ class Employers extends Component
 
             // remove the employer if it doesn't exists anymore
             if (!$exists) {
+                $logger->stdout('✓ Delete employer '. SecurityHelper::decrypt($hubEmp['name']). PHP_EOL, $logger::FG_YELLOW);
                 Craft::$app->getElements()->deleteElementById($hubEmp['id']);
             }
         }
@@ -309,7 +310,7 @@ class Employers extends Component
      * @throws \craft\errors\ElementNotFoundException
      * @throws \yii\base\Exception
      */
-    public function saveEmployer(array $employer, bool $saveRelations = true)
+    public function saveEmployer(array $employer)
     {
         $logger = new Logger();
         $logger->stdout("✓ Save employer " . $employer['name'] ?? null . '...', $logger::RESET);
@@ -338,11 +339,11 @@ class Employers extends Component
             $logger->stdout(" done" . PHP_EOL, $logger::FG_GREEN);
 
             //Save relations (FKs)
-            if (($employer['address'] ?? null) && $saveRelations) {
+            if ($employer['address'] ?? null) {
                 Staff::$plugin->addresses->saveAddressByEmployer($employer['address'], $emp->id);
             }
 
-            if (($employer['defaultPayOptions'] ?? null) && $saveRelations) {
+            if ($employer['defaultPayOptions'] ?? null) {
                 Staff::$plugin->payOptions->savePayOptionsByEmployer($employer['defaultPayOptions'], $emp->id);
             }
         } else {

@@ -32,7 +32,7 @@ class FetchEmployersJob extends BaseJob
 
         $client = new \GuzzleHttp\Client();
 
-        //Fetch existing
+        //Delete existing if they don't exist on Staffology anymore
         Staff::$plugin->employers->syncEmployers($this->criteria['employers']);
 
         //Kickstart the sync process for each employer

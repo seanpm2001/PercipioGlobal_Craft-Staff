@@ -12,7 +12,7 @@ class Logger
     //const FG_BLACK = 30;
     public const FG_RED = 31;
     public const FG_GREEN = 32;
-    //const FG_YELLOW = 33;
+    public const FG_YELLOW = 33;
     //const FG_BLUE = 34;
     public const FG_PURPLE = 35;
     //const FG_CYAN = 36;
