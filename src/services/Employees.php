@@ -13,6 +13,7 @@ namespace percipiolondon\staff\services;
 use Craft;
 use craft\base\Component;
 use percipiolondon\staff\elements\Employee;
+use percipiolondon\staff\elements\Employer;
 use percipiolondon\staff\helpers\Logger;
 use percipiolondon\staff\helpers\Security as SecurityHelper;
 use percipiolondon\staff\jobs\CreateEmployeeJob;
@@ -173,7 +174,39 @@ class Employees extends Component
     }
 
 
-    /* SAVES */
+
+    /**
+     * Checks if our database has employers that are deleted on staffology, if so, delete them on our system
+     *
+     * @param array $employers
+     */
+    public function syncEmployees(array $employer, array $employees)
+    {
+        $logger = new Logger();
+        $logger->stdout('↧ Sync employees of '. $employer['name']. PHP_EOL, $logger::RESET);
+
+        $hubEmployer = Employer::findOne(['staffologyId' => $employer['id']]);
+        $hubEmployees = Employee::findAll(['employerId' => $hubEmployer['id']]);
+
+        foreach ($hubEmployees as $hubEmp) {
+
+            $exists = false;
+
+            // loop through our employees and check if the employee is still on staffology
+            foreach ($employees as $emp) {
+                if ($emp['id'] === $hubEmp['staffologyId']) {
+                    $exists = true;
+                }
+            }
+
+            // remove the employee if it doesn't exists anymore
+            if (!$exists) {
+                $logger->stdout('✓ Delete employee from '. $employer['name']. PHP_EOL, $logger::FG_YELLOW);
+                Craft::$app->getElements()->deleteElementById($hubEmp['id']);
+            }
+        }
+    }
+
     public function saveEmployee(array $employee, string $employeeName, array $employer)
     {
         $logger = new Logger();

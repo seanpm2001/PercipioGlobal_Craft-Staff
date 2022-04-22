@@ -28,6 +28,9 @@ class CreatePayRunEntryJob extends Basejob
         $current = 0;
         $total = count($this->criteria['payRunEntries']);
 
+        //Delete existing if they don't exist on Staffology anymore
+        Staff::$plugin->payRunEntries->syncPayRunEntries($this->criteria['payRun'], $this->criteria['payRunEntries']);
+
         foreach ($this->criteria['payRunEntries'] as $payRunEntryData) {
             $current++;
             $progress = "[" . $current . "/" . $total . "] ";

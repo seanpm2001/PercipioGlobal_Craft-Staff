@@ -40,7 +40,8 @@ class FetchEmployeesListJob extends BaseJob
 
             $logger->stdout(" done" . PHP_EOL, $logger::FG_GREEN);
 
-            //@TODO: check if employees are deleted
+            //Delete existing if they don't exist on Staffology anymore
+            Staff::$plugin->employees->syncEmployees($this->criteria['employer'], $employees);
 
             foreach ($employees as $employee) {
                 $currentEmployee++;
