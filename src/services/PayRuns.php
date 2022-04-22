@@ -31,6 +31,7 @@ use percipiolondon\staff\records\Employee as EmployeeRecord;
 use percipiolondon\staff\records\Employer as EmployerRecord;
 use percipiolondon\staff\records\EmploymentDetails;
 use percipiolondon\staff\records\FpsFields;
+use percipiolondon\staff\records\PayCode;
 use percipiolondon\staff\records\PayCode as PayCodeRecord;
 use percipiolondon\staff\records\PayLine as PayLineRecord;
 
@@ -42,6 +43,7 @@ use percipiolondon\staff\records\PensionSummary;
 use percipiolondon\staff\records\PersonalDetails;
 use percipiolondon\staff\records\WorkerGroup;
 use percipiolondon\staff\Staff;
+use phpseclib3\Math\BigInteger\Engines\PHP;
 use yii\db\Exception;
 use yii\queue\redis\Queue as RedisQueue;
 
@@ -360,6 +362,42 @@ class PayRuns extends Component
     }
 
     /**
+     * Checks if our database has employers that are deleted on staffology, if so, delete them on our system
+     *
+     * @param array $employers
+     */
+    public function syncPayCode(array $employer, array $payCodes)
+    {
+        $logger = new Logger();
+        $logger->stdout('↧ Sync pay codes of '. $employer['name']. PHP_EOL, $logger::RESET);
+
+        $hubEmployer = Employer::findOne(['staffologyId' => $employer['id']]);
+        $hubPayCodes = PayCode::findAll(['employerId' => $hubEmployer['id']]);
+
+        foreach ($hubPayCodes as $hubPayCode) {
+
+            $exists = false;
+
+            // loop through our employees and check if the employee is still on staffology
+            foreach ($payCodes as $payCode) {
+                if ($payCode['code'] === $hubPayCode['code']) {
+                    $exists = true;
+                }
+            }
+
+            // remove the employee if it doesn't exists anymore
+            if (!$exists) {
+                $logger->stdout('✓ Delete pay code ' . $hubPayCode['code'] . ' from '. $employer['name']. PHP_EOL, $logger::FG_YELLOW);
+
+                $payCode = PayCode::findOne(['code' => $hubPayCode['code']]);
+                if($payCode) {
+                    $payCode->delete();
+                }
+            }
+        }
+    }
+
+    /**
      * @param array $payCode
      * @param array $employer
      */
@@ -395,6 +433,41 @@ class PayRuns extends Component
 
             $logger->stdout($errors . PHP_EOL, $logger::FG_RED);
             Craft::error($payCodeRecord->errors, __METHOD__);
+        }
+    }
+
+
+    /**
+     * Checks if our database has employers that are deleted on staffology, if so, delete them on our system
+     *
+     * @param array $employer
+     * @param array $payruns
+     */
+    public function syncPayRuns(array $employer, array $payRuns)
+    {
+        $logger = new Logger();
+        $logger->stdout('↧ Sync pay run of '. $employer['name']. PHP_EOL, $logger::RESET);
+
+        $taxYear = $payRuns['metadata']['taxYear'] ?? '';
+        $hubEmployer = Employer::findOne(['staffologyId' => $employer['id']]);
+        $hubPayRuns = PayRun::findAll(['employerId' => $hubEmployer['id'], 'taxYear' => $taxYear]);
+
+        foreach ($hubPayRuns as $hubPayRun) {
+
+            $exists = false;
+
+            // loop through our employees and check if the employee is still on staffology
+            foreach ($payRuns as $payRun) {
+                if ($payRun['url'] === $hubPayRun['url']) {
+                    $exists = true;
+                }
+            }
+
+            // remove the employee if it doesn't exists anymore
+            if (!$exists) {
+                $logger->stdout('✓ Delete pay run ' . $hubPayRun['taxYear'] . '/' . $hubPayRun['taxMonth'] . ' from '. $employer['name']. PHP_EOL, $logger::FG_YELLOW);
+                Craft::$app->getElements()->deleteElementById($hubPayRun['id']);
+            }
         }
     }
 

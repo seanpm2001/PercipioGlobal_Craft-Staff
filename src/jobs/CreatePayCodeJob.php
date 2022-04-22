@@ -31,6 +31,8 @@ class CreatePayCodeJob extends BaseJob
         $currentPayCode = 0;
         $totalPayCodes = count($this->criteria['payCodes']);
 
+        $payCodes = [];
+
         foreach ($this->criteria['payCodes'] as $payCode) {
             $currentPayCode++;
             $progress = "[" . $currentPayCode . "/" . $totalPayCodes . "] ";
@@ -43,7 +45,8 @@ class CreatePayCodeJob extends BaseJob
 
                 $logger->stdout(" done" . PHP_EOL, $logger::FG_GREEN);
 
-                Staff::$plugin->payRuns->savePayCode($result, $this->criteria['employer']);
+                $payCodes[] = $result;
+
             } catch (\Exception $e) {
                 $logger->stdout(PHP_EOL, $logger::RESET);
                 $logger->stdout($e->getMessage() . PHP_EOL, $logger::FG_RED);
@@ -51,6 +54,14 @@ class CreatePayCodeJob extends BaseJob
             }
 
             $this->setProgress($queue, $currentPayCode / $totalPayCodes);
+        }
+
+        //Delete existing if they don't exist on Staffology anymore
+        Staff::$plugin->payRuns->syncPayCode($this->criteria['employer'], $payCodes);
+
+        //Save pay codes
+        foreach($payCodes as $payCode) {
+            Staff::$plugin->payRuns->savePayCode($payCode, $this->criteria['employer']);
         }
     }
 }
