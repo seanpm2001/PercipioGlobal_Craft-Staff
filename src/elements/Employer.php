@@ -14,16 +14,14 @@ use Craft;
 use craft\base\Element;
 use craft\elements\db\ElementQueryInterface;
 
-use percipiolondon\staff\Staff;
-use yii\base\InvalidConfigException;
-use yii\db\Exception;
-use yii\db\Query;
-
 use percipiolondon\staff\elements\db\EmployerQuery;
 use percipiolondon\staff\helpers\Logger;
 use percipiolondon\staff\helpers\Security as SecurityHelper;
-use percipiolondon\staff\records\Employer as EmployerRecord;
 
+use percipiolondon\staff\records\Employer as EmployerRecord;
+use percipiolondon\staff\Staff;
+use yii\db\Exception;
+use yii\db\Query;
 
 /**
  * Employer Element
@@ -36,20 +34,19 @@ class Employer extends Element
     // Public Properties
     // =========================================================================
 
-    public $slug;
-    public $siteId;
-    public $staffologyId;
-    public $name;
-    public $logoUrl;
-    public $crn;
-    public $defaultPayOptionsId;
-    public $address;
-    public $addressId;
-    public $startYear;
-    public $currentYear;
-    public $employeeCount;
+    public string $staffologyId;
+    public ?string $name;
+    public ?string $logoUrl;
+    public ?string $crn;
+    public ?string $startYear;
+    public ?string $currentYear;
+    public $defaultPayOptions;
+    public ?string $employeeCount;
 
     private $_currentPayRun;
+    private $_defaultPayOptions;
+    private $_hmrcDetails;
+    private $_address;
 
     // Static Methods
     // =========================================================================
@@ -121,7 +118,7 @@ class Employer extends Element
                 'label' => 'All Employers',
                 'defaultSort' => ['id', 'desc'],
                 'criteria' => ['id' => $ids],
-            ]
+            ],
         ];
     }
 
@@ -130,9 +127,9 @@ class Employer extends Element
     /**
      * Returns the payrun totals.
      *
-     * @return PayRun|null
+     * @return bool|string|PayRun|null
      */
-    public function getCurrentPayRun()
+    public function getCurrentPayRun(): bool|string|PayRun|null
     {
         if ($this->_currentPayRun === null) {
             if ($this->id === null) {
@@ -141,11 +138,65 @@ class Employer extends Element
 
             if (($this->_currentPayRun = Staff::$plugin->payRuns->getLastPayRunByEmployer($this->id)) === null) {
                 // The author is probably soft-deleted. Just no author is set
-                $this->_currentPayRun = false;
+                $this->_currentPayRun = null;
             }
         }
 
         return $this->_currentPayRun ?: null;
+    }
+
+    /**
+     * Returns the payrun totals.
+     *
+     * @return PayRun|null
+     */
+    public function getDefaultPayOptions()
+    {
+        if ($this->_defaultPayOptions === null) {
+
+            if (($this->_defaultPayOptions = Staff::$plugin->payOptions->getPayOptionsByEmployer($this->id)) === null) {
+                // The author is probably soft-deleted. Just no author is set
+                $this->_defaultPayOptions = null;
+            }
+        }
+
+        return $this->_defaultPayOptions ?: null;
+    }
+
+    /**
+     * Returns the payrun totals.
+     *
+     * @return PayRun|null
+     */
+    public function getHmrcDetails()
+    {
+        if ($this->_hmrcDetails === null) {
+
+            if (($this->_hmrcDetails = Staff::$plugin->employers->getHmrcDetailsByEmployer($this->id)) === null) {
+                // The author is probably soft-deleted. Just no author is set
+                $this->_hmrcDetails = null;
+            }
+        }
+
+        return $this->_hmrcDetails ?: null;
+    }
+
+    /**
+     * Returns the payrun totals.
+     *
+     * @return PayRun|null
+     */
+    public function getAddress()
+    {
+        if ($this->_address === null) {
+
+            if (($this->_address = Staff::$plugin->employers->getAddressByEmployer($this->id)) === null) {
+                // The author is probably soft-deleted. Just no author is set
+                $this->_address = false;
+            }
+        }
+
+        return $this->_address ?: null;
     }
 
     /**
@@ -168,7 +219,7 @@ class Employer extends Element
      *
      * @return FieldLayout|null
      */
-    public function getFieldLayout()
+    public function getFieldLayout(): ?FieldLayout
     {
         return null;
     }
@@ -201,11 +252,8 @@ class Employer extends Element
      */
     public function afterSave(bool $isNew)
     {
-
         if (!$this->propagating) {
-
             $this->_saveRecord($isNew);
-
         }
 
         return parent::afterSave($isNew);
@@ -231,19 +279,17 @@ class Employer extends Element
         return true;
     }
 
-    private function _saveRecord(bool $isNew):void
+    private function _saveRecord(bool $isNew): void
     {
         $logger = new Logger();
 
         try {
             if (!$isNew) {
-
                 $record = EmployerRecord::findOne($this->id);
 
                 if (!$record) {
                     throw new Exception('Invalid employer ID: ' . $this->id);
                 }
-
             } else {
                 $record = new EmployerRecord();
                 $record->id = (int)$this->id;
@@ -254,27 +300,23 @@ class Employer extends Element
             $record->name = SecurityHelper::encrypt($this->name ?? '');
             $record->crn = SecurityHelper::encrypt($this->crn ?? '');
             $record->logoUrl = SecurityHelper::encrypt($this->logoUrl ?? '');
-            $record->addressId = $this->addressId ?? null;
             $record->startYear = $this->startYear ?? null;
             $record->currentYear = $this->currentYear ?? null;
             $record->employeeCount = $this->employeeCount ?? null;
-            $record->defaultPayOptionsId = $this->defaultPayOptionsId ?? null;
 
             $success = $record->save(false);
 
-            if(!$success) {
+            if (!$success) {
                 $errors = "";
 
-                foreach($record->errors as $err) {
+                foreach ($record->errors as $err) {
                     $errors .= implode(',', $err);
                 }
 
                 $logger->stdout($errors . PHP_EOL, $logger::FG_RED);
                 Craft::error($record->errors, __METHOD__);
             }
-
         } catch (\Exception $e) {
-
             $logger->stdout(PHP_EOL, $logger::RESET);
             $logger->stdout($e->getMessage() . PHP_EOL, $logger::FG_RED);
             Craft::error($e->getMessage(), __METHOD__);

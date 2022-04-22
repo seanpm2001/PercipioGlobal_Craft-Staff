@@ -6,13 +6,15 @@ use craft\db\ActiveRecord;
 use percipiolondon\staff\db\Table;
 
 /**
- * @property string $action;
- * @property string $employeeState;
- * @property boolean $actionCompleted;
- * @property string $actionCompletedMessage;
- * @property string $requiredLetter;
- * @property string $pensionSchemeId;
- * @property string $workerGroupId;
+ * @property int autoEnrolmentAssessmentId;
+ *
+ * @property string action;
+ * @property string employeeState;
+ * @property boolean actionCompleted;
+ * @property string actionCompletedMessage;
+ * @property string requiredLetter;
+ * @property string pensionSchemeId;
+ * @property string workerGroupId;
  */
 
 class AutoEnrolmentAssesmentAction extends ActiveRecord
@@ -32,7 +34,7 @@ class AutoEnrolmentAssesmentAction extends ActiveRecord
      *
      * @return string the table name
      */
-    public static function tableName()
+    public static function tableName(): string
     {
         return Table::AUTO_ENROLMENT_ASSESSMENT_ACTION;
     }

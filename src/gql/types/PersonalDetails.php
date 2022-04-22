@@ -2,13 +2,14 @@
 
 namespace percipiolondon\staff\gql\types;
 
+use craft\gql\base\GqlTypeTrait;
 use craft\gql\types\DateTime;
 
-use percipiolondon\staff\gql\base\GqlTypeTrait;
+use GraphQL\Type\Definition\ResolveInfo;
 use percipiolondon\staff\gql\types\Address;
 use percipiolondon\staff\gql\types\PartnerDetails;
 use GraphQL\Type\Definition\Type;
-
+use percipiolondon\staff\helpers\Security;
 
 /**
  * Class PersonalDetails
@@ -46,46 +47,71 @@ class PersonalDetails
                 'name' => 'maritalStatus',
                 'type' => Type::string(),
                 'description' => 'Marital Status.',
+
             ],
             'title' => [
                 'name' => 'title',
                 'type' => Type::string(),
                 'description' => 'Name title.',
+                'resolve' => function ($source, array $arguments, $context, ResolveInfo $resolveInfo) {
+                    return Security::resolve($source, $resolveInfo, 'string');
+                },
             ],
             'firstName' => [
                 'name' => 'firstName',
                 'type' => Type::string(),
                 'description' => 'First name.',
+                'resolve' => function ($source, array $arguments, $context, ResolveInfo $resolveInfo) {
+                    return Security::resolve($source, $resolveInfo, 'string');
+                },
             ],
             'middleName' => [
                 'name' => 'middleName',
                 'type' => Type::string(),
                 'description' => 'Middle name.',
+                'resolve' => function ($source, array $arguments, $context, ResolveInfo $resolveInfo) {
+                    return Security::resolve($source, $resolveInfo, 'string');
+                },
             ],
             'lastName' => [
                 'name' => 'lastName',
                 'type' => Type::string(),
                 'description' => 'Last name.',
+                'resolve' => function ($source, array $arguments, $context, ResolveInfo $resolveInfo) {
+                    return Security::resolve($source, $resolveInfo, 'string');
+                },
             ],
             'email' => [
                 'name' => 'email',
                 'type' => Type::string(),
                 'description' => 'Email address.',
+                'resolve' => function ($source, array $arguments, $context, ResolveInfo $resolveInfo) {
+                    return Security::resolve($source, $resolveInfo, 'string');
+                },
             ],
             'emailPayslip' => [
                 'name' => 'emailPayslip',
                 'type' => Type::boolean(),
                 'description' => 'Does the employee want to receive payslips through email?',
+                'resolve' => function ($source, array $arguments, $context, ResolveInfo $resolveInfo) {
+                    return Security::resolve($source, $resolveInfo, 'string');
+                },
             ],
             'telephone' => [
                 'name' => 'telephone',
                 'type' => Type::string(),
                 'description' => 'Telephone number.',
+                'resolve' => function ($source, array $arguments, $context, ResolveInfo $resolveInfo) {
+                    return Security::resolve($source, $resolveInfo, 'string');
+                },
             ],
             'mobile' => [
                 'name' => 'mobile',
                 'type' => Type::string(),
                 'description' => 'Mobile number.',
+                'resolve' => function ($source, array $arguments, $context, ResolveInfo $resolveInfo) {
+                    return Security::resolve($source, $resolveInfo, 'string');
+                },
             ],
             'dateOfBirth' => [
                 'name' => 'dateOfBirth',
@@ -101,11 +127,17 @@ class PersonalDetails
                 'name' => 'niNumber',
                 'type' => Type::string(),
                 'description' => 'National insurance number.',
+                'resolve' => function ($source, array $arguments, $context, ResolveInfo $resolveInfo) {
+                    return Security::resolve($source, $resolveInfo, 'string');
+                },
             ],
             'passportNumber' => [
                 'name' => 'passportNumber',
                 'type' => Type::string(),
                 'description' => 'Passport number.',
+                'resolve' => function ($source, array $arguments, $context, ResolveInfo $resolveInfo) {
+                    return Security::resolve($source, $resolveInfo, 'string');
+                },
             ],
             'partnerDetails' => [
                 'name' => 'partnerDetails',
@@ -114,5 +146,4 @@ class PersonalDetails
             ],
         ];
     }
-
 }

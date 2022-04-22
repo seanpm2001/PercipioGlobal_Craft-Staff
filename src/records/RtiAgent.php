@@ -10,22 +10,21 @@
 
 namespace percipiolondon\staff\records;
 
-use percipiolondon\staff\Staff;
-
-use Craft;
 use craft\db\ActiveRecord;
 use percipiolondon\staff\db\Table;
 
 /**
- * @property string $payrollCode;
- * @property double $chargePerTimesheet;
- * @property double $invoiceValue;
- * @property int $mapsMiles;
- * @property double $otherExpenses;
- * @property int $numberOfTimesheets;
- * @property double $hoursWorked;
- * @property double $grossDeduction;
- * @property double $grossAddition;
+ * @property int rtiSubmissionSettingsId;
+ *
+ * @property string payrollCode;
+ * @property double chargePerTimesheet;
+ * @property double invoiceValue;
+ * @property int mapsMiles;
+ * @property double otherExpenses;
+ * @property int numberOfTimesheets;
+ * @property double hoursWorked;
+ * @property double grossDeduction;
+ * @property double grossAddition;
 
  */
 
@@ -46,7 +45,7 @@ class RtiAgent extends ActiveRecord
      *
      * @return string the table name
      */
-    public static function tableName()
+    public static function tableName(): string
     {
         return Table::RTI_AGENT;
     }

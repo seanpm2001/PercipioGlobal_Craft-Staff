@@ -2,16 +2,12 @@
 
 namespace percipiolondon\staff\gql\types;
 
+use craft\gql\base\GqlTypeTrait;
 use craft\gql\types\DateTime;
 
-use percipiolondon\staff\gql\base\GqlTypeTrait;
-use percipiolondon\staff\gql\types\StarterDetails;
-use percipiolondon\staff\gql\types\DirectorShipDetails;
-use percipiolondon\staff\gql\types\LeaverDetails;
-use percipiolondon\staff\gql\types\CisDetails;
-use percipiolondon\staff\gql\types\Department;
+use GraphQL\Type\Definition\ResolveInfo;
 use GraphQL\Type\Definition\Type;
-
+use percipiolondon\staff\helpers\Security;
 
 /**
  * Class EmploymentDetails
@@ -48,11 +44,17 @@ class EmploymentDetails
                 'name' => 'payrollCode',
                 'type' => Type::string(),
                 'description' => 'The Employees Payroll Code. Must be unique within the Employer.',
+                'resolve' => function ($source, array $arguments, $context, ResolveInfo $resolveInfo) {
+                    return Security::resolve($source, $resolveInfo, 'string');
+                },
             ],
             'jobTitle' => [
                 'name' => 'jobTitle',
                 'type' => Type::string(),
                 'description' => 'Job Title of Primary post of the Employee.',
+                'resolve' => function ($source, array $arguments, $context, ResolveInfo $resolveInfo) {
+                    return Security::resolve($source, $resolveInfo, 'string');
+                },
             ],
             'onHold' => [
                 'name' => 'onHold',
@@ -84,6 +86,9 @@ class EmploymentDetails
                 'name' => 'furloughCalculationBasisAmount',
                 'type' => Type::float(),
                 'description' => 'Furlough calculation basis amount.',
+                'resolve' => function ($source, array $arguments, $context, ResolveInfo $resolveInfo) {
+                    return Security::resolve($source, $resolveInfo, 'float');
+                },
             ],
             'partialFurlough' => [
                 'name' => 'partialFurlough',
@@ -114,6 +119,9 @@ class EmploymentDetails
                 'name' => 'forcePreviousPayrollCode',
                 'type' => Type::string(),
                 'description' => 'If this property has a non-empty value then a change of Payroll code will be declared on the next FPS.',
+                'resolve' => function ($source, array $arguments, $context, ResolveInfo $resolveInfo) {
+                    return Security::resolve($source, $resolveInfo, 'string');
+                },
             ],
             'starterDetails' => [
                 'name' => 'starterDetails',
@@ -137,5 +145,4 @@ class EmploymentDetails
             ],
         ];
     }
-
 }

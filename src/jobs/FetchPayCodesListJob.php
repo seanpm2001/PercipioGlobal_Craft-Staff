@@ -2,13 +2,13 @@
 
 namespace percipiolondon\staff\jobs;
 
+use Craft;
 use craft\helpers\App;
 use craft\helpers\Json;
 use craft\queue\BaseJob;
+use percipiolondon\staff\helpers\Logger;
 use percipiolondon\staff\records\Employer as EmployerRecord;
 use percipiolondon\staff\Staff;
-use percipiolondon\staff\helpers\Logger;
-use Craft;
 
 class FetchPayCodesListJob extends BaseJob
 {
@@ -21,7 +21,7 @@ class FetchPayCodesListJob extends BaseJob
         // connection props
         $api = App::parseEnv(Staff::$plugin->getSettings()->apiKeyStaffology);
         $base_url = 'https://api.staffology.co.uk/';
-        $credentials = base64_encode('staff:'.$api);
+        $credentials = base64_encode('staff:' . $api);
         $headers = [
             'headers' => [
                 'Authorization' => 'Basic ' . $credentials,
@@ -33,21 +33,19 @@ class FetchPayCodesListJob extends BaseJob
         $logger->stdout("↧ Fetching pay codes of " . $this->criteria['employer']['name'] . '...', $logger::RESET);
 
         try {
-            $employer =  is_int($this->criteria['employer']['id'] ?? null) ? EmployerRecord::findOne(['staffologyId' => $this->criteria['employer']['id'] ?? null]) : $this->criteria['employer'];
+            $employer = is_int($this->criteria['employer']['id'] ?? null) ? EmployerRecord::findOne(['staffologyId' => $this->criteria['employer']['id'] ?? null]) : $this->criteria['employer'];
             $employerId = $employer['id'] ?? null;
 
-            $response = $client->get($base_url.'employers/'.$employerId.'/paycodes', $headers);
+            $response = $client->get($base_url . 'employers/' . $employerId . '/paycodes', $headers);
             $payCodes = Json::decodeIfJson($response->getBody()->getContents(), true);
 
             $logger->stdout(" done" . PHP_EOL, $logger::FG_GREEN);
 
             Staff::$plugin->payRuns->fetchPayCodes($payCodes, $this->criteria['employer']);
         } catch (\Exception $e) {
-
             $logger->stdout(PHP_EOL, $logger::RESET);
             $logger->stdout($e->getMessage() . PHP_EOL, $logger::FG_RED);
             Craft::error($e->getMessage(), __METHOD__);
-
         }
     }
 }

@@ -10,32 +10,29 @@
 
 namespace percipiolondon\staff\records;
 
-use percipiolondon\staff\Staff;
-
-use Craft;
 use craft\db\ActiveRecord;
 use percipiolondon\staff\db\Table;
 
 /**
- * @property int $address;
+ * @property int pensionSchemeId;
  *
- * @property string $name;
- * @property string $accountNo;
- * @property string $portal;
- * @property string $website;
- * @property string $telephone;
- * @property string $papdisVersion;
- * @property string $papdisProviderId;
- * @property string $papdisEmployerId;
- * @property string $csvFormat;
- * @property int $excludeNilPaidFromContributions;
- * @property boolean $payPeriodDateAdjustment;
- * @property boolean $miscBoolean1;
- * @property boolean $miscBoolean2;
- * @property string $miscString1;
- * @property string $miscString2;
- * @property int $optOutWindow;
- * @property boolean $optOutWindowIsMonths;
+ * @property string name;
+ * @property string accountNo;
+ * @property string portal;
+ * @property string website;
+ * @property string telephone;
+ * @property string papdisVersion;
+ * @property string papdisProviderId;
+ * @property string papdisEmployerId;
+ * @property string csvFormat;
+ * @property int excludeNilPaidFromContributions;
+ * @property boolean payPeriodDateAdjustment;
+ * @property boolean miscBoolean1;
+ * @property boolean miscBoolean2;
+ * @property string miscString1;
+ * @property string miscString2;
+ * @property int optOutWindow;
+ * @property boolean optOutWindowIsMonths;
  */
 
 class PensionProvider extends ActiveRecord
@@ -55,7 +52,7 @@ class PensionProvider extends ActiveRecord
      *
      * @return string the table name
      */
-    public static function tableName()
+    public static function tableName(): string
     {
         return Table::PENSION_PROVIDER;
     }

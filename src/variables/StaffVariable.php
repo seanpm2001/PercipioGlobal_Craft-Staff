@@ -21,5 +21,4 @@ use percipiolondon\staff\Staff;
 class StaffVariable implements ViteVariableInterface
 {
     use ViteVariableTrait;
-
 }

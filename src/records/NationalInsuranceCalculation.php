@@ -10,26 +10,25 @@
 
 namespace percipiolondon\staff\records;
 
-use percipiolondon\staff\Staff;
-
-use Craft;
 use craft\db\ActiveRecord;
 use percipiolondon\staff\db\Table;
 
 /**
- * @property double $earningsUptoIncludingLEL;
- * @property double $earningsAboveLELUptoIncludingPT;
- * @property double $earningsAbovePTUptoIncludingST;
- * @property double $earningsAbovePTUptoIncludingUEL;
- * @property double $earningsAboveSTUptoIncludingUEL;
- * @property double $earningsAboveUEL;
- * @property double $employeeNiGross;
- * @property double $employeeNiRebate;
- * @property double $employerNiGross;
- * @property double $employerNiRebate;
- * @property double $employeeNi;
- * @property double $employerNi;
- * @property double $netNi;
+ * @property int payRunEntryId;
+ *
+ * @property string earningsUptoIncludingLEL;
+ * @property string earningsAboveLELUptoIncludingPT;
+ * @property string earningsAbovePTUptoIncludingST;
+ * @property string earningsAbovePTUptoIncludingUEL;
+ * @property string earningsAboveSTUptoIncludingUEL;
+ * @property string earningsAboveUEL;
+ * @property string employeeNiGross;
+ * @property string employeeNiRebate;
+ * @property string employerNiGross;
+ * @property string employerNiRebate;
+ * @property string employeeNi;
+ * @property string employerNi;
+ * @property string netNi;
 
  */
 
@@ -50,7 +49,7 @@ class NationalInsuranceCalculation extends ActiveRecord
      *
      * @return string the table name
      */
-    public static function tableName()
+    public static function tableName(): string
     {
         return Table::NATIONAL_INSURANCE_CALCULATION;
     }

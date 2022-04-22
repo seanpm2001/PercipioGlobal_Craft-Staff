@@ -2,8 +2,10 @@
 
 namespace percipiolondon\staff\gql\types;
 
-use percipiolondon\staff\gql\base\GqlTypeTrait;
+use craft\gql\base\GqlTypeTrait;
+use GraphQL\Type\Definition\ResolveInfo;
 use GraphQL\Type\Definition\Type;
+use percipiolondon\staff\helpers\Security as SecurityHelper;
 
 /**
  * Class Address
@@ -45,6 +47,9 @@ class PayOptions
                 'name' => 'payAmount',
                 'type' => Type::int(),
                 'description' => 'Amount to pay.',
+                'resolve' => function ($source, array $arguments, $context, ResolveInfo $resolveInfo) {
+                    return SecurityHelper::resolve($source, $resolveInfo, 'int');
+                }
             ],
             'basis' => [
                 'name' => 'basis',
@@ -65,6 +70,9 @@ class PayOptions
                 'name' => 'baseHourlyRate',
                 'type' => Type::float(),
                 'description' => 'Base Hourly Rate.',
+                'resolve' => function ($source, array $arguments, $context, ResolveInfo $resolveInfo) {
+                    return SecurityHelper::resolve($source, $resolveInfo, 'float');
+                }
             ],
             'autoAdjustForLeave' => [
                 'name' => 'autoAdjustForLeave',
@@ -93,5 +101,4 @@ class PayOptions
             ],
         ];
     }
-
 }

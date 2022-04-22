@@ -6,9 +6,9 @@ use craft\db\ActiveRecord;
 use percipiolondon\staff\db\Table;
 
 /**
- * @property string $name;
- * @property string $iso;
- * @property int $sortOrder;
+ * @property string name;
+ * @property string iso;
+ * @property int sortOrder;
  */
 
 class Countries extends ActiveRecord
@@ -28,7 +28,7 @@ class Countries extends ActiveRecord
      *
      * @return string the table name
      */
-    public static function tableName()
+    public static function tableName(): string
     {
         return Table::COUNTRIES;
     }

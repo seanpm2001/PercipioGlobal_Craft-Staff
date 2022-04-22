@@ -27,6 +27,7 @@ abstract class Table
     const HISTORY = "{{%staff_history}}";
     const HMRC_DETAILS = "{{%staff_hrmc_details}}";
     const ITEMS = "{{%staff_items}}";
+    const ITEM_RELATIONS = "{{%staff_item_relations}}";
     const LEAVE_SETTINGS = "{{%staff_leave_settings}}";
     const LEAVER_DETAILS = "{{%staff_leaver_details}}";
     const NATIONAL_INSURANCE_CALCULATION = "{{%staff_national_insurance_calculations}}";
@@ -35,11 +36,11 @@ abstract class Table
     const PAY_CODES = "{{%staff_pay_codes}}";
     const PAY_LINES = "{{%staff_pay_lines}}";
     const PAY_OPTIONS = "{{%staff_pay_options}}";
-    const PAYRUN = "{{%staff_payrun}}";
-    const PAYRUN_ENTRIES = "{{%staff_payrun_entries}}";
-    const PAYRUN_IMPORTS = "{{%staff_payrun_imports}}";
-    const PAYRUN_LOG = "{{%staff_payrun_logs}}";
-    const PAYRUN_TOTALS = "{{%staff_payrun_totals}}";
+    const PAY_RUN = "{{%staff_pay_run}}";
+    const PAY_RUN_ENTRIES = "{{%staff_pay_run_entries}}";
+    const PAY_RUN_IMPORTS = "{{%staff_pay_run_imports}}";
+    const PAY_RUN_LOG = "{{%staff_pay_run_logs}}";
+    const PAY_RUN_TOTALS = "{{%staff_pay_run_totals}}";
     const PENSIONS = "{{%staff_pension}}";
     const PENSION_ADMINISTRATOR = "{{%staff_pension_administrator}}";
     const PENSION_PROVIDER = "{{%staff_pension_provider}}";

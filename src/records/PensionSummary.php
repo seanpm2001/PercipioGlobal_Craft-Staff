@@ -10,34 +10,22 @@
 
 namespace percipiolondon\staff\records;
 
-use percipiolondon\staff\Staff;
-
-use Craft;
 use craft\db\ActiveRecord;
 use percipiolondon\staff\db\Table;
 
 /**
- * @property string $title;
- * @property int $code;
- * @property double $defaultValue;
- * @property boolean $isDeduction;
- * @property boolean $isNiable;
- * @property boolean $isTaxable;
- * @property boolean $isPensionable;
- * @property boolean $isAttachable;
- * @property boolean $isRealTimeClass1aNiable;
- * @property boolean $isNotContributingToHolidayPay;
- * @property boolean $isQualifyingEarningsForAe;
- * @property boolean $isNotTierable;
- * @property boolean $isTcp_Tcls;
- * @property boolean $isTcp_Pp;
- * @property boolean $isTcp_Op;
- * @property boolean $isFlexiDd_DeathBenefit;
- * @property boolean $isFlexiDd_Pension;
- * @property string $calculationType;
- * @property double $hourlyRateMultiplier;
- * @property boolean $isSystemCode;
- * @property boolean $isControlCode;
+ * @property int payRunEntryId;
+ * @property int workerGroupId;
+ *
+ * @property string name;
+ * @property string startDate;
+ * @property string pensionRule;
+ * @property string employeePensionContributionMultiplier;
+ * @property string additionalVoluntaryContribution;
+ * @property bool avcIsPercentage;
+ * @property bool autoEnrolled;
+ * @property int papdisPensionProviderId;
+ * @property int papdisEmployerId;
  */
 
 class PensionSummary extends ActiveRecord
@@ -57,7 +45,7 @@ class PensionSummary extends ActiveRecord
      *
      * @return string the table name
      */
-    public static function tableName()
+    public static function tableName(): string
     {
         return Table::PENSION_SUMMARY;
     }

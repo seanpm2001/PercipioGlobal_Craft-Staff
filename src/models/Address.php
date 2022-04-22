@@ -2,12 +2,7 @@
 
 namespace percipiolondon\staff\models;
 
-use craft\base\model;
-
-use percipiolondon\staff\Table;
-use percipiolondon\staff\records\Address as AddressRecord;
-
-use yii\base\InvalidConfigException;
+use craft\base\Model;
 
 class Address extends Model
 {

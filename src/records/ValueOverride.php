@@ -10,21 +10,18 @@
 
 namespace percipiolondon\staff\records;
 
-use percipiolondon\staff\db\Table;
-use percipiolondon\staff\Staff;
-
-use Craft;
 use craft\db\ActiveRecord;
+
+use percipiolondon\staff\db\Table;
 
 /**
  * @property int payRunEntryId;
- * @property int pensionId;
  *
  * @property string type;
- * @property double $value;
- * @property double $originalValue;
- * @property string $note;
- * @property string $attachmentOrderId;
+ * @property double value;
+ * @property double originalValue;
+ * @property string note;
+ * @property string attachmentOrderId;
  */
 
 class ValueOverride extends ActiveRecord
@@ -44,7 +41,7 @@ class ValueOverride extends ActiveRecord
      *
      * @return string the table name
      */
-    public static function tableName()
+    public static function tableName(): string
     {
         return Table::VALUE_OVERRIDE;
     }

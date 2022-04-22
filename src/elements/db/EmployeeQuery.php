@@ -2,129 +2,101 @@
 
 namespace percipiolondon\staff\elements\db;
 
-use craft\db\Query;
-use craft\db\QueryAbortedException;
-use craft\db\Table;
 use craft\elements\db\ElementQuery;
 use craft\helpers\Db;
 
-use yii\db\Connection;
-
+/**
+ * Class EmployeeQuery
+ *
+ * @package percipiolondon\staff\elements\db
+ */
 class EmployeeQuery extends ElementQuery
 {
+    /**
+     * @var
+     */
     public $staffologyId;
+    /**
+     * @var
+     */
     public $employerId;
+    /**
+     * @var
+     */
     public $userId;
-    public $personalDetailsId;
-    public $employmentDetailsId;
-    public $autoEnrolment;
-    public $leaveSettingsId;
-    public $rightToWork;
-    public $bankDetailsId;
-    public $status;
-    public $autoEnrolmentId;
-    public $niNumber;
+    /**
+     * @var
+     */
     public $isDirector;
+    /**
+     * @var
+     */
+    public $status;
 
     /**
-     * @inheritdoc
+     * @param $value
+     * @return $this
      */
-    public function __construct($elementType, array $config = [])
-    {
-        parent::__construct($elementType, $config);
-    }
-
-    public function personalDetailsId($value)
-    {
-        $this->personalDetailsId = $value;
-        return $this;
-    }
-
     public function staffologyId($value)
     {
         $this->staffologyId = $value;
         return $this;
     }
 
+    /**
+     * @param $value
+     * @return $this
+     */
     public function employerId($value)
     {
         $this->employerId = $value;
         return $this;
     }
 
+    /**
+     * @param $value
+     * @return $this
+     */
     public function userId($value)
     {
         $this->userId = $value;
         return $this;
     }
 
-    public function employmentDetailsId($value)
-    {
-        $this->employmentDetailsId = $value;
-        return $this;
-    }
-
-    public function autoEnrolment($value)
-    {
-        $this->autoEnrolment = $value;
-        return $this;
-    }
-
-    public function leaveSettingsId($value)
-    {
-        $this->leaveSettingsId = $value;
-        return $this;
-    }
-
-    public function rightToWork($value)
-    {
-        $this->rightToWork = $value;
-        return $this;
-    }
-
-    public function bankDetails($value)
-    {
-        $this->bankDetails = $value;
-        return $this;
-    }
-
+    /**
+     * @param string|string[]|null $value
+     * @return $this|ElementQuery|EmployeeQuery
+     */
     public function status($value)
     {
         $this->status = $value;
         return $this;
     }
 
-    public function niNumber($value)
-    {
-        $this->niNumber = $value;
-        return $this;
-    }
-
+    /**
+     * @param $value
+     * @return $this
+     */
     public function isDirector($value)
     {
         $this->isDirector = $value;
         return $this;
     }
 
+
+    /**
+     * @return bool
+     */
     protected function beforePrepare(): bool
     {
         $this->joinElementTable('staff_employees');
 
         $this->query->select([
-            'staff_employees.personalDetailsId',
             'staff_employees.staffologyId',
             'staff_employees.employerId',
             'staff_employees.userId',
-            'staff_employees.personalDetailsId',
-            'staff_employees.employmentDetailsId',
-//            'staff_employees.autoEnrolmentId',
-//            'staff_employees.leaveSettingsId',
-//            'staff_employees.rightToWorkId',
-//            'staff_employees.bankDetailsId',
             'staff_employees.status',
-//            'staff_employees.aeNotEnroledWarning',
             'staff_employees.niNumber',
-//            'staff_employees.sourceSystemId',
             'staff_employees.isDirector',
         ]);
 

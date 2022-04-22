@@ -2,12 +2,12 @@
 
 namespace percipiolondon\staff\jobs;
 
+use Craft;
 use craft\helpers\App;
 use craft\helpers\Json;
 use craft\queue\BaseJob;
-use percipiolondon\staff\Staff;
 use percipiolondon\staff\helpers\Logger;
-use Craft;
+use percipiolondon\staff\Staff;
 
 class FetchEmployeesListJob extends BaseJob
 {
@@ -40,28 +40,25 @@ class FetchEmployeesListJob extends BaseJob
 
             $logger->stdout(" done" . PHP_EOL, $logger::FG_GREEN);
 
-            foreach($employees as $employee) {
+            //Delete existing if they don't exist on Staffology anymore
+            Staff::$plugin->employees->syncEmployees($this->criteria['employer'], $employees);
 
+            foreach ($employees as $employee) {
                 $currentEmployee++;
 
                 Staff::$plugin->employees->fetchEmployee($employee, $this->criteria['employer']);
 //                Staff::$plugin->pensions->fetchPension($employee, $this->criteria['employer']['id']);
 
-                if($currentEmployee === $totalEmployees){
+                if ($currentEmployee === $totalEmployees) {
                     Staff::$plugin->payRuns->fetchPayRunByStaffologyEmployer($this->criteria['employer']);
                 }
 
                 $this->setProgress($queue, $currentEmployee / $totalEmployees);
-
             }
-
         } catch (\Exception $e) {
-
             $logger->stdout(PHP_EOL, $logger::RESET);
             $logger->stdout($e->getMessage() . PHP_EOL, $logger::FG_RED);
             Craft::error($e->getMessage(), __METHOD__);
-
         }
-
     }
 }

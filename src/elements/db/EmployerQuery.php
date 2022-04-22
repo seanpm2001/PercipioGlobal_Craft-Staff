@@ -2,27 +2,18 @@
 
 namespace percipiolondon\staff\elements\db;
 
-use craft\db\Query;
-use craft\db\QueryAbortedException;
 use craft\elements\db\ElementQuery;
 use craft\helpers\Db;
 
-use percipiolondon\staff\db\Table;
 use percipiolondon\staff\models\Address;
-
-use yii\db\Connection;
 
 class EmployerQuery extends ElementQuery
 {
-    public $slug;
-    public $siteId;
     public $staffologyId;
-    public $name;
-    public $logoUrl;
     public $crn;
     public $defaultPayOptions;
+    public $hmrcDetails;
     public $addressId;
-    public $address;
     public $startYear;
     public $currentYear;
     public $employeeCount;
@@ -45,18 +36,6 @@ class EmployerQuery extends ElementQuery
         return $this;
     }
 
-    public function name($value)
-    {
-        $this->name = $value;
-        return $this;
-    }
-
-    public function logoUrl($value)
-    {
-        $this->logoUrl = $value;
-        return $this;
-    }
-
     public function crn($value)
     {
         $this->crn = $value;
@@ -69,20 +48,15 @@ class EmployerQuery extends ElementQuery
         return $this;
     }
 
-    public function addressId($value)
+    public function hmrcDetails($value)
     {
-        $this->addressId = $value;
+        $this->hmrcDetails = $value;
         return $this;
     }
 
-    public function address($value)
+    public function addressId($value)
     {
-        if ($value instanceof Address) {
-            $this->addressId = [$value->id];
-        } else {
-            $this->addressId = null;
-        }
-
+        $this->addressId = $value;
         return $this;
     }
 
@@ -110,33 +84,12 @@ class EmployerQuery extends ElementQuery
 
         $this->query->select([
             'staff_employers.staffologyId',
-            'staff_employers.addressId',
-//            'staff_employers.bankDetailsId',
-            'staff_employers.defaultPayOptionsId',
-//            'staff_employers.hmrcDetailsId',
-//            'staff_employers.rtiSubmissionSettingsId',
-//            'staff_employers.autoEnrolmentSettingsId',
-//            'staff_employers.leaveSettingsId',
-//            'staff_employers.settingsId',
-//            'staff_employers.umbrellaSettingsId',
             'staff_employers.name',
             'staff_employers.crn',
             'staff_employers.logoUrl',
-//            'staff_employers.alternativeId',
-//            'staff_employers.bankPaymentsCsvFormat',
-//            'staff_employers.bacsServiceUserNumber',
-//            'staff_employers.bacsBureauNumber',
-//            'staff_employers.rejectInvalidBankDetails',
-//            'staff_employers.bankPaymentsReferenceFormat',
-//            'staff_employers.useTenantRtiSubmissionSettings',
             'staff_employers.employeeCount',
-//            'staff_employers.subcontractorCount',
             'staff_employers.startYear',
             'staff_employers.currentYear',
-//            'staff_employers.supportAccessEnabled',
-//            'staff_employers.archived',
-//            'staff_employers.canUseBureauFeatures',
-//            'staff_employers.sourceSystemId',
             'staff_employers.slug',
         ]);
 

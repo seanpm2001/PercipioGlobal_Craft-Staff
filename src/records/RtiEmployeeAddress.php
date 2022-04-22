@@ -10,18 +10,17 @@
 
 namespace percipiolondon\staff\records;
 
-use percipiolondon\staff\Staff;
-
-use Craft;
 use craft\db\ActiveRecord;
 use percipiolondon\staff\db\Table;
 
 /**
- * @property string $line;
- * @property string $postcode_v1;
- * @property string $postcode_v2;
- * @property string $ukPostcode;
- * @property string $country;
+ * @property int employeeId;
+ *
+ * @property string line;
+ * @property string postcode_v1;
+ * @property string postcode_v2;
+ * @property string ukPostcode;
+ * @property string country;
  */
 
 class RtiEmployeeAddress extends ActiveRecord
@@ -41,7 +40,7 @@ class RtiEmployeeAddress extends ActiveRecord
      *
      * @return string the table name
      */
-    public static function tableName()
+    public static function tableName(): string
     {
         return Table::RTI_EMPLOYEE_ADDRESS;
     }

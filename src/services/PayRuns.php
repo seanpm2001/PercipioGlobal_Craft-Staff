@@ -10,42 +10,41 @@
 
 namespace percipiolondon\staff\services;
 
+use Craft;
+use craft\base\Component;
 use craft\base\ElementInterface;
 use craft\helpers\App;
 use craft\queue\QueueInterface;
-use GuzzleHttp\Exception\GuzzleException;
-use percipiolondon\staff\db\Table;
 use percipiolondon\staff\elements\Employer;
+use GuzzleHttp\Exception\GuzzleException;
 use percipiolondon\staff\elements\PayRun;
 use percipiolondon\staff\elements\PayRunEntry;
+use percipiolondon\staff\helpers\Csv as CsvHelper;
 use percipiolondon\staff\helpers\Logger;
 use percipiolondon\staff\helpers\Security as SecurityHelper;
-use percipiolondon\staff\helpers\Csv as CsvHelper;
-use percipiolondon\staff\jobs\FetchPayCodesListJob;
-use percipiolondon\staff\jobs\FetchPaySchedulesJob;
-use percipiolondon\staff\jobs\FetchPaySlipJob;
 use percipiolondon\staff\jobs\CreatePayCodeJob;
-use percipiolondon\staff\jobs\CreatePayRunJob;
 use percipiolondon\staff\jobs\CreatePayRunEntryJob;
 
+use percipiolondon\staff\jobs\CreatePayRunJob;
+use percipiolondon\staff\jobs\FetchPayCodesListJob;
 use percipiolondon\staff\records\Employee as EmployeeRecord;
 use percipiolondon\staff\records\Employer as EmployerRecord;
 use percipiolondon\staff\records\EmploymentDetails;
+use percipiolondon\staff\records\FpsFields;
+use percipiolondon\staff\records\PayCode;
 use percipiolondon\staff\records\PayCode as PayCodeRecord;
 use percipiolondon\staff\records\PayLine as PayLineRecord;
-use percipiolondon\staff\records\PayOption as PayOptionRecord;
+
 use percipiolondon\staff\records\PayRun as PayRunRecord;
 use percipiolondon\staff\records\PayRunEntry as PayRunEntryRecord;
-
-use Craft;
-use craft\base\Component;
 use percipiolondon\staff\records\PayRunLog;
 use percipiolondon\staff\records\PayRunTotals;
+use percipiolondon\staff\records\PensionSummary;
 use percipiolondon\staff\records\PersonalDetails;
+use percipiolondon\staff\records\WorkerGroup;
 use percipiolondon\staff\Staff;
-use craft\helpers\Json;
+use phpseclib3\Math\BigInteger\Engines\PHP;
 use yii\db\Exception;
-use yii\db\Query;
 use yii\queue\redis\Queue as RedisQueue;
 
 /**
@@ -68,7 +67,7 @@ class PayRuns extends Component
 
 
     /* GETTERS */
-    public function getLastPayRunByEmployer(int $employerId) : ElementInterface|null
+    public function getLastPayRunByEmployer(int $employerId): ElementInterface|null
     {
         return PayRun::find()
             ->employerId($employerId)
@@ -76,12 +75,36 @@ class PayRuns extends Component
             ->one();
     }
 
-    public function getTotalsById(int $totalsId) : array
+    public function getTotalsById(int $totalsId): array
     {
         $payRunTotals = PayRunTotals::findOne($totalsId);
         return $payRunTotals ? $payRunTotals->toArray() : [];
     }
 
+    /**
+     * @param int $payRunId
+     */
+    public function getCsvTemplate(int $payRunId): void
+    {
+        // fetch pay run
+        $payRunQuery = PayRunRecord::findOne($payRunId);
+        $payRunQuery = $payRunQuery ? $payRunQuery->toArray() : [];
+
+        // fetch employer
+        $employer = EmployerRecord::findOne($payRunQuery['employerId'] ?? null);
+        $employer = $employer ? $employer->toArray() : [];
+        $employer = Staff::$plugin->employers->parseEmployer($employer);
+
+        $csvEntries = $this->getCsvData($payRunId);
+
+        CsvHelper::arrayToCsv($csvEntries, 'pay-' . ($employer['slug'] ?? 'x') . '-' . ($payRunQuery['taxMonth'] ?? 'x') . '-' . strtolower($payRunQuery['taxYear']) ?? 'x');
+    }
+
+    /**
+     * @param int $payRunId
+     * @param bool $fetchHeaders
+     * @return array
+     */
     public function getCsvData(int $payRunId, bool $fetchHeaders = false): array
     {
         // fetch pay run
@@ -102,14 +125,15 @@ class PayRuns extends Component
         $payCodes = PayCodeRecord::find()->where(['employerId' => $payRunEmployerId, 'isSystemCode' => 0])->all();
 
         //create pay codes for all entries
-        $payCodeKeys = array_map(function($code){ return $code['code']; },$payCodes);
+        $payCodeKeys = array_map(function($code) {
+            return $code['code'];
+        },$payCodes);
         sort($payCodeKeys);
 
         $csvEntries = [];
 
         //fill in data
-        foreach($payRunEntries as $entry) {
-
+        foreach ($payRunEntries as $entry) {
             $employee = EmployeeRecord::findOne($entry['employeeId'] ?? null);
             $employee = $employee ? $employee->toArray() : [];
 
@@ -131,12 +155,12 @@ class PayRuns extends Component
             // decrypt values
             $personalDetails = Staff::$plugin->employees->parsePersonalDetails($personalDetails);
             $employmentDetails = Staff::$plugin->employees->parseEmploymentDetails($employmentDetails);
-            $totals = $this->_parseTotals($totals);
+            $totals = Staff::$plugin->totals->parseTotals($totals);
 
             //CSV structure
             $payRunEntry = [];
             $payRunEntry['id'] = (int)($entry['id'] ?? null);
-            $payRunEntry['name'] = ($personalDetails['title'] . ' ' ?? null).($personalDetails['firstName'] ?? null) . ' ' . ($personalDetails['lastName'] ?? null);
+            $payRunEntry['name'] = ($personalDetails['title'] . ' ' ?? null) . ($personalDetails['firstName'] ?? null) . ' ' . ($personalDetails['lastName'] ?? null);
             $payRunEntry['niNumber'] = $personalDetails['niNumber'] ?? null;
             $payRunEntry['payrollCode'] = $employmentDetails['payrollCode'] ?? null;
             $payRunEntry['gross'] = (float)($totals['gross'] ?? 0);
@@ -144,120 +168,40 @@ class PayRuns extends Component
             $payRunEntry['totalCost'] = (float)($totals['totalCost'] ?? 0);
 
             //set all the pay run codes dynamic to payRunEntry with default value
-            foreach($payCodeKeys as $payCodeKey) {
+            foreach ($payCodeKeys as $payCodeKey) {
                 $payRunEntry[$payCodeKey] = '';
-                $payRunEntry['description_'.$payCodeKey] = '';
+                $payRunEntry['description_' . $payCodeKey] = '';
             }
 
             //overwrite custom pay lines
-            foreach($payLines as $payLine){
+            foreach ($payLines as $payLine) {
                 $payLine = $payLine->toArray();
                 $payLine = $this->_parsePayLines($payLine);
 
-                if($payLine && in_array($payLine['code'], $payCodeKeys, true)){
-
+                if ($payLine && in_array($payLine['code'], $payCodeKeys, true)) {
                     $payRunEntry[$payLine['code']] = (float)($payLine['value'] ?? '');
-                    $payRunEntry['description_'.$payLine['code']] = $payLine['description'] ?? '';
-
+                    $payRunEntry['description_' . $payLine['code']] = $payLine['description'] ?? '';
                 }
             }
 
             $csvEntries[] = $payRunEntry;
-
         }
 
-        usort($csvEntries, function($a, $b){
+        usort($csvEntries, function($a, $b) {
             return $a['payrollCode'] > $b['payrollCode'];
         });
 
         return $csvEntries;
     }
 
-    public function getCsvTemplate(int $payRunId) :void
-    {
-        // fetch pay run
-        $payRunQuery = PayRunRecord::findOne($payRunId);
-        $payRunQuery = $payRunQuery ? $payRunQuery->toArray() : [];
 
-        // fetch employer
-        $employer = EmployerRecord::findOne($payRunQuery['employerId'] ?? null);
-        $employer = $employer ? $employer->toArray() : [];
-        $employer = Staff::$plugin->employers->parseEmployer($employer);
-
-        $csvEntries = $this->getCsvData($payRunId);
-
-        CsvHelper::arrayToCsv($csvEntries,'pay-'.($employer['slug'] ?? 'x').'-'.($payRunQuery['taxMonth'] ?? 'x').'-'.strtolower($payRunQuery['taxYear']) ?? 'x');
-    }
-
-    public function setPayRunEntry(array $entries) :array
-    {
-        $savedEntries = [];
-
-        foreach($entries as $entry) {
-            $payRunEntry = PayRunEntryRecord::findOne($entry['id'] ?? null);
-
-            if($payRunEntry){
-                $employer = EmployerRecord::findOne($payRunEntry['employerId'] ?? null);
-
-                if($employer){
-                    $employer = $employer->toArray();
-
-                    $id = $payRunEntry['staffologyId'] ?? null;
-                    $employerId = $employer['staffologyId'] ?? null;
-                    $taxYear = $payRunEntry['taxYear'] ?? null;
-                    $payPeriod = $payRunEntry['payPeriod'] ?? 'Monthly';
-                    $period = $payRunEntry['period'] ?? null;
-
-                    $api = App::parseEnv(Staff::$plugin->getSettings()->apiKeyStaffology);
-                    $base_url = 'https://api.staffology.co.uk/employers/'.$employerId.'/payrun/'.$taxYear.'/'.$payPeriod.'/'.$period.'/'.$id;
-                    $credentials = base64_encode('staff:'.$api);
-                    $headers = [
-                        'headers' => [
-                            'Authorization' => 'Basic ' . $credentials,
-                        ],
-                    ];
-
-                    $client = new \GuzzleHttp\Client();
-
-                    try {
-                        $response = $client->get($base_url, $headers);
-                        $payRunEntryData = Json::decodeIfJson($response->getBody()->getContents(), true);
-
-                        $payRunEntry = $this->savePayRunEntry($payRunEntryData, $employer, $payRunEntry['payRunId']);
-
-                        if($payRunEntry) {
-                            $savedEntries[] = $payRunEntry;
-                        }
-
-                    } catch (\Exception $e) {
-
-                        Craft::error($e->getMessage(), __METHOD__);
-
-                    }
-                }
-            }
-        }
-
-        return $savedEntries;
-    }
+    /* SAVES */
 
 
-
-
-
-
-    /* FETCHES */
-    public function fetchPayCodesList(array $employer): void
-    {
-        $queue = Craft::$app->getQueue();
-        $queue->push(new FetchPayCodesListJob([
-            'description' => 'Fetch pay codes',
-            'criteria' => [
-                'employer' => $employer
-            ]
-        ]));
-    }
-
+    /**
+     * @param array $payCodes
+     * @param array $employer
+     */
     public function fetchPayCodes(array $payCodes, array $employer): void
     {
         $queue = Craft::$app->getQueue();
@@ -265,23 +209,29 @@ class PayRuns extends Component
             'description' => 'Save pay codes',
             'criteria' => [
                 'payCodes' => $payCodes,
-                'employer' => $employer
-            ]
+                'employer' => $employer,
+            ],
         ]));
     }
 
-    public function fetchPayRuns(array $payRuns, array $employer): void
+    /**
+     * @param array $employer
+     */
+    public function fetchPayCodesList(array $employer): void
     {
         $queue = Craft::$app->getQueue();
-        $queue->push(new CreatePayRunJob([
-            'description' => 'Fetch pay runs',
+        $queue->push(new FetchPayCodesListJob([
+            'description' => 'Fetch pay codes',
             'criteria' => [
-                'payRuns' => $payRuns,
                 'employer' => $employer,
-            ]
+            ],
         ]));
     }
 
+    /**
+     * @param array $employer
+     * @param bool $startQueue
+     */
     public function fetchPayRunByStaffologyEmployer(array $employer, bool $startQueue = false): void
     {
         $payRuns = $employer['metadata']['payruns'] ?? [];
@@ -292,10 +242,10 @@ class PayRuns extends Component
             'criteria' => [
                 'payRuns' => $payRuns,
                 'employer' => $employer,
-            ]
+            ],
         ]));
 
-        if($startQueue) {
+        if ($startQueue) {
             $queue = Craft::$app->getQueue();
             if ($queue instanceof QueueInterface) {
                 $queue->run();
@@ -305,27 +255,31 @@ class PayRuns extends Component
         }
     }
 
+    /**
+     * @param int $employerId
+     * @param string $taxYear
+     * @throws \GuzzleHttp\Exception\GuzzleException
+     */
     public function fetchPayRunByEmployer(int $employerId, string $taxYear = '')
     {
         $logger = new Logger();
 
-        if(!$employerId) {
+        if (!$employerId) {
             $logger->stdout("There's no employer id provided" . PHP_EOL, $logger::FG_RED);
             Craft::error("There's no employer id provided", __METHOD__);
         }
 
         $employer = Staff::$plugin->employers->getEmployerById($employerId);
 
-        if($employer){
-
+        if ($employer) {
             $id = $employer['staffologyId'] ?? '';
             $taxYear = $taxYear === '' ? $employer['currentYear'] : $taxYear;
             $payPeriod = $employer['defaultPayOptions']['period'] ?? 'Monthly';
 
-            $url = '/employers/'.$id.'/payrun/'.$taxYear.'/'.$payPeriod;
+            $url = '/employers/' . $id . '/payrun/' . $taxYear . '/' . $payPeriod;
 
             $api = App::parseEnv(Staff::$plugin->getSettings()->apiKeyStaffology);
-            $credentials = base64_encode('staff:'.$api);
+            $credentials = base64_encode('staff:' . $api);
             $headers = [
                 'headers' => [
                     'Authorization' => 'Basic ' . $credentials,
@@ -334,12 +288,10 @@ class PayRuns extends Component
             $client = new \GuzzleHttp\Client();
 
             try {
-
-                $response =  $client->get("https://api.staffology.co.uk/" . $url, $headers);
+                $response = $client->get("https://api.staffology.co.uk/" . $url, $headers);
                 $payRunData = json_decode($response->getBody()->getContents(), true);
 
-                if($payRunData) {
-
+                if ($payRunData) {
                     $employer['id'] = $employer['staffologyId'];
 
                     $this->fetchPayCodesList($employer);
@@ -353,17 +305,34 @@ class PayRuns extends Component
                         $queue->run(false);
                     }
                 }
-
             } catch (\Exception $e) {
-
                 $logger->stdout(PHP_EOL, $logger::RESET);
                 $logger->stdout($e->getMessage() . PHP_EOL, $logger::FG_RED);
                 Craft::error($e->getMessage(), __METHOD__);
-
             }
         }
     }
 
+    /**
+     * @param array $payRuns
+     * @param array $employer
+     */
+    public function fetchPayRuns(array $payRuns, array $employer): void
+    {
+        $queue = Craft::$app->getQueue();
+        $queue->push(new CreatePayRunJob([
+            'description' => 'Fetch pay runs',
+            'criteria' => [
+                'payRuns' => $payRuns,
+                'employer' => $employer,
+            ],
+        ]));
+    }
+
+    /**
+     * @param int $payRunId
+     * @param bool $startQueue
+     */
     public function fetchPayRunByPayRunId(int $payRunId, bool $startQueue = false): void
     {
         $payRun = PayRunRecord::findOne($payRunId);
@@ -371,18 +340,17 @@ class PayRuns extends Component
         $employerId = $payRun['employerId'] ?? null;
         $employer = EmployerRecord::findOne($employerId);
 
-        if($payRun && $employer) {
-
+        if ($payRun && $employer) {
             $queue = Craft::$app->getQueue();
             $queue->push(new CreatePayRunJob([
                 'description' => 'Fetch pay runs',
                 'criteria' => [
                     'payRuns' => [$payRun],
                     'employer' => $employer->toArray(),
-                ]
+                ],
             ]));
 
-            if($startQueue) {
+            if ($startQueue) {
                 $queue = Craft::$app->getQueue();
                 if ($queue instanceof QueueInterface) {
                     $queue->run();
@@ -393,26 +361,46 @@ class PayRuns extends Component
         }
     }
 
-    public function fetchPaySlip(array $payRunEntry, array $employer): void
+    /**
+     * Checks if our database has employers that are deleted on staffology, if so, delete them on our system
+     *
+     * @param array $employers
+     */
+    public function syncPayCode(array $employer, array $payCodes)
     {
-        $queue = Craft::$app->getQueue();
-        $queue->push(new FetchPaySlipJob([
-            'description' => 'Fetch Pay Slips',
-            'criteria' => [
-                'employer' => $employer,
-                'payPeriod' => $payRunEntry['payPeriod'] ?? null,
-                'periodNumber' => $payRunEntry['period'] ?? null,
-                'taxYear' => $payRunEntry['taxYear'] ?? null,
-                'payRunEntry' => $payRunEntry ?? null
-            ]
-        ]));
+        $logger = new Logger();
+        $logger->stdout('↧ Sync pay codes of '. $employer['name']. PHP_EOL, $logger::RESET);
+
+        $hubEmployer = Employer::findOne(['staffologyId' => $employer['id']]);
+        $hubPayCodes = PayCode::findAll(['employerId' => $hubEmployer['id']]);
+
+        foreach ($hubPayCodes as $hubPayCode) {
+
+            $exists = false;
+
+            // loop through our employees and check if the employee is still on staffology
+            foreach ($payCodes as $payCode) {
+                if ($payCode['code'] === $hubPayCode['code']) {
+                    $exists = true;
+                }
+            }
+
+            // remove the employee if it doesn't exists anymore
+            if (!$exists) {
+                $logger->stdout('✓ Delete pay code ' . $hubPayCode['code'] . ' from '. $employer['name']. PHP_EOL, $logger::FG_YELLOW);
+
+                $payCode = PayCode::findOne(['code' => $hubPayCode['code']]);
+                if($payCode) {
+                    $payCode->delete();
+                }
+            }
+        }
     }
 
-
-
-
-
-    /* SAVES */
+    /**
+     * @param array $payCode
+     * @param array $employer
+     */
     public function savePayCode(array $payCode, array $employer): void
     {
         $logger = new Logger();
@@ -421,9 +409,10 @@ class PayRuns extends Component
         $employerRecord = is_int($employer['id'] ?? null) ? $employer : EmployerRecord::findOne(['staffologyId' => $employer['id'] ?? null]);
         $payCodeRecord = PayCodeRecord::findOne(['code' => $payCode['code'], 'employerId' => $employerRecord->id ?? null]);
 
-        if(!$payCodeRecord){
+        if (!$payCodeRecord) {
             $payCodeRecord = new PayCodeRecord();
         }
+
         $payCodeRecord->title = $payCode['title'] ?? null;
         $payCodeRecord->code = $payCode['code'] ?? null;
         $payCodeRecord->employerId = $employerRecord->id ?? null;
@@ -431,16 +420,14 @@ class PayRuns extends Component
         $payCodeRecord->isSystemCode = $payCode['isSystemCode'] ?? null;
         $success = $payCodeRecord->save();
 
-        if($success) {
-
+        if ($success) {
             $logger->stdout(" done" . PHP_EOL, $logger::FG_GREEN);
-
-        }else{
+        } else {
             $logger->stdout(" failed" . PHP_EOL, $logger::FG_RED);
 
             $errors = "";
 
-            foreach($payCodeRecord->errors as $err) {
+            foreach ($payCodeRecord->errors as $err) {
                 $errors .= implode(',', $err);
             }
 
@@ -449,29 +436,64 @@ class PayRuns extends Component
         }
     }
 
+
+    /**
+     * Checks if our database has employers that are deleted on staffology, if so, delete them on our system
+     *
+     * @param array $employer
+     * @param array $payruns
+     */
+    public function syncPayRuns(array $employer, array $payRuns)
+    {
+        $logger = new Logger();
+        $logger->stdout('↧ Sync pay run of '. $employer['name']. PHP_EOL, $logger::RESET);
+
+        $taxYear = $payRuns['metadata']['taxYear'] ?? '';
+        $hubEmployer = Employer::findOne(['staffologyId' => $employer['id']]);
+        $hubPayRuns = PayRun::findAll(['employerId' => $hubEmployer['id'], 'taxYear' => $taxYear]);
+
+        foreach ($hubPayRuns as $hubPayRun) {
+
+            $exists = false;
+
+            // loop through our employees and check if the employee is still on staffology
+            foreach ($payRuns as $payRun) {
+                if ($payRun['url'] === $hubPayRun['url']) {
+                    $exists = true;
+                }
+            }
+
+            // remove the employee if it doesn't exists anymore
+            if (!$exists) {
+                $logger->stdout('✓ Delete pay run ' . $hubPayRun['taxYear'] . '/' . $hubPayRun['taxMonth'] . ' from '. $employer['name']. PHP_EOL, $logger::FG_YELLOW);
+                Craft::$app->getElements()->deleteElementById($hubPayRun['id']);
+            }
+        }
+    }
+
+    /**
+     * @param array $payRun
+     * @param string $payRunUrl
+     * @param array $employer
+     * @throws \Throwable
+     */
     public function savePayRun(array $payRun, string $payRunUrl, array $employer): void
     {
         $logger = new Logger();
-        $logger->stdout("✓ Save pay run of " .$employer['name'] . ' ' . $payRun['taxYear'] .  ' / ' . $payRun['taxMonth'] . '...', $logger::RESET);
+        $logger->stdout("✓ Save pay run of " . $employer['name'] . ' ' . $payRun['taxYear'] . ' / ' . $payRun['taxMonth'] . '...', $logger::RESET);
 
         $payRunRecord = PayRun::findOne(['url' => $payRunUrl]);
 
         try {
-            if(!$payRunRecord) {
+            if (!$payRunRecord) {
                 $payRunRecord = new PayRun();
-
-                //foreign keys
-                $totalsId = $payRunRecord->totalsId;
-            } else {
-                //foreign keys
-                $totalsId = null;
             }
 
             //foreign keys
-            $totals = Staff::$plugin->payRuns->saveTotals( $payRun['totals'] ?? [], $totalsId);
+//            $totals = Staff::$plugin->totals->saveTotals($payRun['totals'] ?? [], $totalsId);
             $emp = is_int($employer['id'] ?? null) ? $employer : EmployerRecord::findOne(['staffologyId' => $employer['id'] ?? null]);
 
-            $payRunRecord->employerId = $emp['id'] ?? null;
+            $payRunRecord->employerId = $emp->id ?? null;
             $payRunRecord->taxYear = $payRun['taxYear'] ?? '';
             $payRunRecord->taxMonth = $payRun['taxMonth'] ?? null;
             $payRunRecord->payPeriod = $payRun['payPeriod'] ?? '';
@@ -482,7 +504,6 @@ class PayRuns extends Component
             $payRunRecord->paymentDate = $payRun['paymentDate'] ?? null;
             $payRunRecord->employeeCount = $payRun['employeeCount'] ?? null;
             $payRunRecord->subContractorCount = $payRun['subContractorCount'] ?? null;
-            $payRunRecord->totalsId = $totals->id ?? null;
             $payRunRecord->state = $payRun['state'] ?? '';
             $payRunRecord->isClosed = $payRun['isClosed'] ?? '';
             $payRunRecord->dateClosed = $payRun['dateClosed'] ?? null;
@@ -491,7 +512,7 @@ class PayRuns extends Component
             $elementsService = Craft::$app->getElements();
             $success = $elementsService->saveElement($payRunRecord);
 
-            if($success) {
+            if ($success) {
 
                 // GET PAYRUNENTRY FROM PAYRUN
                 $queue = Craft::$app->getQueue();
@@ -501,28 +522,28 @@ class PayRuns extends Component
                         'payRun' => $payRunRecord,
                         'payRunEntries' => $payRun['entries'],
                         'employer' => $employer,
-                    ]
+                    ],
                 ]));
 
                 $logger->stdout(" done" . PHP_EOL, $logger::FG_GREEN);
 
-                $this->savePayRunLog($payRun, $payRunUrl, $payRunRecord->id, $employer['id']);
-
-            }else{
+                if ($payRun['totals'] ?? null) {
+                    Staff::$plugin->totals->savePayRunTotals($payRun['totals'], $payRunRecord->id);
+                }
+//                $this->savePayRunLog($payRun, $payRunUrl, $payRunRecord->id, $employer['id']);
+            } else {
                 $logger->stdout(" failed" . PHP_EOL, $logger::FG_RED);
 
                 $errors = "";
 
-                foreach($payRunRecord->errors as $err) {
+                foreach ($payRunRecord->errors as $err) {
                     $errors .= implode(',', $err);
                 }
 
                 $logger->stdout($errors . PHP_EOL, $logger::FG_RED);
                 Craft::error($payRunRecord->errors, __METHOD__);
             }
-
         } catch (\Exception $e) {
-
             $logger = new Logger();
             $logger->stdout(PHP_EOL, $logger::RESET);
             $logger->stdout($e->getMessage() . PHP_EOL, $logger::FG_RED);
@@ -530,6 +551,13 @@ class PayRuns extends Component
         }
     }
 
+    /**
+     * @param array $payRun
+     * @param string $url
+     * @param string $payRunId
+     * @param string $employerId
+     * @return bool
+     */
     public function savePayRunLog(array $payRun, string $url, string $payRunId, string $employerId): bool
     {
         $logger = new Logger();
@@ -548,16 +576,14 @@ class PayRuns extends Component
 
         $success = $payRunLog->save(true);
 
-        if($success) {
-
+        if ($success) {
             $logger->stdout(" done" . PHP_EOL, $logger::FG_GREEN);
-
-        }else{
+        } else {
             $logger->stdout(" failed" . PHP_EOL, $logger::FG_RED);
 
             $errors = "";
 
-            foreach($payRunLog->errors as $err) {
+            foreach ($payRunLog->errors as $err) {
                 $errors .= implode(',', $err);
             }
 
@@ -567,397 +593,4 @@ class PayRuns extends Component
 
         return $success;
     }
-
-    public function savePayRunEntry(array $payRunEntryData, array $employer, int $payRunId): ?PayRunEntry
-    {
-        $logger = new Logger();
-        $logger->stdout("✓ Save pay run entry for " . $payRunEntryData['employee']['name'] ?? '' . '...', $logger::RESET);
-
-        $payRunEntryRecord = PayRunEntry::findOne(['staffologyId' => $payRunEntryData['id'] ?? null]);
-
-        try {
-            if (!$payRunEntryRecord) {
-                $payRunEntryRecord = new PayRunEntry();
-            }
-
-            //foreign keys
-            $totalsId = $payRunEntryRecord->totalsId ?? null;
-            $totalsYtdId = $payRunEntryRecord->totalsYtdId ?? null;
-            $payOptionsId = $payRunEntryRecord->payOptionsId ?? null;
-
-            $totals = $this->saveTotals($payRunEntryData['totals'], $totalsId);
-            $totalsYtd = $this->saveTotals($payRunEntryData['totalsYtd'], $totalsYtdId);
-            $payOptions = $this->savePayOptions($payRunEntryData['payOptions'], $payOptionsId);
-            $employee = EmployeeRecord::findOne(['staffologyId' => $payRunEntryData['employee']['id'] ?? null]);
-
-            $employerRecord = is_int($employer['id'] ?? null) ? $employer : EmployerRecord::findOne(['staffologyId' => $employer['id'] ?? null]);
-
-            //save
-            $payRunEntryRecord->employerId = $employerRecord['id'] ?? null;
-            $payRunEntryRecord->employeeId = $employee->id ?? null;
-            $payRunEntryRecord->payRunId = $payRunId ?? null;
-            $payRunEntryRecord->payOptionsId = $payOptions->id ?? null;
-            $payRunEntryRecord->totalsId = $totals->id ?? null;
-            $payRunEntryRecord->totalsYtdId = $totalsYtd->id ?? null;
-            $payRunEntryRecord->staffologyId = $payRunEntryData['id'] ?? null;
-            $payRunEntryRecord->taxYear = $payRunEntryData['taxYear'] ?? null;
-            $payRunEntryRecord->startDate = $payRunEntryData['startDate'] ?? null;
-            $payRunEntryRecord->endDate = $payRunEntryData['endDate'] ?? null;
-            $payRunEntryRecord->note = $payRunEntryData['note'] ?? null;
-            $payRunEntryRecord->bacsSubReference = $payRunEntryData['bacsSubReference'] ?? null;
-            $payRunEntryRecord->bacsHashcode = $payRunEntryData['bacsHashcode'] ?? null;
-            $payRunEntryRecord->percentageOfWorkingDaysPaidAsNormal = $payRunEntryData['percentageOfWorkingDaysPaidAsNormal'] ?? null;
-            $payRunEntryRecord->workingDaysNotPaidAsNormal = $payRunEntryData['workingDaysNotPaidAsNormal'] ?? null;
-            $payRunEntryRecord->payPeriod = $payRunEntryData['payPeriod'] ?? null;
-            $payRunEntryRecord->ordinal = $payRunEntryData['ordinal'] ?? null;
-            $payRunEntryRecord->period = $payRunEntryData['period'] ?? null;
-            $payRunEntryRecord->isNewStarter = $payRunEntryData['isNewStarter'] ?? null;
-            $payRunEntryRecord->unpaidAbsence = $payRunEntryData['unpaidAbsence'] ?? null;
-            $payRunEntryRecord->hasAttachmentOrders = $payRunEntryData['hasAttachmentOrders'] ?? null;
-            $payRunEntryRecord->paymentDate = $payRunEntryData['paymentDate'] ?? null;
-            $payRunEntryRecord->forcedCisVatAmount = $payRunEntryData['forcedCisVatAmount'] ?? null;
-            $payRunEntryRecord->holidayAccrued = $payRunEntryData['holidayAccrued'] ?? null;
-            $payRunEntryRecord->state = $payRunEntryData['state'] ?? null;
-            $payRunEntryRecord->isClosed = $payRunEntryData['isClosed'] ?? null;
-            $payRunEntryRecord->manualNi = $payRunEntryData['manualNi'] ?? null;
-            $payRunEntryRecord->payrollCodeChanged = $payRunEntryData['payrollCodeChanged'] ?? null;
-            $payRunEntryRecord->aeNotEnroledWarning = $payRunEntryData['aeNotEnroledWarning'] ?? null;
-            $payRunEntryRecord->receivingOffsetPay = $payRunEntryData['receivingOffsetPay'] ?? null;
-            $payRunEntryRecord->paymentAfterLearning = $payRunEntryData['paymentAfterLearning'] ?? null;
-            $payRunEntryRecord->pdf = '';
-
-            $elementsService = Craft::$app->getElements();
-            $success = $elementsService->saveElement($payRunEntryRecord);
-
-            if($success){
-                $logger->stdout(" done" . PHP_EOL, $logger::FG_GREEN);
-            } else {
-                $logger->stdout(" failed" . PHP_EOL, $logger::FG_RED);
-
-                $errors = "";
-
-                foreach($payRunEntryRecord->errors as $err) {
-                    $errors .= implode(',', $err);
-                }
-
-                $logger->stdout($errors . PHP_EOL, $logger::FG_RED);
-                Craft::error($payRunEntryRecord->errors, __METHOD__);
-            }
-
-            return $payRunEntryRecord;
-
-        } catch (\Exception $e) {
-
-            $logger = new Logger();
-            $logger->stdout(PHP_EOL, $logger::RESET);
-            $logger->stdout($e->getMessage() . PHP_EOL, $logger::FG_RED);
-            Craft::error($e->getMessage(), __METHOD__);
-        }
-
-        return null;
-    }
-
-    public function savePaySlip(array $paySlip, array $payRunEntry): void
-    {
-        $logger = new Logger();
-        $logger->stdout("✓ Save pay slip of ". $payRunEntry['employee']['name'] ?? '' ."...", $logger::RESET);
-
-        $record = PayRunEntryRecord::findOne(['staffologyId' => $payRunEntry['id']]);
-
-        if($paySlip['content'] && $record)
-        {
-            $record->pdf = SecurityHelper::encrypt($paySlip['content'] ?? '');
-
-            $success = $record->save();
-
-            if($success) {
-                $logger->stdout(" done" . PHP_EOL, $logger::FG_GREEN);
-            } else {
-                $logger->stdout(PHP_EOL, $logger::RESET);
-                $logger->stdout("The payslip couldn't be created for ". $payRunEntry['employee']['name'] ?? '' . PHP_EOL, $logger::FG_RED);
-                Craft::error("The payslip couldn't be created for ". $payRunEntry['employee']['name'] ?? '', __METHOD__);
-            }
-        }
-    }
-    
-    public function saveTotals(array $totals, int $totalsId = null): PayRunTotals
-    {
-
-        if($totalsId) {
-            $record = PayRunTotals::findOne($totalsId);
-
-            if (!$record) {
-                throw new Exception('Invalid pay run totals ID: ' . $totalsId);
-            }
-
-        }else{
-            $record = new PayRunTotals();
-        }
-
-        $record->basicPay = SecurityHelper::encrypt($totals['basicPay'] ?? '');
-        $record->gross = SecurityHelper::encrypt($totals['gross'] ?? '');
-        $record->grossForNi = SecurityHelper::encrypt($totals['grossForNi'] ?? '');
-        $record->grossNotSubjectToEmployersNi = SecurityHelper::encrypt($totals['grossNotSubjectToEmployersNi'] ?? '');
-        $record->grossForTax = SecurityHelper::encrypt($totals['grossForTax'] ?? '');
-        $record->employerNi = SecurityHelper::encrypt($totals['employerNi'] ?? '');
-        $record->employeeNi = SecurityHelper::encrypt($totals['employeeNi'] ?? '');
-        $record->employerNiOffPayroll = $totals['employerNiOffPayroll'] ?? null;
-        $record->realTimeClass1ANi = $totals['realTimeClass1ANi'] ?? null;
-        $record->tax = SecurityHelper::encrypt($totals['tax'] ?? '');
-        $record->netPay = SecurityHelper::encrypt($totals['netPay'] ?? '');
-        $record->adjustments = SecurityHelper::encrypt($totals['adjustments'] ?? '');
-        $record->additions = SecurityHelper::encrypt($totals['additions'] ?? '');
-        $record->takeHomePay = SecurityHelper::encrypt($totals['takeHomePay'] ?? '');
-        $record->nonTaxOrNICPmt = SecurityHelper::encrypt($totals['nonTaxOrNICPmt'] ?? '');
-        $record->itemsSubjectToClass1NIC = $totals['itemsSubjectToClass1NIC'] ?? null;
-        $record->dednsFromNetPay = $totals['dednsFromNetPay'] ?? null;
-        $record->tcp_Tcls = $totals['tcp_Tcls'] ?? null;
-        $record->tcp_Pp = $totals['tcp_Pp'] ?? null;
-        $record->tcp_Op = $totals['tcp_Op'] ?? null;
-        $record->flexiDd_Death = $totals['flexiDd_Death'] ?? null;
-        $record->flexiDd_Death_NonTax = $totals['flexiDd_Death_NonTax'] ?? null;
-        $record->flexiDd_Pension = $totals['flexiDd_Pension'] ?? null;
-        $record->flexiDd_Pension_NonTax = $totals['flexiDd_Pension_NonTax'] ?? null;
-        $record->smp = $totals['smp'] ?? null;
-        $record->spp = $totals['spp'] ?? null;
-        $record->sap = $totals['sap'] ?? null;
-        $record->shpp = $totals['shpp'] ?? null;
-        $record->spbp = $totals['spbp'] ?? null;
-        $record->ssp = $totals['ssp'] ?? null;
-        $record->studentLoanRecovered = SecurityHelper::encrypt($totals['studentLoanRecovered'] ?? '');
-        $record->postgradLoanRecovered = SecurityHelper::encrypt($totals['postgradLoanRecovered'] ?? '');
-        $record->pensionableEarnings = SecurityHelper::encrypt($totals['pensionableEarnings'] ?? '');
-        $record->pensionablePay = SecurityHelper::encrypt($totals['pensionablePay'] ?? '');
-        $record->nonTierablePay = SecurityHelper::encrypt($totals['nonTierablePay'] ?? '');
-        $record->employeePensionContribution = SecurityHelper::encrypt($totals['employeePensionContribution'] ?? '');
-        $record->employeePensionContributionAvc = SecurityHelper::encrypt($totals['employeePensionContributionAvc'] ?? '');
-        $record->employerPensionContribution = SecurityHelper::encrypt($totals['employerPensionContribution'] ?? '');
-        $record->empeePenContribnsNotPaid = SecurityHelper::encrypt($totals['empeePenContribnsNotPaid'] ?? '');
-        $record->empeePenContribnsPaid = SecurityHelper::encrypt($totals['empeePenContribnsPaid'] ?? '');
-        $record->attachmentOrderDeductions = SecurityHelper::encrypt($totals['attachmentOrderDeductions'] ?? '');
-        $record->cisDeduction = SecurityHelper::encrypt($totals['cisDeduction'] ?? '');
-        $record->cisVat = SecurityHelper::encrypt($totals['cisVat'] ?? '');
-        $record->cisUmbrellaFee = SecurityHelper::encrypt($totals['cisUmbrellaFee'] ?? '');
-        $record->cisUmbrellaFeePostTax = SecurityHelper::encrypt($totals['cisUmbrellaFeePostTax'] ?? '');
-        $record->pbik = $totals['pbik'] ?? null;
-        $record->mapsMiles = $totals['mapsMiles'] ?? null;
-        $record->umbrellaFee = SecurityHelper::encrypt($totals['umbrellaFee'] ?? '');
-        $record->appLevyDeduction = $totals['appLevyDeduction'] ?? null;
-        $record->paymentAfterLeaving = $totals['paymentAfterLeaving'] ?? null;
-        $record->taxOnPaymentAfterLeaving = $totals['taxOnPaymentAfterLeaving'] ?? null;
-        $record->nilPaid = $totals['nilPaid'] ?? null;
-        $record->leavers = $totals['leavers'] ?? null;
-        $record->starters = $totals['starters'] ?? null;
-        $record->totalCost = SecurityHelper::encrypt($totals['totalCost'] ?? '');
-
-        $success = $record->save();
-
-        if($success) {
-            return $record;
-        }
-
-        $errors = "";
-
-        foreach($record->errors as $err) {
-            $errors .= implode(',', $err);
-        }
-
-        $logger = new Logger();
-        $logger->stdout($errors . PHP_EOL, $logger::FG_RED);
-        Craft::error($record->errors, __METHOD__);
-
-    }
-
-    public function savePayOptions(array $payOptions, int $payOptionsId = null): PayOptionRecord
-    {
-        if($payOptionsId) {
-            $record = PayOptionRecord::findOne($payOptionsId);
-
-            if (!$record) {
-                throw new Exception('Invalid pay options ID: ' . $payOptionsId);
-            }
-
-        }else{
-            $record = new PayOptionRecord();
-        }
-
-        $record->period = $payOptions['period'] ?? null;
-        $record->ordinal = $payOptions['ordinal'] ?? null;
-        $record->payAmount = SecurityHelper::encrypt($totals['payAmount'] ?? '');
-        $record->basis = $payOptions['basis'] ?? 'Monthly';
-        $record->nationalMinimumWage = $payOptions['nationalMinimumWage'] ?? null;
-        $record->payAmountMultiplier = $payOptions['payAmountMultiplier'] ?? null;
-        $record->baseHourlyRate = SecurityHelper::encrypt($totals['baseHourlyRate'] ?? '');
-        $record->autoAdjustForLeave = $payOptions['autoAdjustForLeave'] ?? null;
-        $record->method = $payOptions['method'] ?? null;
-        $record->payCode = $payOptions['payCode'] ?? null;
-        $record->withholdTaxRefundIfPayIsZero = $payOptions['withholdTaxRefundIfPayIsZero'] ?? null;
-        $record->mileageVehicleType = $payOptions['mileageVehicleType'] ?? null;
-        $record->mapsMiles = $payOptions['mapsMiles'] ?? null;
-
-        $success = $record->save();
-
-        if($success) {
-
-            //delete pay lines from DB to prevent removed ones in staffology to still exists here
-            $payLines = PayLineRecord::findAll(['payOptionsId' => $record->id]);
-            foreach($payLines as $payLine){
-                $payLine->delete();
-            }
-
-            //save pay lines
-            foreach($payOptions['regularPayLines'] ?? [] as $payLine){
-                $this->savePayLines($payLine, $record->id);
-            }
-
-            return $record;
-        }
-
-        $errors = "";
-        foreach($record->errors as $err) {
-            $errors .= implode(',', $err);
-        }
-
-        $logger = new Logger();
-        $logger->stdout($errors . PHP_EOL, $logger::FG_RED);
-        Craft::error($record->errors, __METHOD__);
-    }
-
-    public function savePayLines(array $payLine, int $payOptionsId = null): void
-    {
-        $record = PayLineRecord::findOne(['payOptionsId' => $payOptionsId, 'code' => $payLine['code'] ?? null]);
-
-        if(!$record) {
-            $record = new PayLineRecord();
-        }
-
-        $record->payOptionsId = $payOptionsId ?? null;
-        $record->value = SecurityHelper::encrypt($payLine['value'] ?? '');
-        $record->rate = SecurityHelper::encrypt($payLine['rate'] ?? '');
-        $record->description = $payLine['description'] ?? null;
-        $record->attachmentOrderId = $payLine['attachmentOrderId'] ?? null;
-        $record->pensionId = $payLine['pensionId'] ?? null;
-        $record->code = $payLine['code'] ?? null;
-
-        $record->save();
-    }
-
-
-
-
-
-    /* UPDATES */
-    public function updatePayRunEntry(string $payPeriod, int $employer, int $payRunId, array $payRunEntryUpdate): bool
-    {
-        $employer = EmployerRecord::findOne($employer);
-
-        if($employer){
-
-            $api = App::parseEnv(Staff::$plugin->getSettings()->apiKeyStaffology);
-            $base_url = 'https://api.staffology.co.uk/employers/'.$employer['staffologyId'].'/payrun/'.$payPeriod.'/importpay?linesOnly=true';
-//            $base_url = 'https://api.staffology.co.uk/employers/'.$employer['staffologyId'].'/payrun/'.$payRunEntry['taxYear'].'/'.$payRunEntry['payPeriod'].'/'.$payRunEntry['period'].'/'.$payRunEntry['staffologyId'];
-            $credentials = base64_encode('staff:'.$api);
-            $client = new \GuzzleHttp\Client([
-                'headers' => [
-                    'Authorization' => 'Basic ' . $credentials,
-                ],
-            ]);
-
-
-            # START TEST
-//            var_dump($base_url);
-//            echo "<br/><br/>";
-//            var_dump(json_encode($payRunEntryUpdate));
-//            echo "<br/>";
-//            return true;
-//            Craft::dd((array)$payRunEntryUpdate);
-            #END TEST
-
-            try {
-                $response = $client->post(
-                    $base_url,
-                    [
-                        'json' => $payRunEntryUpdate,
-                    ]
-                );
-
-                $this->fetchPayRunByPayRunId($payRunId, true);
-
-                return true;
-
-            } catch (GuzzleException $e) {
-
-                Craft::error($e->getMessage(), __METHOD__);
-
-                return false;
-
-            }
-        }
-
-        return false;
-    }
-
-
-
-
-    /* PARSE SECURITY VALUES */
-    private function _parseTotals(array $totals) :array
-    {
-        $totals['basicPay'] = SecurityHelper::decrypt($totals['basicPay'] ?? '');
-        $totals['gross'] = SecurityHelper::decrypt($totals['gross'] ?? '');
-        $totals['grossForNi'] = SecurityHelper::decrypt($totals['grossForNi'] ?? '');
-        $totals['grossNotSubjectToEmployersNi'] = SecurityHelper::decrypt($totals['grossNotSubjectToEmployersNi'] ?? '');
-        $totals['grossForTax'] = SecurityHelper::decrypt($totals['grossForTax'] ?? '');
-        $totals['employerNi'] = SecurityHelper::decrypt($totals['employerNi'] ?? '');
-        $totals['employeeNi'] = SecurityHelper::decrypt($totals['employeeNi'] ?? '');
-        $totals['tax'] = SecurityHelper::decrypt($totals['tax'] ?? '');
-        $totals['netPay'] = SecurityHelper::decrypt($totals['netPay'] ?? '');
-        $totals['adjustments'] = SecurityHelper::decrypt($totals['adjustments'] ?? '');
-        $totals['additions'] = SecurityHelper::decrypt($totals['additions'] ?? '');
-        $totals['takeHomePay'] = SecurityHelper::decrypt($totals['takeHomePay'] ?? '');
-        $totals['nonTaxOrNICPmt'] = SecurityHelper::decrypt($totals['nonTaxOrNICPmt'] ?? '');
-        $totals['studentLoanRecovered'] = SecurityHelper::decrypt($totals['studentLoanRecovered'] ?? '');
-        $totals['postgradLoanRecovered'] = SecurityHelper::decrypt($totals['postgradLoanRecovered'] ?? '');
-        $totals['pensionableEarnings'] = SecurityHelper::decrypt($totals['pensionableEarnings'] ?? '');
-        $totals['pensionablePay'] = SecurityHelper::decrypt($totals['pensionablePay'] ?? '');
-        $totals['nonTierablePay'] = SecurityHelper::decrypt($totals['nonTierablePay'] ?? '');
-        $totals['employeePensionContribution'] = SecurityHelper::decrypt($totals['employeePensionContribution'] ?? '');
-        $totals['employeePensionContributionAvc'] = SecurityHelper::decrypt($totals['employeePensionContributionAvc'] ?? '');
-        $totals['employerPensionContribution'] = SecurityHelper::decrypt($totals['employerPensionContribution'] ?? '');
-        $totals['empeePenContribnsNotPaid'] = SecurityHelper::decrypt($totals['empeePenContribnsNotPaid'] ?? '');
-        $totals['empeePenContribnsPaid'] = SecurityHelper::decrypt($totals['empeePenContribnsPaid'] ?? '');
-        $totals['attachmentOrderDeductions'] = SecurityHelper::decrypt($totals['attachmentOrderDeductions'] ?? '');
-        $totals['cisDeduction'] = SecurityHelper::decrypt($totals['cisDeduction'] ?? '');
-        $totals['cisVat'] = SecurityHelper::decrypt($totals['cisVat'] ?? '');
-        $totals['cisUmbrellaFee'] = SecurityHelper::decrypt($totals['cisUmbrellaFee'] ?? '');
-        $totals['cisUmbrellaFeePostTax'] = SecurityHelper::decrypt($totals['cisUmbrellaFeePostTax'] ?? '');
-        $totals['umbrellaFee'] = SecurityHelper::decrypt($totals['umbrellaFee'] ?? '');
-        $totals['totalCost'] = SecurityHelper::decrypt($totals['totalCost'] ?? '');
-
-        return $totals;
-    }
-
-    public function parsePayOptions(array $payOptions): array
-    {
-        $payOptions['payAmount'] = SecurityHelper::decrypt($payOptions['payAmount'] ?? '');
-        $payOptions['baseHourlyRate'] = SecurityHelper::decrypt($payOptions['baseHourlyRate'] ?? '');
-
-        return $payOptions;
-    }
-
-    private function _parsePayLines(array $payLine): array
-    {
-        $payLine['value'] = SecurityHelper::decrypt($payLine['value'] ?? '');
-        $payLine['rate'] = SecurityHelper::decrypt($payLine['rate'] ?? '');
-
-        return $payLine;
-    }
-
-
-
-
-
-
-    /* PRIVATE */
-
 }

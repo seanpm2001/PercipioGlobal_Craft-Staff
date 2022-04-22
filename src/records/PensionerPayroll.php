@@ -10,16 +10,15 @@
 
 namespace percipiolondon\staff\records;
 
-use percipiolondon\staff\Staff;
-
-use Craft;
 use craft\db\ActiveRecord;
 use percipiolondon\staff\db\Table;
 
 /**
- * @property boolean $inReceiptOfPension;
- * @property boolean $bereaved;
- * @property double $amount;
+ * @property int starterDetailsId;
+ *
+ * @property boolean inReceiptOfPension;
+ * @property boolean bereaved;
+ * @property double amount;
  */
 
 class PensionerPayroll extends ActiveRecord
@@ -39,7 +38,7 @@ class PensionerPayroll extends ActiveRecord
      *
      * @return string the table name
      */
-    public static function tableName()
+    public static function tableName(): string
     {
         return Table::PENSIONER_PAYROLL;
     }

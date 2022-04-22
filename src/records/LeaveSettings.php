@@ -10,40 +10,39 @@
 
 namespace percipiolondon\staff\records;
 
-use percipiolondon\staff\Staff;
-
-use Craft;
 use craft\db\ActiveRecord;
 use percipiolondon\staff\db\Table;
 
-
 /**
- * @property boolean $useDefaultHolidayType;
- * @property boolean $useDefaultAllowanceResetDate;
- * @property boolean $useDefaultAllowance;
- * @property boolean $useDefaultAccruePaymentInLieu;
- * @property boolean $useDefaultAccruePaymentInLieuRate;
- * @property boolean $useDefaultAccruePaymentInLieuAllGrossPay;
- * @property boolean $useDefaultAccruePaymentInLieuPayAutomatically;
- * @property boolean $useDefaultAccrueHoursPerDay;
- * @property \DateTime $allowanceResetDate;
- * @property double $allowance;
- * @property double $adjustment;
- * @property double $allowanceUsed;
- * @property double $allowanceUsedPreviousPeriod;
- * @property double $allowanceRemaining;
- * @property string $holidayType;
- * @property boolean $accrueSetAmount;
- * @property double $accrueHoursPerDay;
- * @property boolean $showAllowanceOnPayslip;
- * @property boolean $showAhpOnPayslip;
- * @property double $accruePaymentInLieuRate;
- * @property boolean $accruePaymentInLieuAllGrossPay;
- * @property boolean $accruePaymentInLieuPayAutomatically;
- * @property double $accruedPaymentLiability;
- * @property double $accruedPaymentAdjustment;
- * @property double $accruedPaymentPaid;
- * @property double $accruedPaymentBalance;
+ * @property int employeeId;
+ * @property int employerId;
+ *
+ * @property boolean useDefaultHolidayType;
+ * @property boolean useDefaultAllowanceResetDate;
+ * @property boolean useDefaultAllowance;
+ * @property boolean useDefaultAccruePaymentInLieu;
+ * @property boolean useDefaultAccruePaymentInLieuRate;
+ * @property boolean useDefaultAccruePaymentInLieuAllGrossPay;
+ * @property boolean useDefaultAccruePaymentInLieuPayAutomatically;
+ * @property boolean useDefaultAccrueHoursPerDay;
+ * @property \DateTime allowanceResetDate;
+ * @property double allowance;
+ * @property double adjustment;
+ * @property double allowanceUsed;
+ * @property double allowanceUsedPreviousPeriod;
+ * @property double allowanceRemaining;
+ * @property string holidayType;
+ * @property boolean accrueSetAmount;
+ * @property double accrueHoursPerDay;
+ * @property boolean showAllowanceOnPayslip;
+ * @property boolean showAhpOnPayslip;
+ * @property double accruePaymentInLieuRate;
+ * @property boolean accruePaymentInLieuAllGrossPay;
+ * @property boolean accruePaymentInLieuPayAutomatically;
+ * @property double accruedPaymentLiability;
+ * @property double accruedPaymentAdjustment;
+ * @property double accruedPaymentPaid;
+ * @property double accruedPaymentBalance;
  */
 
 class LeaveSettings extends ActiveRecord
@@ -63,7 +62,7 @@ class LeaveSettings extends ActiveRecord
      *
      * @return string the table name
      */
-    public static function tableName()
+    public static function tableName(): string
     {
         return Table::LEAVE_SETTINGS;
     }

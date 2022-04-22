@@ -6,10 +6,12 @@ use craft\db\ActiveRecord;
 use percipiolondon\staff\db\Table;
 
 /**
- * @property boolean $isDirector;
- * @property \DateTime $startDate;
- * @property \DateTime $leaveDate;
- * @property boolean $niAlternativeMethod;
+ * @property int employmentDetailsId;
+ *
+ * @property boolean isDirector;
+ * @property \DateTime startDate;
+ * @property \DateTime leaveDate;
+ * @property boolean niAlternativeMethod;
  */
 
 class DirectorshipDetails extends ActiveRecord
@@ -29,7 +31,7 @@ class DirectorshipDetails extends ActiveRecord
      *
      * @return string the table name
      */
-    public static function tableName()
+    public static function tableName(): string
     {
         return Table::DIRECTORSHIP_DETAILS;
     }

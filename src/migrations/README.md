@@ -43,12 +43,12 @@ Query on employerId from within staffology call
 #### customPayCodes
 PAY_CODES: Query on employerId from within staffology call
 
-## Table::PAYRUN
+## Table::PAY_RUN
 ### totalsId (PayRunTotals)
 Query on payRunId from within staffology call
 ### employerId (Employer)
 
-## Table::PAYRUN_ENRIES
+## Table::PAY_RUN_ENRIES
 ### priorPayrollCodeId (PayCode)
 Query on code from within staffology call
 ### payOptionsId (PayOptions)

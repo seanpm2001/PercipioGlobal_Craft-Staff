@@ -10,17 +10,18 @@
 
 namespace percipiolondon\staff\records;
 
-use percipiolondon\staff\Staff;
-
-use Craft;
 use craft\db\ActiveRecord;
 use percipiolondon\staff\db\Table;
 
 /**
- * @property string $itemId;
- * @property string $name;
- * @property string $metadata;
- * @property string $url;
+ * @property int autoEnrolmentAssessmentId;
+ * @property int noteId;
+ * @property int cisSubcontractorId;
+ *
+ * @property string itemId;
+ * @property string name;
+ * @property string metadata;
+ * @property string url;
  */
 
 class Item extends ActiveRecord
@@ -40,7 +41,7 @@ class Item extends ActiveRecord
      *
      * @return string the table name
      */
-    public static function tableName()
+    public static function tableName(): string
     {
         return Table::ITEMS;
     }

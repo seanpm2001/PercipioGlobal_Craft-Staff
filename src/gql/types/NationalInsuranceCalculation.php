@@ -2,9 +2,10 @@
 
 namespace percipiolondon\staff\gql\types;
 
+use craft\gql\base\GqlTypeTrait;
 use GraphQL\Type\Definition\Type;
 
-use percipiolondon\staff\gql\base\GqlTypeTrait;
+use craft\gql\base\GqlTypeTrait;
 
 
 /**
@@ -94,5 +95,4 @@ class NationalInsuranceCalculation
             ],
         ];
     }
-
 }

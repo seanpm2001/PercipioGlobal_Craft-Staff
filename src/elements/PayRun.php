@@ -15,13 +15,13 @@ use craft\base\Element;
 use craft\db\Query;
 use craft\elements\db\ElementQueryInterface;
 
+use percipiolondon\staff\elements\db\PayRunQuery;
+use percipiolondon\staff\helpers\Logger;
+use percipiolondon\staff\records\PayRun as PayRunRecord;
+
 use percipiolondon\staff\Staff;
 use yii\base\InvalidConfigException;
 use yii\db\Exception;
-
-use percipiolondon\staff\helpers\Logger;
-use percipiolondon\staff\records\PayRun as PayRunRecord;
-use percipiolondon\staff\elements\db\PayRunQuery;
 
 /**
  * PayRun Element
@@ -35,24 +35,23 @@ class PayRun extends Element
     // Public Properties
     // =========================================================================
 
-    public $staffologyId;
-    public $taxYear;
-    public $taxMonth;
-    public $payPeriod;
-    public $ordinal;
-    public $period;
-    public $startDate;
-    public $endDate;
-    public $paymentDate;
-    public $employeeCount;
-    public $subContractorCount;
-    public $totalsId;
-    public $state;
-    public $isClosed;
-    public $dateClosed;
-    public $pdf;
-    public $url;
-    public $employerId;
+    public string $staffologyId;
+    public ?string $taxYear;
+    public ?string $taxMonth;
+    public ?string $payPeriod;
+    public ?string $ordinal;
+    public ?string $period;
+    public ?string $startDate;
+    public ?string $endDate;
+    public ?string $paymentDate;
+    public ?string $employeeCount;
+    public ?string $subContractorCount;
+    public ?string $state;
+    public ?\DateTime $dateClosed;
+    public ?string $pdf;
+    public ?string $url;
+    public ?bool $isClosed;
+    public ?int $employerId;
 
     private $_totals;
     private $_employer;
@@ -126,7 +125,7 @@ class PayRun extends Element
                 'label' => 'All payruns',
                 'defaultSort' => ['id', 'desc'],
                 'criteria' => ['id' => $ids],
-            ]
+            ],
         ];
     }
 
@@ -136,19 +135,16 @@ class PayRun extends Element
     /**
      * Returns the payrun totals.
      *
-     * @return PayRunTotals|null
+     * @return array|null
      * @throws InvalidConfigException if [[totalId]] is set but invalid
      */
     public function getTotals()
     {
         if ($this->_totals === null) {
-            if ($this->totalsId === null) {
-                return null;
-            }
 
-            if (($this->_totals = Staff::$plugin->payRuns->getTotalsById($this->totalsId)) === null) {
+            if (($this->_totals = Staff::$plugin->totals->getTotalsByPayRun($this->id)) === null) {
                 // The author is probably soft-deleted. Just no author is set
-                $this->_totals = false;
+                $this->_totals = null;
             }
         }
 
@@ -156,7 +152,7 @@ class PayRun extends Element
     }
 
     /**
-     * Returns the payrun totals.
+     * Returns the employer
      *
      * @return string|null
      * @throws InvalidConfigException if [[employerId]] is set but invalid
@@ -255,15 +251,15 @@ class PayRun extends Element
         return true;
     }
 
-    public function datetimeAttributes(): array
-    {
-        $attributes = parent::datetimeAttributes();
-        $attributes[] = 'dateClosed';
-        $attributes[] = 'paymentDate';
-        $attributes[] = 'startDate';
-        $attributes[] = 'endDate';
-        return $attributes;
-    }
+//    public function datetimeAttributes(): array
+//    {
+//        $attributes = parent::datetimeAttributes();
+//        $attributes[] = 'dateClosed';
+//        $attributes[] = 'paymentDate';
+//        $attributes[] = 'startDate';
+//        $attributes[] = 'endDate';
+//        return $attributes;
+//    }
 
     /**
      * Returns all payrun ID's
@@ -276,7 +272,7 @@ class PayRun extends Element
         $payrunIds = [];
 
         $payruns = (new Query())
-            ->from('{{%staff_payrun}}')
+            ->from('{{%staff_pay_run}}')
             ->select('id')
             ->all();
 
@@ -298,15 +294,12 @@ class PayRun extends Element
                 if (!$record) {
                     throw new Exception('Invalid pay run ID: ' . $this->id);
                 }
-
             } else {
                 $record = new PayRunRecord();
                 $record->id = (int)$this->id;
             }
 
             $record->employerId = $this->employerId ?? null;
-            $record->totalsId = $this->totalsId ?? null;
-
             $record->taxYear = $this->taxYear;
             $record->taxMonth = $this->taxMonth;
             $record->payPeriod = $this->payPeriod;
@@ -324,17 +317,16 @@ class PayRun extends Element
 
             $success = $record->save(false);
 
-            if(!$success) {
+            if (!$success) {
                 $errors = "";
 
-                foreach($record->errors as $err) {
+                foreach ($record->errors as $err) {
                     $errors .= implode(',', $err);
                 }
 
                 $logger->stdout($errors . PHP_EOL, $logger::FG_RED);
                 Craft::error($record->errors, __METHOD__);
             }
-
         } catch (\Exception $e) {
             $logger->stdout(PHP_EOL, $logger::RESET);
             $logger->stdout($e->getMessage() . PHP_EOL, $logger::FG_RED);

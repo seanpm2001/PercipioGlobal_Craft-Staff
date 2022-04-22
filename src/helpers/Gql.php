@@ -2,14 +2,11 @@
 
 namespace percipiolondon\staff\helpers;
 
-use jamesedmonston\graphqlauthentication\GraphqlAuthentication;
-use percipiolondon\staff\Staff;
-
 class Gql extends \craft\helpers\Gql
 {
     public static function canQueryEmployers(): bool
     {
-            return true;
+        return true;
     }
 
     public static function canQueryEmployees(): bool

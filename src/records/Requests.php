@@ -10,22 +10,22 @@
 
 namespace percipiolondon\staff\records;
 
-use percipiolondon\staff\Staff;
-
-use Craft;
 use craft\db\ActiveRecord;
 use percipiolondon\staff\db\Table;
 
 /**
- * @property int $pensionSummaryId;
- *
- * @property string $name;
- * @property string $description;
- * @property double $rangeStart;
- * @property double $rate;
+ * @property \DateTime $dateAdministered;
+ * @property int $employerId;
+ * @property int $employeeId;
+ * @property string $administerId;
+ * @property string $data;
+ * @property string $section;
+ * @property string $element;
+ * @property string $status;
+ * @property string $note;
  */
 
-class TieredPensionRate extends ActiveRecord
+class Requests extends ActiveRecord
 {
     // Public Static Methods
     // =========================================================================
@@ -42,8 +42,8 @@ class TieredPensionRate extends ActiveRecord
      *
      * @return string the table name
      */
-    public static function tableName()
+    public static function tableName(): string
     {
-        return Table::TIERED_PENSION_RATE;
+        return Table::REQUESTS;
     }
 }

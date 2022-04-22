@@ -12,14 +12,14 @@ namespace percipiolondon\staff\elements;
 
 use Craft;
 use craft\base\Element;
-use craft\elements\db\ElementQuery;
 use craft\elements\db\ElementQueryInterface;
-use craft\validators\DateTimeValidator;
 
 use percipiolondon\staff\elements\db\PayRunEntryQuery;
 use percipiolondon\staff\helpers\Logger;
 use percipiolondon\staff\records\PayRunEntry as PayRunEntryRecord;
 
+use percipiolondon\staff\Staff;
+use yii\base\InvalidConfigException;
 use yii\db\Exception;
 
 /**
@@ -33,46 +33,40 @@ class PayRunEntry extends Element
     // Public Properties
     // =========================================================================
 
-    public $staffologyId;
-    public $payRunId;
-    public $employerId;
-    public $employeeId;
-    public $taxYear;
-    public $startDate;
-    public $endDate;
-    public $note;
-    public $bacsSubReference;
-    public $bacsHashcode;
-    public $percentageOfWorkingDaysPaidAsNormal;
-    public $workingDaysNotPaidAsNormal;
-    public $payPeriod;
-    public $ordinal;
-    public $period;
-    public $isNewStarter;
-    public $unpaidAbsence;
-    public $hasAttachmentOrders;
-    public $paymentDate;
-    public $priorPayrollCodeId;
-    public $payOptionsId;
-    public $pensionSummaryId;
-    public $totalsId;
-    public $periodOverrides;
-    public $totalsYtdId;
-    public $totalsYtdOverrides;
-    public $forcedCisVatAmount;
-    public $holidayAccrued;
-    public $state;
-    public $isClosed;
-    public $manualNi;
-    public $nationalInsuranceCalculationId;
-    public $payrollCodeChanged;
-    public $aeNotEnroledWarning;
-    public $fpsId;
-    public $receivingOffsetPay;
-    public $paymentAfterLearning;
-    public $umbrellaPaymentId;
-    public $employee;
-    public $pdf;
+    public string $staffologyId;
+    public int $payRunId;
+    public int $employerId;
+    public int $employeeId;
+    public ?string $taxYear;
+    public ?string $startDate;
+    public ?string $endDate;
+    public ?string $note;
+    public ?string $bacsSubReference;
+    public ?string $bacsHashcode;
+    public ?string $percentageOfWorkingDaysPaidAsNormal;
+    public ?string $workingDaysNotPaidAsNormal;
+    public ?string $payPeriod;
+    public ?string $ordinal;
+    public ?string $period;
+    public ?string $isNewStarter;
+    public ?string $unpaidAbsence;
+    public ?string $hasAttachmentOrders;
+    public ?string $paymentDate;
+    public ?string $periodOverrides;
+    public ?string $forcedCisVatAmount;
+    public ?string $holidayAccrued;
+    public ?string $state;
+    public ?string $isClosed;
+    public ?string $manualNi;
+    public ?string $payrollCodeChanged;
+    public ?string $aeNotEnroledWarning;
+    public ?string $receivingOffsetPay;
+    public ?string $paymentAfterLearning;
+    public ?string $pdf;
+
+    private $_totals;
+    private $_employee;
+    private $_pensionSummary;
 
     // Static Methods
     // =========================================================================
@@ -143,12 +137,74 @@ class PayRunEntry extends Element
                 'label' => 'All payrun entries',
                 'defaultSort' => ['id', 'desc'],
                 'criteria' => ['id' => $ids],
-            ]
+            ],
         ];
     }
 
     // Public Methods
     // =========================================================================
+    /**
+     * Returns the payrun totals.
+     *
+     * @return array|null
+     * @throws InvalidConfigException if [[totalId]] is set but invalid
+     */
+    public function getTotals(): ?array
+    {
+        if ($this->_totals === null) {
+
+            if (($this->_totals = Staff::$plugin->totals->getTotalsByPayRunEntry($this->id)) === null) {
+                // The author is probably soft-deleted. Just no author is set
+                $this->_totals = null;
+            }
+        }
+
+        return $this->_totals ?: null;
+    }
+
+    /**
+     * Returns the employer
+     *
+     * @return string|null
+     * @throws InvalidConfigException if [[employerId]] is set but invalid
+     */
+    public function getEmployee(): ?array
+    {
+        if ($this->_employee === null) {
+            if ($this->employeeId === null) {
+                return null;
+            }
+
+            if (($this->_employee = Staff::$plugin->employees->getEmployeeById($this->employeeId)) === null) {
+                // The author is probably soft-deleted. Just no author is set
+                $this->_employee = null;
+            }
+        }
+
+        return $this->_employee ?: null;
+
+        return null;
+    }
+
+    /**
+     * Returns the employer
+     *
+     * @return string|null
+     * @throws InvalidConfigException if [[employerId]] is set but invalid
+     */
+    public function getPensionSummary(): ?array
+    {
+        if ($this->_pensionSummary === null) {
+
+            if (($this->_pensionSummary = Staff::$plugin->pensions->getPensionSummaryByPayRunEntryId($this->id)) === null) {
+                // The author is probably soft-deleted. Just no author is set
+                $this->_pensionSummary = null;
+            }
+        }
+
+        return $this->_pensionSummary ?: null;
+    }
+
 
     /**
      * Returns the validation rules for attributes.
@@ -238,7 +294,7 @@ class PayRunEntry extends Element
         $payrunEntryIds = [];
 
         $payrunentries = (new Query())
-            ->from('{{%staff_payrun_entries}}')
+            ->from('{{%staff_pay_run_entries}}')
             ->select('id')
             ->all();
 
@@ -260,7 +316,6 @@ class PayRunEntry extends Element
                 if (!$record) {
                     throw new Exception('Invalid pay run entry ID: ' . $this->id);
                 }
-
             } else {
                 $record = new PayRunEntryRecord();
                 $record->id = (int)$this->id;
@@ -269,9 +324,6 @@ class PayRunEntry extends Element
             $record->employerId = $this->employerId ?? null;
             $record->employeeId = $this->employeeId ?? null;
             $record->payRunId = $this->payRunId ?? null;
-            $record->payOptionsId = $this->payOptionsId ?? null;
-            $record->totalsId = $this->totalsId ?? null;
-            $record->totalsYtdId = $this->totalsYtdId ?? null;
             $record->staffologyId = $this->staffologyId;
             $record->taxYear = $this->taxYear;
             $record->startDate = $this->startDate;
@@ -301,19 +353,17 @@ class PayRunEntry extends Element
 
             $success = $record->save(false);
 
-            if(!$success) {
+            if (!$success) {
                 $errors = "";
 
-                foreach($record->errors as $err) {
+                foreach ($record->errors as $err) {
                     $errors .= implode(',', $err);
                 }
 
                 $logger->stdout($errors . PHP_EOL, $logger::FG_RED);
                 Craft::error($record->errors, __METHOD__);
             }
-
         } catch (\Exception $e) {
-
             $logger->stdout(PHP_EOL, $logger::RESET);
             $logger->stdout($e->getMessage() . PHP_EOL, $logger::FG_RED);
             Craft::error($e->getMessage(), __METHOD__);

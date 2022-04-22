@@ -10,18 +10,15 @@
 
 namespace percipiolondon\staff\records;
 
-use percipiolondon\staff\Staff;
-
-use Craft;
 use craft\db\ActiveRecord;
 use percipiolondon\staff\db\Table;
 
 /**
- * @property int $address;
+ * @property int pensionSchemeId;
  *
- * @property string $name;
- * @property string $email;
- * @property string $telephone;
+ * @property string name;
+ * @property string email;
+ * @property string telephone;
  */
 
 class PensionAdministrator extends ActiveRecord
@@ -41,7 +38,7 @@ class PensionAdministrator extends ActiveRecord
      *
      * @return string the table name
      */
-    public static function tableName()
+    public static function tableName(): string
     {
         return Table::PENSION_ADMINISTRATOR;
     }

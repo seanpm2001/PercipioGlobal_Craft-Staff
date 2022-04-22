@@ -10,16 +10,13 @@
 
 namespace percipiolondon\staff\records;
 
-use percipiolondon\staff\Staff;
-
-use Craft;
 use craft\db\ActiveRecord;
 use percipiolondon\staff\db\Table;
 
 /**
- * @property int $itemId;
- * @property int $noteId;
- * @property int $employmentDetailId;
+ * @property int employmentDetailsId;
+ * @property int itemId;
+ * @property int noteId;
  */
 
 class ItemRelations extends ActiveRecord
@@ -39,7 +36,7 @@ class ItemRelations extends ActiveRecord
      *
      * @return string the table name
      */
-    public static function tableName()
+    public static function tableName(): string
     {
         return Table::ITEM_RELATIONS;
     }

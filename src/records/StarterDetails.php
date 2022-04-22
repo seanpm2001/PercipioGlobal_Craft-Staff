@@ -10,17 +10,16 @@
 
 namespace percipiolondon\staff\records;
 
-use percipiolondon\staff\Staff;
-
-use Craft;
 use craft\db\ActiveRecord;
 use percipiolondon\staff\db\Table;
 
 /**
- * @property \DateTime $startDate;
- * @property string $starterDeclaration;
- * @property int $overseasEmployerDetails;
- * @property int $pensionerPayroll;
+ * @property int employmentDetailsId;
+ *
+ * @property \DateTime startDate;
+ * @property string starterDeclaration;
+ * @property int overseasEmployerDetails;
+ * @property int pensionerPayroll;
  */
 
 class StarterDetails extends ActiveRecord
@@ -40,7 +39,7 @@ class StarterDetails extends ActiveRecord
      *
      * @return string the table name
      */
-    public static function tableName()
+    public static function tableName(): string
     {
         return Table::STARTER_DETAILS;
     }

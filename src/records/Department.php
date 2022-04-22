@@ -6,10 +6,12 @@ use craft\db\ActiveRecord;
 use percipiolondon\staff\db\Table;
 
 /**
- * @property string $code;
- * @property string $title;
- * @property string $color;
- * @property int $employeeCount;
+ * @property int employmentDetailsId;
+ *
+ * @property string code;
+ * @property string title;
+ * @property string color;
+ * @property int employeeCount;
  */
 
 class Department extends ActiveRecord
@@ -29,7 +31,7 @@ class Department extends ActiveRecord
      *
      * @return string the table name
      */
-    public static function tableName()
+    public static function tableName(): string
     {
         return Table::DEPARTMENT;
     }
