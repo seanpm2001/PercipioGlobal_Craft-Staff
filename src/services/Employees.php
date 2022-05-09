@@ -225,7 +225,7 @@ class Employees extends Component
             $employeeRecord->staffologyId = $employee['id'];
             $employeeRecord->siteId = Craft::$app->getSites()->currentSite->id;
             $employeeRecord->status = $employee['status'] ?? '';
-            $employeeRecord->personalDetails = $employee['personalDetails'] ?? null;
+            $employeeRecord->personalDetailsObject = $employee['personalDetails'] ?? null;
             $employeeRecord->niNumber = $employee['personalDetails']['niNumber'] ?? null;
             $employeeRecord->userId = null;
             $employeeRecord->isDirector = $this->isDirector ?? false;

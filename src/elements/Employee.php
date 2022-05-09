@@ -40,7 +40,7 @@ class Employee extends Element
     public ?int $userId;
     public ?string $status;
     public ?string $niNumber;
-    public $personalDetails;
+    public $personalDetailsObject;
     public ?bool $isDirector;
 
     private $_employmentDetails;
@@ -253,8 +253,8 @@ class Employee extends Element
             }
 
             // user creation
-            if ($this->personalDetails) {
-                $email = $this->personalDetails['email'] ?? '';
+            if ($this->personalDetailsObject) {
+                $email = $this->personalDetailsObject['email'] ?? '';
                 $user = User::findOne(['email' => $email]);
 
                 // check if user exists, if so, skip this step
@@ -262,8 +262,8 @@ class Employee extends Element
 
                     //create user
                     $user = new User();
-                    $user->firstName = SecurityHelper::decrypt($this->personalDetails['firstName']);
-                    $user->lastName = SecurityHelper::decrypt($this->personalDetails['lastName']);
+                    $user->firstName = SecurityHelper::decrypt($this->personalDetailsObject['firstName']);
+                    $user->lastName = SecurityHelper::decrypt($this->personalDetailsObject['lastName']);
                     $user->username = $email;
                     $user->email = $email;
 
