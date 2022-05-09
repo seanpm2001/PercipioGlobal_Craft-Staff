@@ -24,6 +24,7 @@ use percipiolondon\staff\records\Permission;
 use percipiolondon\staff\records\PersonalDetails;
 use percipiolondon\staff\Staff;
 
+use yii\base\InvalidConfigException;
 use yii\db\Exception;
 
 /**
@@ -46,6 +47,7 @@ class Employee extends Element
     private $_employmentDetails;
     private $_leaveSettings;
     private $_personalDetails;
+    private $_employer;
 
     // Static Methods
     // =========================================================================
@@ -177,6 +179,25 @@ class Employee extends Element
         }
 
         return $this->_personalDetails ?: null;
+    }
+
+    /**
+     * Returns the company name
+     *
+     * @return strng|null
+     * @throws InvalidConfigException if [[employerId]] is set but invalid
+     */
+    public function getEmployer()
+    {
+        if ($this->_employer === null) {
+
+            if (($this->_employer = Staff::$plugin->employers->getEmployerNameById($this->employerId)) === null) {
+                // The author is probably soft-deleted. Just no author is set
+                $this->_employer = false;
+            }
+        }
+
+        return $this->_employer ?: null;
     }
 
     /**

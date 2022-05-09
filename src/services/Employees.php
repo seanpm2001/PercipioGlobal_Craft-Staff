@@ -115,6 +115,17 @@ class Employees extends Component
         return $leaveSettings->toArray();
     }
 
+    public function getStarterDetailsByEmployee(int $employeeId): array
+    {
+        $starterDetails = LeaveSettings::findOne(['employeeId' => $employeeId]);
+
+        if (!$starterDetails) {
+            return [];
+        }
+
+        return $starterDetails->toArray();
+    }
+
     public function getEmploymentDetailsByEmployee(int $employeeId): array
     {
         $employmentDetails = EmploymentDetails::findOne(['employeeId' => $employeeId]);
@@ -312,8 +323,6 @@ class Employees extends Component
             $record = new EmploymentDetails();
         }
 
-        $this->saveStarterDetails($employmentDetails['starterDetails'], $record->id);
-
         $record->employeeId = $employee;
         $record->cisSubContractor = $employmentDetails['cisSubCopntractor'] ?? null;
         $record->payrollCode = SecurityHelper::encrypt($employmentDetails['payrollCode'] ?? '');
@@ -333,7 +342,11 @@ class Employees extends Component
         $record->workingPattern = $employmentDetails['workingPattern'] ?? null;
         $record->forcePreviousPayrollCode = SecurityHelper::encrypt($employmentDetails['forcePreviousPayrollCode'] ?? '');
 
-        $record->save();
+        $success = $record->save();
+
+        if($success) {
+            $this->saveStarterDetails($employmentDetails['starterDetails'], $record->id);
+        }
 
         return $record;
     }

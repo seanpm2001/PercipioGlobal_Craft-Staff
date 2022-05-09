@@ -8,6 +8,7 @@ use craft\helpers\App;
 use craft\helpers\Json;
 use Exception;
 use GuzzleHttp\Client;
+use GuzzleHttp\Exception\GuzzleException;
 use percipiolondon\staff\elements\PayRun;
 use percipiolondon\staff\elements\PayRunEntry;
 use percipiolondon\staff\helpers\Logger;
@@ -249,7 +250,7 @@ class PayRunEntries extends Component
 //            echo "<br/><br/>";
 //            var_dump(json_encode($payRunEntryUpdate));
 //            echo "<br/>";
-            return true;
+//            return true;
 //            Craft::dd((array)$payRunEntryUpdate);
             #END TEST
 

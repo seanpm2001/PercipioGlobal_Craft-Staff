@@ -13,6 +13,7 @@ use percipiolondon\staff\gql\types\EmploymentDetails;
 use percipiolondon\staff\gql\types\generators\EmployeeGenerator;
 use percipiolondon\staff\gql\types\LeaveSettings;
 use percipiolondon\staff\gql\types\PersonalDetails;
+use percipiolondon\staff\gql\types\StarterDetails;
 use percipiolondon\staff\helpers\Security as SecurityHelper;
 
 /**
@@ -100,6 +101,11 @@ class Employee extends Element
                 'type' => Type::id(),
                 'description' => 'The id of the employer this employee works for.',
             ],
+            'employer' => [
+                'name' => 'employer',
+                'type' => Type::string(),
+                'description' => 'The name of the employer this employee works for.',
+            ],
             'userId' => [
                 'name' => 'userId',
                 'type' => Type::id(),
@@ -123,6 +129,11 @@ class Employee extends Element
             'leaveSettings' => [
                 'name' => 'leaveSettings',
                 'type' => LeaveSettings::getType(),
+                'description' => 'The leave setting details info of an employee'
+            ],
+            'starterDetails' => [
+                'name' => 'starterDetails',
+                'type' => StarterDetails::getType(),
                 'description' => 'The leave setting details info of an employee'
             ],
             'personalDetails' => [
