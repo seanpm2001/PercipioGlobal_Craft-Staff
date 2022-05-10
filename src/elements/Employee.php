@@ -276,7 +276,11 @@ class Employee extends Element
             // user creation
             if ($this->personalDetailsObject) {
                 $email = $this->personalDetailsObject['email'] ?? '';
-                $user = User::findOne(['email' => $email]);
+                $user = null;
+
+                if($email) {
+                    $user = User::findOne(['email' => $email]);
+                }
 
                 // check if user exists, if so, skip this step
                 if (!$user && $email) {
