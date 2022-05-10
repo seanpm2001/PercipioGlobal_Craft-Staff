@@ -47,7 +47,7 @@ class PayRun extends Element
     public ?string $employeeCount;
     public ?string $subContractorCount;
     public ?string $state;
-    public ?\DateTime $dateClosed;
+    public ?string $dateClosed;
     public ?string $pdf;
     public ?string $url;
     public ?bool $isClosed;
