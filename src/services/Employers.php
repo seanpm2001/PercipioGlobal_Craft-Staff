@@ -107,15 +107,17 @@ class Employers extends Component
 
         $employer = $this->parseEmployer($employerQuery);
 
-        $query = new Query();
-        $query->from(Table::PAY_OPTIONS)
-            ->where('id = ' . $employer['defaultPayOptionsId'])
-            ->one();
-        $command = $query->createCommand();
-        $payOptions = $command->queryOne();
+        if($employer['defaultPayOptionsId'] ?? null) {
+            $query = new Query();
+            $query->from(Table::PAY_OPTIONS)
+                ->where('id = ' . $employer['defaultPayOptionsId'])
+                ->one();
+            $command = $query->createCommand();
+            $payOptions = $command->queryOne();
 
-        if ($payOptions) {
-            $employer['defaultPayOptions'] = Staff::$plugin->payRuns->parsePayOptions($payOptions);
+            if ($payOptions) {
+                $employer['defaultPayOptions'] = Staff::$plugin->payRuns->parsePayOptions($payOptions);
+            }
         }
 
         return $employer;
