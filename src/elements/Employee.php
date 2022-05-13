@@ -16,14 +16,15 @@ use craft\db\Query;
 use craft\elements\db\ElementQueryInterface;
 use craft\elements\User;
 
+use percipiolondon\staff\elements\db\EmployeeQuery;
 use percipiolondon\staff\helpers\Logger;
 use percipiolondon\staff\helpers\Security as SecurityHelper;
-use percipiolondon\staff\elements\db\EmployeeQuery;
 use percipiolondon\staff\records\Employee as EmployeeRecord;
 use percipiolondon\staff\records\Permission;
 use percipiolondon\staff\records\PersonalDetails;
 use percipiolondon\staff\Staff;
 
+use yii\base\InvalidConfigException;
 use yii\db\Exception;
 
 /**
@@ -35,20 +36,18 @@ class Employee extends Element
     // Public Properties
     // =========================================================================
 
-    public $staffologyId;
-    public $employerId;
-    public $userId;
-    public $personalDetailsId;
-    public $employmentDetailsId;
-    public $autoEnrolment;
-    public $leaveSettingsId;
-    public $rightToWork;
-    public $bankDetailsId;
-    public $status;
-    public $autoEnrolmentId;
-    public $niNumber;
-    public $sourceSystemId;
-    public $isDirector;
+    public string $staffologyId;
+    public ?int $employerId;
+    public ?int $userId;
+    public ?string $status;
+    public ?string $niNumber;
+    public $personalDetailsObject;
+    public ?bool $isDirector;
+
+    private $_employmentDetails;
+    private $_leaveSettings;
+    private $_personalDetails;
+    private $_employer;
 
     // Static Methods
     // =========================================================================
@@ -119,26 +118,86 @@ class Employee extends Element
                 'label' => 'All Employees',
                 'defaultSort' => ['id', 'desc'],
                 'criteria' => ['id' => $ids],
-            ]
+            ],
         ];
     }
 
     // Public Methods
     // =========================================================================
+    /**
+     * Returns the employment details
+     *
+     * @return array|null
+     * @throws InvalidConfigException if [[employerId]] is set but invalid
+     */
+    public function getEmploymentDetails()
+    {
+        if ($this->_employmentDetails === null) {
+
+            if (($this->_employmentDetails = Staff::$plugin->employees->getEmploymentDetailsByEmployee($this->id)) === null) {
+                // The author is probably soft-deleted. Just no author is set
+                $this->_employmentDetails = false;
+            }
+        }
+
+        return $this->_employmentDetails ?: null;
+    }
 
     /**
-     * Returns the validation rules for attributes.
+     * Returns the leave settings
      *
-     * Validation rules are used by [[validate()]] to check if attribute values are valid.
-     * Child classes may override this method to declare different validation rules.
-     *
-     * More info: http://www.yiiframework.com/doc-2.0/guide-input-validation.html
-     *
-     * @return array
+     * @return array|null
+     * @throws InvalidConfigException if [[employerId]] is set but invalid
      */
-    public function rules()
+    public function getLeaveSettings()
     {
-        return parent::rules();
+        if ($this->_leaveSettings === null) {
+
+            if (($this->_leaveSettings = Staff::$plugin->employees->getLeaveSettingsByEmployee($this->id)) === null) {
+                // The author is probably soft-deleted. Just no author is set
+                $this->_leaveSettings = false;
+            }
+        }
+
+        return $this->_leaveSettings ?: null;
+    }
+
+    /**
+     * Returns the personal details
+     *
+     * @return array|null
+     * @throws InvalidConfigException if [[employerId]] is set but invalid
+     */
+    public function getPersonalDetails()
+    {
+        if ($this->_personalDetails === null) {
+
+            if (($this->_personalDetails = Staff::$plugin->employees->getPersonalDetailsByEmployee($this->id)) === null) {
+                // The author is probably soft-deleted. Just no author is set
+                $this->_personalDetails = false;
+            }
+        }
+
+        return $this->_personalDetails ?: null;
+    }
+
+    /**
+     * Returns the company name
+     *
+     * @return strng|null
+     * @throws InvalidConfigException if [[employerId]] is set but invalid
+     */
+    public function getEmployer()
+    {
+        if ($this->_employer === null) {
+
+            if (($this->_employer = Staff::$plugin->employers->getEmployerNameById($this->employerId)) === null) {
+                // The author is probably soft-deleted. Just no author is set
+                $this->_employer = false;
+            }
+        }
+
+        return $this->_employer ?: null;
     }
 
     /**
@@ -146,7 +205,7 @@ class Employee extends Element
      *
      * @return FieldLayout|null
      */
-    public function getFieldLayout()
+    public function getFieldLayout(): ?FieldLayout
     {
         return null;
     }
@@ -204,48 +263,42 @@ class Employee extends Element
         return true;
     }
 
-    private function _saveRecord($isNew)
+    private function _saveRecord($isNew): void
     {
         try {
             $record = EmployeeRecord::findOne($this->id);
 
-            if ($record) {
-                $record = EmployeeRecord::findOne($this->id);
-
-                if (!$record) {
-                    throw new Exception('Invalid employee ID: ' . $this->id);
-                }
-
-            } else {
+            if (!$record) {
                 $record = new EmployeeRecord();
-                $record->id = (int)$this->id;
+                $record->id = $this->id;
             }
 
-            $personalDetails = PersonalDetails::findOne($this->personalDetailsId);
-
             // user creation
-            if($personalDetails) {
+            if ($this->personalDetailsObject) {
+                $email = $this->personalDetailsObject['email'] ?? '';
+                $user = null;
 
-                $email = SecurityHelper::decrypt($personalDetails['email']) ?? '';
-                $user = User::findOne(['email' => $email]);
+                if($email) {
+                    $user = User::findOne(['email' => $email]);
+                }
 
                 // check if user exists, if so, skip this step
-                if(!$user && $email) {
+                if (!$user && $email) {
 
                     //create user
                     $user = new User();
-                    $user->firstName = SecurityHelper::decrypt($personalDetails['firstName']);
-                    $user->lastName = SecurityHelper::decrypt($personalDetails['lastName']);
+                    $user->firstName = SecurityHelper::decrypt($this->personalDetailsObject['firstName']);
+                    $user->lastName = SecurityHelper::decrypt($this->personalDetailsObject['lastName']);
                     $user->username = $email;
                     $user->email = $email;
 
                     $success = Craft::$app->elements->saveElement($user, true);
 
-                    if(!$success){
+                    if (!$success) {
                         throw new Exception("The user couldn't be created");
                     }
 
-                    Craft::info("Craft Staff: new user creation: ".$user->id);
+                    Craft::info("Craft Staff: new user creation: " . $user->id);
 
                     // assign user to group
                     $group = Craft::$app->getUserGroups()->getGroupByHandle('hardingUsers');
@@ -258,19 +311,16 @@ class Employee extends Element
 
             $record->employerId = $this->employerId ?? null;
             $record->staffologyId = $this->staffologyId;
-            $record->personalDetailsId = $this->personalDetailsId;
-            $record->employmentDetailsId = $this->employmentDetailsId;
             $record->status = $this->status;
-            $record->sourceSystemId = $this->sourceSystemId;
             $record->niNumber = SecurityHelper::encrypt($this->niNumber ?? '');
             $record->userId = $this->userId;
             $record->isDirector = $this->isDirector;
 
             $record->save();
 
-            if($isNew) {
+            if ($isNew) {
                 //assign permissions to employee
-                if($this->isDirector) {
+                if ($this->isDirector) {
                     $permissions = Permission::find()->all();
                 } else {
                     $permissions = [Permission::findOne(['name' => 'access:employer'])];
@@ -278,9 +328,7 @@ class Employee extends Element
 
                 Staff::$plugin->userPermissions->createPermissions($permissions, $this->userId, $this->id);
             }
-
         } catch (\Exception $e) {
-
             $logger = new Logger();
             $logger->stdout(PHP_EOL, $logger::RESET);
             $logger->stdout($e->getMessage() . PHP_EOL, $logger::FG_RED);

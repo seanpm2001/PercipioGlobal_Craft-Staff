@@ -10,11 +10,10 @@
 
 namespace percipiolondon\staff\records;
 
-use percipiolondon\staff\Staff;
-
-use Craft;
 use craft\db\ActiveRecord;
+
 use percipiolondon\staff\db\Table;
+use percipiolondon\staff\Staff;
 
 /**
  * Employer Record
@@ -34,10 +33,13 @@ use percipiolondon\staff\db\Table;
  */
 
 /**
- * @property string $offPayrollWorker;
- * @property boolean $irregularPaymentPattern;
- * @property boolean $nonIndividual;
- * @property string $hoursNormallyWorked;
+ * @property int payRunEntryId;
+ * @property int payOptionsId;
+ *
+ * @property string offPayrollWorker;
+ * @property boolean irregularPaymentPattern;
+ * @property boolean nonIndividual;
+ * @property string hoursNormallyWorked;
  */
 
 class FpsFields extends ActiveRecord
@@ -57,7 +59,7 @@ class FpsFields extends ActiveRecord
      *
      * @return string the table name
      */
-    public static function tableName()
+    public static function tableName(): string
     {
         return Table::FPS_FIELDS;
     }

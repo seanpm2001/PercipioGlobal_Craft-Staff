@@ -10,23 +10,22 @@
 
 namespace percipiolondon\staff\records;
 
-use percipiolondon\staff\Staff;
-
-use Craft;
 use craft\db\ActiveRecord;
 use percipiolondon\staff\db\Table;
 
 /**
- * @property string $niTable;
- * @property boolean $secondaryClass1NotPayable;
- * @property boolean $postgradLoan;
- * @property \DateTime $postgraduateLoanStartDate;
- * @property \DateTime $postgraduateLoanEndDate;
- * @property boolean $studentLoan;
- * @property \DateTime $studentLoanStartDate;
- * @property \DateTime $studentLoanEndDate;
- * @property string $taxCode;
- * @property boolean $week1Month1;
+ * @property int payOptionsId;
+ *
+ * @property string niTable;
+ * @property boolean secondaryClass1NotPayable;
+ * @property boolean postgradLoan;
+ * @property \DateTime postgraduateLoanStartDate;
+ * @property \DateTime postgraduateLoanEndDate;
+ * @property boolean studentLoan;
+ * @property \DateTime studentLoanStartDate;
+ * @property \DateTime studentLoanEndDate;
+ * @property string taxCode;
+ * @property boolean week1Month1;
  */
 
 class TaxAndNi extends ActiveRecord
@@ -46,7 +45,7 @@ class TaxAndNi extends ActiveRecord
      *
      * @return string the table name
      */
-    public static function tableName()
+    public static function tableName(): string
     {
         return Table::TAX_AND_NI;
     }

@@ -10,18 +10,17 @@
 
 namespace percipiolondon\staff\records;
 
-use percipiolondon\staff\Staff;
-
-use Craft;
 use craft\db\ActiveRecord;
 use percipiolondon\staff\db\Table;
 
 /**
- * @property boolean $checked;
- * @property string $documentType;
- * @property string $documentRef;
- * @property \DateTime $documentExpiry;
- * @property string $note;
+ * @property int employeeId;
+ *
+ * @property boolean checked;
+ * @property string documentType;
+ * @property string documentRef;
+ * @property \DateTime documentExpiry;
+ * @property string note;
  */
 
 class RightToWork extends ActiveRecord
@@ -41,7 +40,7 @@ class RightToWork extends ActiveRecord
      *
      * @return string the table name
      */
-    public static function tableName()
+    public static function tableName(): string
     {
         return Table::RIGHT_TO_WORK;
     }

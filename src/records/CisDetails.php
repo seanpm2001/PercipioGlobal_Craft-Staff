@@ -6,17 +6,18 @@ use craft\db\ActiveRecord;
 use percipiolondon\staff\db\Table;
 
 /**
- * @property int $verification;
+ * @property int cisVerificationDetailsId;
+ * @property int employmentDetailsId;
  *
- * @property string $type;
- * @property string $utr;
- * @property string $tradingName;
- * @property string $companyUtr;
- * @property string $companyNumber;
- * @property boolean $vatRegistered;
- * @property string $vatNumber;
- * @property double $vatRate;
- * @property boolean $reverseChargeVAT;
+ * @property string type;
+ * @property string utr;
+ * @property string tradingName;
+ * @property string companyUtr;
+ * @property string companyNumber;
+ * @property boolean vatRegistered;
+ * @property string vatNumber;
+ * @property double vatRate;
+ * @property boolean reverseChargeVAT;
  */
 
 class CisDetails extends ActiveRecord
@@ -36,7 +37,7 @@ class CisDetails extends ActiveRecord
      *
      * @return string the table name
      */
-    public static function tableName()
+    public static function tableName(): string
     {
         return Table::CIS_DETAILS;
     }

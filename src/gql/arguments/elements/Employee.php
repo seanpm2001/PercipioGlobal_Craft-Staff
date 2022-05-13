@@ -34,6 +34,10 @@ class Employee extends HardingArguments
                 'type' => Type::listOf(Type::string()),
                 'description' => 'Narrows the query results based on the employees` status.',
             ],
+            'niNumber' => [
+                'name' => 'niNumber',
+                'type' => Type::listOf(Type::string()),
+            ],
             'userId' => [
                 'name' => 'userId',
                 'type' => Type::listOf(Type::int()),

@@ -10,15 +10,10 @@
 
 namespace percipiolondon\staff\console\controllers;
 
-use craft\helpers\App;
-use craft\queue\QueueInterface;
-use percipiolondon\staff\helpers\Logger;
-use percipiolondon\staff\records\Employer;
-use percipiolondon\staff\Staff;
-
 use Craft;
+
 use craft\console\Controller;
-use yii\queue\redis\Queue as RedisQueue;
+use percipiolondon\staff\Staff;
 
 /**
  * PayRunController Controller
@@ -42,7 +37,6 @@ use yii\queue\redis\Queue as RedisQueue;
  */
 class PayRunController extends Controller
 {
-
     public $taxYear = '';
     public $employer = '';
 

@@ -10,7 +10,6 @@
 
 namespace percipiolondon\staff\assetbundles\indexcpsection;
 
-use Craft;
 use craft\web\AssetBundle;
 use craft\web\assets\cp\CpAsset;
 

@@ -2,11 +2,13 @@
 
 namespace percipiolondon\staff\gql\types;
 
+use craft\gql\base\GqlTypeTrait;
 use craft\gql\types\DateTime;
-
+use craft\helpers\DateTimeHelper;
+use craft\helpers\Gql;
+use GraphQL\Type\Definition\ResolveInfo;
 use GraphQL\Type\Definition\Type;
 
-use percipiolondon\staff\gql\base\GqlTypeTrait;
 use percipiolondon\staff\gql\types\OverseasEmployerDetails;
 use percipiolondon\staff\gql\types\PensionerPayroll;
 
@@ -40,6 +42,9 @@ class StarterDetails
                 'name' => 'startDate',
                 'type' => DateTime::getType(),
                 'description' => 'Start date of employment.',
+                'resolve' => function ($source, array $arguments, $context, ResolveInfo $resolveInfo) {
+                    return Gql::applyDirectives($source, $resolveInfo, DateTimeHelper::toDateTime($source['startDate']));
+                }
             ],
             // TODO Create Enum
             'starterDeclaration' => [
@@ -57,5 +62,4 @@ class StarterDetails
             ],
         ];
     }
-
 }

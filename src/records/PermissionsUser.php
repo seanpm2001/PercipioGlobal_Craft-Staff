@@ -10,10 +10,6 @@
 
 namespace percipiolondon\staff\records;
 
-use percipiolondon\staff\Staff;
-
-use Craft;
-use DateTime;
 use craft\db\ActiveRecord;
 use percipiolondon\staff\db\Table;
 
@@ -40,7 +36,7 @@ class PermissionsUser extends ActiveRecord
      *
      * @return string the table name
      */
-    public static function tableName()
+    public static function tableName(): string
     {
         return Table::PERMISSIONS_USERS;
     }

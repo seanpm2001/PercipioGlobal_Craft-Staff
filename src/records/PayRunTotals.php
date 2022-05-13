@@ -6,61 +6,64 @@ use craft\db\ActiveRecord;
 use percipiolondon\staff\db\Table;
 
 /**
- * @property string $basicPay;
- * @property string $gross;
- * @property string $grossForNi;
- * @property string $grossNotSubjectToEmployersNi;
- * @property string $grossForTax;
- * @property string $employerNi;
- * @property string $employeeNi;
- * @property double $employerNiOffPayroll;
- * @property double $realTimeClass1ANi;
- * @property string $tax;
- * @property string $netPay;
- * @property string $adjustments;
- * @property string $additions;
- * @property string $takeHomePay;
- * @property string $nonTaxOrNICPmt;
- * @property double $itemsSubjectToClass1NIC;
- * @property double $dednsFromNetPay;
- * @property double $tcp_Tcls;
- * @property double $tcp_Pp;
- * @property double $tcp_Op;
- * @property double $flexiDd_Death;
- * @property double $flexiDd_Death_NonTax;
- * @property double $flexiDd_Pension;
- * @property double $flexiDd_Pension_NonTax;
- * @property double $smp;
- * @property double $spp;
- * @property double $sap;
- * @property double $shpp;
- * @property double $spbp;
- * @property double $ssp;
- * @property string $studentLoanRecovered;
- * @property string $postgradLoanRecovered;
- * @property string $pensionableEarnings;
- * @property string $pensionablePay;
- * @property string $nonTierablePay;
- * @property string $employeePensionContribution;
- * @property string $employeePensionContributionAvc;
- * @property string $employerPensionContribution;
- * @property string $empeePenContribnsNotPaid;
- * @property string $empeePenContribnsPaid;
- * @property string $attachmentOrderDeductions;
- * @property string $cisDeduction;
- * @property string $cisVat;
- * @property string $cisUmbrellaFee;
- * @property string $cisUmbrellaFeePostTax;
- * @property double $pbik;
- * @property int $mapsMiles;
- * @property string $umbrellaFee;
- * @property double $appLevyDeduction;
- * @property double $paymentAfterLeaving;
- * @property double $taxOnPaymentAfterLeaving;
- * @property int $nilPaid;
- * @property int $leavers;
- * @property int $starters;
- * @property string $totalCost;
+ * @property string payRunId;
+ * @property string payRunEntryId;
+ *
+ * @property string basicPay;
+ * @property string gross;
+ * @property string grossForNi;
+ * @property string grossNotSubjectToEmployersNi;
+ * @property string grossForTax;
+ * @property string employerNi;
+ * @property string employeeNi;
+ * @property double employerNiOffPayroll;
+ * @property double realTimeClass1ANi;
+ * @property string tax;
+ * @property string netPay;
+ * @property string adjustments;
+ * @property string additions;
+ * @property string takeHomePay;
+ * @property string nonTaxOrNICPmt;
+ * @property double itemsSubjectToClass1NIC;
+ * @property double dednsFromNetPay;
+ * @property double tcp_Tcls;
+ * @property double tcp_Pp;
+ * @property double tcp_Op;
+ * @property double flexiDd_Death;
+ * @property double flexiDd_Death_NonTax;
+ * @property double flexiDd_Pension;
+ * @property double flexiDd_Pension_NonTax;
+ * @property double smp;
+ * @property double spp;
+ * @property double sap;
+ * @property double shpp;
+ * @property double spbp;
+ * @property double ssp;
+ * @property string studentLoanRecovered;
+ * @property string postgradLoanRecovered;
+ * @property string pensionableEarnings;
+ * @property string pensionablePay;
+ * @property string nonTierablePay;
+ * @property string employeePensionContribution;
+ * @property string employeePensionContributionAvc;
+ * @property string employerPensionContribution;
+ * @property string empeePenContribnsNotPaid;
+ * @property string empeePenContribnsPaid;
+ * @property string attachmentOrderDeductions;
+ * @property string cisDeduction;
+ * @property string cisVat;
+ * @property string cisUmbrellaFee;
+ * @property string cisUmbrellaFeePostTax;
+ * @property double pbik;
+ * @property int mapsMiles;
+ * @property string umbrellaFee;
+ * @property double appLevyDeduction;
+ * @property double paymentAfterLeaving;
+ * @property double taxOnPaymentAfterLeaving;
+ * @property int nilPaid;
+ * @property int leavers;
+ * @property int starters;
+ * @property string totalCost;
  */
 
 class PayRunTotals extends ActiveRecord
@@ -80,8 +83,8 @@ class PayRunTotals extends ActiveRecord
      *
      * @return string the table name
      */
-    public static function tableName()
+    public static function tableName(): string
     {
-        return Table::PAYRUN_TOTALS;
+        return Table::PAY_RUN_TOTALS;
     }
 }

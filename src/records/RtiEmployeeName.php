@@ -10,17 +10,16 @@
 
 namespace percipiolondon\staff\records;
 
-use percipiolondon\staff\Staff;
-
-use Craft;
 use craft\db\ActiveRecord;
 use percipiolondon\staff\db\Table;
 
 /**
- * @property string $ttl;
- * @property string $fore;
- * @property string $initials;
- * @property string $sur;
+ * @property int cisSubcontractorId;
+ *
+ * @property string ttl;
+ * @property string fore;
+ * @property string initials;
+ * @property string sur;
  */
 
 class RtiEmployeeName extends ActiveRecord
@@ -40,7 +39,7 @@ class RtiEmployeeName extends ActiveRecord
      *
      * @return string the table name
      */
-    public static function tableName()
+    public static function tableName(): string
     {
         return Table::RTI_EMPLOYEE_NAME;
     }

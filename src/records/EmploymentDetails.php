@@ -10,36 +10,29 @@
 
 namespace percipiolondon\staff\records;
 
-use percipiolondon\staff\Staff;
-
-use Craft;
 use craft\db\ActiveRecord;
 use percipiolondon\staff\db\Table;
 
 /**
- * @property int $cisId;
- * @property int $starterDetailsId;
- * @property int $directorshipDetailsId;
- * @property int $leaverDetailsId;
- * @property string $department;
- * 
- * @property string $cisSubContractor;
- * @property string $payrollCode;
- * @property int $jobTitle;
- * @property bool $onHold;
- * @property bool $onFurlough;
- * @property \DateTime $furloughStart;
- * @property \DateTime $furloughEnd;
- * @property string $furloughCalculationBasis;
- * @property double $furloughCalculationBasisAmount;
- * @property boolean $partialFurlough;
- * @property double $furloughHoursNormallyWorked;
- * @property double $furloughHoursOnFurlough;
- * @property boolean $isApprentice;
- * @property \DateTime $apprenticeshipStartDate;
- * @property \DateTime $apprenticeshipEndDate;
- * @property string $workingPattern;
- * @property string $forcePreviousPayrollCode;
+ * @property int employeeId;
+ *
+ * @property string cisSubContractor;
+ * @property string payrollCode;
+ * @property int jobTitle;
+ * @property bool onHold;
+ * @property bool onFurlough;
+ * @property \DateTime furloughStart;
+ * @property \DateTime furloughEnd;
+ * @property string furloughCalculationBasis;
+ * @property double furloughCalculationBasisAmount;
+ * @property boolean partialFurlough;
+ * @property double furloughHoursNormallyWorked;
+ * @property double furloughHoursOnFurlough;
+ * @property boolean isApprentice;
+ * @property \DateTime apprenticeshipStartDate;
+ * @property \DateTime apprenticeshipEndDate;
+ * @property string workingPattern;
+ * @property string forcePreviousPayrollCode;
  */
 
 class EmploymentDetails extends ActiveRecord
@@ -59,7 +52,7 @@ class EmploymentDetails extends ActiveRecord
      *
      * @return string the table name
      */
-    public static function tableName()
+    public static function tableName(): string
     {
         return Table::EMPLOYMENT_DETAILS;
     }

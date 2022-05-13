@@ -2,22 +2,21 @@
 
 namespace percipiolondon\staff\gql\interfaces\elements;
 
-use craft\gql\interfaces\Element;
 use craft\gql\GqlEntityRegistry;
-use craft\gql\TypeLoader;
+use craft\gql\interfaces\Element;
 use craft\gql\TypeManager;
 use craft\gql\types\DateTime;
+use craft\helpers\DateTimeHelper;
 use craft\helpers\Gql;
-use craft\helpers\Json;
-
 use GraphQL\Type\Definition\InterfaceType;
 use GraphQL\Type\Definition\ResolveInfo;
 use GraphQL\Type\Definition\Type;
-
 use percipiolondon\staff\elements\PayRunEntry as PayRunEntryElement;
+use percipiolondon\staff\gql\types\Employee;
 use percipiolondon\staff\gql\types\generators\PayRunEntryGenerator;
+use percipiolondon\staff\gql\types\PayRunTotals;
+use percipiolondon\staff\gql\types\PensionSummary;
 use percipiolondon\staff\helpers\Security as SecurityHelper;
-
 
 class PayRunEntry extends Element
 {
@@ -34,7 +33,6 @@ class PayRunEntry extends Element
      */
     public static function getType($fields = null): Type
     {
-
         if ($type = GqlEntityRegistry::getEntity(self::getName())) {
             return $type;
         }
@@ -45,7 +43,7 @@ class PayRunEntry extends Element
             'description' => 'This is the interface implemented for all payrun entries.',
             'resolveType' => function(PayRunEntryElement $value) {
                 return $value->getGqlTypeName();
-            }
+            },
         ]));
 
         PayRunEntryGenerator::generateTypes();
@@ -73,9 +71,9 @@ class PayRunEntry extends Element
                 'name' => 'pdf',
                 'type' => Type::string(),
                 'description' => 'The payslip pdf',
-                'resolve' => function ($source, array $arguments, $context, ResolveInfo $resolveInfo) {
+                'resolve' => function($source, array $arguments, $context, ResolveInfo $resolveInfo) {
                     return SecurityHelper::resolve($source, $resolveInfo);
-                }
+                },
             ],
         ];
 
@@ -83,12 +81,17 @@ class PayRunEntry extends Element
             'staffologyId' => [
                 'name' => 'staffologyId',
                 'type' => Type::string(),
-                'description' => 'The payruns id from staffology, needed for API calls.'
+                'description' => 'The payruns id from staffology, needed for API calls.',
             ],
             'employerId' => [
                 'name' => 'employerId',
                 'type' => Type::int(),
-                'description' => 'The id of the employer this payruns is for.',
+                'description' => 'The id of the employer this pay run entry is from.',
+            ],
+            'employeeId' => [
+                'name' => 'employeeId',
+                'type' => Type::int(),
+                'description' => 'The id of the employee this pay run entry is for.',
             ],
             'taxYear' => [
                 'name' => 'taxYear',
@@ -98,11 +101,17 @@ class PayRunEntry extends Element
                 'name' => 'startDate',
                 'type' => DateTime::getType(),
                 'description' => 'The start date of the period this PayRun covers.',
+                'resolve' => function ($source, array $arguments, $context, ResolveInfo $resolveInfo) {
+                    return Gql::applyDirectives($source, $resolveInfo, DateTimeHelper::toDateTime($source->startDate));
+                }
             ],
             'endDate' => [
                 'name' => 'endDate',
                 'type' => DateTime::getType(),
                 'description' => 'The end date of the period this PayRun covers.',
+                'resolve' => function ($source, array $arguments, $context, ResolveInfo $resolveInfo) {
+                    return Gql::applyDirectives($source, $resolveInfo, DateTimeHelper::toDateTime($source->startDate));
+                }
             ],
             'note' => [
                 'name' => 'note',
@@ -154,6 +163,9 @@ class PayRunEntry extends Element
                 'name' => 'paymentDate',
                 'type' => DateTime::getType(),
                 'description' => 'The intended date that Employees will be paid, although this can be changed on a per PayRunEntry basis.',
+                'resolve' => function ($source, array $arguments, $context, ResolveInfo $resolveInfo) {
+                    return Gql::applyDirectives($source, $resolveInfo, DateTimeHelper::toDateTime($source->startDate));
+                }
             ],
             'forcedCisVatAmount' => [
                 'name' => 'forcedCisVatAmount',
@@ -162,12 +174,12 @@ class PayRunEntry extends Element
             'holidayAccrued' => [
                 'name' => 'holidayAccrued',
                 'type' => Type::float(),
-                'description' => 'The amount of holiday days accrued in the period.'
+                'description' => 'The amount of holiday days accrued in the period.',
             ],
             'state' => [
                 'name' => 'state',
                 'type' => Type::string(),
-                'description' => 'The state of the payruns. You would set this value when updating a payruns to finalise or re-open it.'
+                'description' => 'The state of the payruns. You would set this value when updating a payruns to finalise or re-open it.',
             ],
             'isClosed' => [
                 'name' => 'isClosed',
@@ -192,6 +204,26 @@ class PayRunEntry extends Element
                 'name' => 'receivingOffsetPay',
                 'type' => Type::boolean(),
                 'description' => 'If the pay is being topped up due to an applied Leave having the offset value set to true then this will be set to true.',
+            ],
+            'employer' => [
+                'name' => 'employer',
+                'type' => Type::string(),
+                'description' => 'The company name of where the pay run belongs to'
+            ],
+            'employee' => [
+                'name' => 'employee',
+                'type' => Employee::getType(),
+                'description' => 'The employee of where the pay run entry belongs to'
+            ],
+            'pensionSummary' => [
+                'name' => 'pensionSummary',
+                'type' => PensionSummary::getType(),
+                'description' => 'The employee pension summary'
+            ],
+            'totals' => [
+                'name' => 'totals',
+                'type' => PayRunTotals::getType(),
+                'description' => 'Totals of the payrun.',
             ],
         ];
 

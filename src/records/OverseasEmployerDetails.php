@@ -10,17 +10,16 @@
 
 namespace percipiolondon\staff\records;
 
-use percipiolondon\staff\Staff;
-
-use Craft;
 use craft\db\ActiveRecord;
 use percipiolondon\staff\db\Table;
 
 /**
- * @property boolean $overseasEmployer;
- * @property string $overseasSecondmentStatus;
- * @property boolean $eeaCitizen;
- * @property boolean $epm6Scheme;
+ * @property int starterDetailsId;
+ *
+ * @property boolean overseasEmployer;
+ * @property string overseasSecondmentStatus;
+ * @property boolean eeaCitizen;
+ * @property boolean epm6Scheme;
  */
 
 class OverseasEmployerDetails extends ActiveRecord
@@ -40,7 +39,7 @@ class OverseasEmployerDetails extends ActiveRecord
      *
      * @return string the table name
      */
-    public static function tableName()
+    public static function tableName(): string
     {
         return Table::OVERSEAS_EMPLOYER_DETAILS;
     }

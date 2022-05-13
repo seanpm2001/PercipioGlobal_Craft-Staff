@@ -6,7 +6,9 @@ use craft\db\ActiveRecord;
 use percipiolondon\staff\db\Table;
 
 /**
- * @property string $allowNegativePay;
+ * @property int employerId;
+ *
+ * @property string allowNegativePay;
  */
 
 class EmployerSettings extends ActiveRecord
@@ -26,7 +28,7 @@ class EmployerSettings extends ActiveRecord
      *
      * @return string the table name
      */
-    public static function tableName()
+    public static function tableName(): string
     {
         return Table::EMPLOYER_SETTINGS;
     }

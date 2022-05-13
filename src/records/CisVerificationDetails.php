@@ -6,14 +6,14 @@ use craft\db\ActiveRecord;
 use percipiolondon\staff\db\Table;
 
 /**
- * @property int $verificationResponse;
+ * @property int cisDetailsId;
  *
- * @property boolean $manuallyEntered;
- * @property boolean $matchInsteadOfVerify;
- * @property string $number;
- * @property \DateTime $date;
- * @property string $taxStatus;
- * @property string $verificationRequest;
+ * @property boolean manuallyEntered;
+ * @property boolean matchInsteadOfVerify;
+ * @property string number;
+ * @property \DateTime date;
+ * @property string taxStatus;
+ * @property string verificationRequest;
  */
 
 class CisVerificationDetails extends ActiveRecord
@@ -33,7 +33,7 @@ class CisVerificationDetails extends ActiveRecord
      *
      * @return string the table name
      */
-    public static function tableName()
+    public static function tableName(): string
     {
         return Table::CIS_VERIFICATION_DETAILS;
     }

@@ -2,9 +2,8 @@
 
 namespace percipiolondon\staff\gql\types;
 
-use percipiolondon\staff\gql\base\GqlTypeTrait;
+use craft\gql\base\GqlTypeTrait;
 use GraphQL\Type\Definition\Type;
-
 
 /**
  * Class Item
@@ -42,7 +41,7 @@ class Item
             ],
             'metadata' => [
                 'name' => 'metadata',
-                'type' => Type::object(),
+                'type' => Type::array(),
             ],
             'url' => [
                 'name' => 'url',
@@ -50,5 +49,4 @@ class Item
             ],
         ];
     }
-
 }

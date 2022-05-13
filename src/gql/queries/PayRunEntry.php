@@ -6,14 +6,13 @@ use craft\gql\base\Query;
 
 use GraphQL\Type\Definition\Type;
 
-use percipiolondon\staff\helpers\Gql as GqlHelper;
 use percipiolondon\staff\gql\arguments\elements\PayRunEntry as PayRunEntryArguments;
 use percipiolondon\staff\gql\interfaces\elements\PayRunEntry as PayRunEntryInterface;
 use percipiolondon\staff\gql\resolvers\elements\PayRunEntry as PayRunEntryResolver;
+use percipiolondon\staff\helpers\Gql as GqlHelper;
 
 class PayRunEntry extends Query
 {
-
     public static function getQueries($checkToken = true): array
     {
         if ($checkToken && !GqlHelper::canQueryPayrunEntries()) {
@@ -34,8 +33,7 @@ class PayRunEntry extends Query
                 'resolve' => PayRunEntryResolver::class . '::resolveOne',
                 'description' => 'This query is used to query for a single Payrun Entry.',
                 'complexity' => GqlHelper::relatedArgumentComplexity(),
-            ]
+            ],
         ];
     }
-
 }

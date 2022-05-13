@@ -5,9 +5,8 @@ namespace percipiolondon\staff\jobs;
 use craft\helpers\App;
 use craft\helpers\Json;
 use craft\queue\BaseJob;
-use percipiolondon\staff\Staff;
 use percipiolondon\staff\helpers\Logger;
-use Craft;
+use percipiolondon\staff\Staff;
 
 class FetchPensionSchemesJob extends BaseJob
 {
@@ -20,7 +19,7 @@ class FetchPensionSchemesJob extends BaseJob
         // connection props
         $api = App::parseEnv(Staff::$plugin->getSettings()->apiKeyStaffology);
         $base_url = 'https://api.staffology.co.uk/';
-        $credentials = base64_encode('staff:'.$api);
+        $credentials = base64_encode('staff:' . $api);
         $headers = [
             'headers' => [
                 'Authorization' => 'Basic ' . $credentials,
@@ -32,15 +31,14 @@ class FetchPensionSchemesJob extends BaseJob
         $currentPensionScheme = 0;
         $totalPensionScheme = count($this->criteria['employers']);
 
-        foreach($this->criteria['employers'] as $employer) {
-
+        foreach ($this->criteria['employers'] as $employer) {
             $currentPensionScheme++;
-            $progress = "[".$currentPensionScheme."/".$totalPensionScheme."] ";
+            $progress = "[" . $currentPensionScheme . "/" . $totalPensionScheme . "] ";
 
-            $logger->stdout($progress."↧ Fetching pension schemes of " . $employer['name'] . '...', $logger::RESET);
+            $logger->stdout($progress . "↧ Fetching pension schemes of " . $employer['name'] . '...', $logger::RESET);
             $logger->stdout(" done" . PHP_EOL, $logger::FG_GREEN);
 
-            $response = $client->get($base_url.'employers/'.$employer['id'].'/pensionschemes', $headers);
+            $response = $client->get($base_url . 'employers/' . $employer['id'] . '/pensionschemes', $headers);
             $results = Json::decodeIfJson($response->getBody()->getContents(), true);
 
             //@TODO: save

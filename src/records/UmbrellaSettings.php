@@ -6,16 +6,18 @@ use craft\db\ActiveRecord;
 use percipiolondon\staff\db\Table;
 
 /**
- * @property boolean $enabled;
- * @property double $chargePerTimesheet;
- * @property double $apprenticeshipLevyDednRate;
- * @property double $holidayRate;
- * @property string $dpsbCode;
- * @property string $expensesCode;
- * @property string $grossDeductionCode;
- * @property string $holidayCode;
- * @property string $cisFeeCode;
- * @property boolean $detailFeeInComment;
+ * @property int employerId;
+ *
+ * @property boolean enabled;
+ * @property double chargePerTimesheet;
+ * @property double apprenticeshipLevyDednRate;
+ * @property double holidayRate;
+ * @property string dpsbCode;
+ * @property string expensesCode;
+ * @property string grossDeductionCode;
+ * @property string holidayCode;
+ * @property string cisFeeCode;
+ * @property boolean detailFeeInComment;
  */
 
 class UmbrellaSettings extends ActiveRecord
@@ -35,7 +37,7 @@ class UmbrellaSettings extends ActiveRecord
      *
      * @return string the table name
      */
-    public static function tableName()
+    public static function tableName(): string
     {
         return Table::UMBRELLA_SETTINGS;
     }

@@ -10,22 +10,19 @@
 
 namespace percipiolondon\staff\records;
 
-use percipiolondon\staff\Staff;
-
-use Craft;
 use craft\db\ActiveRecord;
 use percipiolondon\staff\db\Table;
 
 /**
- * @property int $payOptionsId;
+ * @property int payOptionsId;
  *
- * @property string $value;
- * @property double $rate;
- * @property double $multiplier;
- * @property string $description;
- * @property string $attachmentOrderId;
- * @property string $pensionId;
- * @property string $code;
+ * @property string value;
+ * @property double rate;
+ * @property double multiplier;
+ * @property string description;
+ * @property string attachmentOrderId;
+ * @property string pensionId;
+ * @property string code;
  */
 
 class PayLine extends ActiveRecord
@@ -45,7 +42,7 @@ class PayLine extends ActiveRecord
      *
      * @return string the table name
      */
-    public static function tableName()
+    public static function tableName(): string
     {
         return Table::PAY_LINES;
     }

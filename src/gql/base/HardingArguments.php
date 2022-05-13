@@ -2,10 +2,7 @@
 
 namespace percipiolondon\staff\gql\base;
 
-use Craft;
 use craft\gql\base\ElementArguments;
-use craft\gql\types\QueryArgument;
-use GraphQL\Type\Definition\Type;
 
 class HardingArguments extends ElementArguments
 {
@@ -14,7 +11,6 @@ class HardingArguments extends ElementArguments
      */
     public static function getArguments(): array
     {
-
         $arguments = parent::getArguments();
         unset(
             $arguments['archived'],

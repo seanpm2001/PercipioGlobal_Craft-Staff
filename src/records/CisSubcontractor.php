@@ -6,33 +6,30 @@ use craft\db\ActiveRecord;
 use percipiolondon\staff\db\Table;
 
 /**
- * @property int $item;
- * @property int $name;
- * @property int $partnership;
- * @property int $address;
+ * @property int cisVerificationDetailsId;
  *
- * @property string $employeeUniqueId;
- * @property string $emailStatementTo;
- * @property int $numberOfPayments;
- * @property string $displayName;
- * @property string $action;
- * @property string $type;
- * @property string $tradingName;
- * @property string $worksRef;
- * @property string $unmatchedRate;
- * @property string $utr;
- * @property string $crn;
- * @property string $nino;
- * @property string $telephone;
- * @property string $totalPaymentsUnrounded;
- * @property string $costOfMaterialsUnrounded;
- * @property string $umbrellaFee;
- * @property string $validationMsg;
- * @property string $totalPayments;
- * @property string $costOfMaterials;
- * @property string $totalDeducted;
- * @property string $matched;
- * @property string $taxTreatment;
+ * @property string employeeUniqueId;
+ * @property string emailStatementTo;
+ * @property int numberOfPayments;
+ * @property string displayName;
+ * @property string action;
+ * @property string type;
+ * @property string tradingName;
+ * @property string worksRef;
+ * @property string unmatchedRate;
+ * @property string utr;
+ * @property string crn;
+ * @property string nino;
+ * @property string telephone;
+ * @property string totalPaymentsUnrounded;
+ * @property string costOfMaterialsUnrounded;
+ * @property string umbrellaFee;
+ * @property string validationMsg;
+ * @property string totalPayments;
+ * @property string costOfMaterials;
+ * @property string totalDeducted;
+ * @property string matched;
+ * @property string taxTreatment;
  */
 
 class CisSubcontractor extends ActiveRecord
@@ -52,7 +49,7 @@ class CisSubcontractor extends ActiveRecord
      *
      * @return string the table name
      */
-    public static function tableName()
+    public static function tableName(): string
     {
         return Table::CIS_SUBCONTRACTOR;
     }

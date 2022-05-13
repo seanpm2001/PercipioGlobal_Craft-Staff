@@ -6,15 +6,21 @@ use craft\db\ActiveRecord;
 use percipiolondon\staff\db\Table;
 
 /**
- * @property int $countryId;
- * @property string $employerId;
- * @property string $employeeId;
- * @property string $address1;
- * @property string $address2;
- * @property string $address3;
- * @property string $address4;
- * @property string $address5;
- * @property string $zipCode;
+ * @property int cisSubcontractorId;
+ * @property int countryId;
+ * @property integer employerId;
+ * @property integer employeeId;
+ * @property integer pensionAdministratorId;
+ * @property integer pensionProviderId;
+ * @property integer rtiAgentId;
+ * @property integer rtiEmployeeAddressId;
+ *
+ * @property string address1;
+ * @property string address2;
+ * @property string address3;
+ * @property string address4;
+ * @property string address5;
+ * @property string zipCode;
  */
 
 class Address extends ActiveRecord
@@ -34,7 +40,7 @@ class Address extends ActiveRecord
      *
      * @return string the table name
      */
-    public static function tableName()
+    public static function tableName(): string
     {
         return Table::ADDRESSES;
     }

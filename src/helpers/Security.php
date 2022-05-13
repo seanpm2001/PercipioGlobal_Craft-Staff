@@ -9,7 +9,7 @@ class Security
 {
     public static function encrypt(string|null $data): string|null
     {
-        if($data === '' || $data === null){
+        if ($data === '' || $data === null) {
             return $data;
         }
 
@@ -18,7 +18,7 @@ class Security
 
     public static function decrypt(string|null $data, $type = 'string'): string|float|int|bool|null
     {
-        if($data === '' || $data === null){
+        if ($data === '' || $data === null) {
             return $data;
         }
 
@@ -26,6 +26,7 @@ class Security
 
         return match ($type) {
             'int' => (int) $data,
+            'float' => (float) $data,
             default => (string) $data,
         };
     }
@@ -34,7 +35,7 @@ class Security
     {
         $fieldName = $resolveInfo->fieldName;
         $value = self::decrypt($source[$fieldName] ?? '', $type = 'string');
-        return empty($value) ?
+        return empty($value) && $value !== 0 ?
              null : $value;
     }
 }

@@ -24,27 +24,25 @@ use craft\services\Elements;
 use craft\services\Gql;
 use craft\services\Plugins;
 use craft\services\UserPermissions;
-use craft\web\UrlManager;
 use craft\web\twig\variables\CraftVariable;
+use craft\web\UrlManager;
 
 use nystudio107\pluginvite\services\VitePluginService;
 
 use percipiolondon\staff\assetbundles\staff\StaffAsset;
-use percipiolondon\staff\helpers\Security;
-use percipiolondon\staff\models\Settings;
-use percipiolondon\staff\elements\Employer as EmployerElement;
 use percipiolondon\staff\elements\Employee as EmployeeElement;
+use percipiolondon\staff\elements\Employer as EmployerElement;
 use percipiolondon\staff\elements\PayRun as PayRunElement;
 use percipiolondon\staff\elements\PayRunEntry as PayRunEntryElement;
-use percipiolondon\staff\elements\HardingUser as HardingUserElement;
-use percipiolondon\staff\gql\queries\Employer as EmployerQueries;
-use percipiolondon\staff\gql\queries\Employee as EmployeeQueries;
-use percipiolondon\staff\gql\queries\PayRun as PayRunQueries;
-use percipiolondon\staff\gql\queries\PayRunEntry as PayRunEntryQueries;
 use percipiolondon\staff\gql\interfaces\elements\Employer as EmployerInterface;
 use percipiolondon\staff\gql\interfaces\elements\Employee as EmployeeInterface;
 use percipiolondon\staff\gql\interfaces\elements\PayRun as PayRunInterface;
 use percipiolondon\staff\gql\interfaces\elements\PayRunEntry as PayRunEntryInterface;
+use percipiolondon\staff\gql\queries\Employee as EmployeeQueries;
+use percipiolondon\staff\gql\queries\Employer as EmployerQueries;
+use percipiolondon\staff\gql\queries\PayRun as PayRunQueries;
+use percipiolondon\staff\gql\queries\PayRunEntry as PayRunEntryQueries;
+use percipiolondon\staff\models\Settings;
 use percipiolondon\staff\plugin\Services as StaffServices;
 use percipiolondon\staff\variables\StaffVariable;
 
@@ -137,7 +135,7 @@ class Staff extends Plugin
                 'errorEntry' => 'src/js/payrun.ts',
                 'devServerInternal' => 'http://craft-staff-buildchain:3050',
                 'checkDevServer' => true,
-            ]
+            ],
         ];
 
         parent::__construct($id, $parent, $config);
@@ -219,7 +217,8 @@ class Staff extends Plugin
      */
     public function getSettings()
     {
-        return parent::getSettings();;
+        return parent::getSettings();
+        ;
     }
 
     /**
@@ -245,19 +244,19 @@ class Staff extends Plugin
         if ($currentUser->can('hub:dashboard')) {
             $subNavs['dashboard'] = [
                 'label' => Craft::t('staff-management', 'Dashboard'),
-                'url' => 'staff-management/dashboard'
+                'url' => 'staff-management/dashboard',
             ];
         }
         if ($currentUser->can('hub:payruns')) {
             $subNavs['payRuns'] = [
                 'label' => Craft::t('staff-management', 'Pay Runs'),
-                'url' => 'staff-management/pay-runs'
+                'url' => 'staff-management/pay-runs',
             ];
         }
 
         $editableSettings = true;
         // Check against allowAdminChanges
-        if ( !Craft::$app->getConfig()->getGeneral()->allowAdminChanges ) {
+        if (!Craft::$app->getConfig()->getGeneral()->allowAdminChanges) {
             $editableSettings = false;
         }
 
@@ -301,7 +300,7 @@ class Staff extends Plugin
         Event::on(
             UrlManager::class,
             UrlManager::EVENT_REGISTER_CP_URL_RULES,
-            function (RegisterUrlRulesEvent $event) {
+            function(RegisterUrlRulesEvent $event) {
                 Craft::debug(
                     'UrlManager::EVENT_REGISTER_CP_URL_RULES',
                     __METHOD__
@@ -318,7 +317,7 @@ class Staff extends Plugin
         Event::on(
             UserPermissions::class,
             UserPermissions::EVENT_REGISTER_PERMISSIONS,
-            function (RegisterUserPermissionsEvent $event) {
+            function(RegisterUserPermissionsEvent $event) {
                 Craft::debug(
                     'UserPermissions::EVENT_REGISTER_PERMISSIONS',
                     __METHOD__
@@ -359,7 +358,7 @@ class Staff extends Plugin
             'staff-management/pay-runs/fetch-pay-runs/<employerId:\d+>/<taxYear:\w+>' => 'staff-management/pay-run/fetch-pay-runs',
             'staff-management/pay-runs/fetch-pay-run/<payRunId:\d+>' => 'staff-management/pay-run/fetch-pay-run',
             'staff-management/pay-runs/get-logs/<payRunId:\d+>' => 'staff-management/pay-run/get-pay-run-logs',
-            'staff-management/pay-runs/download-template/<payRunId:\d+>' => 'staff-management/pay-run/download-template'
+            'staff-management/pay-runs/download-template/<payRunId:\d+>' => 'staff-management/pay-run/download-template',
         ];
     }
 
@@ -379,7 +378,7 @@ class Staff extends Plugin
             ],
             'hub:plugin-settings' => [
                 'label' => Craft::t('staff-management', 'Edit Plugin Settings'),
-            ]
+            ],
         ];
     }
 
@@ -392,10 +391,10 @@ class Staff extends Plugin
         Event::on(
             CraftVariable::class,
             CraftVariable::EVENT_INIT,
-            function ( Event $event ) {
-               /** @var CraftVariable $variable */
-               $variable = $event->sender;
-               $variable->set('staff', [
+            function(Event $event) {
+                /** @var CraftVariable $variable */
+                $variable = $event->sender;
+                $variable->set('staff', [
                    'class' => StaffVariable::class,
                    'viteService' => $this->vite,
                ]);
@@ -433,7 +432,6 @@ class Staff extends Plugin
             Gql::class,
             Gql::EVENT_REGISTER_GQL_SCHEMA_COMPONENTS,
             function(RegisterGqlSchemaComponentsEvent $event) {
-
                 $event->queries = array_merge($event->queries, [
                     'Staff Management' => [
                         // employers component with read action, labelled “View Employers” in UI
@@ -441,14 +439,13 @@ class Staff extends Plugin
                         // employees component with read action, labelled “View Employees” in UI
                         'employees:read' => ['label' => Craft::t('staff-management', 'View Employees')],
                         // payruns component with read action, labelled “View Payruns” in UI
-                        'payruns:read' => ['label' => Craft::t('staff-management', 'View Payruns')]
+                        'payruns:read' => ['label' => Craft::t('staff-management', 'View Payruns')],
                     ],
                     'PayrunEntries' => [
                         // payruns entries component with read action, labelled “View Payruns” in UI
-                        'payrunentries:read' => ['label' => Craft::t('staff-management', 'View Payrun Entries')]
+                        'payrunentries:read' => ['label' => Craft::t('staff-management', 'View Payrun Entries')],
                     ],
                 ]);
-
             }
         );
     }
@@ -476,7 +473,7 @@ class Staff extends Plugin
         Event::on(
             Elements::class,
             Elements::EVENT_REGISTER_ELEMENT_TYPES,
-            function (RegisterComponentTypesEvent $event) {
+            function(RegisterComponentTypesEvent $event) {
                 $event->types[] = EmployerElement::class;
                 $event->types[] = EmployeeElement::class;
                 $event->types[] = PayRunElement::class;
