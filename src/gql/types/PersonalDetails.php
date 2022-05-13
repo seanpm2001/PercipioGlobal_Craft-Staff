@@ -5,6 +5,8 @@ namespace percipiolondon\staff\gql\types;
 use craft\gql\base\GqlTypeTrait;
 use craft\gql\types\DateTime;
 
+use craft\helpers\DateTimeHelper;
+use craft\helpers\Gql;
 use GraphQL\Type\Definition\ResolveInfo;
 use percipiolondon\staff\gql\types\Address;
 use percipiolondon\staff\gql\types\PartnerDetails;
@@ -117,6 +119,9 @@ class PersonalDetails
                 'name' => 'dateOfBirth',
                 'type' => DateTime::getType(),
                 'description' => 'Mobile number.',
+                'resolve' => function ($source, array $arguments, $context, ResolveInfo $resolveInfo) {
+                    return Gql::applyDirectives($source, $resolveInfo, DateTimeHelper::toDateTime($source['dateOfBirth']));
+                }
             ],
             'statePensionAge' => [
                 'name' => 'statePensionAge',
