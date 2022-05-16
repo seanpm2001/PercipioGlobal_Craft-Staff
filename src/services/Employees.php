@@ -128,7 +128,6 @@ class Employees extends Component
 
     public function getEmploymentDetailsByEmployee(int $employeeId): array
     {
-        Craft::dd($employeeId);
         $employmentDetails = EmploymentDetails::findOne(['employeeId' => $employeeId]);
 
         if (!$employmentDetails) {

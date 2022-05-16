@@ -16,7 +16,6 @@ use percipiolondon\staff\db\Table;
 
 /**
  * @property int employeeId;
- *
  * @property string cisSubContractor;
  * @property string payrollCode;
  * @property int jobTitle;
