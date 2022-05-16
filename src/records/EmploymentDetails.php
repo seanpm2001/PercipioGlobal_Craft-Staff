@@ -11,6 +11,7 @@
 namespace percipiolondon\staff\records;
 
 use craft\db\ActiveRecord;
+use DateTime;
 use percipiolondon\staff\db\Table;
 
 /**
@@ -21,16 +22,16 @@ use percipiolondon\staff\db\Table;
  * @property int jobTitle;
  * @property bool onHold;
  * @property bool onFurlough;
- * @property \DateTime furloughStart;
- * @property \DateTime furloughEnd;
+ * @property DateTime furloughStart;
+ * @property DateTime furloughEnd;
  * @property string furloughCalculationBasis;
  * @property double furloughCalculationBasisAmount;
  * @property boolean partialFurlough;
  * @property double furloughHoursNormallyWorked;
  * @property double furloughHoursOnFurlough;
  * @property boolean isApprentice;
- * @property \DateTime apprenticeshipStartDate;
- * @property \DateTime apprenticeshipEndDate;
+ * @property DateTime apprenticeshipStartDate;
+ * @property DateTime apprenticeshipEndDate;
  * @property string workingPattern;
  * @property string forcePreviousPayrollCode;
  */

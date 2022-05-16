@@ -130,14 +130,11 @@ class Employee extends Element
      * @return array|null
      * @throws InvalidConfigException if [[employerId]] is set but invalid
      */
-    public function getEmploymentDetails()
+    public function getEmploymentDetails(): bool|array|null
     {
-        if ($this->_employmentDetails === null) {
-
-            if (($this->_employmentDetails = Staff::$plugin->employees->getEmploymentDetailsByEmployee($this->id)) === null) {
-                // The author is probably soft-deleted. Just no author is set
-                $this->_employmentDetails = false;
-            }
+        if ((is_null($this->_employmentDetails)) && ($this->_employmentDetails = Staff::$plugin->employees->getEmploymentDetailsByEmployee($this->id)) === null) {
+            // The author is probably soft-deleted. Just no author is set
+            $this->_employmentDetails = false;
         }
 
         return $this->_employmentDetails ?: null;
