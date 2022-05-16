@@ -37,9 +37,22 @@ use percipiolondon\staff\Staff;
  */
 class PayRunController extends Controller
 {
+    /**
+     * Provide a specific tax year. If not provided, the current tax year will be used
+     * @var string
+     */
     public $taxYear = '';
+
+    /**
+     * Provide an employer to fetch [required]
+     * @var string
+     */
     public $employer = '';
 
+    /**
+     * @param string $actionID
+     * @return int[]|string[]
+     */
     public function options($actionID)
     {
         $options = parent::options($actionID);
@@ -49,17 +62,14 @@ class PayRunController extends Controller
         return $options;
     }
 
+    /**
+     * Fetch pay runs from an employer. If you want a specific tax year, you can provide the tax year. parameter examples: --employer='1234' --taxYear='2021'
+     * e.g. staff-management/pay-run/fetch-pay-run-by-employer --employer="1234" --taxYear="2021"
+     *
+     * @throws \GuzzleHttp\Exception\GuzzleException
+     */
     public function actionFetchPayRunByEmployer()
     {
         Staff::$plugin->payRuns->fetchPayRunByEmployer($this->employer, $this->taxYear);
     }
-//    public function actionFetch()
-//    {
-//        return  Staff::$plugin->payRuns->fetch();
-//    }
-//
-//    public function actionFetchPayslips()
-//    {
-//        return  Staff::$plugin->payRuns->fetchPayslips();
-//    }
 }

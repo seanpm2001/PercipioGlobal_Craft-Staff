@@ -19,6 +19,9 @@ use percipiolondon\staff\records\PayCode;
 class TestDataController extends Controller
 {
 
+    /**
+     * Provide a test employer / employee / paycodes / pay run and pay run entry
+     */
     public function actionIndex()
     {
         $this->_createEmployer();
@@ -28,6 +31,28 @@ class TestDataController extends Controller
         $this->_createPayRunEntry();
     }
 
+    /**
+     * Provide a test employer
+     */
+    public function actionTestEmployer()
+    {
+        $this->_createEmployer();
+    }
+
+    /**
+     * Provide a test employee
+     */
+    public function actionTestEmployee()
+    {
+        $this->_createEmployee();
+    }
+
+    /**
+     * @return Employer|null
+     * @throws \Throwable
+     * @throws \craft\errors\ElementNotFoundException
+     * @throws \yii\base\Exception
+     */
     private function _createEmployer(): ?Employer
     {
         $logger = new Logger();
@@ -63,6 +88,11 @@ class TestDataController extends Controller
         return null;
     }
 
+    /**
+     * @throws \Throwable
+     * @throws \craft\errors\ElementNotFoundException
+     * @throws \yii\base\Exception
+     */
     private function _createEmployee()
     {
         $logger = new Logger();
@@ -95,6 +125,9 @@ class TestDataController extends Controller
         }
     }
 
+    /**
+     *
+     */
     private function _createPayCode()
     {
         $logger = new Logger();
@@ -123,6 +156,11 @@ class TestDataController extends Controller
         }
     }
 
+    /**
+     * @throws \Throwable
+     * @throws \craft\errors\ElementNotFoundException
+     * @throws \yii\base\Exception
+     */
     private function _createPayRun()
     {
         $logger = new Logger();
@@ -162,6 +200,11 @@ class TestDataController extends Controller
         }
     }
 
+    /**
+     * @throws \Throwable
+     * @throws \craft\errors\ElementNotFoundException
+     * @throws \yii\base\Exception
+     */
     private function _createPayRunEntry()
     {
         $logger = new Logger();
@@ -216,18 +259,5 @@ class TestDataController extends Controller
         } else {
             $logger->stdout(' failed' . PHP_EOL, $logger::FG_RED);
         }
-    }
-
-    /**
-     * Provide a test employer
-     */
-    public function actionTestEmployer()
-    {
-        $this->_createEmployer();
-    }
-
-    public function actionTestEmployee()
-    {
-        $this->_createEmployee();
     }
 }
