@@ -19,7 +19,7 @@ class Totals extends Component
 
     public function getTotalsByPayRunEntry(int $payRunEntryId) : array
     {
-        $payRunTotals = PayRunTotals::findOne(['payRunEntryId' => $payRunEntryId]);
+        $payRunTotals = PayRunTotals::findOne(['payRunEntryId' => $payRunEntryId, 'isYtd' => false]);
         return $payRunTotals ? $payRunTotals->toArray() : [];
     }
 
@@ -39,7 +39,7 @@ class Totals extends Component
 
     public function savePayRunEntryTotals(array $totals, int $payRunEntryId = null, bool $isYtd = false): PayRunTotals
     {
-        $record = PayRunTotals::findOne(['payRunEntryId' => $payRunEntryId]);
+        $record = PayRunTotals::findOne(['payRunEntryId' => $payRunEntryId, 'isYtd' => $isYtd]);
 
         if (!$record) {
             $record = new PayRunTotals();
