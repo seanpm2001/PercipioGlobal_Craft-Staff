@@ -44,6 +44,14 @@ use percipiolondon\staff\gql\queries\PayRun as PayRunQueries;
 use percipiolondon\staff\gql\queries\PayRunEntry as PayRunEntryQueries;
 use percipiolondon\staff\models\Settings;
 use percipiolondon\staff\plugin\Services as StaffServices;
+use percipiolondon\staff\services\Addresses;
+use percipiolondon\staff\services\Employees;
+use percipiolondon\staff\services\Employers;
+use percipiolondon\staff\services\PayOptions;
+use percipiolondon\staff\services\PayRunEntries;
+use percipiolondon\staff\services\PayRuns;
+use percipiolondon\staff\services\Pensions;
+use percipiolondon\staff\services\Totals;
 use percipiolondon\staff\variables\StaffVariable;
 
 use yii\base\Event;
@@ -64,6 +72,15 @@ use yii\base\Event;
  *
  * @property  Settings              $settings
  * @property  VitePluginService     $vite
+ * @property  Addresses $addresses
+ * @property  Employees $employees
+ * @property  Employers $employers
+ * @property  PayOptions $payOptions
+ * @property  PayRunEntries $payRunEntries
+ * @property  PayRuns $payRuns
+ * @property  Pensions $pensions
+ * @property  Totals $totals
+ * @property  UserPermissions $userPermissions
  */
 class Staff extends Plugin
 {
