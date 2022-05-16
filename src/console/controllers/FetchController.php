@@ -10,8 +10,17 @@ use percipiolondon\staff\Staff;
 use yii\helpers\Console;
 use yii\queue\redis\Queue as RedisQueue;
 
+/**
+ * Class FetchController
+ *
+ * @package percipiolondon\staff\console\controllers
+ */
 class FetchController extends Controller
 {
+    /**
+     * Fetch all the employers/employees/payruns/pensions/... from staffology
+     * e.g.: actions/staff-management/employer-controller/fetch
+     */
     public function actionIndex()
     {
         $this->stdout("" . PHP_EOL, Console::RESET);
@@ -36,6 +45,9 @@ class FetchController extends Controller
         $this->stdout("" . PHP_EOL, Console::RESET);
     }
 
+    /**
+     * Start the queue
+     */
     private function _runQueue()
     {
         // This might take a while

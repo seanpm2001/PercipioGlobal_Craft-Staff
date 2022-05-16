@@ -151,10 +151,10 @@ class PayRunEntry extends Element
      */
     public function getTotals(): ?array
     {
+
         if ($this->_totals === null) {
 
             if (($this->_totals = Staff::$plugin->totals->getTotalsByPayRunEntry($this->id)) === null) {
-                // The author is probably soft-deleted. Just no author is set
                 $this->_totals = null;
             }
         }

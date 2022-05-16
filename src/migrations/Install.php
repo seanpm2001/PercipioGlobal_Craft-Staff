@@ -1432,7 +1432,7 @@ class Install extends Migration
         $this->createIndex(null, Table::FPS_FIELDS, 'payRunEntryId', false);
         $this->createIndex(null, Table::NATIONAL_INSURANCE_CALCULATION, 'payRunEntryId', false);
         $this->createIndex(null, Table::PAY_OPTIONS, 'payRunEntryId', true);
-        $this->createIndex(null, Table::PAY_RUN_TOTALS, 'payRunEntryId', true);
+        $this->createIndex(null, Table::PAY_RUN_TOTALS, 'payRunEntryId', false);
         $this->createIndex(null, Table::PENSION_SUMMARY, 'payRunEntryId', false);
         $this->createIndex(null, Table::UMBRELLA_PAYMENT, 'payRunEntryId', false);
         $this->createIndex(null, Table::VALUE_OVERRIDE, 'payRunEntryId', false);
