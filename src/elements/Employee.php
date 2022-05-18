@@ -284,8 +284,8 @@ class Employee extends Element
 
                     //create user
                     $user = new User();
-                    $user->firstName = SecurityHelper::decrypt($this->personalDetailsObject['firstName']);
-                    $user->lastName = SecurityHelper::decrypt($this->personalDetailsObject['lastName']);
+                    $user->firstName = $this->personalDetailsObject['firstName'] ?? '';
+                    $user->lastName = $this->personalDetailsObject['lastName'] ?? '';
                     $user->username = $email;
                     $user->email = $email;
 
@@ -300,6 +300,9 @@ class Employee extends Element
                     // assign user to group
                     $group = Craft::$app->getUserGroups()->getGroupByHandle('hardingUsers');
                     Craft::$app->getUsers()->assignUserToGroups($user->id, [$group->id]);
+
+                    // send activation mail
+                    Craft::$app->users->sendActivationEmail($user);
                 }
 
                 //assign the userId to the employee record
