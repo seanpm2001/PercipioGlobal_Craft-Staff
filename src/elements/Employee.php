@@ -16,6 +16,7 @@ use craft\db\Query;
 use craft\elements\db\ElementQueryInterface;
 use craft\elements\User;
 
+use craft\helpers\App;
 use percipiolondon\staff\elements\db\EmployeeQuery;
 use percipiolondon\staff\helpers\Logger;
 use percipiolondon\staff\helpers\Security as SecurityHelper;
@@ -302,7 +303,9 @@ class Employee extends Element
                     Craft::$app->getUsers()->assignUserToGroups($user->id, [$group->id]);
 
                     // send activation mail
-                    Craft::$app->users->sendActivationEmail($user);
+                    if(!App::parseEnv('$HUB_PREVENT_MAILS')) {
+                        Craft::$app->users->sendActivationEmail($user);
+                    }
                 }
 
                 //assign the userId to the employee record
