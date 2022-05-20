@@ -16,6 +16,7 @@ use craft\db\Query;
 use craft\elements\db\ElementQueryInterface;
 use craft\elements\User;
 
+use craft\helpers\App;
 use percipiolondon\staff\elements\db\EmployeeQuery;
 use percipiolondon\staff\helpers\Logger;
 use percipiolondon\staff\helpers\Security as SecurityHelper;
@@ -284,8 +285,8 @@ class Employee extends Element
 
                     //create user
                     $user = new User();
-                    $user->firstName = SecurityHelper::decrypt($this->personalDetailsObject['firstName']);
-                    $user->lastName = SecurityHelper::decrypt($this->personalDetailsObject['lastName']);
+                    $user->firstName = $this->personalDetailsObject['firstName'] ?? '';
+                    $user->lastName = $this->personalDetailsObject['lastName'] ?? '';
                     $user->username = $email;
                     $user->email = $email;
 
@@ -300,6 +301,11 @@ class Employee extends Element
                     // assign user to group
                     $group = Craft::$app->getUserGroups()->getGroupByHandle('hardingUsers');
                     Craft::$app->getUsers()->assignUserToGroups($user->id, [$group->id]);
+
+                    // send activation mail
+                    if(!App::parseEnv('$HUB_PREVENT_MAILS')) {
+                        Craft::$app->users->sendActivationEmail($user);
+                    }
                 }
 
                 //assign the userId to the employee record
