@@ -12,6 +12,7 @@ namespace percipiolondon\staff\services;
 
 use Craft;
 use craft\base\Component;
+use craft\errors\ElementNotFoundException;
 use craft\helpers\App;
 use craft\helpers\Json;
 use percipiolondon\staff\db\Table;
@@ -25,6 +26,7 @@ use percipiolondon\staff\records\FpsFields;
 use percipiolondon\staff\records\HmrcDetails;
 use percipiolondon\staff\records\PayOption;
 use percipiolondon\staff\Staff;
+use Throwable;
 use yii\db\Exception;
 use yii\db\Query;
 
@@ -79,10 +81,10 @@ class Employers extends Component
      */
     public function parseEmployer(array $employer): array
     {
-        $employer['name'] = SecurityHelper::decrypt($employer['name'] ?? '');
+        $employer['name'] = $employer['name'] ?? '';
         $employer['crn'] = SecurityHelper::decrypt($employer['crn'] ?? '');
-        $employer['slug'] = SecurityHelper::decrypt($employer['slug'] ?? '');
-        $employer['logoUrl'] = SecurityHelper::decrypt($employer['logoUrl'] ?? '');
+        $employer['slug'] = $employer['slug'] ?? '';
+        $employer['logoUrl'] = $employer['logoUrl'] ?? '';
 
         return $employer;
     }
@@ -156,7 +158,7 @@ class Employers extends Component
         $employer = Employer::findOne($employerId);
 
         if ($employer) {
-            return SecurityHelper::decrypt($employer['name']);
+            return $employer['name'];
         }
 
         return '';
@@ -238,7 +240,7 @@ class Employers extends Component
 
                 //TESTING PURPOSE
                 if (App::parseEnv('$HUB_DEV_MODE') && App::parseEnv('$HUB_DEV_MODE') == 1) {
-                    $employers = array_filter($employers, function($emp) {
+                    $employers = array_filter($employers, static function($emp) {
                         return $emp['name'] == 'Acme Limited (Demo)' || $emp['name'] == 'Harding Financial Ltd';
                     });
                 }
@@ -263,7 +265,7 @@ class Employers extends Component
     /**
      * @param array $employers
      */
-    public function fetchEmployers(array $employers)
+    public function fetchEmployers(array $employers): void
     {
         $queue = Craft::$app->getQueue();
         $queue->push(new FetchEmployersJob([
@@ -279,7 +281,7 @@ class Employers extends Component
      *
      * @param array $employers
      */
-    public function syncEmployers(array $employers)
+    public function syncEmployers(array $employers): void
     {
         $logger = new Logger();
         $logger->stdout('↧ Sync employers'. PHP_EOL, $logger::RESET);
@@ -299,7 +301,7 @@ class Employers extends Component
 
             // remove the employer if it doesn't exists anymore
             if (!$exists) {
-                $logger->stdout('✓ Delete employer '. SecurityHelper::decrypt($hubEmp['name']). PHP_EOL, $logger::FG_YELLOW);
+                $logger->stdout('✓ Delete employer '. $hubEmp['name']. PHP_EOL, $logger::FG_YELLOW);
                 Craft::$app->getElements()->deleteElementById($hubEmp['id']);
             }
         }
@@ -307,12 +309,8 @@ class Employers extends Component
 
     /**
      * @param array $employer
-     * @param bool $saveRelations
-     * @throws \Throwable
-     * @throws \craft\errors\ElementNotFoundException
-     * @throws \yii\base\Exception
      */
-    public function saveEmployer(array $employer)
+    public function saveEmployer(array $employer): void
     {
         $logger = new Logger();
         $logger->stdout("✓ Save employer " . $employer['name'] ?? null . '...', $logger::RESET);
