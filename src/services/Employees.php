@@ -12,6 +12,7 @@ namespace percipiolondon\staff\services;
 
 use Craft;
 use craft\base\Component;
+use Exception;
 use percipiolondon\staff\elements\Employee;
 use percipiolondon\staff\elements\Employer;
 use percipiolondon\staff\helpers\Logger;
@@ -185,11 +186,11 @@ class Employees extends Component
     }
 
 
-
     /**
      * Checks if our database has employers that are deleted on staffology, if so, delete them on our system
      *
-     * @param array $employers
+     * @param array $employer
+     * @param array $employees
      */
     public function syncEmployees(array $employer, array $employees)
     {
@@ -218,7 +219,7 @@ class Employees extends Component
         }
     }
 
-    public function saveEmployee(array $employee, string $employeeName, array $employer)
+    public function saveEmployee(array $employee, string $employeeName, array $employer): void
     {
         $logger = new Logger();
         $logger->stdout("✓ Save employee " . $employeeName . '...', $logger::RESET);
@@ -272,7 +273,7 @@ class Employees extends Component
                 $logger->stdout($errors . PHP_EOL, $logger::FG_RED);
                 Craft::error($employeeRecord->errors, __METHOD__);
             }
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             $logger = new Logger();
             $logger->stdout(PHP_EOL, $logger::RESET);
             $logger->stdout($e->getMessage() . PHP_EOL, $logger::FG_RED);
@@ -290,10 +291,10 @@ class Employees extends Component
 
         $record->employeeId = $employee;
         $record->maritalStatus = $personalDetails['maritalStatus'] ?? 'Unknown';
-        $record->title = SecurityHelper::encrypt($personalDetails['title'] ?? '');
-        $record->firstName = SecurityHelper::encrypt($personalDetails['firstName'] ?? '');
-        $record->middleName = SecurityHelper::encrypt($personalDetails['middleName'] ?? '');
-        $record->lastName = SecurityHelper::encrypt($personalDetails['lastName'] ?? '');
+        $record->title = $personalDetails['title'] ?? '';
+        $record->firstName = $personalDetails['firstName'] ?? '';
+        $record->middleName = $personalDetails['middleName'] ?? '';
+        $record->lastName =$personalDetails['lastName'] ?? '';
         $record->email = SecurityHelper::encrypt($personalDetails['email'] ?? '');
         $record->emailPayslip = $personalDetails['emailPayslip'] ?? null;
         $record->passwordProtectPayslip = $personalDetails['passwordProtectPayslip'] ?? null;
@@ -326,7 +327,7 @@ class Employees extends Component
         $record->employeeId = $employee;
         $record->cisSubContractor = $employmentDetails['cisSubCopntractor'] ?? null;
         $record->payrollCode = SecurityHelper::encrypt($employmentDetails['payrollCode'] ?? '');
-        $record->jobTitle = SecurityHelper::encrypt($employmentDetails['jobTitle'] ?? '');
+        $record->jobTitle = $employmentDetails['jobTitle'] ?? '';
         $record->onHold = $employmentDetails['onHold'] ?? null;
         $record->onFurlough = $employmentDetails['onFurlough'] ?? null;
         $record->furloughStart = $employmentDetails['furloughStart'] ?? null;
@@ -416,10 +417,10 @@ class Employees extends Component
 
     public function parsePersonalDetails(array $personalDetails): array
     {
-        $personalDetails['title'] = SecurityHelper::decrypt($personalDetails['title'] ?? '');
-        $personalDetails['firstName'] = SecurityHelper::decrypt($personalDetails['firstName'] ?? '');
-        $personalDetails['middleName'] = SecurityHelper::decrypt($personalDetails['middleName'] ?? '');
-        $personalDetails['lastName'] = SecurityHelper::decrypt($personalDetails['lastName'] ?? '');
+        $personalDetails['title'] = $personalDetails['title'] ?? '';
+        $personalDetails['firstName'] = $personalDetails['firstName'] ?? '';
+        $personalDetails['middleName'] = $personalDetails['middleName'] ?? '';
+        $personalDetails['lastName'] = $personalDetails['lastName'] ?? '';
         $personalDetails['email'] = SecurityHelper::decrypt($personalDetails['email'] ?? '');
         $personalDetails['pdfPassword'] = SecurityHelper::decrypt($personalDetails['pdfPassword'] ?? '');
         $personalDetails['telephone'] = SecurityHelper::decrypt($personalDetails['telephone'] ?? '');
@@ -433,7 +434,7 @@ class Employees extends Component
     public function parseEmploymentDetails(array $employmentDetails): array
     {
         $employmentDetails['payrollCode'] = SecurityHelper::decrypt($employmentDetails['payrollCode'] ?? '');
-        $employmentDetails['jobTitle'] = SecurityHelper::decrypt($employmentDetails['jobTitle'] ?? '');
+        $employmentDetails['jobTitle'] = $employmentDetails['jobTitle'] ?? '';
         $employmentDetails['furloughCalculationBasisAmount'] = SecurityHelper::decrypt($employmentDetails['furloughCalculationBasisAmount'] ?? '');
         $employmentDetails['forcePreviousPayrollCode'] = SecurityHelper::decrypt($employmentDetails['forcePreviousPayrollCode'] ?? '');
 
