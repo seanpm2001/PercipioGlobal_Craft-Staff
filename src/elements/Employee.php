@@ -182,14 +182,14 @@ class Employee extends Element
     /**
      * Returns the company name
      *
-     * @return strng|null
+     * @return array|null
      * @throws InvalidConfigException if [[employerId]] is set but invalid
      */
     public function getEmployer()
     {
         if ($this->_employer === null) {
 
-            if (($this->_employer = Staff::$plugin->employers->getEmployerNameById($this->employerId)) === null) {
+            if (($this->_employer = Staff::$plugin->employers->getEmployerById($this->employerId, true)) === null) {
                 // The author is probably soft-deleted. Just no author is set
                 $this->_employer = false;
             }
