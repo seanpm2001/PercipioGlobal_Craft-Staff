@@ -101,11 +101,6 @@ class Employee extends Element
                 'type' => Type::id(),
                 'description' => 'The id of the employer this employee works for.',
             ],
-            'employer' => [
-                'name' => 'employer',
-                'type' => Type::string(),
-                'description' => 'The name of the employer this employee works for.',
-            ],
             'userId' => [
                 'name' => 'userId',
                 'type' => Type::id(),
@@ -140,7 +135,12 @@ class Employee extends Element
                 'name' => 'personalDetails',
                 'type' => PersonalDetails::getType(),
                 'description' => 'The personal details of an employee'
-            ]
+            ],
+            'employer' => [
+                'name' => 'employer',
+                'type' => \percipiolondon\staff\gql\types\Employer::getType(),
+                'description' => 'The name of the employer this employee works for.',
+            ],
 
         ];
 

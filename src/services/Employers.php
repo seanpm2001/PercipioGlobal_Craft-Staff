@@ -94,20 +94,22 @@ class Employers extends Component
      * @return array
      * @throws Exception
      */
-    public function getEmployerById(int $employerId): array
+    public function getEmployerById(int $employerId, bool $raw = false): array
     {
         $query = new Query();
         $query->from(Table::EMPLOYERS)
             ->where('id = ' . $employerId)
             ->one();
         $command = $query->createCommand();
-        $employerQuery = $command->queryOne();
+        $employer = $command->queryOne();
 
-        if (!$employerQuery) {
+        if (!$employer) {
             return [];
         }
 
-        $employer = $this->parseEmployer($employerQuery);
+        if(!$raw) {
+            $employer = $this->parseEmployer($employer);
+        }
 
         if($employer['defaultPayOptionsId'] ?? null) {
             $query = new Query();
@@ -117,7 +119,7 @@ class Employers extends Component
             $command = $query->createCommand();
             $payOptions = $command->queryOne();
 
-            if ($payOptions) {
+            if ($payOptions && !$raw) {
                 $employer['defaultPayOptions'] = Staff::$plugin->payRuns->parsePayOptions($payOptions);
             }
         }
