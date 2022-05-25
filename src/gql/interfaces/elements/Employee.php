@@ -84,9 +84,6 @@ class Employee extends Element
                 'name' => 'slug',
                 'type' => Type::nonNull(Type::string()),
                 'description' => 'The company slug.',
-                'resolve' => function($source, array $arguments, $context, ResolveInfo $resolveInfo) {
-                    return SecurityHelper::resolve($source, $resolveInfo);
-                },
             ],
         ];
 

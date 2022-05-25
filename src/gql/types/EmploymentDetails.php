@@ -52,9 +52,6 @@ class EmploymentDetails
                 'name' => 'jobTitle',
                 'type' => Type::string(),
                 'description' => 'Job Title of Primary post of the Employee.',
-                'resolve' => function ($source, array $arguments, $context, ResolveInfo $resolveInfo) {
-                    return Security::resolve($source, $resolveInfo, 'string');
-                },
             ],
             'onHold' => [
                 'name' => 'onHold',

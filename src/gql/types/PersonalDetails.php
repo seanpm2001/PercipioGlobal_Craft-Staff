@@ -55,33 +55,21 @@ class PersonalDetails
                 'name' => 'title',
                 'type' => Type::string(),
                 'description' => 'Name title.',
-                'resolve' => function ($source, array $arguments, $context, ResolveInfo $resolveInfo) {
-                    return Security::resolve($source, $resolveInfo, 'string');
-                },
             ],
             'firstName' => [
                 'name' => 'firstName',
                 'type' => Type::string(),
                 'description' => 'First name.',
-                'resolve' => function ($source, array $arguments, $context, ResolveInfo $resolveInfo) {
-                    return Security::resolve($source, $resolveInfo, 'string');
-                },
             ],
             'middleName' => [
                 'name' => 'middleName',
                 'type' => Type::string(),
                 'description' => 'Middle name.',
-                'resolve' => function ($source, array $arguments, $context, ResolveInfo $resolveInfo) {
-                    return Security::resolve($source, $resolveInfo, 'string');
-                },
             ],
             'lastName' => [
                 'name' => 'lastName',
                 'type' => Type::string(),
                 'description' => 'Last name.',
-                'resolve' => function ($source, array $arguments, $context, ResolveInfo $resolveInfo) {
-                    return Security::resolve($source, $resolveInfo, 'string');
-                },
             ],
             'email' => [
                 'name' => 'email',

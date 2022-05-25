@@ -90,17 +90,11 @@ class Employer extends Element
                 'name' => 'name',
                 'type' => Type::string(),
                 'description' => 'The company name.',
-                'resolve' => function($source, array $arguments, $context, ResolveInfo $resolveInfo) {
-                    return SecurityHelper::resolve($source, $resolveInfo);
-                },
             ],
             'slug' => [
                 'name' => 'slug',
                 'type' => Type::nonNull(Type::string()),
                 'description' => 'The company slug.',
-                'resolve' => function($source, array $arguments, $context, ResolveInfo $resolveInfo) {
-                    return SecurityHelper::resolve($source, $resolveInfo);
-                },
             ],
         ];
 
@@ -125,9 +119,6 @@ class Employer extends Element
             'logoUrl' => [
                 'name' => 'logoUrl',
                 'type' => Type::string(),
-                'resolve' => function($source, array $arguments, $context, ResolveInfo $resolveInfo) {
-                    return SecurityHelper::resolve($source, $resolveInfo);
-                },
             ],
             'currentPayRun' => [
                 'name' => 'currentPayRun',

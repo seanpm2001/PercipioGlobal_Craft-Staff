@@ -295,7 +295,7 @@ class Employer extends Element
                 $record->id = (int)$this->id;
             }
 
-            $record->slug = SecurityHelper::encrypt((strtolower(trim(preg_replace('/[^A-Za-z0-9-]+/', '-', $this->name ?? ''), '-'))));
+            $record->slug = strtolower(trim(preg_replace('/[^A-Za-z0-9-]+/', '-', $this->name ?? ''), '-'));
             $record->staffologyId = $this->staffologyId;
             $record->name = SecurityHelper::encrypt($this->name ?? '');
             $record->crn = SecurityHelper::encrypt($this->crn ?? '');
