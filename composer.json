@@ -2,7 +2,7 @@
     "name": "percipiolondon/craft-staff",
     "description": "Craft Staff Management provides an HR solution for payroll and benefits",
     "type": "craft-plugin",
-    "version": "1.0.0-beta.6",
+    "version": "1.0.0-beta.7",
     "keywords": [
         "craft",
         "cms",
@@ -22,6 +22,7 @@
         }
     ],
     "require": {
+        "php": "^8.0.2",
         "craftcms/cms": "^3.7.35",
         "league/csv": "^9.0.0",
         "nystudio107/craft-plugin-vite": "^1.0.0",
