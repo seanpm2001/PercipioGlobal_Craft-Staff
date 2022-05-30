@@ -23,6 +23,7 @@ use percipiolondon\staff\helpers\Csv as CsvHelper;
 use percipiolondon\staff\helpers\Logger;
 use percipiolondon\staff\helpers\Security as SecurityHelper;
 use percipiolondon\staff\jobs\CreatePayCodeJob;
+use percipiolondon\staff\jobs\CreatePayRunByEmployerJob;
 use percipiolondon\staff\jobs\CreatePayRunEntryJob;
 
 use percipiolondon\staff\jobs\CreatePayRunJob;
@@ -260,56 +261,109 @@ class PayRuns extends Component
      * @param string $taxYear
      * @throws \GuzzleHttp\Exception\GuzzleException
      */
-    public function fetchPayRunByEmployer(int $employerId, string $taxYear = '')
+    public function fetchPayRunByEmployer(string $emp, string $taxYear)
     {
         $logger = new Logger();
+        
+        $queue = Craft::$app->getQueue();
+        $startTaxYear = 2020;
 
-        if (!$employerId) {
-            $logger->stdout("There's no employer id provided" . PHP_EOL, $logger::FG_RED);
-            Craft::error("There's no employer id provided", __METHOD__);
+        if ($emp === '*' || strpos($emp, ',')) {
+
+            // Fetch all the employers
+            if($emp === '*') {
+                $employers = Staff::$plugin->employers->getEmployers();
+            }else{
+                $ids = explode(',', $emp);
+                $employers = [];
+
+                foreach($ids as $id) {
+                    $employers[] = Staff::$plugin->employers->getEmployerById($id);
+                }
+            }
+
+            // Fetch the pay runs of all employers
+            foreach($employers as $employer) {
+
+                // If tax year is not provided or as *, fetch all the tax years starting from 2020
+                if($taxYear === '*' || strpos($taxYear, ',')) {
+
+                    $taxYears = [];
+
+                    if($taxYear === '*') {
+                        $endTaxYear = (int) str_replace('Year', '', $employer['currentYear']);
+                        $taxYears = range($startTaxYear, $endTaxYear);
+                    } else {
+                        $taxYears = explode(',', $taxYear);
+                    }
+
+                    foreach($taxYears as $year) {
+                        $queue->push(new CreatePayRunByEmployerJob([
+                            'description' => 'Fetch pay runs',
+                            'criteria' => [
+                                'taxYear' => 'Year'.$year,
+                                'employer' => $employer,
+                            ],
+                        ]));
+                    }
+
+                } else {
+                    $queue->push(new CreatePayRunByEmployerJob([
+                        'description' => 'Fetch pay runs',
+                        'criteria' => [
+                            'taxYear' => $taxYear,
+                            'employer' => $employer,
+                        ],
+                    ]));                    
+                }
+                
+            }
+        } else {
+
+            // Only fetch the given employer
+            $employer = Staff::$plugin->employers->getEmployerById($emp);
+
+            // If tax year is not provided or as *, fetch all the tax years starting from 2020
+            if($taxYear === '*' || strpos($taxYear, ',')) {
+
+                $taxYears = [];
+
+                if($taxYear === '*') {
+                    // if tax year is * --> fetch range between 2020 and current tax year of employer
+                    $endTaxYear = (int) str_replace('Year', '', $employer['currentYear']);
+                    $taxYears = range($startTaxYear, $endTaxYear);
+                } else {
+                    // if tax year is an array --> fetch the array
+                    $taxYears = explode(',', $taxYear);
+                }
+
+                foreach($taxYears as $year) {
+                    $queue->push(new CreatePayRunByEmployerJob([
+                        'description' => 'Fetch pay runs',
+                        'criteria' => [
+                            'taxYear' => 'Year'.$year,
+                            'employer' => $employer,
+                        ],
+                    ]));
+                }
+
+            } else {
+                $queue->push(new CreatePayRunByEmployerJob([
+                    'description' => 'Fetch pay runs',
+                    'criteria' => [
+                        'taxYear' => $taxYear,
+                        'employer' => $employer,
+                    ],
+                ]));
+            }
         }
 
-        $employer = Staff::$plugin->employers->getEmployerById($employerId);
-
-        if ($employer) {
-            $id = $employer['staffologyId'] ?? '';
-            $taxYear = $taxYear === '' ? $employer['currentYear'] : $taxYear;
-            $payPeriod = $employer['defaultPayOptions']['period'] ?? 'Monthly';
-
-            $url = '/employers/' . $id . '/payrun/' . $taxYear . '/' . $payPeriod;
-
-            $api = App::parseEnv(Staff::$plugin->getSettings()->apiKeyStaffology);
-            $credentials = base64_encode('staff:' . $api);
-            $headers = [
-                'headers' => [
-                    'Authorization' => 'Basic ' . $credentials,
-                ],
-            ];
-            $client = new \GuzzleHttp\Client();
-
-            try {
-                $response = $client->get("https://api.staffology.co.uk/" . $url, $headers);
-                $payRunData = json_decode($response->getBody()->getContents(), true);
-
-                if ($payRunData) {
-                    $employer['id'] = $employer['staffologyId'];
-
-                    $this->fetchPayCodesList($employer);
-                    $this->fetchPayRuns($payRunData, $employer);
-
-                    App::maxPowerCaptain();
-                    $queue = Craft::$app->getQueue();
-                    if ($queue instanceof QueueInterface) {
-                        $queue->run();
-                    } elseif ($queue instanceof RedisQueue) {
-                        $queue->run(false);
-                    }
-                }
-            } catch (\Exception $e) {
-                $logger->stdout(PHP_EOL, $logger::RESET);
-                $logger->stdout($e->getMessage() . PHP_EOL, $logger::FG_RED);
-                Craft::error($e->getMessage(), __METHOD__);
-            }
+        App::maxPowerCaptain();
+        $queue = Craft::$app->getQueue();
+        if ($queue instanceof QueueInterface) {
+            $queue->run();
+        } elseif ($queue instanceof RedisQueue) {
+            $queue->run(false);
         }
     }
 
@@ -448,25 +502,28 @@ class PayRuns extends Component
         $logger = new Logger();
         $logger->stdout('↧ Sync pay run of '. $employer['name']. PHP_EOL, $logger::RESET);
 
-        $taxYear = $payRuns['metadata']['taxYear'] ?? '';
-        $hubEmployer = Employer::findOne(['staffologyId' => $employer['id']]);
-        $hubPayRuns = PayRun::findAll(['employerId' => $hubEmployer['id'], 'taxYear' => $taxYear]);
+        $taxYear = $payRuns[0]['metadata']['taxYear'] ?? '';
 
-        foreach ($hubPayRuns as $hubPayRun) {
+        // only check to delete pay runs if we have a tax year
+        if($taxYear) {
+            $hubEmployer = Employer::findOne(['staffologyId' => $employer['id']]);
+            $hubPayRuns = PayRun::findAll(['employerId' => $hubEmployer['id'], 'taxYear' => $taxYear]);
+            foreach ($hubPayRuns as $hubPayRun) {
 
-            $exists = false;
+                $exists = false;
 
-            // loop through our employees and check if the employee is still on staffology
-            foreach ($payRuns as $payRun) {
-                if ($payRun['url'] === $hubPayRun['url']) {
-                    $exists = true;
+                // loop through our pay runs and check if the pay run is still on staffology
+                foreach ($payRuns as $payRun) {
+                    if ($payRun['url'] === 'https://api.staffology.co.uk'.$hubPayRun['url']) {
+                        $exists = true;
+                    }
                 }
-            }
 
-            // remove the employee if it doesn't exists anymore
-            if (!$exists) {
-                $logger->stdout('✓ Delete pay run ' . $hubPayRun['taxYear'] . '/' . $hubPayRun['taxMonth'] . ' from '. $employer['name']. PHP_EOL, $logger::FG_YELLOW);
-                Craft::$app->getElements()->deleteElementById($hubPayRun['id']);
+                // remove the pay run if it doesn't exists anymore
+                if (!$exists) {
+                    $logger->stdout('✓ Delete pay run ' . $hubPayRun['taxYear'] . '/' . $hubPayRun['taxMonth'] . ' from '. $employer['name']. PHP_EOL, $logger::FG_YELLOW);
+                    Craft::$app->getElements()->deleteElementById($hubPayRun['id']);
+                }
             }
         }
     }

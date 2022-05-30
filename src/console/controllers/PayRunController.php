@@ -41,13 +41,13 @@ class PayRunController extends Controller
      * Provide a specific tax year. If not provided, the current tax year will be used
      * @var string
      */
-    public $taxYear = '';
+    public $taxYear = '*';
 
     /**
      * Provide an employer to fetch [required]
      * @var string
      */
-    public $employer = '';
+    public $employer = '*';
 
     /**
      * @param string $actionID

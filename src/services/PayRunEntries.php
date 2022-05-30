@@ -191,7 +191,7 @@ class PayRunEntries extends Component
 
             $exists = false;
 
-            // loop through our employees and check if the employee is still on staffology
+            // loop through our pay run entries and check if the pay run entry is still on staffology
             foreach ($payRunEntries as $payRunEntry) {
                 if ($payRunEntry['id'] === $hubPayRunEntry['staffologyId']) {
                     $exists = true;
