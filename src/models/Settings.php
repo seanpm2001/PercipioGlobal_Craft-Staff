@@ -41,6 +41,11 @@ class Settings extends Model
     public $pluginName = 'The Hub';
 
     /**
+     * @var string The API url from Staffology
+     */
+    public $apiBaseUrl = 'https://api.staffology.co.uk/';
+
+    /**
      * @var string The Staffology API key.
      */
     public $apiKeyStaffology = '';
