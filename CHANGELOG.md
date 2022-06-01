@@ -4,6 +4,15 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](http://keepachangelog.com/) and this project adheres to [Semantic Versioning](http://semver.org/).
 
+## 1.0.0-beta.8 - 2022-05-30
+
+### Changed
+- Provide multiple options for fetching employers with tax years inside of the console
+- Provided the api url inside of the settings instead of static
+
+### Fixed
+- Fixed the refresh pay runs button when there are no current results
+
 ## 1.0.0-beta.7 - 2022-05-25
 
 ### Fixed

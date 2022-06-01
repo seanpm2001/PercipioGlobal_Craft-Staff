@@ -10,7 +10,7 @@
     "integrity": "sha384-Ae9yvm+/TJhVmeZnhq75lkkUglAw/9jKd3hxl0D0zA9D/PL7v7dZn8KjnPMLm9qK"
   },
   "src/js/payruns.ts": {
-    "file": "assets/payruns.8c13be4e.js",
+    "file": "assets/payruns.f9e7c00e.js",
     "src": "src/js/payruns.ts",
     "isEntry": true,
     "imports": [
@@ -18,10 +18,10 @@
       "_useApolloClient.3973916d.js",
       "_status--synced.a1cfbd6e.js"
     ],
-    "integrity": "sha384-nxT52cZ025HTWVUX5qnJgHQniyLcDoISCYDyZ3e6DUOGsqXCD9GVTmY8g1YSRgB3"
+    "integrity": "sha384-i5nhG+ainr0pozDbJY1Rrn3Ng6ZoXA4gM0J7h5dK9KUcHZc06pcLpxTjj9huUUxM"
   },
   "src/js/payrunDetails.ts": {
-    "file": "assets/details.1be0207d.js",
+    "file": "assets/details.502eba73.js",
     "src": "src/js/payrunDetails.ts",
     "isEntry": true,
     "imports": [
@@ -29,7 +29,7 @@
       "_useApolloClient.3973916d.js",
       "_status--synced.a1cfbd6e.js"
     ],
-    "integrity": "sha384-/bGyPf9SX296JKTE4qFQdzQsyuZe3J8ITKI4g/ytQf26BSJaU/jQGcLr9b9zlGDZ"
+    "integrity": "sha384-wrXD9j81NiDWtoPNA+uONDAlMMEZUYA5Cpnp7sErNRaej1g5C9ZmKXh7CkBi79aW"
   },
   "src/js/staff.ts": {
     "file": "assets/staff.394784cb.js",

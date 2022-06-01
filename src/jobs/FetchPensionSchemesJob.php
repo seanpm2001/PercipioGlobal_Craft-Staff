@@ -18,7 +18,7 @@ class FetchPensionSchemesJob extends BaseJob
 
         // connection props
         $api = App::parseEnv(Staff::$plugin->getSettings()->apiKeyStaffology);
-        $base_url = 'https://api.staffology.co.uk/';
+        $base_url = Staff::$plugin->getSettings()->apiBaseUrl;
         $credentials = base64_encode('staff:' . $api);
         $headers = [
             'headers' => [
