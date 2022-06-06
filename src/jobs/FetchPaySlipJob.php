@@ -60,7 +60,7 @@ class FetchPaySlipJob extends Basejob
         }
     }
 
-    private function _savePaySlipToPayRunEntry($data)
+    private function _savePaySlipToPayRunEntry($data): void
     {
     }
 }

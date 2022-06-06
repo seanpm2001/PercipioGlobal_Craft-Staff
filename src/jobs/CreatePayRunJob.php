@@ -4,6 +4,7 @@ namespace percipiolondon\staff\jobs;
 
 use Craft;
 use craft\helpers\App;
+use craft\helpers\Json;
 use craft\helpers\Queue;
 use craft\queue\BaseJob;
 use percipiolondon\staff\elements\PayRun;
@@ -58,7 +59,7 @@ class CreatePayRunJob extends BaseJob
                 $logger->stdout($progress . "↧ Fetching pay run info of " . $taxYear . ' / ' . $name . '...', $logger::RESET);
 
                 $response = $client->get("https://api.staffology.co.uk" . $url, $headers);
-                $payRunData = json_decode($response->getBody()->getContents(), true);
+                $payRunData = Json::decode($response->getBody()->getContents(), true);
 
                 $logger->stdout(" done" . PHP_EOL, $logger::FG_GREEN);
 

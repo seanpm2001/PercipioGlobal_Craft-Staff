@@ -4,6 +4,7 @@ namespace percipiolondon\staff\jobs;
 
 use Craft;
 use craft\helpers\App;
+use craft\helpers\Json;
 use craft\helpers\Queue;
 use craft\queue\BaseJob;
 use percipiolondon\staff\elements\PayRun;
@@ -39,7 +40,7 @@ class CreatePayRunByEmployerJob extends BaseJob
 
             try {
                 $response = $client->get(Staff::$plugin->getSettings()->apiBaseUrl . $url, $headers);
-                $payRunData = json_decode($response->getBody()->getContents(), true);
+                $payRunData = Json::decode($response->getBody()->getContents(), true);
 
                 if ($payRunData) {
                     $this->criteria['employer']['id'] = $this->criteria['employer']['staffologyId'];

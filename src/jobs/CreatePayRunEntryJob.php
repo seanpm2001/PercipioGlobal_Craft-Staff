@@ -4,6 +4,7 @@ namespace percipiolondon\staff\jobs;
 
 use Craft;
 use craft\helpers\App;
+use craft\helpers\Json;
 use craft\queue\BaseJob;
 use percipiolondon\staff\helpers\Logger;
 use percipiolondon\staff\Staff;
@@ -28,7 +29,7 @@ class CreatePayRunEntryJob extends Basejob
         $current = 0;
         $total = count($this->criteria['payRunEntries']);
 
-        //Delete existing if they don't exist on Staffology anymore
+        // Delete existing if they don't exist on Staffology anymore
         Staff::$plugin->payRunEntries->syncPayRunEntries($this->criteria['payRun'], $this->criteria['payRunEntries']);
 
         foreach ($this->criteria['payRunEntries'] as $payRunEntryData) {
@@ -42,7 +43,7 @@ class CreatePayRunEntryJob extends Basejob
 
             try {
                 $response = $client->get($base_url, $headers);
-                $result = json_decode($response->getBody()->getContents(), true);
+                $result = Json::decode($response->getBody()->getContents(), true);
 
                 Staff::$plugin->payRunEntries->savePayRunEntry($result, $this->criteria['employer'], $this->criteria['payRun']->id);
 
