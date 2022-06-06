@@ -72,7 +72,10 @@ class PayRuns extends Component
     {
         return PayRun::find()
             ->employerId($employerId)
-            ->orderBy('dateCreated DESC')
+            ->orderBy([
+                'taxYear' => SORT_DESC,
+                'taxMonth' => SORT_DESC,
+            ])
             ->one();
     }
 
