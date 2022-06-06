@@ -11,6 +11,7 @@ use GraphQL\Type\Definition\Type;
 use percipiolondon\staff\elements\Employee as EmployeeElement;
 use percipiolondon\staff\gql\types\EmploymentDetails;
 use percipiolondon\staff\gql\types\generators\EmployeeGenerator;
+use percipiolondon\staff\gql\types\Employer;
 use percipiolondon\staff\gql\types\LeaveSettings;
 use percipiolondon\staff\gql\types\PersonalDetails;
 use percipiolondon\staff\gql\types\StarterDetails;
@@ -135,7 +136,7 @@ class Employee extends Element
             ],
             'employer' => [
                 'name' => 'employer',
-                'type' => \percipiolondon\staff\gql\types\Employer::getType(),
+                'type' => Employer::getType(),
                 'description' => 'The name of the employer this employee works for.',
             ],
 
