@@ -46,17 +46,11 @@ class Employer
                 'name' => 'name',
                 'type' => Type::string(),
                 'description' => 'The company name.',
-                'resolve' => function($source, array $arguments, $context, ResolveInfo $resolveInfo) {
-                    return SecurityHelper::resolve($source, $resolveInfo);
-                },
             ],
             'slug' => [
                 'name' => 'slug',
                 'type' => Type::nonNull(Type::string()),
                 'description' => 'The company slug.',
-                'resolve' => function($source, array $arguments, $context, ResolveInfo $resolveInfo) {
-                    return SecurityHelper::resolve($source, $resolveInfo);
-                },
             ],
             'currentYear' => [
                 'name' => 'currentYear',
@@ -78,9 +72,6 @@ class Employer
             'logoUrl' => [
                 'name' => 'logoUrl',
                 'type' => Type::string(),
-                'resolve' => function($source, array $arguments, $context, ResolveInfo $resolveInfo) {
-                    return SecurityHelper::resolve($source, $resolveInfo);
-                },
             ],
             'currentPayRun' => [
                 'name' => 'currentPayRun',
