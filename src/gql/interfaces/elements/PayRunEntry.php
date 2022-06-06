@@ -110,7 +110,7 @@ class PayRunEntry extends Element
                 'type' => DateTime::getType(),
                 'description' => 'The end date of the period this PayRun covers.',
                 'resolve' => function ($source, array $arguments, $context, ResolveInfo $resolveInfo) {
-                    return Gql::applyDirectives($source, $resolveInfo, DateTimeHelper::toDateTime($source->startDate));
+                    return Gql::applyDirectives($source, $resolveInfo, DateTimeHelper::toDateTime($source->endDate));
                 }
             ],
             'note' => [
