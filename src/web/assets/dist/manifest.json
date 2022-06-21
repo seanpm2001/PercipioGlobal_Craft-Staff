@@ -1,71 +1,71 @@
 {
-  "src/js/wysiwyg.ts": {
-    "file": "assets/wysiwyg.18884be1.js",
-    "src": "src/js/wysiwyg.ts",
+  "src/js/tiptap.ts": {
+    "file": "assets/tiptap.68d8f962.js",
+    "src": "src/js/tiptap.ts",
     "isEntry": true,
     "imports": [
-      "_vendor.638d3191.js"
+      "_runtime-dom.esm-bundler.723b1be6.js"
     ],
-    "integrity": "sha384-IYS/baICWfIQv1hnOMRSDkXaT2GXe25Sh8skyPLHpQSvr7X6nMWvMV7SAT0ja90d"
+    "integrity": "sha384-y8kazMEhR4loyIphnMrJjLTMhZKMpcgBj9a5FXZU000qrDOpDAnXFX42SWQIabzR"
   },
   "src/js/employers.ts": {
-    "file": "assets/employers.86e3cf6d.js",
+    "file": "assets/employers.5eb90b5a.js",
     "src": "src/js/employers.ts",
     "isEntry": true,
     "imports": [
-      "_vendor.638d3191.js",
-      "_useApolloClient.248cbc93.js"
+      "_useApolloClient.52323202.js",
+      "_runtime-dom.esm-bundler.723b1be6.js"
     ],
-    "integrity": "sha384-gwEyYH3ab2HV+5JRsJwS5EQz128WaB1toZ+7lbN9WcAleGTOGmP9pPg9Y7TOqcrg"
+    "integrity": "sha384-42WbpfVMgXLrDUYEQSpt/3FdRUDCcfDN8mxE/IW1cFbtmqdzAmM0++3kH9PyDyqc"
   },
   "src/js/payruns.ts": {
-    "file": "assets/payruns.b88d6b1d.js",
+    "file": "assets/payruns.77975023.js",
     "src": "src/js/payruns.ts",
     "isEntry": true,
     "imports": [
-      "_vendor.638d3191.js",
-      "_useApolloClient.248cbc93.js",
-      "_status--synced.3226d7f8.js"
+      "_useApolloClient.52323202.js",
+      "_status--synced.89d7fb51.js",
+      "_runtime-dom.esm-bundler.723b1be6.js"
     ],
-    "integrity": "sha384-/HBrtMvv2fvemNW/4qdl8ZSHLwAEKjOID+18vAr9KoJW6Tqar8UtYN2lFtGQMUGB"
+    "integrity": "sha384-ZIygA929m2qC70/ys9/Ar806xGzmA111sHqtY8VQY7iGGMKi7NSYn4ROFirtpccN"
   },
   "src/js/payrunDetails.ts": {
-    "file": "assets/details.4a754d71.js",
+    "file": "assets/details.10c5bfb5.js",
     "src": "src/js/payrunDetails.ts",
     "isEntry": true,
     "imports": [
-      "_vendor.638d3191.js",
-      "_useApolloClient.248cbc93.js",
-      "_status--synced.3226d7f8.js"
+      "_useApolloClient.52323202.js",
+      "_status--synced.89d7fb51.js",
+      "_runtime-dom.esm-bundler.723b1be6.js"
     ],
-    "integrity": "sha384-lkmZj4SVJ4e6k3vjsEH3yg7a6o8+12RHXIg2jR49JTw0taHKbxeeu/G5VQPLRSK2"
+    "integrity": "sha384-eYPhD13xv7BS3Jd+K5QU/n2mYgz4ekk+jhwlDEW8zDSplMwg5DQE9NLvUH8FaXmI"
   },
   "src/js/staff.ts": {
-    "file": "assets/staff.394784cb.js",
+    "file": "assets/staff.982ee24e.js",
     "src": "src/js/staff.ts",
     "isEntry": true,
     "css": [
-      "assets/staff.a3ceef67.css"
+      "assets/staff.22f83b22.css"
     ],
-    "integrity": "sha384-Kcx0gEO5hnQ/Asv3AznXqh/qp6GulOcvm5sgITSIFxuks6QnKDoQJHq3nrPoa5nu"
+    "integrity": "sha384-8UnMAPqA298bq8hfSgVTe28LPYj6HHf9cnA5itQ78qlFnJw0vSwHgGOfdzKxk0+4"
   },
-  "_vendor.638d3191.js": {
-    "file": "assets/vendor.638d3191.js",
-    "integrity": "sha384-ogje/ebpjgWUTJcMPuAbCBZG00mNNRQKQCkIJWoP737G72oe0ROASJBGByKjtYGT"
+  "_runtime-dom.esm-bundler.723b1be6.js": {
+    "file": "assets/runtime-dom.esm-bundler.723b1be6.js",
+    "integrity": "sha384-nSKZcQ6saLwRGRywxWdEdpFKIOgdhjXc+3/cuw9SRRDqh9k9gfsSgYwvLwxXBUSB"
   },
-  "_useApolloClient.248cbc93.js": {
-    "file": "assets/useApolloClient.248cbc93.js",
+  "_useApolloClient.52323202.js": {
+    "file": "assets/useApolloClient.52323202.js",
     "imports": [
-      "_vendor.638d3191.js"
+      "_runtime-dom.esm-bundler.723b1be6.js"
     ],
-    "integrity": "sha384-KGPy9nG1kBFrq+epX31atCznjMQdEhAIGOQoBhfBRAeVpIOZfJWVOywRvpE/5S2q"
+    "integrity": "sha384-BRYPbamOYM74R2gUMhc72S/tw6f95HWKFemSu81T7qIJ1esknupNDNE8VJ84h2tv"
   },
-  "_status--synced.3226d7f8.js": {
-    "file": "assets/status--synced.3226d7f8.js",
+  "_status--synced.89d7fb51.js": {
+    "file": "assets/status--synced.89d7fb51.js",
     "imports": [
-      "_vendor.638d3191.js",
-      "_useApolloClient.248cbc93.js"
+      "_useApolloClient.52323202.js",
+      "_runtime-dom.esm-bundler.723b1be6.js"
     ],
-    "integrity": "sha384-7qRu5cx4/N5BTIctGFt1PagzfcgWHCNrdxwBUqu92Ku7tjnmxlnFxOjiMUmdjj7a"
+    "integrity": "sha384-FisO89mj9KPdDdwyFTnSkIuFYITWRZs3BlANOIil5YmNM7B0aJ1uN74c/pma37k4"
   }
 }

@@ -57,7 +57,7 @@
         errors: provider ? provider.getErrors('logo') : null,
     }) }}
 
-    <div id="wysiwyg-container"></div>
+    <div id="tiptap-container"></div>
 
 {%- endset -%}
 
@@ -68,5 +68,5 @@
             'percipiolondon\\staff\\assetbundles\\staff\\StaffAsset'
         ]
     } -%}
-    {{  craft.staff.register('src/js/wysiwyg.ts', false, tagOptions, tagOptions) }}
+    {{  craft.staff.register('src/js/tiptap.ts', false, tagOptions, tagOptions) }}
 {%- endblock -%}
