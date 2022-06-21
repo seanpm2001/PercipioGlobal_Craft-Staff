@@ -61,7 +61,6 @@ class Install extends Migration
     /**
      * Creates the tables for Staff Management
      */
-
     public function createTables()
     {
         $tableCreated = false;
@@ -69,6 +68,21 @@ class Install extends Migration
         $tableSchema = Craft::$app->db->schema->getTableSchema(Table::EMPLOYERS);
         if ($tableSchema === null) {
             // BASE
+            $this->createTable(Table::BENEFIT_PROVIDERS, [
+                'id' => $this->primaryKey(),
+                'dateCreated' => $this->dateTime()->notNull(),
+                'dateUpdated' => $this->dateTime()->notNull(),
+                'uid' => $this->uid(),
+                'siteId' => $this->integer(),
+                //FK
+                //intern
+                //fields
+                'name' => $this->string(255)->notNull(),
+                'logo' => $this->integer(),
+                'url' => $this->string(255)->notNull(),
+                'content' => $this->longText()
+            ]);
+
             $this->createTable(Table::EMPLOYEES, [
                 'id' => $this->primaryKey(),
                 'dateCreated' => $this->dateTime()->notNull(),
@@ -1380,6 +1394,9 @@ class Install extends Migration
     public function createIndexes(): void
     {
         /** BASE **/
+        // Benefits [name]
+        $this->createIndex(null, Table::BENEFIT_PROVIDERS, 'name', true);
+
         // Employees [id]
         $this->createIndex(null, Table::AUTO_ENROLMENT, 'employeeId', false);
         $this->createIndex(null, Table::ADDRESSES, 'employeeId', true);

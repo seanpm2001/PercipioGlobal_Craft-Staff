@@ -1,0 +1,18 @@
+{%- set pluginCpUrl = url('staff-management') -%}
+
+<nav>
+    <ul>
+        <li>
+            {%- set benefitProvidersUrl = pluginCpUrl ~ '/benefits/providers' -%}
+            <a href="{{- benefitProvidersUrl -}}" title="Benefit Providers" class="{{- benefitProvidersUrl == craft.app.request.absoluteUrl ? 'sel' : '' -}}">
+                <span class="label">Benefit Providers</span>
+            </a>
+        </li>
+        <li>
+            {%- set benefitProvidersUrl = pluginCpUrl ~ '/benefits/group' -%}
+            <a href="{{- benefitProvidersUrl -}}"title="Group Benefits" class="{{- benefitProvidersUrl == craft.app.request.absoluteUrl ? 'sel' : '' -}}">
+                <span class="label">Group Benefits</span>
+            </a>
+        </li>
+    </ul>
+</nav>
