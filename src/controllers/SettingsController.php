@@ -10,10 +10,13 @@
 namespace percipiolondon\staff\controllers;
 
 use Craft;
+use craft\errors\MissingComponentException;
 use craft\helpers\App;
 use craft\web\Controller;
 
 use percipiolondon\staff\Staff;
+use yii\web\BadRequestHttpException;
+use yii\web\ForbiddenHttpException;
 use yii\web\NotFoundHttpException;
 
 use yii\web\Response;
@@ -24,11 +27,36 @@ class SettingsController extends Controller
      * Dashboard display
      *
      * @param string|null $siteHandle
-     * @param bool        $showWelcome
      *
      * @return Response The rendered result
      * @throws NotFoundHttpException
-     * @throws \yii\web\ForbiddenHttpException
+     * @throws ForbiddenHttpException
+     */
+    public function actionGroupBenefits(string $siteHandle = null): Response
+    {
+        $variables = [];
+
+        $pluginName = Staff::$settings->pluginName;
+        $templateTitle = Craft::t('staff-management', 'Group Benefits');
+
+        $variables['controllerHandle'] = 'group-benefits';
+        $variables['pluginName'] = Staff::$settings->pluginName;
+        $variables['title'] = $templateTitle;
+        $variables['docTitle'] = "{$pluginName} - {$templateTitle}";
+        $variables['selectedSubnavItem'] = 'group-benefits';
+
+        // Render the template
+        return $this->renderTemplate('staff-management/group-benefits/index', $variables);
+    }
+
+    /**
+     * Dashboard display
+     *
+     * @param string|null $siteHandle
+     *
+     * @return Response The rendered result
+     * @throws NotFoundHttpException
+     * @throws ForbiddenHttpException
      */
     public function actionDashboard(string $siteHandle = null): Response
     {
@@ -48,12 +76,38 @@ class SettingsController extends Controller
     }
 
     /**
+     * Payruns display
+     *
+     * @param string|null $siteHandle
+     *
+     * @return Response The rendered result
+     * @throws NotFoundHttpException
+     * @throws ForbiddenHttpException
+     */
+    public function actionPayRuns(string $siteHandle = null): Response
+    {
+        $variables = [];
+
+        $pluginName = Staff::$settings->pluginName;
+        $templateTitle = Craft::t('staff-management', 'Pay runs');
+
+        $variables['controllerHandle'] = 'pay-runs';
+        $variables['pluginName'] = Staff::$settings->pluginName;
+        $variables['title'] = $templateTitle;
+        $variables['docTitle'] = "{$pluginName} - {$templateTitle}";
+        $variables['selectedSubnavItem'] = 'pay-runs';
+
+        // Render the template
+        return $this->renderTemplate('staff-management/payruns/index', $variables);
+    }
+
+    /**
      * Settings display
      *
      *
      * @return Response The rendered result
      * @throws NotFoundHttpException
-     * @throws \yii\web\ForbiddenHttpException
+     * @throws ForbiddenHttpException
      */
     public function actionPlugin(): Response
     {
@@ -77,8 +131,8 @@ class SettingsController extends Controller
      *
      * @return Response|null
      * @throws NotFoundHttpException if the requested plugin cannot be found
-     * @throws \yii\web\BadRequestHttpException
-     * @throws \craft\errors\MissingComponentException
+     * @throws BadRequestHttpException
+     * @throws MissingComponentException
      */
 
     public function actionSavePluginSettings()

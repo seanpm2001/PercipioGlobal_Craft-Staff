@@ -141,6 +141,7 @@ class Staff extends Plugin
     public function __construct($id, $parent = null, array $config = [])
     {
         $config['components'] = [
+            'staff' => __CLASS__,
             // Register the vite service
             'vite' => [
                 'class' => VitePluginService::class,
@@ -173,7 +174,7 @@ class Staff extends Plugin
      * you do not need to load it in your init() method.
      *
      */
-    public function init()
+    public function init(): void
     {
         parent::init();
         self::$plugin = $this;
@@ -234,13 +235,12 @@ class Staff extends Plugin
     public function getSettings()
     {
         return parent::getSettings();
-        ;
     }
 
     /**
      * @inheritdoc
      */
-    public function getSettingsResponse()
+    public function getSettingsResponse(): void
     {
         // redirect to plugin settings page
         Craft::$app->getResponse()->redirect(UrlHelper::cpUrl('staff-management/plugin'));
@@ -263,7 +263,13 @@ class Staff extends Plugin
                 'url' => 'staff-management/dashboard',
             ];
         }
-        if ($currentUser->can('hub:payruns')) {
+        if ($currentUser->can('hub:group-benefits')) {
+            $subNavs['groupBenefits'] = [
+                'label' => Craft::t('staff-management', 'Group Benefits'),
+                'url' => 'staff-management/group-benefits',
+            ];
+        }
+        if ($currentUser->can('hub:pay-runs')) {
             $subNavs['payRuns'] = [
                 'label' => Craft::t('staff-management', 'Pay Runs'),
                 'url' => 'staff-management/pay-runs',
@@ -283,11 +289,9 @@ class Staff extends Plugin
             ];
         }
 
-        $navItem = array_merge($navItem, [
+        return array_merge($navItem, [
             'subnav' => $subNavs,
         ]);
-
-        return $navItem;
     }
 
     // Protected Methods
@@ -296,7 +300,7 @@ class Staff extends Plugin
     /**
      * Install our event listeners.
      */
-    protected function installEventListeners()
+    protected function installEventListeners(): void
     {
         $request = Craft::$app->getRequest();
         $this->installGlobalEventListeners();
@@ -309,7 +313,7 @@ class Staff extends Plugin
     /**
      * Install site event listeners for Control Panel requests only
      */
-    protected function installCpEventListeners()
+    protected function installCpEventListeners(): void
     {
 
         // Handler: UrlManager::EVENT_REGISTER_CP_URL_RULES
@@ -364,8 +368,8 @@ class Staff extends Plugin
         return [
             'staff-management' => 'staff-management/settings/dashboard',
             'staff-management/dashboard' => 'staff-management/settings/dashboard',
-            'staff-management/settings/get-gql-token' => 'staff-management/settings/get-gql-token',
-            'staff-management/plugin' => 'staff-management/settings/plugin',
+            'staff-management/group-benefits' => 'staff-management/group-benefits/',
+            'staff-management/group-benefits/providers/<providerId:\d+>' => 'staff-management/group-benefits/providers/detail',
             'staff-management/pay-runs' => 'staff-management/pay-run',
             'staff-management/pay-runs/queue' => 'staff-management/pay-run/get-queue',
             'staff-management/pay-runs/<employerId:\d+>/<currentYear:\w+>' => 'staff-management/pay-run/pay-run-by-employer',
@@ -375,6 +379,8 @@ class Staff extends Plugin
             'staff-management/pay-runs/fetch-pay-run/<payRunId:\d+>' => 'staff-management/pay-run/fetch-pay-run',
             'staff-management/pay-runs/get-logs/<payRunId:\d+>' => 'staff-management/pay-run/get-pay-run-logs',
             'staff-management/pay-runs/download-template/<payRunId:\d+>' => 'staff-management/pay-run/download-template',
+            'staff-management/plugin' => 'staff-management/settings/plugin',
+            'staff-management/settings/get-gql-token' => 'staff-management/settings/get-gql-token',
         ];
     }
 
@@ -389,7 +395,10 @@ class Staff extends Plugin
             'hub:dashboard' => [
                 'label' => Craft::t('staff-management', 'Dashboard'),
             ],
-            'hub:payruns' => [
+            'hub:group-benefits' => [
+                'label' => Craft::t('staff-management', 'Group Benefits'),
+            ],
+            'hub:pay-runs' => [
                 'label' => Craft::t('staff-management', 'Pay Runs'),
             ],
             'hub:plugin-settings' => [
@@ -401,7 +410,7 @@ class Staff extends Plugin
     /**
      * Install global event listeners for all request types
      */
-    protected function installGlobalEventListeners()
+    protected function installGlobalEventListeners(): void
     {
         // Handler: CraftVariable::EVENT_INIT
         Event::on(
@@ -428,7 +437,7 @@ class Staff extends Plugin
     // Private Methods
     // =========================================================================
 
-    private function _registerGqlInterfaces()
+    private function _registerGqlInterfaces(): void
     {
         Event::on(
             Gql::class,
@@ -442,7 +451,7 @@ class Staff extends Plugin
         );
     }
 
-    private function _registerGqlSchemaComponents()
+    private function _registerGqlSchemaComponents(): void
     {
         Event::on(
             Gql::class,
@@ -466,7 +475,7 @@ class Staff extends Plugin
         );
     }
 
-    private function _registerGqlQueries()
+    private function _registerGqlQueries(): void
     {
         Event::on(
             Gql::class,
@@ -483,7 +492,7 @@ class Staff extends Plugin
         );
     }
 
-    private function _registerElementTypes()
+    private function _registerElementTypes(): void
     {
         // Register our elements
         Event::on(
@@ -498,7 +507,7 @@ class Staff extends Plugin
         );
     }
 
-    private function _registerControllers()
+    private function _registerControllers(): void
     {
         // Add in our console commands
         if (Craft::$app instanceof ConsoleApplication) {
