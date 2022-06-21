@@ -365,6 +365,7 @@ class Staff extends Plugin
             'staff-management/dashboard' => 'staff-management/settings/dashboard',
             'staff-management/benefits/group' => 'staff-management/group-benefits',
             'staff-management/benefits/providers' => 'staff-management/benefits/benefits-provider',
+            'staff-management/benefits/providers/new' => 'staff-management/benefits/benefits-provider-new',
             'staff-management/benefits/providers/<providerId:\d+>' => 'staff-management/benefits/provider-detail',
             'staff-management/pay-runs' => 'staff-management/pay-run',
             'staff-management/pay-runs/queue' => 'staff-management/pay-run/get-queue',

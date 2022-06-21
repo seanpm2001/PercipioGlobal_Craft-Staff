@@ -1,0 +1,28 @@
+{%- requirePermission "hub:benefits" -%}
+
+{%- extends 'staff-management/_layouts/hub-cp.twig' -%}
+
+{%- set sidebar -%}
+    {%- include "staff-management/benefits/_nav" -%}
+{%- endset -%}
+
+{%- block actionButton -%}
+    {%- include "staff-management/_atoms/buttons/button--primary" with {
+        options: {
+            title: 'Create Benefit Provider',
+            url: url('staff-management/benefits/providers/new')
+        }
+    } -%}
+{%- endblock -%}
+
+{%- set content -%}
+
+    <div>
+        <h1 class="ml-1 text-xl font-semibold text-gray-900">Benefit Providers</h1>
+    </div>
+
+{%- endset -%}
+
+{%- block foot -%}
+    {{ parent() }}
+{%- endblock -%}
