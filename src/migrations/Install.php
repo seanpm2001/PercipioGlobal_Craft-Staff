@@ -68,7 +68,7 @@ class Install extends Migration
         $tableSchema = Craft::$app->db->schema->getTableSchema(Table::EMPLOYERS);
         if ($tableSchema === null) {
             // BASE
-            $this->createTable(Table::BENEFIT_TYPES, [
+            $this->createTable(Table::BENEFIT_PROVIDERS, [
                 'id' => $this->primaryKey(),
                 'dateCreated' => $this->dateTime()->notNull(),
                 'dateUpdated' => $this->dateTime()->notNull(),
@@ -1395,7 +1395,7 @@ class Install extends Migration
     {
         /** BASE **/
         // Benefits [name]
-        $this->createIndex(null, Table::BENEFIT_TYPES, 'name', true);
+        $this->createIndex(null, Table::BENEFIT_PROVIDERS, 'name', true);
 
         // Employees [id]
         $this->createIndex(null, Table::AUTO_ENROLMENT, 'employeeId', false);

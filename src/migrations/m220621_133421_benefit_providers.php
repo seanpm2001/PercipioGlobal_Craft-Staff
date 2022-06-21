@@ -36,9 +36,9 @@ class m220621_133421_benefit_providers extends Migration
     public function createTables(): bool {
         $tableCreated = false;
 
-        $tableSchema = Craft::$app->db->schema->getTableSchema(Table::BENEFIT_TYPES);
+        $tableSchema = Craft::$app->db->schema->getTableSchema(Table::BENEFIT_PROVIDERS);
         if ($tableSchema === null) {
-            $this->createTable(Table::BENEFIT_TYPES, [
+            $this->createTable(Table::BENEFIT_PROVIDERS, [
                 'id' => $this->primaryKey(),
                 'dateCreated' => $this->dateTime()->notNull(),
                 'dateUpdated' => $this->dateTime()->notNull(),
@@ -64,7 +64,7 @@ class m220621_133421_benefit_providers extends Migration
      */
     public function createIndexes(): void
     {
-        $this->createIndex(null, Table::BENEFIT_TYPES, 'name', true);
+        $this->createIndex(null, Table::BENEFIT_PROVIDERS, 'name', true);
     }
 
     /**
