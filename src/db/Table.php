@@ -10,6 +10,7 @@ abstract class Table
     const AUTO_ENROLMENT_ASSESSMENT_ACTION = "{{%staff_autoenrolment_assessment_action}}";
     const AUTO_ENROLMENT_SETTINGS = "{{%staff_autoenrolment_settings}}";
     const BANK_DETAILS = "{{%staff_bankdetails}}";
+    const BENEFIT_TYPES = "{{%staff_benefit_types}}";
     const CIS_DETAILS = "{{%staff_cis_details}}";
     const CIS_PARTNERSHIP = "{{%staff_cis_partnership}}";
     const CIS_SUBCONTRACTOR = "{{%staff_cis_subcontractor}}";
