@@ -179,11 +179,6 @@ class Staff extends Plugin
         parent::init();
         self::$plugin = $this;
 
-        // Add in our console commands
-        if (Craft::$app instanceof ConsoleApplication) {
-            $this->controllerNamespace = 'percipiolondon\staff\console\controllers';
-        }
-
         // Initialize properties
         self::$settings = self::$plugin->getSettings();
         self::$view = Craft::$app->getView();
@@ -263,10 +258,10 @@ class Staff extends Plugin
                 'url' => 'staff-management/dashboard',
             ];
         }
-        if ($currentUser->can('hub:group-benefits')) {
-            $subNavs['groupBenefits'] = [
-                'label' => Craft::t('staff-management', 'Group Benefits'),
-                'url' => 'staff-management/group-benefits',
+        if ($currentUser->can('hub:benefits')) {
+            $subNavs['benefits'] = [
+                'label' => Craft::t('staff-management', 'Benefits'),
+                'url' => 'staff-management/benefits/providers',
             ];
         }
         if ($currentUser->can('hub:pay-runs')) {
@@ -368,8 +363,9 @@ class Staff extends Plugin
         return [
             'staff-management' => 'staff-management/settings/dashboard',
             'staff-management/dashboard' => 'staff-management/settings/dashboard',
-            'staff-management/group-benefits' => 'staff-management/group-benefits/',
-            'staff-management/group-benefits/providers/<providerId:\d+>' => 'staff-management/group-benefits/providers/detail',
+            'staff-management/benefits/group' => 'staff-management/group-benefits',
+            'staff-management/benefits/providers' => 'staff-management/benefits/benefits-provider',
+            'staff-management/benefits/providers/<providerId:\d+>' => 'staff-management/benefits/provider-detail',
             'staff-management/pay-runs' => 'staff-management/pay-run',
             'staff-management/pay-runs/queue' => 'staff-management/pay-run/get-queue',
             'staff-management/pay-runs/<employerId:\d+>/<currentYear:\w+>' => 'staff-management/pay-run/pay-run-by-employer',
@@ -394,6 +390,9 @@ class Staff extends Plugin
         return [
             'hub:dashboard' => [
                 'label' => Craft::t('staff-management', 'Dashboard'),
+            ],
+            'hub:benefits' => [
+                'label' => Craft::t('staff-management', 'Benefits'),
             ],
             'hub:group-benefits' => [
                 'label' => Craft::t('staff-management', 'Group Benefits'),

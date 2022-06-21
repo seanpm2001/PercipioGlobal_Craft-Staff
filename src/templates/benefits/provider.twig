@@ -1,0 +1,17 @@
+{%- requirePermission "hub:group-benefits" -%}
+
+{%- extends 'staff-management/_layouts/hub-cp.twig' -%}
+
+{%- set sidebar -%}
+    {%- include "staff-management/benefits/_nav" -%}
+{%- endset -%}
+
+{%- set content -%}
+
+    <div></div>
+
+{%- endset -%}
+
+{%- block foot -%}
+    {{ parent() }}
+{%- endblock -%}
