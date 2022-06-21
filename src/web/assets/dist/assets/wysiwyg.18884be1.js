@@ -1,0 +1,2 @@
+import{u as a,S as i,c as l,a as t,E as c,o as u,b as p,h as w}from"./vendor.638d3191.js";const y={setup(n){const s=a({content:"<p>I\u2019m running Tiptap with Vue.js. \u{1F389}</p>",extensions:[i]});return(e,o)=>(u(),l(t(c),{editor:t(s),modelValue:e.content,"onUpdate:modelValue":o[0]||(o[0]=r=>e.content=r)},null,8,["editor","modelValue"]))}};console.log("wysiwyg");const d=async()=>(console.log("test"),p({render:()=>w(y)}).mount("#wysiwyg-container"));d().then(()=>{console.log()});
+//# sourceMappingURL=wysiwyg.18884be1.js.map

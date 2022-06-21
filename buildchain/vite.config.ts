@@ -18,6 +18,7 @@ export default defineConfig(({command}) => ({
         sourcemap: true,
         rollupOptions: {
             input: {
+                wysiwyg: './src/js/wysiwyg.ts',
                 employers: './src/js/employers.ts',
                 payruns: './src/js/payruns.ts',
                 details: './src/js/payrunDetails.ts',

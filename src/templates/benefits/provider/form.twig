@@ -57,8 +57,16 @@
         errors: provider ? provider.getErrors('logo') : null,
     }) }}
 
+    <div id="wysiwyg-container"></div>
+
 {%- endset -%}
 
 {%- block foot -%}
     {{ parent() }}
+    {%- set tagOptions = {
+        'depends': [
+            'percipiolondon\\staff\\assetbundles\\staff\\StaffAsset'
+        ]
+    } -%}
+    {{  craft.staff.register('src/js/wysiwyg.ts', false, tagOptions, tagOptions) }}
 {%- endblock -%}

@@ -1,35 +1,44 @@
 {
+  "src/js/wysiwyg.ts": {
+    "file": "assets/wysiwyg.18884be1.js",
+    "src": "src/js/wysiwyg.ts",
+    "isEntry": true,
+    "imports": [
+      "_vendor.638d3191.js"
+    ],
+    "integrity": "sha384-IYS/baICWfIQv1hnOMRSDkXaT2GXe25Sh8skyPLHpQSvr7X6nMWvMV7SAT0ja90d"
+  },
   "src/js/employers.ts": {
-    "file": "assets/employers.d40e8220.js",
+    "file": "assets/employers.86e3cf6d.js",
     "src": "src/js/employers.ts",
     "isEntry": true,
     "imports": [
-      "_vendor.ace9cd94.js",
-      "_useApolloClient.3973916d.js"
+      "_vendor.638d3191.js",
+      "_useApolloClient.248cbc93.js"
     ],
-    "integrity": "sha384-Ae9yvm+/TJhVmeZnhq75lkkUglAw/9jKd3hxl0D0zA9D/PL7v7dZn8KjnPMLm9qK"
+    "integrity": "sha384-gwEyYH3ab2HV+5JRsJwS5EQz128WaB1toZ+7lbN9WcAleGTOGmP9pPg9Y7TOqcrg"
   },
   "src/js/payruns.ts": {
-    "file": "assets/payruns.f9e7c00e.js",
+    "file": "assets/payruns.b88d6b1d.js",
     "src": "src/js/payruns.ts",
     "isEntry": true,
     "imports": [
-      "_vendor.ace9cd94.js",
-      "_useApolloClient.3973916d.js",
-      "_status--synced.a1cfbd6e.js"
+      "_vendor.638d3191.js",
+      "_useApolloClient.248cbc93.js",
+      "_status--synced.3226d7f8.js"
     ],
-    "integrity": "sha384-i5nhG+ainr0pozDbJY1Rrn3Ng6ZoXA4gM0J7h5dK9KUcHZc06pcLpxTjj9huUUxM"
+    "integrity": "sha384-/HBrtMvv2fvemNW/4qdl8ZSHLwAEKjOID+18vAr9KoJW6Tqar8UtYN2lFtGQMUGB"
   },
   "src/js/payrunDetails.ts": {
-    "file": "assets/details.502eba73.js",
+    "file": "assets/details.4a754d71.js",
     "src": "src/js/payrunDetails.ts",
     "isEntry": true,
     "imports": [
-      "_vendor.ace9cd94.js",
-      "_useApolloClient.3973916d.js",
-      "_status--synced.a1cfbd6e.js"
+      "_vendor.638d3191.js",
+      "_useApolloClient.248cbc93.js",
+      "_status--synced.3226d7f8.js"
     ],
-    "integrity": "sha384-wrXD9j81NiDWtoPNA+uONDAlMMEZUYA5Cpnp7sErNRaej1g5C9ZmKXh7CkBi79aW"
+    "integrity": "sha384-lkmZj4SVJ4e6k3vjsEH3yg7a6o8+12RHXIg2jR49JTw0taHKbxeeu/G5VQPLRSK2"
   },
   "src/js/staff.ts": {
     "file": "assets/staff.394784cb.js",
@@ -40,23 +49,23 @@
     ],
     "integrity": "sha384-Kcx0gEO5hnQ/Asv3AznXqh/qp6GulOcvm5sgITSIFxuks6QnKDoQJHq3nrPoa5nu"
   },
-  "_vendor.ace9cd94.js": {
-    "file": "assets/vendor.ace9cd94.js",
-    "integrity": "sha384-EMB++SYltrW17dXaPMS9A5tL+NoKhzRKPeRl1+o+XYVileRi7kOUMt3GaZOYescy"
+  "_vendor.638d3191.js": {
+    "file": "assets/vendor.638d3191.js",
+    "integrity": "sha384-ogje/ebpjgWUTJcMPuAbCBZG00mNNRQKQCkIJWoP737G72oe0ROASJBGByKjtYGT"
   },
-  "_useApolloClient.3973916d.js": {
-    "file": "assets/useApolloClient.3973916d.js",
+  "_useApolloClient.248cbc93.js": {
+    "file": "assets/useApolloClient.248cbc93.js",
     "imports": [
-      "_vendor.ace9cd94.js"
+      "_vendor.638d3191.js"
     ],
-    "integrity": "sha384-C8vZAeap0da1405XoANnvXjnQbIhAeVzEVxzwy5IXf+Id9YfXYLuMLM7q+RgkB0Y"
+    "integrity": "sha384-KGPy9nG1kBFrq+epX31atCznjMQdEhAIGOQoBhfBRAeVpIOZfJWVOywRvpE/5S2q"
   },
-  "_status--synced.a1cfbd6e.js": {
-    "file": "assets/status--synced.a1cfbd6e.js",
+  "_status--synced.3226d7f8.js": {
+    "file": "assets/status--synced.3226d7f8.js",
     "imports": [
-      "_vendor.ace9cd94.js",
-      "_useApolloClient.3973916d.js"
+      "_vendor.638d3191.js",
+      "_useApolloClient.248cbc93.js"
     ],
-    "integrity": "sha384-JxylcNge8cxiMXZv9362dm4oNxjKvCFRdfrL6sVTIIbaevHKcr+z6pcztq5E6rQ9"
+    "integrity": "sha384-7qRu5cx4/N5BTIctGFt1PagzfcgWHCNrdxwBUqu92Ku7tjnmxlnFxOjiMUmdjj7a"
   }
 }
