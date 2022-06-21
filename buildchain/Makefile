@@ -4,7 +4,7 @@ DOCKERRUN=docker container run \
 	--name ${CONTAINER} \
 	--rm \
 	-t \
-	--network craft-plugin-playground_default \
+	--network plugin-playground_default \
 	-p 3050:3050 \
 	-v "${CURDIR}"/../:/app \
     ${CONTAINER}:${TAG}

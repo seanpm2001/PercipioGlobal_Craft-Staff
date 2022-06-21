@@ -67,7 +67,7 @@ export default defineConfig(({command}) => ({
             strict: false
         },
         host: '0.0.0.0',
-        origin: 'http://localhost:3050/',
+        origin: 'http://localhost:3050',
         port: 3050,
         strictPort: true,
     }
