@@ -3,5 +3,8 @@
 </script>
 
 <template>
+    <div>
+        bla
+    </div>
     <editor v-model="content" />
 </template>
