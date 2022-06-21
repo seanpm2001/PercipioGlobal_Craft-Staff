@@ -16,6 +16,7 @@ use craft\db\Query;
 use craft\elements\db\ElementQueryInterface;
 
 use craft\helpers\App;
+use percipiolondon\staff\db\Table;
 use percipiolondon\staff\elements\db\BenefitProviderQuery as ProviderQuery;
 use percipiolondon\staff\records\BenefitProvider as ProviderRecord;
 use percipiolondon\staff\Staff;
@@ -186,7 +187,7 @@ class BenefitProvider extends Element
         $providerIds = [];
 
         $providers = (new Query())
-            ->from('{{%staff_providers}}')
+            ->from(Table::BENEFIT_PROVIDERS)
             ->select('id')
             ->all();
 

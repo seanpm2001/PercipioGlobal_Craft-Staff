@@ -1,0 +1,64 @@
+{%- requirePermission "hub:benefits" -%}
+
+{%- extends 'staff-management/_layouts/hub-cp.twig' -%}
+{%- import "_includes/forms" as forms -%}
+
+{#{% css "/lib/redactor/redactor.css" %}#}
+{#{% js "/lib/redactor/redactor.js" %}#}
+
+{%- set sidebar -%}
+    {%- include "staff-management/benefits/_nav" -%}
+{%- endset -%}
+
+{%- block actionButton -%}
+    {%- include "staff-management/_atoms/buttons/button--primary" with {
+        options: {
+            title: 'Save Benefit Provider',
+            action: url('staff-management/benefits/providers/save')
+        }
+    } -%}
+{%- endblock -%}
+
+{%- set fullPageForm = true -%}
+
+{%- set content -%}
+
+    <h1 class="text-xl font-semibold text-gray-900">New Benefit Provider</h1>
+
+    <input type="hidden" name="action" value="{{- url('staff-management/benefits/providers/save') -}}" />
+    <input type="hidden" name="providerId" value="{{- provider ? provider.id : '' -}}" />
+    <input type="hidden" name="siteId" value="{{- provider ? provider.siteId : currentSite.id -}}" />
+
+    {{ forms.textField({
+        first: true,
+        label: "Name"|t('staff-management'),
+        instructions: "What's the name of the benefit provider"|t('staff-management'),
+        id: 'name',
+        name: 'name',
+        value: provider ? provider.name : '',
+        errors: provider ? provider.getErrors('name') : null,
+        autofocus: true,
+        required: true,
+    }) }}
+
+    {%- set asset = provider ? provider.logo ? [craft.assets.id(provider.logo).one()] : [] : [] -%}
+    {{ forms.elementSelectField({
+        label: "Logo"|t('staff-management'),
+        id: 'logo',
+        name: 'logo',
+        elementType: 'craft\\elements\\Asset',
+        limit: 1,
+        elements:asset,
+        criteria: {
+            'kind': ['image'],
+        },
+        value: provider ? provider.logo : '',
+        instructions: "Upload or select a logo"|t('staff-management'),
+        errors: provider ? provider.getErrors('logo') : null,
+    }) }}
+
+{%- endset -%}
+
+{%- block foot -%}
+    {{ parent() }}
+{%- endblock -%}
