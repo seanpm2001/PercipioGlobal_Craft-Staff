@@ -4,8 +4,8 @@ DOCKERRUN=docker container run \
 	--name ${CONTAINER} \
 	--rm \
 	-t \
-	--network plugin-playground_default \
-	-p 3050:3050 \
+	--network harding-hub-headless_default \
+	-p 3951:3951 \
 	-v "${CURDIR}"/../:/app \
     ${CONTAINER}:${TAG}
 
