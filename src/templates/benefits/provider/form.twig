@@ -41,6 +41,16 @@
         required: true,
     }) }}
 
+    {{ forms.textField({
+        label: "Url"|t('staff-management'),
+        instructions: "What's the url of the benefit provider"|t('staff-management'),
+        id: 'url',
+        name: 'url',
+        value: provider ? provider.url : '',
+        errors: provider ? provider.getErrors('url') : null,
+        required: true,
+    }) }}
+
     {%- set asset = provider ? provider.logo ? [craft.assets.id(provider.logo).one()] : [] : [] -%}
     {{ forms.elementSelectField({
         label: "Logo"|t('staff-management'),
@@ -51,7 +61,9 @@
         elements:asset,
         criteria: {
             'kind': ['image'],
+            'volume': ['branding']
         },
+        sources: [volume],
         value: provider ? provider.logo : '',
         instructions: "Upload or select a logo"|t('staff-management'),
         errors: provider ? provider.getErrors('logo') : null,

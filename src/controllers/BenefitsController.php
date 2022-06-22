@@ -3,6 +3,7 @@
 namespace percipiolondon\staff\controllers;
 
 use Craft;
+use craft\elements\Asset;
 use craft\web\Controller;
 use percipiolondon\staff\elements\BenefitProvider;
 use percipiolondon\staff\Staff;
@@ -50,6 +51,14 @@ class BenefitsController extends Controller
 
         $variables = [];
 
+        $volume = null;
+
+        foreach(Asset::sources() as $source) {
+            if($source['data']['volume-handle'] == 'branding') {
+                $volume = $source['key'];
+            }
+        }
+
         $pluginName = Staff::$settings->pluginName;
         $templateTitle = Craft::t('staff-management', 'Benefits');
 
@@ -59,6 +68,7 @@ class BenefitsController extends Controller
         $variables['docTitle'] = "{$pluginName} - {$templateTitle}";
         $variables['selectedSubnavItem'] = 'benefits';
         $variables['provider'] = null;
+        $variables['volume'] = $volume;
 
         // Render the template
         return $this->renderTemplate('staff-management/benefits/provider/form', $variables);
