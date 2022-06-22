@@ -4,6 +4,7 @@ namespace percipiolondon\staff\migrations;
 
 use Craft;
 use craft\db\Migration;
+use craft\db\Table as CraftTable;
 use percipiolondon\staff\db\Table;
 
 /**
@@ -26,6 +27,7 @@ class m220621_133421_benefit_providers extends Migration
 
         if ($this->createTables()) {
             $this->createIndexes();
+            $this->createForeignKeys();
             Craft::$app->db->schema->refresh();
         }
     }
@@ -65,6 +67,11 @@ class m220621_133421_benefit_providers extends Migration
     public function createIndexes(): void
     {
         $this->createIndex(null, Table::BENEFIT_PROVIDERS, 'name', true);
+    }
+
+    public function createForeignKeys(): void
+    {
+        $this->addForeignKey(null, Table::BENEFIT_PROVIDERS, ['id'], CraftTable::ELEMENTS, ['id'], 'CASCADE', 'CASCADE' );
     }
 
     /**

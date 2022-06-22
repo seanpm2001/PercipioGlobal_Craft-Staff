@@ -11,10 +11,10 @@
 {%- endset -%}
 
 {%- block actionButton -%}
-    {%- include "staff-management/_atoms/buttons/button--primary" with {
+    {%- include "staff-management/_atoms/buttons/button--submit" with {
         options: {
             title: 'Save Benefit Provider',
-            action: url('staff-management/benefits/providers/save')
+            action: 'staff-management/benefits/benefits-provider-save'
         }
     } -%}
 {%- endblock -%}
@@ -25,7 +25,7 @@
 
     <h1 class="text-xl font-semibold text-gray-900">New Benefit Provider</h1>
 
-    <input type="hidden" name="action" value="{{- url('staff-management/benefits/providers/save') -}}" />
+    <input type="hidden" name="action" value="staff-management/benefits/benefits-provider-save" />
     <input type="hidden" name="providerId" value="{{- provider ? provider.id : '' -}}" />
     <input type="hidden" name="siteId" value="{{- provider ? provider.siteId : currentSite.id -}}" />
 
@@ -36,9 +36,19 @@
         id: 'name',
         name: 'name',
         value: provider ? provider.name : '',
-        errors: provider ? provider.getErrors('name') : null,
+        errors: errors['name'] ?? null,
         autofocus: true,
         required: true,
+    }) }}
+
+    {{ forms.textField({
+        label: "Url"|t('staff-management'),
+        instructions: "What's the url of the benefit provider"|t('staff-management'),
+        id: 'url',
+        name: 'url',
+        value: provider ? provider.url : '',
+        errors: errors['url'] ?? null,
+        required: false,
     }) }}
 
     {%- set asset = provider ? provider.logo ? [craft.assets.id(provider.logo).one()] : [] : [] -%}
@@ -51,13 +61,26 @@
         elements:asset,
         criteria: {
             'kind': ['image'],
+            'volume': ['branding']
         },
+        sources: [volume],
         value: provider ? provider.logo : '',
         instructions: "Upload or select a logo"|t('staff-management'),
-        errors: provider ? provider.getErrors('logo') : null,
+        errors: errors['logo'] ?? null,
     }) }}
 
     <div id="tiptap-container"></div>
+    <input type="text" name="content" value="<p>This is content</p>" />
+    {%- if errors['content'] ?? null -%}
+        <ul id="content-errors" class="errors"> 
+            {%- for error in errors['content'] -%}                   
+                <li>
+                    <span class="visually-hidden">Error:</span>
+                    {{- error -}}
+                </li>
+            {%- endfor -%}
+        </ul>
+    {%- endif -%}
 
 {%- endset -%}
 

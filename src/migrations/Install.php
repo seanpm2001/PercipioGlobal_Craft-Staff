@@ -1720,6 +1720,7 @@ class Install extends Migration
 
         /** CRAFT **/
         // Elements [id]
+        $this->addForeignKey(null, Table::BENEFIT_PROVIDERS, ['id'], CraftTable::ELEMENTS, ['id'], 'CASCADE', 'CASCADE' );
         $this->addForeignKey(null, Table::EMPLOYEES, ['id'], CraftTable::ELEMENTS, ['id'], 'CASCADE', 'CASCADE' );
         $this->addForeignKey(null, Table::EMPLOYERS, ['id'], CraftTable::ELEMENTS, ['id'], 'CASCADE', 'CASCADE' );
         $this->addForeignKey(null, Table::PAY_RUN, ['id'], CraftTable::ELEMENTS, ['id'], 'CASCADE', 'CASCADE' );
