@@ -18,11 +18,8 @@ use craft\elements\db\ElementQueryInterface;
 use craft\helpers\App;
 use percipiolondon\staff\db\Table;
 use percipiolondon\staff\elements\db\BenefitProviderQuery as ProviderQuery;
+use percipiolondon\staff\helpers\Logger;
 use percipiolondon\staff\records\BenefitProvider as ProviderRecord;
-use percipiolondon\staff\Staff;
-
-use yii\base\InvalidConfigException;
-use yii\db\Exception;
 
 /**
  * Employee Element
@@ -33,7 +30,10 @@ class BenefitProvider extends Element
     // Public Properties
     // =========================================================================
 
-    public string $providerId;
+    public string $name = '';
+    public string|null $url = null;
+    public int|null $logo = null;
+    public string|null $content = null;
 
     // Static Methods
     // =========================================================================
@@ -108,6 +108,25 @@ class BenefitProvider extends Element
         ];
     }
 
+    /**
+     * Returns the validation rules for attributes.
+     *
+     * Validation rules are used by [[validate()]] to check if attribute values are valid.
+     * Child classes may override this method to declare different validation rules.
+     *
+     * More info: http://www.yiiframework.com/doc-2.0/guide-input-validation.html
+     *
+     * @return array
+     */
+    public function rules()
+    {
+        $rules = parent::rules();
+
+        $rules[] = [['name', 'content'], 'required'];
+
+        return $rules;
+    }
+
     // Public Methods
     // =========================================================================
     /**
@@ -174,7 +193,27 @@ class BenefitProvider extends Element
 
     private function _saveRecord($isNew): void
     {
+        try{
+            $record = ProviderRecord::findOne($this->id);
 
+            if(!$record) {
+                $record = new ProviderRecord();
+                $record->id = $this->id;
+            }
+
+            $record->name = $this->name;
+            $record->logo = $this->logo;
+            $record->url = $this->url;
+            $record->content = $this->content;
+
+            $record->save();
+
+        } catch (\Exception $e) {
+            $logger = new Logger();
+            $logger->stdout(PHP_EOL, $logger::RESET);
+            $logger->stdout($e->getMessage() . PHP_EOL, $logger::FG_RED);
+            Craft::error($e->getMessage(), __METHOD__);
+        }
     }
 
     /**
