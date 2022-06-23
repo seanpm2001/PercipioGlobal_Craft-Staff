@@ -282,6 +282,14 @@ class m220623_062719_benefit_types extends Migration
 
     public function createForeignKeys(): void
     {
+        $this->addForeignKey(null, Table::BENETFIT_TYPE_DENTAL, ['providerId'], Table::BENEFIT_PROVIDERS, ['id'], 'CASCADE', 'CASCADE' );
+        $this->addForeignKey(null, Table::BENETFIT_TYPE_GROUP_CRITICAL_ILLNESS_COVER, ['providerId'], Table::BENEFIT_PROVIDERS, ['id'], 'CASCADE', 'CASCADE' );
+        $this->addForeignKey(null, Table::BENETFIT_TYPE_GROUP_DEATH_IN_SERVICE, ['providerId'], Table::BENEFIT_PROVIDERS, ['id'], 'CASCADE', 'CASCADE' );
+        $this->addForeignKey(null, Table::BENETFIT_TYPE_GROUP_INCOME_PROTECTION, ['providerId'], Table::BENEFIT_PROVIDERS, ['id'], 'CASCADE', 'CASCADE' );
+        $this->addForeignKey(null, Table::BENETFIT_TYPE_GROUP_LIFE_ASSURANCE, ['providerId'], Table::BENEFIT_PROVIDERS, ['id'], 'CASCADE', 'CASCADE' );
+        $this->addForeignKey(null, Table::BENETFIT_TYPE_HEALTH_CASH_PLAN, ['providerId'], Table::BENEFIT_PROVIDERS, ['id'], 'CASCADE', 'CASCADE' );
+        $this->addForeignKey(null, Table::BENETFIT_TYPE_PRIVATE_MEDICAL_INSURANCE, ['providerId'], Table::BENEFIT_PROVIDERS, ['id'], 'CASCADE', 'CASCADE' );
+
         $this->addForeignKey(null, Table::BENETFIT_TYPE_DENTAL, ['id'], CraftTable::ELEMENTS, ['id'], 'CASCADE', 'CASCADE' );
         $this->addForeignKey(null, Table::BENETFIT_TYPE_GROUP_CRITICAL_ILLNESS_COVER, ['id'], CraftTable::ELEMENTS, ['id'], 'CASCADE', 'CASCADE' );
         $this->addForeignKey(null, Table::BENETFIT_TYPE_GROUP_DEATH_IN_SERVICE, ['id'], CraftTable::ELEMENTS, ['id'], 'CASCADE', 'CASCADE' );
