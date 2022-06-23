@@ -29,6 +29,8 @@ use craft\web\UrlManager;
 use nystudio107\pluginvite\services\VitePluginService;
 
 use percipiolondon\staff\assetbundles\staff\StaffAsset;
+use percipiolondon\staff\elements\BenefitProvider;
+use percipiolondon\staff\elements\BenefitType;
 use percipiolondon\staff\elements\Employee as EmployeeElement;
 use percipiolondon\staff\elements\Employer as EmployerElement;
 use percipiolondon\staff\elements\PayRun as PayRunElement;
@@ -363,11 +365,11 @@ class Staff extends Plugin
         return [
             'staff-management' => 'staff-management/settings/dashboard',
             'staff-management/dashboard' => 'staff-management/settings/dashboard',
-            'staff-management/benefits/group' => 'staff-management/group-benefits',
-            'staff-management/benefits/providers' => 'staff-management/benefits/benefits-provider',
-            'staff-management/benefits/providers/new' => 'staff-management/benefits/benefits-provider-edit',
-            'staff-management/benefits/providers/edit/<providerId:\d+>' => 'staff-management/benefits/benefits-provider-edit',
-            'staff-management/benefits/providers/<providerId:\d+>' => 'staff-management/benefits/benefits-provider-detail',
+            'staff-management/benefits/group-benefit-types' => 'staff-management/group-benefit-types',
+            'staff-management/benefits/providers' => 'staff-management/benefit-provider',
+            'staff-management/benefits/providers/new' => 'staff-management/benefit-provider/edit',
+            'staff-management/benefits/providers/edit/<providerId:\d+>' => 'staff-management/benefit-provider/edit',
+            'staff-management/benefits/providers/<providerId:\d+>' => 'staff-management/benefit-provider/detail',
             'staff-management/pay-runs' => 'staff-management/pay-run',
             'staff-management/pay-runs/queue' => 'staff-management/pay-run/get-queue',
             'staff-management/pay-runs/<employerId:\d+>/<currentYear:\w+>' => 'staff-management/pay-run/pay-run-by-employer',
@@ -466,6 +468,8 @@ class Staff extends Plugin
                         'employees:read' => ['label' => Craft::t('staff-management', 'View Employees')],
                         // payruns component with read action, labelled “View Payruns” in UI
                         'payruns:read' => ['label' => Craft::t('staff-management', 'View Payruns')],
+                        // benefits component with read action, labelled “View Benefits” in UI
+                        'benefits:read' => ['label' => Craft::t('staff-management', 'View Benefits')],
                     ],
                     'PayrunEntries' => [
                         // payruns entries component with read action, labelled “View Payruns” in UI
@@ -500,6 +504,8 @@ class Staff extends Plugin
             Elements::class,
             Elements::EVENT_REGISTER_ELEMENT_TYPES,
             function(RegisterComponentTypesEvent $event) {
+                $event->types[] = BenefitProvider::class;
+                $event->types[] = BenefitType::class;
                 $event->types[] = EmployerElement::class;
                 $event->types[] = EmployeeElement::class;
                 $event->types[] = PayRunElement::class;

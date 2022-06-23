@@ -15,7 +15,7 @@ use yii\web\Response;
  *
  * @package percipiolondon\staff\controllers
  */
-class BenefitsController extends Controller
+class BenefitProviderController extends Controller
 {
     /**
      * @var string[]
@@ -29,7 +29,7 @@ class BenefitsController extends Controller
      * @throws \yii\web\NotFoundHttpException
      * @throws \yii\web\ForbiddenHttpException
      */
-    public function actionBenefitsProvider(): Response
+    public function actionIndex(): Response
     {
         $this->requireLogin();
 
@@ -38,7 +38,7 @@ class BenefitsController extends Controller
         $pluginName = Staff::$settings->pluginName;
         $templateTitle = Craft::t('staff-management', 'Benefit Providers');
 
-        $variables['controllerHandle'] = 'benefits';
+        $variables['controllerHandle'] = 'benefit-type';
         $variables['pluginName'] = Staff::$settings->pluginName;
         $variables['title'] = $templateTitle;
         $variables['docTitle'] = "{$pluginName} - {$templateTitle}";
@@ -56,7 +56,7 @@ class BenefitsController extends Controller
      * @throws \yii\web\NotFoundHttpException
      * @throws \yii\web\ForbiddenHttpException
      */
-    public function actionBenefitsProviderEdit(int $providerId = null): Response
+    public function actionEdit(int $providerId = null): Response
     {
         $this->requireLogin();
 
@@ -71,7 +71,7 @@ class BenefitsController extends Controller
         $pluginName = Staff::$settings->pluginName;
         $templateTitle = Craft::t('staff-management', 'Benefit Providers');
 
-        $variables['controllerHandle'] = 'benefits';
+        $variables['controllerHandle'] = 'benefit-type';
         $variables['pluginName'] = Staff::$settings->pluginName;
         $variables['title'] = $templateTitle;
         $variables['docTitle'] = "{$pluginName} - {$templateTitle}";
@@ -88,7 +88,7 @@ class BenefitsController extends Controller
      * @return Response
      * @throws \yii\web\BadRequestHttpException
      */
-    public function actionBenefitsProviderSave(): Response
+    public function actionSave(): Response
     {
         $this->requireLogin();
         $this->requirePostRequest();
@@ -118,7 +118,7 @@ class BenefitsController extends Controller
         $pluginName = Staff::$settings->pluginName;
         $templateTitle = Craft::t('staff-management', 'Benefit Providers');
         $variables = [];
-        $variables['controllerHandle'] = 'benefits';
+        $variables['controllerHandle'] = 'benefit-type';
         $variables['pluginName'] = $pluginName;
         $variables['title'] = $templateTitle;
         $variables['docTitle'] = "{$pluginName} - {$templateTitle}";
@@ -142,7 +142,7 @@ class BenefitsController extends Controller
      * @throws \yii\web\NotFoundHttpException
      * @throws \yii\web\ForbiddenHttpException
      */
-    public function actionBenefitsProviderDetail(int $providerId): Response
+    public function actionDetail(int $providerId): Response
     {
         $this->requireLogin();
 
@@ -152,7 +152,7 @@ class BenefitsController extends Controller
         $templateTitle = Craft::t('staff-management', 'Benefit Providers');
 
         $variables = [];
-        $variables['controllerHandle'] = 'benefits';
+        $variables['controllerHandle'] = 'benefit-type';
         $variables['pluginName'] = Staff::$settings->pluginName;
         $variables['title'] = $templateTitle;
         $variables['docTitle'] = "{$pluginName} - {$templateTitle}";
