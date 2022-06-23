@@ -11,7 +11,7 @@
     {%- include "staff-management/_atoms/buttons/button--submit" with {
         options: {
             title: 'Save Benefit Provider',
-            action: 'staff-management/benefits/benefits-provider-save'
+            action: 'staff-management/benefit-provider/save'
         }
     } -%}
 {%- endblock -%}
@@ -22,7 +22,7 @@
 
     <h1 class="text-xl font-semibold text-gray-900">New Benefit Provider</h1>
 
-    <input type="hidden" name="action" value="staff-management/benefits/benefits-provider-save" />
+    <input type="hidden" name="action" value="staff-management/benefit-provider/save" />
     <input type="hidden" name="providerId" value="{{- provider ? provider.id : '' -}}" />
     <input type="hidden" name="siteId" value="{{- provider ? provider.siteId : currentSite.id -}}" />
 
@@ -49,6 +49,7 @@
     }) }}
 
     {%- set asset = provider ? provider.logo ? [craft.assets.id(provider.logo).one()] : [] : [] -%}
+    {{dump(asset)}}
     {{ forms.elementSelectField({
         label: 'Logo'|t('staff-management'),
         id: 'logo',

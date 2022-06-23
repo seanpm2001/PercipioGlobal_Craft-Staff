@@ -1773,6 +1773,15 @@ class Install extends Migration
     protected function addForeignKeys()
     {
         /** BASE **/
+        // Benefit Providers [id]
+        $this->addForeignKey(null, Table::BENETFIT_TYPE_DENTAL, ['providerId'], Table::BENEFIT_PROVIDERS, ['id'], 'CASCADE', 'CASCADE' );
+        $this->addForeignKey(null, Table::BENETFIT_TYPE_GROUP_CRITICAL_ILLNESS_COVER, ['providerId'], Table::BENEFIT_PROVIDERS, ['id'], 'CASCADE', 'CASCADE' );
+        $this->addForeignKey(null, Table::BENETFIT_TYPE_GROUP_DEATH_IN_SERVICE, ['providerId'], Table::BENEFIT_PROVIDERS, ['id'], 'CASCADE', 'CASCADE' );
+        $this->addForeignKey(null, Table::BENETFIT_TYPE_GROUP_INCOME_PROTECTION, ['providerId'], Table::BENEFIT_PROVIDERS, ['id'], 'CASCADE', 'CASCADE' );
+        $this->addForeignKey(null, Table::BENETFIT_TYPE_GROUP_LIFE_ASSURANCE, ['providerId'], Table::BENEFIT_PROVIDERS, ['id'], 'CASCADE', 'CASCADE' );
+        $this->addForeignKey(null, Table::BENETFIT_TYPE_HEALTH_CASH_PLAN, ['providerId'], Table::BENEFIT_PROVIDERS, ['id'], 'CASCADE', 'CASCADE' );
+        $this->addForeignKey(null, Table::BENETFIT_TYPE_PRIVATE_MEDICAL_INSURANCE, ['providerId'], Table::BENEFIT_PROVIDERS, ['id'], 'CASCADE', 'CASCADE' );
+
         // Employees [id]
         $this->addForeignKey(null, Table::AUTO_ENROLMENT, ['employeeId'], Table::EMPLOYEES, ['id'], 'CASCADE', 'CASCADE');
         $this->addForeignKey(null, Table::ADDRESSES, ['employeeId'], Table::EMPLOYEES, ['id'], 'CASCADE', 'CASCADE');

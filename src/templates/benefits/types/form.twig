@@ -1,0 +1,213 @@
+{%- requirePermission "hub:benefits" -%}
+
+{%- extends 'staff-management/_layouts/hub-cp.twig' -%}
+{%- import "_includes/forms" as forms -%}
+
+{#{% css "/lib/redactor/redactor.css" %}#}
+{#{% js "/lib/redactor/redactor.js" %}#}
+
+{%- set sidebar -%}
+    {%- include "staff-management/benefits/_nav" -%}
+{%- endset -%}
+
+{%- block actionButton -%}
+    {%- include "staff-management/_atoms/buttons/button--submit" with {
+        options: {
+            title: 'Save Benefit Type',
+            action: 'staff-management/benefit-type/save'
+        }
+    } -%}
+{%- endblock -%}
+
+{%- set details -%}
+    <div class="content-pane">
+        {{ forms.selectField({
+            label: "Benefit Type"|t('staff-management'),
+            instructions: 'Choose a benefit type'|t('staff-management'),
+            id: 'benefitType',
+            name: 'benefitType',
+            value: type ? type.benefitType : null,
+            options: types ?? [],
+            errors: errors['benefitType'] ?? null,
+            required: true,
+        }) }} 
+
+        {%- set statusOptions = [
+            {
+                label: 'Choose a status',
+                value: null
+            },
+            {
+                label: 'Active',
+                value: 'active'
+            },
+            {
+                label: 'Inactive',
+                value: 'inactive'
+            },
+        ] -%}
+        {{ forms.selectField({
+            label: "Status"|t('staff-management'),
+            id: 'status',
+            name: 'status',
+            value: type ? type.status : null,
+            options: statusOptions,
+            errors: errors['status'] ?? null,
+            required: false,
+        }) }}
+    </div>
+{%- endset -%}
+
+{%- set fullPageForm = true -%}
+
+{%- set content -%}
+
+    <h1 class="text-xl font-semibold text-gray-900">New Benefit Type</h1>
+
+    <input type="hidden" name="action" value="staff-management/benefit-type/save" />
+    <input type="hidden" name="typeId" value="{{- type ? type.id : '' -}}" />
+    <input type="hidden" name="siteId" value="{{- type ? type.siteId : currentSite.id -}}" />
+
+    {{ forms.textField({
+        first: true,
+        label: "Internal Code"|t('staff-management'),
+        id: 'internalCode',
+        name: 'internalCode',
+        value: type ? type["internalCode"] : '',
+        errors: errors["internalCode"] ?? null,
+        autofocus: true,
+        required: true,
+    }) }}
+
+    {{ forms.textField({
+        label: "Policy Name"|t('staff-management'),
+        id: 'policyName',
+        name: 'policyName',
+        value: type ? type.policyName : '',
+        errors: errors['policyName'] ?? null,
+        required: false,
+    }) }}
+
+    {{ forms.textField({
+        label: "Policy Number"|t('staff-management'),
+        id: 'policyNumber',
+        name: 'policyNumber',
+        value: type ? type.policyNumber : '',
+        errors: errors['policyNumber'] ?? null,
+        required: false,
+    }) }}
+
+    {{ forms.textField({
+        label: "Policy Holder"|t('staff-management'),
+        id: 'policyHolder',
+        name: 'policyHolder',
+        value: type ? type.policyHolder : '',
+        errors: errors['policyHolder'] ?? null,
+        required: false,
+    }) }}
+
+    {{ forms.dateField({
+        label: "Policy Start Date"|t('staff-management'),
+        id: 'policyStartDate',
+        name: 'policyStartDate',
+        value: type ? type.policyStartDate : '',
+        errors: errors['policyStartDate'] ?? null,
+        required: false,
+    }) }}
+
+    {{ forms.dateField({
+        label: "Policy Renewal Date"|t('staff-management'),
+        id: 'policyRenewalDate',
+        name: 'policyRenewalDate',
+        value: type ? type.policyRenewalDate : '',
+        errors: errors['policyRenewalDate'] ?? null,
+        required: false,
+    }) }}
+
+    {{ forms.textField({
+        label: "Commission Rate"|t('staff-management'),
+        id: 'commissionRate',
+        name: 'commissionRate',
+        type: 'number',
+        value: type ? type.commissionRate : '',
+        errors: errors['commissionRate'] ?? null,
+        required: false,
+    }) }}
+
+    {%- set paymentFrequencyOptions = [
+        {
+            label: 'Choose a frequency',
+            value: null
+        },
+        {
+            label: 'Annually',
+            value: 'annual'
+        },
+        {
+            label: 'Monthly',
+            value: 'monthly'
+        },
+    ] -%}
+    {{ forms.selectField({
+        label: "Payment Frequency"|t('staff-management'),
+        id: 'paymentFrequency',
+        name: 'paymentFrequency',
+        value: type ? type.paymentFrequency : null,
+        options: paymentFrequencyOptions,
+        errors: errors['paymentFrequency'] ?? null,
+        required: false,
+    }) }}
+
+    {{ forms.selectField({
+        label: "Benefit Provider"|t('staff-management'),
+        id: 'providerId',
+        name: 'providerId',
+        value: type ? type.providerId : null,
+        options: providers ?? [],
+        errors: errors['providerId'] ?? null,
+        required: false,
+    }) }}
+
+    <hr/>
+
+    {# {{ forms.elementSelectField({
+        label: "Provider"|t('staff-management'),
+        id: 'providerId',
+        name: 'providerId',
+        elementType: 'percipiolondon\\staff\\elements\\BenefitProvider',
+        limit: 1,
+        value: type ? [type.provider] : [],
+        instructions: "Select a provider"|t('staff-management'),
+        required: true,
+        errors: errors['providerId'] ?? null,
+    }) }} #}
+
+
+    <div id="tiptap-container"></div>
+    <input type="text" name="content" value="<p>This is content</p>" />
+    {%- if errors['content'] ?? null -%}
+        <ul id="content-errors" class="errors"> 
+            {%- for error in errors['content'] -%}                   
+                <li>
+                    <span class="visually-hidden">Error:</span>
+                    {{- error -}}
+                </li>
+            {%- endfor -%}
+        </ul>
+    {%- endif -%}
+
+    <hr/>
+
+    {%- include 'staff-management/benefits/types/fields/group-critical-illness-cover' -%}
+
+{%- endset -%}
+
+{%- block foot -%}
+    {{ parent() }}
+    {%- set tagOptions = {
+        'depends': [
+            'percipiolondon\\staff\\assetbundles\\staff\\StaffAsset'
+        ]
+    } -%}
+    {{  craft.staff.register('src/js/tiptap.ts', false, tagOptions, tagOptions) }}
+{%- endblock -%}
