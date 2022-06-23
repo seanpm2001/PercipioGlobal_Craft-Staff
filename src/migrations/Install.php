@@ -83,6 +83,197 @@ class Install extends Migration
                 'content' => $this->longText()
             ]);
 
+            $this->createTable(Table::BENETFIT_TYPE_DENTAL, [
+                'id' => $this->primaryKey(),
+                'dateCreated' => $this->dateTime()->notNull(),
+                'dateUpdated' => $this->dateTime()->notNull(),
+                'uid' => $this->uid(),
+                'siteId' => $this->integer(),
+                //FK
+                //intern
+                'providerId' => $this->integer(),
+                //generic fields
+                'internalCode' => $this->string(255)->notNull(),
+                'status' => $this->string(255)->notNull(),
+                'policyName' => $this->string(255)->notNull(),
+                'policyNumber' => $this->string(255)->notNull(),
+                'policyHolder' => $this->string(255)->notNull(),
+                'content' => $this->longText(),
+                'policyStartDate' => $this->dateTime()->notNull(),
+                'policyRenewalDate' => $this->dateTime()->notNull(),
+                'paymentFrequency' => $this->enum('status', ['annual', 'monthly'])->notNull(),
+                'commissionRate' => $this->float()->notNull(),
+            ]);
+
+            $this->createTable(Table::BENETFIT_TYPE_GROUP_CRITICAL_ILLNESS_COVER, [
+                'id' => $this->primaryKey(),
+                'dateCreated' => $this->dateTime()->notNull(),
+                'dateUpdated' => $this->dateTime()->notNull(),
+                'uid' => $this->uid(),
+                'siteId' => $this->integer(),
+                //FK
+                //intern
+                'providerId' => $this->integer(),
+                //generic fields
+                'internalCode' => $this->string(255)->notNull(),
+                'status' => $this->string(255)->notNull(),
+                'policyName' => $this->string(255)->notNull(),
+                'policyNumber' => $this->string(255)->notNull(),
+                'policyHolder' => $this->string(255)->notNull(),
+                'content' => $this->longText(),
+                'policyStartDate' => $this->dateTime()->notNull(),
+                'policyRenewalDate' => $this->dateTime()->notNull(),
+                'paymentFrequency' => $this->enum('status', ['annual', 'monthly'])->notNull(),
+                'commissionRate' => $this->float()->notNull(),
+                //custom fields
+                'rateReviewGuaranteeDate' => $this->dateTime(),
+                'costingBasis' => $this->enum('costingBasis', ['unit', 'sp']),
+                'unitRate' => $this->float(),
+                'unitRateSuffix' => $this->enum('unitRateSuffix', ['%', '‰']),
+                'freeCoverLevelAutomaticAcceptanceLimit' => $this->float(),
+                'dateRefreshFrequency' => $this->enum('dateRefreshFrequency', ['annual', 'monthly'])
+            ]);
+
+            $this->createTable(Table::BENETFIT_TYPE_GROUP_DEATH_IN_SERVICE, [
+                'id' => $this->primaryKey(),
+                'dateCreated' => $this->dateTime()->notNull(),
+                'dateUpdated' => $this->dateTime()->notNull(),
+                'uid' => $this->uid(),
+                'siteId' => $this->integer(),
+                //FK
+                //intern
+                'providerId' => $this->integer(),
+                //generic fields
+                'internalCode' => $this->string(255)->notNull(),
+                'status' => $this->string(255)->notNull(),
+                'policyName' => $this->string(255)->notNull(),
+                'policyNumber' => $this->string(255)->notNull(),
+                'policyHolder' => $this->string(255)->notNull(),
+                'content' => $this->longText(),
+                'policyStartDate' => $this->dateTime()->notNull(),
+                'policyRenewalDate' => $this->dateTime()->notNull(),
+                'paymentFrequency' => $this->enum('status', ['annual', 'monthly'])->notNull(),
+                'commissionRate' => $this->float()->notNull(),
+                //custom fields
+                'rateReviewGuaranteeDate' => $this->dateTime(),
+                'costingBasis' => $this->enum('costingBasis', ['unit', 'sp']),
+                'unitRate' => $this->float(),
+                'unitRateSuffix' => $this->enum('unitRateSuffix', ['%', '‰']),
+                'freeCoverLevelAutomaticAcceptanceLimit' => $this->float(),
+                'dateRefreshFrequency' => $this->enum('dateRefreshFrequency', ['annual', 'monthly']),
+                'pensionSchemeTaxReferenceNumber' => $this->string(255),
+                'dateOfTrustDeed' => $this->float(),
+                'eventLimit' => $this->float()
+            ]);
+
+            $this->createTable(Table::BENETFIT_TYPE_GROUP_INCOME_PROTECTION, [
+                'id' => $this->primaryKey(),
+                'dateCreated' => $this->dateTime()->notNull(),
+                'dateUpdated' => $this->dateTime()->notNull(),
+                'uid' => $this->uid(),
+                'siteId' => $this->integer(),
+                //FK
+                //intern
+                'providerId' => $this->integer(),
+                //generic fields
+                'internalCode' => $this->string(255)->notNull(),
+                'status' => $this->string(255)->notNull(),
+                'policyName' => $this->string(255)->notNull(),
+                'policyNumber' => $this->string(255)->notNull(),
+                'policyHolder' => $this->string(255)->notNull(),
+                'content' => $this->longText(),
+                'policyStartDate' => $this->dateTime()->notNull(),
+                'policyRenewalDate' => $this->dateTime()->notNull(),
+                'paymentFrequency' => $this->enum('status', ['annual', 'monthly'])->notNull(),
+                'commissionRate' => $this->float()->notNull(),
+                //custom fields
+                'rateReviewGuaranteeDate' => $this->dateTime(),
+                'costingBasis' => $this->enum('costingBasis', ['unit', 'sp']),
+                'unitRate' => $this->float(),
+                'unitRateSuffix' => $this->enum('unitRateSuffix', ['%', '‰']),
+                'freeCoverLevelAutomaticAcceptanceLimit' => $this->float(),
+                'dateRefreshFrequency' => $this->enum('dateRefreshFrequency', ['annual', 'monthly'])
+            ]);
+
+            $this->createTable(Table::BENETFIT_TYPE_GROUP_LIFE_ASSURANCE, [
+                'id' => $this->primaryKey(),
+                'dateCreated' => $this->dateTime()->notNull(),
+                'dateUpdated' => $this->dateTime()->notNull(),
+                'uid' => $this->uid(),
+                'siteId' => $this->integer(),
+                //FK
+                //intern
+                'providerId' => $this->integer(),
+                //generic fields
+                'internalCode' => $this->string(255)->notNull(),
+                'status' => $this->string(255)->notNull(),
+                'policyName' => $this->string(255)->notNull(),
+                'policyNumber' => $this->string(255)->notNull(),
+                'policyHolder' => $this->string(255)->notNull(),
+                'content' => $this->longText(),
+                'policyStartDate' => $this->dateTime()->notNull(),
+                'policyRenewalDate' => $this->dateTime()->notNull(),
+                'paymentFrequency' => $this->enum('status', ['annual', 'monthly'])->notNull(),
+                'commissionRate' => $this->float()->notNull(),
+                //custom fields
+                'rateReviewGuaranteeDate' => $this->dateTime(),
+                'costingBasis' => $this->enum('costingBasis', ['unit', 'sp']),
+                'unitRate' => $this->float(),
+                'unitRateSuffix' => $this->enum('unitRateSuffix', ['%', '‰']),
+                'freeCoverLevelAutomaticAcceptanceLimit' => $this->float(),
+                'dateRefreshFrequency' => $this->enum('dateRefreshFrequency', ['annual', 'monthly']),
+                'pensionSchemeTaxReferenceNumber' => $this->string(255),
+                'dateOfTrustDeed' => $this->float(),
+                'eventLimit' => $this->float()
+            ]);
+
+            $this->createTable(Table::BENETFIT_TYPE_HEALTH_CASH_PLAN, [
+                'id' => $this->primaryKey(),
+                'dateCreated' => $this->dateTime()->notNull(),
+                'dateUpdated' => $this->dateTime()->notNull(),
+                'uid' => $this->uid(),
+                'siteId' => $this->integer(),
+                //FK
+                //intern
+                'providerId' => $this->integer(),
+                //generic fields
+                'internalCode' => $this->string(255)->notNull(),
+                'status' => $this->string(255)->notNull(),
+                'policyName' => $this->string(255)->notNull(),
+                'policyNumber' => $this->string(255)->notNull(),
+                'policyHolder' => $this->string(255)->notNull(),
+                'content' => $this->longText(),
+                'policyStartDate' => $this->dateTime()->notNull(),
+                'policyRenewalDate' => $this->dateTime()->notNull(),
+                'paymentFrequency' => $this->enum('status', ['annual', 'monthly'])->notNull(),
+                'commissionRate' => $this->float()->notNull(),
+            ]);
+
+            $this->createTable(Table::BENETFIT_TYPE_PRIVATE_MEDICAL_INSURANCE, [
+                'id' => $this->primaryKey(),
+                'dateCreated' => $this->dateTime()->notNull(),
+                'dateUpdated' => $this->dateTime()->notNull(),
+                'uid' => $this->uid(),
+                'siteId' => $this->integer(),
+                //FK
+                //intern
+                'providerId' => $this->integer(),
+                //generic fields
+                'internalCode' => $this->string(255)->notNull(),
+                'status' => $this->string(255)->notNull(),
+                'policyName' => $this->string(255)->notNull(),
+                'policyNumber' => $this->string(255)->notNull(),
+                'policyHolder' => $this->string(255)->notNull(),
+                'content' => $this->longText(),
+                'policyStartDate' => $this->dateTime()->notNull(),
+                'policyRenewalDate' => $this->dateTime()->notNull(),
+                'paymentFrequency' => $this->enum('status', ['annual', 'monthly'])->notNull(),
+                'commissionRate' => $this->float()->notNull(),
+                //custom fields
+                'underwritingBasis' => $this->enum('underwritingBasis', ['moratorium', 'medical-history-disregarded', 'full-medical-underwriting']),
+                'hospitalList' => $this->string(),
+            ]);
+
             $this->createTable(Table::EMPLOYEES, [
                 'id' => $this->primaryKey(),
                 'dateCreated' => $this->dateTime()->notNull(),
@@ -1394,8 +1585,17 @@ class Install extends Migration
     public function createIndexes(): void
     {
         /** BASE **/
-        // Benefits [name]
+        // Benefit Providers [name]
         $this->createIndex(null, Table::BENEFIT_PROVIDERS, 'name', true);
+
+        // Benefit Types [internalCode]
+        $this->createIndex(null, Table::BENETFIT_TYPE_DENTAL, 'internalCode', true);
+        $this->createIndex(null, Table::BENETFIT_TYPE_GROUP_CRITICAL_ILLNESS_COVER, 'internalCode', true);
+        $this->createIndex(null, Table::BENETFIT_TYPE_GROUP_DEATH_IN_SERVICE, 'internalCode', true);
+        $this->createIndex(null, Table::BENETFIT_TYPE_GROUP_INCOME_PROTECTION, 'internalCode', true);
+        $this->createIndex(null, Table::BENETFIT_TYPE_GROUP_LIFE_ASSURANCE, 'internalCode', true);
+        $this->createIndex(null, Table::BENETFIT_TYPE_HEALTH_CASH_PLAN, 'internalCode', true);
+        $this->createIndex(null, Table::BENETFIT_TYPE_PRIVATE_MEDICAL_INSURANCE, 'internalCode', true);
 
         // Employees [id]
         $this->createIndex(null, Table::AUTO_ENROLMENT, 'employeeId', false);
@@ -1721,6 +1921,13 @@ class Install extends Migration
         /** CRAFT **/
         // Elements [id]
         $this->addForeignKey(null, Table::BENEFIT_PROVIDERS, ['id'], CraftTable::ELEMENTS, ['id'], 'CASCADE', 'CASCADE' );
+        $this->addForeignKey(null, Table::BENETFIT_TYPE_DENTAL, ['id'], CraftTable::ELEMENTS, ['id'], 'CASCADE', 'CASCADE' );
+        $this->addForeignKey(null, Table::BENETFIT_TYPE_GROUP_CRITICAL_ILLNESS_COVER, ['id'], CraftTable::ELEMENTS, ['id'], 'CASCADE', 'CASCADE' );
+        $this->addForeignKey(null, Table::BENETFIT_TYPE_GROUP_DEATH_IN_SERVICE, ['id'], CraftTable::ELEMENTS, ['id'], 'CASCADE', 'CASCADE' );
+        $this->addForeignKey(null, Table::BENETFIT_TYPE_GROUP_INCOME_PROTECTION, ['id'], CraftTable::ELEMENTS, ['id'], 'CASCADE', 'CASCADE' );
+        $this->addForeignKey(null, Table::BENETFIT_TYPE_GROUP_LIFE_ASSURANCE, ['id'], CraftTable::ELEMENTS, ['id'], 'CASCADE', 'CASCADE' );
+        $this->addForeignKey(null, Table::BENETFIT_TYPE_HEALTH_CASH_PLAN, ['id'], CraftTable::ELEMENTS, ['id'], 'CASCADE', 'CASCADE' );
+        $this->addForeignKey(null, Table::BENETFIT_TYPE_PRIVATE_MEDICAL_INSURANCE, ['id'], CraftTable::ELEMENTS, ['id'], 'CASCADE', 'CASCADE' );
         $this->addForeignKey(null, Table::EMPLOYEES, ['id'], CraftTable::ELEMENTS, ['id'], 'CASCADE', 'CASCADE' );
         $this->addForeignKey(null, Table::EMPLOYERS, ['id'], CraftTable::ELEMENTS, ['id'], 'CASCADE', 'CASCADE' );
         $this->addForeignKey(null, Table::PAY_RUN, ['id'], CraftTable::ELEMENTS, ['id'], 'CASCADE', 'CASCADE' );
