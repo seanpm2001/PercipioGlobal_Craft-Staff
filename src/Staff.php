@@ -365,11 +365,11 @@ class Staff extends Plugin
         return [
             'staff-management' => 'staff-management/settings/dashboard',
             'staff-management/dashboard' => 'staff-management/settings/dashboard',
-            'staff-management/benefits/group-benefit-types' => 'staff-management/group-benefit-types',
             'staff-management/benefits/providers' => 'staff-management/benefit-provider',
             'staff-management/benefits/providers/new' => 'staff-management/benefit-provider/edit',
             'staff-management/benefits/providers/edit/<providerId:\d+>' => 'staff-management/benefit-provider/edit',
             'staff-management/benefits/providers/<providerId:\d+>' => 'staff-management/benefit-provider/detail',
+            'staff-management/benefits/types' => 'staff-management/benefit-type',
             'staff-management/pay-runs' => 'staff-management/pay-run',
             'staff-management/pay-runs/queue' => 'staff-management/pay-run/get-queue',
             'staff-management/pay-runs/<employerId:\d+>/<currentYear:\w+>' => 'staff-management/pay-run/pay-run-by-employer',

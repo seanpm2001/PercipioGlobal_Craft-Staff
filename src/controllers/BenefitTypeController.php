@@ -7,7 +7,7 @@ use craft\web\Controller;
 use percipiolondon\staff\Staff;
 use yii\web\Response;
 
-class GroupBenefitsController extends Controller
+class BenefitTypeController extends Controller
 {
     /**
      * Group Benefits display
@@ -23,15 +23,15 @@ class GroupBenefitsController extends Controller
         $variables = [];
 
         $pluginName = Staff::$settings->pluginName;
-        $templateTitle = Craft::t('staff-management', 'Benefits');
+        $templateTitle = Craft::t('staff-management', 'Benefit Types');
 
-        $variables['controllerHandle'] = 'group-benefits';
+        $variables['controllerHandle'] = 'group-benefit-types';
         $variables['pluginName'] = Staff::$settings->pluginName;
         $variables['title'] = $templateTitle;
         $variables['docTitle'] = "{$pluginName} - {$templateTitle}";
         $variables['selectedSubnavItem'] = 'benefits';
 
         // Render the template
-        return $this->renderTemplate('staff-management/benefits/group', $variables);
+        return $this->renderTemplate('staff-management/benefits/types', $variables);
     }
 }

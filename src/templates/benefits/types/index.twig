@@ -6,6 +6,15 @@
     {%- include "staff-management/benefits/_nav" -%}
 {%- endset -%}
 
+{%- block actionButton -%}
+    {%- include "staff-management/_atoms/buttons/button--primary" with {
+        options: {
+            title: 'Create Group Benefit Type',
+            url: url('staff-management/benefits/group-benefits/new')
+        }
+    } -%}
+{%- endblock -%}
+
 {%- set content -%}
 
     <div></div>
