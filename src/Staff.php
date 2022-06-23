@@ -147,10 +147,10 @@ class Staff extends Plugin
                 'class' => VitePluginService::class,
                 'assetClass' => StaffAsset::class,
                 'useDevServer' => true,
-                'devServerPublic' => 'http://localhost:3050',
-                'serverPublic' => 'http://localhost:8004',
+                'devServerPublic' => 'http://localhost:3951',
+                'serverPublic' => 'http://localhost:3950',
                 'errorEntry' => 'src/js/payrun.ts',
-                'devServerInternal' => 'http://craft-staff-buildchain:3050',
+                'devServerInternal' => 'http://craft-staff-buildchain:3951',
                 'checkDevServer' => true,
             ],
         ];

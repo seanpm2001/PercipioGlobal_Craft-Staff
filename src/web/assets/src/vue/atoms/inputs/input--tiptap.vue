@@ -37,6 +37,7 @@
 
 <template>
     <div v-if="editor">
+      quick test
       <div 
         :class="{ 'bg-blue-100': editor.isActive('bold') }" 
         @click="editor.chain().focus().toggleBold().run()"
