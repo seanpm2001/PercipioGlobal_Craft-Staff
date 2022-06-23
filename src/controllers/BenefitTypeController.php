@@ -3,6 +3,8 @@
 namespace percipiolondon\staff\controllers;
 
 use Craft;
+use craft\helpers\DateTimeHelper;
+use craft\helpers\Db;
 use craft\web\Controller;
 use percipiolondon\staff\elements\BenefitProvider;
 use percipiolondon\staff\elements\BenefitType;
@@ -68,6 +70,7 @@ class BenefitTypeController extends Controller
         $variables['selectedSubnavItem'] = 'benefits';
         $variables['type'] = $type;
         $variables['types'] = $this->_getTypes();
+        $variables['providers'] = $this->_getProviders();
         $variables['errors'] = null;
 
         // Render the template
@@ -88,11 +91,10 @@ class BenefitTypeController extends Controller
         $success = false;
 
         $typeId = $request->getBodyParam('typeId');
-        $type = BenefitType::findOne($typeId);
-        $savedType = null;
+        $type = new BenefitType();
 
-        if(is_null($type)) {
-            $type = new BenefitType();
+        if($typeId) {
+            $type = BenefitType::findOne($typeId);
         }
 
         $type->providerId = $request->getBodyParam('providerId') ? (int)$request->getBodyParam('providerId') : null;
@@ -102,8 +104,8 @@ class BenefitTypeController extends Controller
         $type->policyNumber = $request->getBodyParam('policyNumber');
         $type->policyHolder = $request->getBodyParam('policyHolder');
         $type->content = $request->getBodyParam('content');
-        $type->policyStartDate = $request->getBodyParam('policyStartDate');
-        $type->policyRenewalDate = $request->getBodyParam('policyRenewalDate');
+        $type->policyStartDate = DateTimeHelper::toDateTime($request->getBodyParam('policyStartDate'));
+        $type->policyRenewalDate = DateTimeHelper::toDateTime($request->getBodyParam('policyRenewalDate'));
         $type->paymentFrequency = $request->getBodyParam('paymentFrequency');
         $type->commissionRate = $request->getBodyParam('commissionRate');
         $type->benefitType = $request->getBodyParam('benefitType');
@@ -112,6 +114,8 @@ class BenefitTypeController extends Controller
             case 'group-critical-illness-cover':
                 $type->benefitTypeGroupCriticalIllnessCover = $request->getBodyParam('benefitTypeGroupCriticalIllnessCover');
         }
+
+//        Craft::dd($type->validate());
 
         if($type->validate()) {
             $success = $elementsService->saveElement($type);
@@ -126,8 +130,9 @@ class BenefitTypeController extends Controller
         $variables['docTitle'] = "{$pluginName} - {$templateTitle}";
         $variables['selectedSubnavItem'] = 'benefits';
         $variables['types'] = BenefitType::findAll();
-        $variables['type'] = $type->toArray();
+        $variables['type'] = $type;
         $variables['types'] = $this->_getTypes();
+        $variables['providers'] = $this->_getProviders();
         $variables['errors'] = $type->getErrors();
 
         // Render the template
@@ -153,5 +158,21 @@ class BenefitTypeController extends Controller
         }
 
         return $types;
+    }
+
+    private function _getProviders(): array {
+        $providers = [[
+            'label' => Craft::t('staff-management', 'Choose a Benefit Provider'),
+            'value' => null,
+        ]];
+
+        foreach(BenefitProvider::findAll() as $provider){
+            $providers[] = [
+                'value' => $provider->id,
+                'label' => $provider->name,
+            ];
+        }
+
+        return $providers;
     }
 }

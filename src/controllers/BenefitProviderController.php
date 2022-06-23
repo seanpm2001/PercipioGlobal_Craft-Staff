@@ -98,11 +98,11 @@ class BenefitProviderController extends Controller
         $success = false;
 
         $providerId = $request->getBodyParam('providerId');
-        $provider = BenefitProvider::findOne($providerId);
+        $provider = new BenefitProvider();
         $savedProvider = null;
 
-        if(is_null($provider)) {
-            $provider = new BenefitProvider();
+        if($providerId) {
+            $provider = BenefitProvider::findOne($providerId);
         }
 
         $provider->name = $request->getBodyParam('name') ?? '';

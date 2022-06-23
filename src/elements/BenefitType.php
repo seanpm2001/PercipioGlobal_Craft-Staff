@@ -10,6 +10,7 @@
 
 namespace percipiolondon\staff\elements;
 
+use craft\helpers\DateTimeHelper;
 use DateTime;
 use Craft;
 use craft\base\Element;
@@ -57,13 +58,13 @@ class BenefitType extends Element
      */
     public string|null $content = null;
     /**
-     * @var DateTime|null
+     * @var DateTime|bool|null
      */
-    public DateTime|null $policyStartDate = null;
+    public DateTime|bool|null $policyStartDate = null;
     /**
-     * @var DateTime|null
+     * @var DateTime|bool|null
      */
-    public DateTime|null $policyRenewalDate = null;
+    public DateTime|bool|null $policyRenewalDate = null;
     /**
      * @var string|null
      */
@@ -221,11 +222,11 @@ class BenefitType extends Element
 
     // Public Methods
     // =========================================================================
-    public function validateBenefitType($attribute) {
+    public function validateBenefitType() {
 
         switch($this->benefitType) {
             case 'group-critical-illness-cover':
-                if(is_null($this->benefitTypeGroupCriticalIllnessCover['rateReviewGuaranteeDate'] ?? null)) {
+                if(!DateTimeHelper::toDateTime($this->benefitTypeGroupCriticalIllnessCover['rateReviewGuaranteeDate'] ?? null)) {
                     $this->addError('rateReviewGuaranteeDate', "There's no provider selected");
                 }
         }
@@ -321,8 +322,6 @@ class BenefitType extends Element
                     $fields = array_merge($fields, $this->benefitTypeGroupCriticalIllnessCover);
                     BenefitTypes::saveGroupCriticalIllnessCover($fields);
             }
-
-            Craft::dd('end');
 
         } catch (\Exception $e) {
             $logger = new Logger();

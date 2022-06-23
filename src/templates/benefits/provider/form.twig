@@ -52,6 +52,7 @@
     }) }}
 
     {%- set asset = provider ? provider.logo ? [craft.assets.id(provider.logo).one()] : [] : [] -%}
+    {{dump(asset)}}
     {{ forms.elementSelectField({
         label: "Logo"|t('staff-management'),
         id: 'logo',

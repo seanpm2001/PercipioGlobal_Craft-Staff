@@ -2,6 +2,7 @@
 
 namespace percipiolondon\staff\helpers;
 
+use craft\helpers\Db;
 use percipiolondon\staff\records\BenefitTypeDental;
 use percipiolondon\staff\records\BenefitTypeGroupCriticalIllnessCover;
 
@@ -28,17 +29,15 @@ class BenefitTypes
         $type->policyNumber = $fields['policyNumber'] ?? null;
         $type->policyHolder = $fields['policyHolder'] ?? null;
         $type->content = $fields['content'] ?? null;
-        $type->policyStartDate = $fields['policyStartDate'] ?? null;
-        $type->policyRenewalDate = $fields['policyRenewalDate'] ?? null;
+        $type->policyStartDate = Db::prepareDateForDb($fields['policyStartDate'] ?? null);
+        $type->policyRenewalDate = Db::prepareDateForDb($fields['policyRenewalDate'] ?? null);
         $type->paymentFrequency = $fields['paymentFrequency'] ?? null;
         $type->commissionRate = $fields['commissionRate'] ?? null;
 
-        \Craft::dd($type->validate());
-
         //specific
-//        $type->rateReviewGuaranteeDate = $fields['rateReviewGuaranteeDate'];
-//        $type->costingBasis = $fields['costingBasis'];
+        $type->rateReviewGuaranteeDate = Db::prepareDateForDb($fields['rateReviewGuaranteeDate'] ?? null);
+        $type->costingBasis = $fields['costingBasis'] ?? null;
 
-        $type->save();
+        return $type->save();
     }
 }

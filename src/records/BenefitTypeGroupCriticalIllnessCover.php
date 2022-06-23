@@ -73,6 +73,6 @@ class BenefitTypeGroupCriticalIllnessCover extends ActiveRecord
      */
     public static function tableName(): string
     {
-        return Table::BENETFIT_TYPE_DENTAL;
+        return Table::BENETFIT_TYPE_GROUP_CRITICAL_ILLNESS_COVER;
     }
 }
