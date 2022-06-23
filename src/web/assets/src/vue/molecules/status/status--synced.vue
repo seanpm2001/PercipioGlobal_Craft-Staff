@@ -22,11 +22,20 @@
 </script>
 
 <template>
-    <span class="mt-4 md:mt-0 text-xs inline-flex mr-2 flex-grow" style="margin-bottom:0">
-        Last Synced: 
-        <span v-if="store.queue != 0" class="flex items-center pl-1">
-            <span style="margin-bottom:0">Queue is running to sync</span>
-        </span>
-        <span v-else class="pl-1">{{ date }}</span>
+  <span
+    class="mt-4 md:mt-0 text-xs inline-flex mr-2 flex-grow"
+    style="margin-bottom:0"
+  >
+    Last Synced: 
+    <span
+      v-if="store.queue != 0"
+      class="flex items-center pl-1"
+    >
+      <span style="margin-bottom:0">Queue is running to sync</span>
     </span>
+    <span
+      v-else
+      class="pl-1"
+    >{{ date }}</span>
+  </span>
 </template>

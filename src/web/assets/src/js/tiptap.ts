@@ -1,15 +1,31 @@
-import TipTap from '~/vue/organisms/fields/field--tiptap.vue'
-import { createApp, h } from 'vue'
+import TipTap from '~/vue/Tiptap.vue'
+import { createApp } from 'vue'
 
-const tiptap = async () => {
-    const tiptap = createApp({
-        render: () => h(TipTap)
+const tiptapField = async () => {
+
+    const tiptapFields = document.querySelectorAll('[id$=_tiptap]')
+    const tiptapFieldsToMount = new Object()
+
+    tiptapFields.forEach( (tiptapField) => {
+    
+        let field = tiptapField.id.replace('-', '')
+
+        tiptapFieldsToMount[field] = {
+            'id': '#' + tiptapField.id,
+            'tiptap': createApp({ ...TipTap })
+        }
+
+    })
+
+    const tiptap = Object.entries(tiptapFieldsToMount).map(entry => {
+        let field = entry[1]
+        return field.tiptap.mount(field.id)
     })
     
-    return tiptap.mount('#tiptap-container')
+    return tiptap
 }
 
-tiptap().then(() => {
+tiptapField().then( (tiptap) => {
     console.log()
 })
 

@@ -1,5 +1,4 @@
 import { ApolloClient, from, InMemoryCache, HttpLink } from '@apollo/client/core'
-import { onError } from '@apollo/client/link/error'
 import { setContext } from '@apollo/client/link/context'
 import { getToken } from '~/js/composables/useAxiosClient'
 
