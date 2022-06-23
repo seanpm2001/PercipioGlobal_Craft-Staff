@@ -12,6 +12,7 @@ namespace percipiolondon\staff\elements;
 
 use Craft;
 use craft\base\Element;
+use craft\base\ElementInterface;
 use craft\db\Query;
 use craft\elements\db\ElementQueryInterface;
 
@@ -107,6 +108,62 @@ class BenefitProvider extends Element
             ],
         ];
     }
+
+    /**
+     * @return array
+     */
+    protected static function defineTableAttributes(): array
+    {
+        return [
+            'name' => ['label' => Craft::t('staff-management', 'Name')],
+            'url' => ['label' => Craft::t('staff-management', 'Url')],
+        ];
+    }
+
+
+    /**
+     * @param string $source
+     * @return array
+     */
+    protected static function defineDefaultTableAttributes(string $source): array
+    {
+        $attributes = [];
+        $attributes[] = 'name';
+        $attributes[] = 'dateCreated';
+        $attributes[] = 'dateUpdated';
+
+        return $attributes;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    protected static function defineSortOptions(): array
+    {
+        return [
+            'name' => Craft::t('staff-management', 'Name'),
+            'url' => Craft::t('staff-management', 'Url'),
+
+        ];
+    }
+
+    /**
+     * @param string $attribute
+     * @return string
+     * @throws InvalidConfigException
+     */
+    protected function tableAttributeHtml(string $attribute): string
+    {
+        switch ($attribute) {
+            case 'name':
+                return $this->name;
+            case 'url':
+                return $this->url;
+        }
+
+        return parent::tableAttributeHtml($attribute);
+    }
+
 
     /**
      * Returns the validation rules for attributes.
@@ -227,7 +284,7 @@ class BenefitProvider extends Element
 
         $providers = (new Query())
             ->from(Table::BENEFIT_PROVIDERS)
-            ->select('id')
+            ->select('*')
             ->all();
 
         foreach ($providers as $provider) {

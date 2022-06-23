@@ -1,0 +1,23 @@
+{%- import "_includes/forms" as forms -%}
+
+{{dump(type.benefitTypeGroupCriticalIllnessCover["rateReviewGuaranteeDate"] ?? '')}}
+
+{{ forms.dateField({
+    label: "Rate Review Guarantee Date"|t('staff-management'),
+    id: 'rateReviewGuaranteeDate',
+    name: 'benefitTypeGroupCriticalIllnessCover[rateReviewGuaranteeDate]',
+    value: type ? '' : '',
+    errors: errors['rateReviewGuaranteeDate'] ?? null,
+    autofocus: true,
+    required: true,
+}) }}
+
+{{ forms.textField({
+    label: "Costing Basis"|t('staff-management'),
+    id: 'costingBasis',
+    name: 'benefitTypeGroupCriticalIllnessCover[costingBasis]',
+    value: type ? type.benefitTypeGroupCriticalIllnessCover["costingBasis"] ?? '' : '',
+    errors: errors['costingBasis'] ?? null,
+    autofocus: true,
+    required: true,
+}) }}

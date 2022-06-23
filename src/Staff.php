@@ -30,7 +30,7 @@ use nystudio107\pluginvite\services\VitePluginService;
 
 use percipiolondon\staff\assetbundles\staff\StaffAsset;
 use percipiolondon\staff\elements\BenefitProvider;
-use percipiolondon\staff\elements\BenefitType;
+use percipiolondon\staff\elements\BenefitType ;
 use percipiolondon\staff\elements\Employee as EmployeeElement;
 use percipiolondon\staff\elements\Employer as EmployerElement;
 use percipiolondon\staff\elements\PayRun as PayRunElement;
@@ -370,6 +370,9 @@ class Staff extends Plugin
             'staff-management/benefits/providers/edit/<providerId:\d+>' => 'staff-management/benefit-provider/edit',
             'staff-management/benefits/providers/<providerId:\d+>' => 'staff-management/benefit-provider/detail',
             'staff-management/benefits/types' => 'staff-management/benefit-type',
+            'staff-management/benefits/types/new' => 'staff-management/benefit-type/edit',
+            'staff-management/benefits/types/edit/<typeId:\d+>' => 'staff-management/benefit-type/edit',
+            'staff-management/benefits/types/<typeId:\d+>' => 'staff-management/benefit-type/detail',
             'staff-management/pay-runs' => 'staff-management/pay-run',
             'staff-management/pay-runs/queue' => 'staff-management/pay-run/get-queue',
             'staff-management/pay-runs/<employerId:\d+>/<currentYear:\w+>' => 'staff-management/pay-run/pay-run-by-employer',

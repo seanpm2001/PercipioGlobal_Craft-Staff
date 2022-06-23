@@ -13,20 +13,17 @@ namespace percipiolondon\staff\elements;
 use DateTime;
 use Craft;
 use craft\base\Element;
-use craft\db\Query;
 use craft\elements\db\ElementQueryInterface;
 
-use craft\helpers\App;
-use percipiolondon\staff\db\Table;
-use percipiolondon\staff\elements\db\BenefitProviderQuery as BenefitProviderQuery;
+use percipiolondon\staff\elements\db\BenefitTypeQuery;
 use percipiolondon\staff\helpers\BenefitTypes;
 use percipiolondon\staff\helpers\Logger;
-use percipiolondon\staff\records\BenefitProvider as ProviderRecord;
 
 /**
- * Employee Element
+ * Benefit type Element
+ *
+ * @property-read string $gqlTypeName
  */
-
 class BenefitType extends Element
 {
     // Public Properties
@@ -38,76 +35,76 @@ class BenefitType extends Element
     /**
      * @var string|null
      */
-    public string|null $internalCode;
+    public string|null $internalCode = null;
     /**
      * @var string|null
      */
-    public string|null $status;
+    public string|null $status = null;
     /**
      * @var string|null
      */
-    public string|null $policyName;
+    public string|null $policyName = null;
     /**
      * @var string|null
      */
-    public string|null $policyNumber;
+    public string|null $policyNumber = null;
     /**
      * @var string|null
      */
-    public string|null $policyHolder;
+    public string|null $policyHolder = null;
     /**
      * @var string|null
      */
-    public string|null $content;
+    public string|null $content = null;
     /**
      * @var DateTime|null
      */
-    public DateTime|null $policyStartDate;
+    public DateTime|null $policyStartDate = null;
     /**
      * @var DateTime|null
      */
-    public DateTime|null $policyRenewalDate;
+    public DateTime|null $policyRenewalDate = null;
     /**
      * @var string|null
      */
-    public string|null $paymentFrequency;
+    public string|null $paymentFrequency = null;
     /**
      * @var float|null
      */
-    public float|null $commissionRate;
+    public float|null $commissionRate = null;
 
     /**
      * @var string|null
      */
-    public string|null $benefitType;
+    public string|null $benefitType = null;
     /**
      * @var array|null
      */
-    public array|null $benefitTypeDental;
+    public array|null $benefitTypeDental = null;
     /**
      * @var array|null
      */
-    public array|null $benefitTypeGroupCriticalIllnessCover;
+    public array|null $benefitTypeGroupCriticalIllnessCover = null;
     /**
      * @var array|null
      */
-    public array|null $benefitTypeGroupDeathInService;
+    public array|null $benefitTypeGroupDeathInService = null;
     /**
      * @var array|null
      */
-    public array|null $benefitTypeGroupIncomeProtection;
+    public array|null $benefitTypeGroupIncomeProtection = null;
     /**
      * @var array|null
      */
-    public array|null $benefitTypeGroupLifeAssurance;
+    public array|null $benefitTypeGroupLifeAssurance = null;
     /**
      * @var array|null
      */
-    public array|null $benefitTypeHealthCashPlan;
+    public array|null $benefitTypeHealthCashPlan = null;
     /**
      * @var array|null
      */
-    public array|null $benefitTypePrivateMedicalInsurance;
+    public array|null $benefitTypePrivateMedicalInsurance = null;
 
     /**
      * @var array|null
@@ -186,7 +183,7 @@ class BenefitType extends Element
      */
     public static function find(): ElementQueryInterface
     {
-        return new BenefitProviderQuery(static::class);
+        return new BenefitTypeQuery(static::class);
     }
 
     /**
@@ -201,15 +198,39 @@ class BenefitType extends Element
      */
     public function rules()
     {
-        return parent::rules();
+        $rules = parent::rules();
 
-//        $rules[] = [['name', 'content'], 'required'];
+        $rules[] = [[
+            'providerId',
+            'internalCode',
+            'status',
+            'policyName',
+            'policyNumber',
+            'policyHolder',
+            'policyStartDate',
+            'policyRenewalDate',
+            'paymentFrequency',
+            'commissionRate',
+            'benefitType'
+        ], 'required'];
 
-//        return $rules;
+        $rules[] = ['benefitTypeGroupCriticalIllnessCover', 'validateBenefitType'];
+
+        return $rules;
     }
 
     // Public Methods
     // =========================================================================
+    public function validateBenefitType($attribute) {
+
+        switch($this->benefitType) {
+            case 'group-critical-illness-cover':
+                if(is_null($this->benefitTypeGroupCriticalIllnessCover['rateReviewGuaranteeDate'] ?? null)) {
+                    $this->addError('rateReviewGuaranteeDate', "There's no provider selected");
+                }
+        }
+    }
+
 
     // Indexes, etc.
     // -------------------------------------------------------------------------
@@ -283,6 +304,7 @@ class BenefitType extends Element
         try{
             $fields = [];
             $fields['providerId'] = $this->providerId;
+            $fields['internalCode'] = $this->internalCode;
             $fields['status'] = $this->status;
             $fields['policyName'] = $this->policyName;
             $fields['policyNumber'] = $this->policyNumber;
@@ -295,9 +317,12 @@ class BenefitType extends Element
 
             //save benefit type
             switch($this->benefitType) {
-                case 'dental':
-                    BenefitTypes::saveDental([$fields, ...$this->benefitTypeDental]);
+                case 'group-critical-illness-cover':
+                    $fields = array_merge($fields, $this->benefitTypeGroupCriticalIllnessCover);
+                    BenefitTypes::saveGroupCriticalIllnessCover($fields);
             }
+
+            Craft::dd('end');
 
         } catch (\Exception $e) {
             $logger = new Logger();
