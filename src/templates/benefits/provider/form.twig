@@ -3,9 +3,6 @@
 {%- extends 'staff-management/_layouts/hub-cp.twig' -%}
 {%- import "_includes/forms" as forms -%}
 
-{#{% css "/lib/redactor/redactor.css" %}#}
-{#{% js "/lib/redactor/redactor.js" %}#}
-
 {%- set sidebar -%}
     {%- include "staff-management/benefits/_nav" -%}
 {%- endset -%}
@@ -53,7 +50,7 @@
 
     {%- set asset = provider ? provider.logo ? [craft.assets.id(provider.logo).one()] : [] : [] -%}
     {{ forms.elementSelectField({
-        label: "Logo"|t('staff-management'),
+        label: 'Logo'|t('staff-management'),
         id: 'logo',
         name: 'logo',
         elementType: 'craft\\elements\\Asset',
@@ -65,12 +62,22 @@
         },
         sources: [volume],
         value: provider ? provider.logo : '',
-        instructions: "Upload or select a logo"|t('staff-management'),
+        instructions: 'Upload or select a logo'|t('staff-management'),
         errors: errors['logo'] ?? null,
     }) }}
 
-    <div id="tiptap-container"></div>
-    <input type="text" name="content" value="<p>This is content</p>" />
+    {%- set tiptapOptions = {
+        id: 'provider_description',
+        label: 'Provider Description',
+        instructions: 'Add a description with a short explanation about the provider.',
+        name: 'provider_description',
+    } -%}
+
+    <div id="description_tiptap">
+        <tiptap-field content="test" :options="{{- tiptapOptions | json_encode -}}"></tiptap-field>
+    </div>
+
+    
     {%- if errors['content'] ?? null -%}
         <ul id="content-errors" class="errors"> 
             {%- for error in errors['content'] -%}                   
