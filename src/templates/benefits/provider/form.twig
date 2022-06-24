@@ -70,12 +70,22 @@
         id: 'provider_description',
         label: 'Provider Description',
         instructions: 'Add a description with a short explanation about the provider.',
-        name: 'provider_description',
+        name: 'content',
     } -%}
 
     <div id="description_tiptap">
         <tiptap-field content="test" :options="{{- tiptapOptions | json_encode -}}"></tiptap-field>
     </div>
+    {%- if errors['content'] ?? null -%}
+        <ul id="content-errors" class="errors"> 
+            {%- for error in errors['content'] -%}                   
+                <li>
+                    <span class="visually-hidden">Error:</span>
+                    {{- error -}}
+                </li>
+            {%- endfor -%}
+        </ul>
+    {%- endif -%}
 
     
     {%- if errors['content'] ?? null -%}

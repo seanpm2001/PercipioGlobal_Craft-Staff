@@ -99,7 +99,7 @@ class BenefitTypeController extends Controller
 
         $type->providerId = $request->getBodyParam('providerId') ? (int)$request->getBodyParam('providerId') : null;
         $type->internalCode = $request->getBodyParam('internalCode');
-        $type->status = $request->getBodyParam('status');
+        $type->status = $request->getBodyParam('status') == '1' ? 'active' : 'inactive';
         $type->policyName = $request->getBodyParam('policyName');
         $type->policyNumber = $request->getBodyParam('policyNumber');
         $type->policyHolder = $request->getBodyParam('policyHolder');
@@ -107,7 +107,7 @@ class BenefitTypeController extends Controller
         $type->policyStartDate = DateTimeHelper::toDateTime($request->getBodyParam('policyStartDate'));
         $type->policyRenewalDate = DateTimeHelper::toDateTime($request->getBodyParam('policyRenewalDate'));
         $type->paymentFrequency = $request->getBodyParam('paymentFrequency');
-        $type->commissionRate = $request->getBodyParam('commissionRate');
+        $type->commissionRate = $request->getBodyParam('commissionRate') ? (float)$request->getBodyParam('commissionRate') : null;
         $type->benefitType = $request->getBodyParam('benefitType');
 
         switch($request->getBodyParam('benefitType')) {
