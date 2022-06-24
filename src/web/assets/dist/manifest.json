@@ -1,12 +1,12 @@
 {
   "src/js/tiptap.ts": {
-    "file": "assets/tiptap.242249ac.js",
+    "file": "assets/tiptap.91f69bae.js",
     "src": "src/js/tiptap.ts",
     "isEntry": true,
     "imports": [
       "_vue.esm-bundler.23929e85.js"
     ],
-    "integrity": "sha384-cPri8/LdX+XgPsUkfvOI3nHQa5mpNnmrkFCrRzrRko6tP/UT9ig1MGUnrGovPjBv"
+    "integrity": "sha384-ro6WeqGrgt9k5dOl1hNx5P/WxAfuVJ4QTJ+Uy77jlXytXX/Wv6ot5W0VMMzRJp4l"
   },
   "src/js/employers.ts": {
     "file": "assets/employers.294f32f8.js",

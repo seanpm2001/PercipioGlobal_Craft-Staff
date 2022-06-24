@@ -7,7 +7,7 @@
     const props = defineProps({
         content: {
             type: String,
-            default: '<p>I’m running Tiptap with Vue.js. 🎉</p>'
+            default: '<p>The benefit provider description field.</p>'
         }
     })
 
