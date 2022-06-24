@@ -304,6 +304,7 @@ class BenefitType extends Element
     {
         try{
             $fields = [];
+            $fields['id'] = $this->id;
             $fields['providerId'] = $this->providerId;
             $fields['internalCode'] = $this->internalCode;
             $fields['status'] = $this->status;
