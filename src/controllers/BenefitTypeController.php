@@ -4,10 +4,10 @@ namespace percipiolondon\staff\controllers;
 
 use Craft;
 use craft\helpers\DateTimeHelper;
-use craft\helpers\Db;
 use craft\web\Controller;
 use percipiolondon\staff\elements\BenefitProvider;
 use percipiolondon\staff\elements\BenefitType;
+use percipiolondon\staff\elements\Employer;
 use percipiolondon\staff\helpers\BenefitTypes;
 use percipiolondon\staff\Staff;
 use yii\web\Response;
@@ -30,12 +30,25 @@ class BenefitTypeController extends Controller
         $pluginName = Staff::$settings->pluginName;
         $templateTitle = Craft::t('staff-management', 'Benefit Types');
 
+//        Employer::findAll();
+
+        $types = [];
+
+        $benefitTypesHelper = new BenefitTypes();
+
+        foreach(array_keys($benefitTypesHelper->benefitTypes) as $type){
+            $types[] = BenefitType::findAll(['benefitType' => $type]);
+        }
+
+        $types = array_merge(...$types);
+
         $variables['controllerHandle'] = 'group-benefit-types';
         $variables['pluginName'] = $pluginName;
         $variables['title'] = $templateTitle;
         $variables['docTitle'] = "{$pluginName} - {$templateTitle}";
         $variables['selectedSubnavItem'] = 'benefits';
-        $variables['types'] = BenefitType::findAll();
+        $variables['types'] = $types;
+        $variables['benefitTypes'] = $benefitTypesHelper->benefitTypes;
 
         // Render the template
         return $this->renderTemplate('staff-management/benefits/types', $variables);
@@ -48,14 +61,14 @@ class BenefitTypeController extends Controller
      * @throws \yii\web\NotFoundHttpException
      * @throws \yii\web\ForbiddenHttpException
      */
-    public function actionEdit(int $typeId = null): Response
+    public function actionEdit(?int $typeId = null, ?string $benefitType = null): Response
     {
         $this->requireLogin();
 
         $type = null;
 
         if($typeId) {
-            $type = BenefitType::findOne($typeId);
+            $type = BenefitType::findOne(['id' => $typeId, 'benefitType' => $benefitType]);
         }
 
         $variables = [];
@@ -110,12 +123,7 @@ class BenefitTypeController extends Controller
         $type->commissionRate = $request->getBodyParam('commissionRate') ? (float)$request->getBodyParam('commissionRate') : null;
         $type->benefitType = $request->getBodyParam('benefitType');
 
-        switch($request->getBodyParam('benefitType')) {
-            case 'group-critical-illness-cover':
-                $type->benefitTypeGroupCriticalIllnessCover = $request->getBodyParam('benefitTypeGroupCriticalIllnessCover');
-        }
-
-//        Craft::dd($type->validate());
+        $type->arrBenefitTypeGroupCriticalIllnessCover = $request->getBodyParam('benefitTypeGroupCriticalIllnessCover');
 
         if($type->validate()) {
             $success = $elementsService->saveElement($type);

@@ -48,6 +48,7 @@ use percipiolondon\staff\plugin\Services as StaffServices;
 use percipiolondon\staff\services\Addresses;
 use percipiolondon\staff\services\Employees;
 use percipiolondon\staff\services\Employers;
+use percipiolondon\staff\services\GroupBenefits;
 use percipiolondon\staff\services\PayOptions;
 use percipiolondon\staff\services\PayRunEntries;
 use percipiolondon\staff\services\PayRuns;
@@ -74,6 +75,7 @@ use yii\base\Event;
  * @property  Settings              $settings
  * @property  VitePluginService     $vite
  * @property  Addresses $addresses
+ * @property  GroupBenefits $groupBenefits
  * @property  Employees $employees
  * @property  Employers $employers
  * @property  PayOptions $payOptions
@@ -371,7 +373,7 @@ class Staff extends Plugin
             'staff-management/benefits/providers/<providerId:\d+>' => 'staff-management/benefit-provider/detail',
             'staff-management/benefits/types' => 'staff-management/benefit-type',
             'staff-management/benefits/types/new' => 'staff-management/benefit-type/edit',
-            'staff-management/benefits/types/edit/<typeId:\d+>' => 'staff-management/benefit-type/edit',
+            'staff-management/benefits/types/edit/<typeId:\d+>/<benefitType:\S+>' => 'staff-management/benefit-type/edit',
             'staff-management/benefits/types/<typeId:\d+>' => 'staff-management/benefit-type/detail',
             'staff-management/pay-runs' => 'staff-management/pay-run',
             'staff-management/pay-runs/queue' => 'staff-management/pay-run/get-queue',

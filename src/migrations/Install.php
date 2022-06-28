@@ -103,6 +103,7 @@ class Install extends Migration
                 'policyRenewalDate' => $this->dateTime()->notNull(),
                 'paymentFrequency' => $this->enum('status', ['annual', 'monthly'])->notNull(),
                 'commissionRate' => $this->float()->notNull(),
+                'benefitType' => $this->string(255)->notNull()->defaultValue('dental')
             ]);
 
             $this->createTable(Table::BENETFIT_TYPE_GROUP_CRITICAL_ILLNESS_COVER, [
@@ -125,6 +126,7 @@ class Install extends Migration
                 'policyRenewalDate' => $this->dateTime()->notNull(),
                 'paymentFrequency' => $this->enum('status', ['annual', 'monthly'])->notNull(),
                 'commissionRate' => $this->float()->notNull(),
+                'benefitType' => $this->string(255)->notNull()->defaultValue('group-critical-illness-cover'),
                 //custom fields
                 'rateReviewGuaranteeDate' => $this->dateTime(),
                 'costingBasis' => $this->enum('costingBasis', ['unit', 'sp']),
@@ -154,6 +156,7 @@ class Install extends Migration
                 'policyRenewalDate' => $this->dateTime()->notNull(),
                 'paymentFrequency' => $this->enum('status', ['annual', 'monthly'])->notNull(),
                 'commissionRate' => $this->float()->notNull(),
+                'benefitType' => $this->string(255)->notNull()->defaultValue('group-death-in-service'),
                 //custom fields
                 'rateReviewGuaranteeDate' => $this->dateTime(),
                 'costingBasis' => $this->enum('costingBasis', ['unit', 'sp']),
@@ -186,6 +189,7 @@ class Install extends Migration
                 'policyRenewalDate' => $this->dateTime()->notNull(),
                 'paymentFrequency' => $this->enum('status', ['annual', 'monthly'])->notNull(),
                 'commissionRate' => $this->float()->notNull(),
+                'benefitType' => $this->string(255)->notNull()->defaultValue('group-income-protection'),
                 //custom fields
                 'rateReviewGuaranteeDate' => $this->dateTime(),
                 'costingBasis' => $this->enum('costingBasis', ['unit', 'sp']),
@@ -215,6 +219,7 @@ class Install extends Migration
                 'policyRenewalDate' => $this->dateTime()->notNull(),
                 'paymentFrequency' => $this->enum('status', ['annual', 'monthly'])->notNull(),
                 'commissionRate' => $this->float()->notNull(),
+                'benefitType' => $this->string(255)->notNull()->defaultValue('group-life-assurance'),
                 //custom fields
                 'rateReviewGuaranteeDate' => $this->dateTime(),
                 'costingBasis' => $this->enum('costingBasis', ['unit', 'sp']),
@@ -247,6 +252,7 @@ class Install extends Migration
                 'policyRenewalDate' => $this->dateTime()->notNull(),
                 'paymentFrequency' => $this->enum('status', ['annual', 'monthly'])->notNull(),
                 'commissionRate' => $this->float()->notNull(),
+                'benefitType' => $this->string(255)->notNull()->defaultValue('health-cash-plan'),
             ]);
 
             $this->createTable(Table::BENETFIT_TYPE_PRIVATE_MEDICAL_INSURANCE, [
@@ -269,6 +275,7 @@ class Install extends Migration
                 'policyRenewalDate' => $this->dateTime()->notNull(),
                 'paymentFrequency' => $this->enum('status', ['annual', 'monthly'])->notNull(),
                 'commissionRate' => $this->float()->notNull(),
+                'benefitType' => $this->string(255)->notNull()->defaultValue('private-medical-insurance'),
                 //custom fields
                 'underwritingBasis' => $this->enum('underwritingBasis', ['moratorium', 'medical-history-disregarded', 'full-medical-underwriting']),
                 'hospitalList' => $this->string(),
@@ -1587,6 +1594,15 @@ class Install extends Migration
         /** BASE **/
         // Benefit Providers [name]
         $this->createIndex(null, Table::BENEFIT_PROVIDERS, 'name', true);
+
+        // Benefit Types [benefitType]
+        $this->createIndex(null, Table::BENETFIT_TYPE_DENTAL, 'benefitType', true);
+        $this->createIndex(null, Table::BENETFIT_TYPE_GROUP_CRITICAL_ILLNESS_COVER, 'benefitType', true);
+        $this->createIndex(null, Table::BENETFIT_TYPE_GROUP_DEATH_IN_SERVICE, 'benefitType', true);
+        $this->createIndex(null, Table::BENETFIT_TYPE_GROUP_INCOME_PROTECTION, 'benefitType', true);
+        $this->createIndex(null, Table::BENETFIT_TYPE_GROUP_LIFE_ASSURANCE, 'benefitType', true);
+        $this->createIndex(null, Table::BENETFIT_TYPE_HEALTH_CASH_PLAN, 'benefitType', true);
+        $this->createIndex(null, Table::BENETFIT_TYPE_PRIVATE_MEDICAL_INSURANCE, 'benefitType', true);
 
         // Benefit Types [internalCode]
         $this->createIndex(null, Table::BENETFIT_TYPE_DENTAL, 'internalCode', true);

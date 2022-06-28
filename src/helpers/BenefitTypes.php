@@ -8,6 +8,7 @@ use percipiolondon\staff\records\BenefitTypeGroupCriticalIllnessCover;
 
 class BenefitTypes
 {
+
     public array $benefitTypes = [
         'dental' => 'Dental',
         'group-critical-illness-cover' => 'Group Critical Illness Cover',
@@ -16,6 +17,16 @@ class BenefitTypes
         'group-life-assurance' => 'Life Assurance',
         'health-cash-plan' => 'Health Cash Plan',
         'private-medical-insurance' => 'Private Medical Insurance',
+    ];
+
+    public array $benefitTypesTables = [
+        'dental' => 'staff_benefit_type_dental',
+        'group-critical-illness-cover' => 'staff_benefit_type_group_critical_illness_cover',
+        'group-death-in-service' => 'staff_benefit_type_group_death_in_service',
+        'group-income-protection' => 'staff_benefit_type_group_income_protection',
+        'group-life-assurance' => 'staff_benefit_type_group_life_assurance',
+        'health-cash-plan' => 'staff_benefit_type_health_cash_plan',
+        'private-medical-insurance' => 'staff_benefit_type_private_medical_insurance',
     ];
 
     public static function saveGroupCriticalIllnessCover(array $fields): bool {
