@@ -19,6 +19,7 @@ use craft\elements\db\ElementQueryInterface;
 use percipiolondon\staff\elements\db\BenefitTypeQuery;
 use percipiolondon\staff\helpers\BenefitTypes;
 use percipiolondon\staff\helpers\Logger;
+use percipiolondon\staff\Staff;
 
 /**
  * Benefit type Element
@@ -81,31 +82,31 @@ class BenefitType extends Element
     /**
      * @var array|null
      */
-    public array|null $benefitTypeDental = null;
+    public array|null $arrBenefitTypeDental = null;
     /**
      * @var array|null
      */
-    public array|null $benefitTypeGroupCriticalIllnessCover = null;
+    public array|null $arrBenefitTypeGroupCriticalIllnessCover = null;
     /**
      * @var array|null
      */
-    public array|null $benefitTypeGroupDeathInService = null;
+    public array|null $arrBenefitTypeGroupDeathInService = null;
     /**
      * @var array|null
      */
-    public array|null $benefitTypeGroupIncomeProtection = null;
+    public array|null $arrBenefitTypeGroupIncomeProtection = null;
     /**
      * @var array|null
      */
-    public array|null $benefitTypeGroupLifeAssurance = null;
+    public array|null $arrBenefitTypeGroupLifeAssurance = null;
     /**
      * @var array|null
      */
-    public array|null $benefitTypeHealthCashPlan = null;
+    public array|null $arrBenefitTypeHealthCashPlan = null;
     /**
      * @var array|null
      */
-    public array|null $benefitTypePrivateMedicalInsurance = null;
+    public array|null $arrBenefitTypePrivateMedicalInsurance = null;
 
     /**
      * @var array|null
@@ -114,7 +115,7 @@ class BenefitType extends Element
     /**
      * @var array|null
      */
-    private array|null $_benefitTypeGroupCriticalIllnessCover;
+    private array|null $_benefitTypeGroupCriticalIllnessCover = null;
     /**
      * @var array|null
      */
@@ -135,6 +136,25 @@ class BenefitType extends Element
      * @var array|null
      */
     private array|null $_benefitTypePrivateMedicalInsurance;
+
+
+    // Public Methods
+    // =========================================================================
+    public function getBenefitTypeGroupCriticalIllnessCover(): bool|array|null
+    {
+        if(is_null($this->_benefitTypeGroupCriticalIllnessCover)) {
+            if(is_null($this->id)) {
+                return null;
+            }
+
+            if( ($this->_benefitTypeGroupCriticalIllnessCover = Staff::$plugin->groupBenefits->getBenefitTypeData($this->id, $this->benefitType)) === null) {
+                $this->_benefitTypeGroupCriticalIllnessCover = null;
+            }
+        }
+
+        return $this->_benefitTypeGroupCriticalIllnessCover ?: null;
+    }
+
 
     // Static Methods
     // =========================================================================

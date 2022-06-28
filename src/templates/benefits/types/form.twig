@@ -21,16 +21,18 @@
 
 {%- set details -%}
     <div class="content-pane">
-        {{ forms.selectField({
-            label: "Benefit Type"|t('staff-management'),
-            instructions: 'Choose a benefit type'|t('staff-management'),
-            id: 'benefitType',
-            name: 'benefitType',
-            value: type ? type.benefitType : null,
-            options: types ?? [],
-            errors: errors['benefitType'] ?? null,
-            required: true,
-        }) }} 
+        {%- if type.id ?? null == null -%}
+            {{ forms.selectField({
+                label: "Benefit Type"|t('staff-management'),
+                instructions: 'Choose a benefit type'|t('staff-management'),
+                id: 'benefitType',
+                name: 'benefitType',
+                value: type ? type.benefitType : null,
+                options: types ?? [],
+                errors: errors['benefitType'] ?? null,
+                required: true,
+            }) }} 
+        {%- endif -%}
 
         {{ forms.selectField({
             label: "Benefit Provider"|t('staff-management'),
@@ -50,31 +52,6 @@
             onLabel: 'Active',
             offLabel: 'Inactive'
         }) }}
-
-
-        {# {%- set statusOptions = [
-            {
-                label: 'Choose a status',
-                value: null
-            },
-            {
-                label: 'Active',
-                value: 'active'
-            },
-            {
-                label: 'Inactive',
-                value: 'inactive'
-            },
-        ] -%}
-        {{ forms.selectField({
-            label: "Status"|t('staff-management'),
-            id: 'status',
-            name: 'status',
-            value: type ? type.status : null,
-            options: statusOptions,
-            errors: errors['status'] ?? null,
-            required: false,
-        }) }} #}
     </div>
 {%- endset -%}
 
@@ -82,7 +59,7 @@
 
 {%- set content -%}
 
-    <h1 class="text-xl font-semibold text-gray-900">New Benefit Type</h1>
+    <h1 class="text-xl font-semibold text-gray-900">{{- type.id ?? null ? type.internalCode : 'New Benefit Type' }}</h1>
 
     <input type="hidden" name="action" value="staff-management/benefit-type/save" />
     <input type="hidden" name="typeId" value="{{- type ? type.id : '' -}}" />
