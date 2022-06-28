@@ -19,9 +19,15 @@ class BenefitTypes
     ];
 
     public static function saveGroupCriticalIllnessCover(array $fields): bool {
-        $type = new BenefitTypeGroupCriticalIllnessCover();
+
+        $type = BenefitTypeGroupCriticalIllnessCover::findOne($fields['id'] ?? null);
+
+        if(!$type){
+            $type = new BenefitTypeGroupCriticalIllnessCover();
+        }
 
         //generic
+        $type->id = $fields['id'] ?? null;
         $type->providerId = $fields['providerId'] ?? null;
         $type->internalCode = $fields['internalCode'] ?? null;
         $type->status = $fields['status'] ?? null;

@@ -6,7 +6,7 @@
     label: "Rate Review Guarantee Date"|t('staff-management'),
     id: 'rateReviewGuaranteeDate',
     name: 'benefitTypeGroupCriticalIllnessCover[rateReviewGuaranteeDate]',
-    value: type ? type.benefitTypeGroupCriticalIllnessCover["rateReviewGuaranteeDate"] : '',
+    value: type ? type.benefitTypeGroupCriticalIllnessCover["rateReviewGuaranteeDate"] ?? '' : '',
     errors: errors['rateReviewGuaranteeDate'] ?? null,
     autofocus: true,
     required: true,

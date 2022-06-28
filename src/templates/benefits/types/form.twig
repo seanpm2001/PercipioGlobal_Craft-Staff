@@ -32,7 +32,27 @@
             required: true,
         }) }} 
 
-        {%- set statusOptions = [
+        {{ forms.selectField({
+            label: "Benefit Provider"|t('staff-management'),
+            id: 'providerId',
+            name: 'providerId',
+            value: type ? type.providerId : null,
+            options: providers ?? [],
+            errors: errors['providerId'] ?? null,
+            required: false,
+        }) }}
+
+        {{ forms.lightswitchField({
+            label: "Status"|t('staff-management'),
+            id: 'status',
+            name: 'status',
+            on: (type.status ?? '') == 'active',
+            onLabel: 'Active',
+            offLabel: 'Inactive'
+        }) }}
+
+
+        {# {%- set statusOptions = [
             {
                 label: 'Choose a status',
                 value: null
@@ -54,7 +74,7 @@
             options: statusOptions,
             errors: errors['status'] ?? null,
             required: false,
-        }) }}
+        }) }} #}
     </div>
 {%- endset -%}
 
@@ -158,16 +178,6 @@
         required: false,
     }) }}
 
-    {{ forms.selectField({
-        label: "Benefit Provider"|t('staff-management'),
-        id: 'providerId',
-        name: 'providerId',
-        value: type ? type.providerId : null,
-        options: providers ?? [],
-        errors: errors['providerId'] ?? null,
-        required: false,
-    }) }}
-
     <hr/>
 
     {# {{ forms.elementSelectField({
@@ -183,8 +193,17 @@
     }) }} #}
 
 
-    <div id="tiptap-container"></div>
-    <input type="text" name="content" value="<p>This is content</p>" />
+
+    {%- set tiptapOptions = {
+        id: 'content',
+        label: 'Content',
+        instructions: 'Add a content with a short explanation about the benefit.',
+        name: 'content',
+    } -%}
+
+    <div id="description_tiptap">
+        <tiptap-field content="test" :options="{{- tiptapOptions | json_encode -}}"></tiptap-field>
+    </div>
     {%- if errors['content'] ?? null -%}
         <ul id="content-errors" class="errors"> 
             {%- for error in errors['content'] -%}                   
