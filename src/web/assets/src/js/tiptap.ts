@@ -25,13 +25,6 @@ const tiptapField = async () => {
     return tiptap
 }
 
-tiptapField().then( (tiptap) => {
+tiptapField().then( () => {
     console.log()
 })
-
-// Accept HMR as per: https://vitejs.dev/guide/api-hmr.html
-if (import.meta.hot) {
-    import.meta.hot.accept(() => {
-        console.log('HMR active')
-    });
-}

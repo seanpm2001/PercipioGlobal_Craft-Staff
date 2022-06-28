@@ -143,7 +143,7 @@ class Staff extends Plugin
     public function __construct($id, $parent = null, array $config = [])
     {
         $config['components'] = [
-            'staff' => __CLASS__,
+            'staff' => Staff::class,
             // Register the vite service
             'vite' => [
                 'class' => VitePluginService::class,
@@ -151,7 +151,7 @@ class Staff extends Plugin
                 'useDevServer' => true,
                 'devServerPublic' => 'http://localhost:3951',
                 'serverPublic' => 'http://localhost:3950',
-                'errorEntry' => 'src/js/payrun.ts',
+                'errorEntry' => 'src/js/staff.ts',
                 'devServerInternal' => 'http://craft-staff-buildchain:3951',
                 'checkDevServer' => true,
             ],
