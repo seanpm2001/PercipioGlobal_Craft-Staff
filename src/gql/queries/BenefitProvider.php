@@ -20,14 +20,14 @@ class BenefitProvider extends Query
         }
 
         return [
-            'benefitproviders' => [
+            'BenefitProviders' => [
                 'type' => Type::listOf(BenefitProviderInterface::getType()),
                 'args' => BenefitProviderArguments::getArguments(),
                 'resolve' => BenefitProviderResolver::class . '::resolve',
                 'description' => 'This query is used to query for all the benefit providers.',
                 'complexity' => GqlHelper::relatedArgumentComplexity(),
             ],
-            'benefitprovider' => [
+            'BenefitProvider' => [
                 'type' => BenefitProviderInterface::getType(),
                 'args' => BenefitProviderArguments::getArguments(),
                 'resolve' => BenefitProviderResolver::class . '::resolveOne',

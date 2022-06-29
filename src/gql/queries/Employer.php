@@ -23,14 +23,14 @@ class Employer extends Query
         }
 
         return [
-            'employers' => [
+            'Employers' => [
                 'type' => Type::listOf(EmployerInterface::getType()),
                 'args' => EmployerArguments::getArguments(),
                 'resolve' => EmployerResolver::class . '::resolve',
                 'description' => 'This query is used to query for employers.',
                 'complexity' => GqlHelper::relatedArgumentComplexity(),
             ],
-            'employer' => [
+            'Employer' => [
                 'type' => EmployerInterface::getType(),
                 'args' => EmployerArguments::getArguments(),
                 'resolve' => EmployerResolver::class . '::resolveOne',

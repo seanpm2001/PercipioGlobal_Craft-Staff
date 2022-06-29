@@ -19,14 +19,14 @@ class PayRun extends Query
     public static function getQueries($checkToken = true): array
     {
         return [
-            'payruns' => [
+            'PayRuns' => [
                 'type' => Type::listOf(PayRunInterface::getType()),
                 'args' => PayRunArguments::getArguments(),
                 'resolve' => PayRunResolver::class . '::resolve',
                 'description' => 'This query is used to query for all the payruns.',
                 'complexity' => GqlHelper::relatedArgumentComplexity(),
             ],
-            'payrun' => [
+            'PayRun' => [
                 'type' => PayRunInterface::getType(),
                 'args' => PayRunArguments::getArguments(),
                 'resolve' => PayRunResolver::class . '::resolveOne',

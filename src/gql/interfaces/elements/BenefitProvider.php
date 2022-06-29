@@ -55,7 +55,7 @@ class BenefitProvider extends Element
      */
     public static function getName(): string
     {
-        return 'EmployeeInterface';
+        return 'BenefitProviderInterface';
     }
 
     /**
