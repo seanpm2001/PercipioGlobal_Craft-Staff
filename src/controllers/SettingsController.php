@@ -37,7 +37,7 @@ class SettingsController extends Controller
         $variables = [];
 
         $pluginName = Staff::$settings->pluginName;
-        $templateTitle = Craft::t('staff-management', 'Group Benefits');
+        $templateTitle = Craft::t('staff-management', 'Group BenefitProvider');
 
         $variables['controllerHandle'] = 'group-benefits';
         $variables['pluginName'] = Staff::$settings->pluginName;

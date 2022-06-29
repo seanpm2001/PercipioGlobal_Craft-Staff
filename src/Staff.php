@@ -35,10 +35,12 @@ use percipiolondon\staff\elements\Employee as EmployeeElement;
 use percipiolondon\staff\elements\Employer as EmployerElement;
 use percipiolondon\staff\elements\PayRun as PayRunElement;
 use percipiolondon\staff\elements\PayRunEntry as PayRunEntryElement;
+use percipiolondon\staff\gql\interfaces\elements\BenefitProvider as BenefitProviderInterface;
 use percipiolondon\staff\gql\interfaces\elements\Employer as EmployerInterface;
 use percipiolondon\staff\gql\interfaces\elements\Employee as EmployeeInterface;
 use percipiolondon\staff\gql\interfaces\elements\PayRun as PayRunInterface;
 use percipiolondon\staff\gql\interfaces\elements\PayRunEntry as PayRunEntryInterface;
+use percipiolondon\staff\gql\queries\BenefitProvider as BenefitProviderQueries;
 use percipiolondon\staff\gql\queries\Employee as EmployeeQueries;
 use percipiolondon\staff\gql\queries\Employer as EmployerQueries;
 use percipiolondon\staff\gql\queries\PayRun as PayRunQueries;
@@ -264,7 +266,7 @@ class Staff extends Plugin
         }
         if ($currentUser->can('hub:benefits')) {
             $subNavs['benefits'] = [
-                'label' => Craft::t('staff-management', 'Benefits'),
+                'label' => Craft::t('staff-management', 'BenefitProvider'),
                 'url' => 'staff-management/benefits/providers',
             ];
         }
@@ -401,10 +403,10 @@ class Staff extends Plugin
                 'label' => Craft::t('staff-management', 'Dashboard'),
             ],
             'hub:benefits' => [
-                'label' => Craft::t('staff-management', 'Benefits'),
+                'label' => Craft::t('staff-management', 'BenefitProvider'),
             ],
             'hub:group-benefits' => [
-                'label' => Craft::t('staff-management', 'Group Benefits'),
+                'label' => Craft::t('staff-management', 'Group BenefitProvider'),
             ],
             'hub:pay-runs' => [
                 'label' => Craft::t('staff-management', 'Pay Runs'),
@@ -451,6 +453,7 @@ class Staff extends Plugin
             Gql::class,
             Gql::EVENT_REGISTER_GQL_TYPES,
             function(RegisterGqlTypesEvent $event) {
+                $event->types[] = BenefitProviderInterface::class;
                 $event->types[] = EmployerInterface::class;
                 $event->types[] = EmployeeInterface::class;
                 $event->types[] = PayRunInterface::class;
@@ -466,19 +469,21 @@ class Staff extends Plugin
             Gql::EVENT_REGISTER_GQL_SCHEMA_COMPONENTS,
             function(RegisterGqlSchemaComponentsEvent $event) {
                 $event->queries = array_merge($event->queries, [
+                    'Benefits' => [
+                        // benefits component with read action, labelled “View Benefit Providers” in UI
+                        'benefitproviders:read' => ['label' => Craft::t('staff-management', 'View Benefit Providers')],
+                    ],
                     'Staff Management' => [
                         // employers component with read action, labelled “View Employers” in UI
                         'employers:read' => ['label' => Craft::t('staff-management', 'View Employers')],
                         // employees component with read action, labelled “View Employees” in UI
                         'employees:read' => ['label' => Craft::t('staff-management', 'View Employees')],
-                        // payruns component with read action, labelled “View Payruns” in UI
-                        'payruns:read' => ['label' => Craft::t('staff-management', 'View Payruns')],
-                        // benefits component with read action, labelled “View Benefits” in UI
-                        'benefits:read' => ['label' => Craft::t('staff-management', 'View Benefits')],
                     ],
                     'PayrunEntries' => [
                         // payruns entries component with read action, labelled “View Payruns” in UI
                         'payrunentries:read' => ['label' => Craft::t('staff-management', 'View Payrun Entries')],
+                        // payruns component with read action, labelled “View Payruns” in UI
+                        'payruns:read' => ['label' => Craft::t('staff-management', 'View Payruns')],
                     ],
                 ]);
             }
@@ -493,6 +498,7 @@ class Staff extends Plugin
             function(RegisterGqlQueriesEvent $event) {
                 $event->queries = array_merge(
                     $event->queries,
+                    BenefitProviderQueries::getQueries(),
                     EmployerQueries::getQueries(),
                     EmployeeQueries::getQueries(),
                     PayRunQueries::getQueries(),

@@ -136,7 +136,7 @@ class BenefitProviderController extends Controller
     }
 
     /**
-     * Group Benefits Provider Detail display
+     * Group BenefitProvider Provider Detail display
      *
      * @return Response The rendered result
      * @throws \yii\web\NotFoundHttpException

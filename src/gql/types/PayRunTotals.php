@@ -350,7 +350,7 @@ class PayRunTotals
             'pbik' => [
                 'name' => 'pbik',
                 'type' => Type::float(),
-                'description' => 'Value of any Payrolled Benefits In Kind',
+                'description' => 'Value of any Payrolled BenefitProvider In Kind',
             ],
             'mapsMiles' => [
                 'name' => 'mapsMiles',
