@@ -111,7 +111,7 @@ class BenefitType extends Element
     /**
      * @var array|null
      */
-    private array|null $_benefitTypeDental;
+    private array|null $_benefitTypeDental = null;
     /**
      * @var array|null
      */
@@ -119,27 +119,42 @@ class BenefitType extends Element
     /**
      * @var array|null
      */
-    private array|null $_benefitTypeGroupDeathInService;
+    private array|null $_benefitTypeGroupDeathInService = null;
     /**
      * @var array|null
      */
-    private array|null $_benefitTypeGroupIncomeProtection;
+    private array|null $_benefitTypeGroupIncomeProtection = null;
     /**
      * @var array|null
      */
-    private array|null $_benefitTypeGroupLifeAssurance;
+    private array|null $_benefitTypeGroupLifeAssurance = null;
     /**
      * @var array|null
      */
-    private array|null $_benefitTypeHealthCashPlan;
+    private array|null $_benefitTypeHealthCashPlan = null;
     /**
      * @var array|null
      */
-    private array|null $_benefitTypePrivateMedicalInsurance;
+    private array|null $_benefitTypePrivateMedicalInsurance = null;
 
 
     // Public Methods
     // =========================================================================
+    public function getBenefitTypeDental(): bool|array|null
+    {
+        if(is_null($this->_benefitTypeDental)) {
+            if(is_null($this->id)) {
+                return null;
+            }
+
+            if( ($this->_benefitTypeDental = Staff::$plugin->groupBenefits->getBenefitTypeData($this->id, $this->benefitType)) === null) {
+                $this->_benefitTypeDental = null;
+            }
+        }
+
+        return $this->_benefitTypeDental ?: null;
+    }
+
     public function getBenefitTypeGroupCriticalIllnessCover(): bool|array|null
     {
         if(is_null($this->_benefitTypeGroupCriticalIllnessCover)) {
@@ -153,6 +168,21 @@ class BenefitType extends Element
         }
 
         return $this->_benefitTypeGroupCriticalIllnessCover ?: null;
+    }
+
+    public function getBenefitTypeGroupDeathInService(): bool|array|null
+    {
+        if(is_null($this->_benefitTypeGroupDeathInService)) {
+            if(is_null($this->id)) {
+                return null;
+            }
+
+            if( ($this->_benefitTypeGroupDeathInService = Staff::$plugin->groupBenefits->getBenefitTypeData($this->id, $this->benefitType)) === null) {
+                $this->_benefitTypeGroupDeathInService = null;
+            }
+        }
+
+        return $this->_benefitTypeGroupDeathInService ?: null;
     }
 
 
@@ -235,7 +265,7 @@ class BenefitType extends Element
             'benefitType'
         ], 'required'];
 
-        $rules[] = ['benefitTypeGroupCriticalIllnessCover', 'validateBenefitType'];
+        $rules[] = ['arrBenefitTypeGroupDeathInService', 'validateBenefitType'];
 
         return $rules;
     }
@@ -245,11 +275,15 @@ class BenefitType extends Element
     public function validateBenefitType() {
 
         switch($this->benefitType) {
-            case 'group-critical-illness-cover':
-                if(!DateTimeHelper::toDateTime($this->benefitTypeGroupCriticalIllnessCover['rateReviewGuaranteeDate'] ?? null)) {
-                    $this->addError('rateReviewGuaranteeDate', "There's no provider selected");
+            case 'group-death-in-service':
+                if(!DateTimeHelper::toDateTime($this->arrBenefitTypeGroupDeathInService['rateReviewGuaranteeDate'] ?? null)) {
+                    $this->addError('rateReviewGuaranteeDate', "There's no rate review guarantee date selected");
                 }
         }
+
+//        if(!DateTimeHelper::toDateTime($this->arrBenefitTypeGroupDeathInService['rateReviewGuaranteeDate'] ?? null)) {
+//            $this->addError('rateReviewGuaranteeDate', "There's no rate review guarantee date selected");
+//        }
     }
 
 
@@ -337,11 +371,18 @@ class BenefitType extends Element
             $fields['paymentFrequency'] = $this->paymentFrequency;
             $fields['commissionRate'] = $this->commissionRate;
 
+            $benefitTypes = new BenefitTypes();
+
             //save benefit type
             switch($this->benefitType) {
                 case 'group-critical-illness-cover':
-                    $fields = array_merge($fields, $this->benefitTypeGroupCriticalIllnessCover);
-                    BenefitTypes::saveGroupCriticalIllnessCover($fields);
+                    $fields = array_merge($fields, $this->arrBenefitTypeGroupCriticalIllnessCover);
+                    $benefitTypes->setGroupCriticalIllnessCover($fields);
+                    break;
+                case 'group-death-in-service':
+                    $fields = array_merge($fields, $this->arrBenefitTypeGroupDeathInService);
+                    $benefitTypes->setGroupDeathInService($fields);
+                    break;
             }
 
         } catch (\Exception $e) {

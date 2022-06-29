@@ -71,6 +71,8 @@ class BenefitTypeController extends Controller
             $type = BenefitType::findOne(['id' => $typeId, 'benefitType' => $benefitType]);
         }
 
+        $benefitTypesHelper = new BenefitTypes();
+
         $variables = [];
 
         $pluginName = Staff::$settings->pluginName;
@@ -83,6 +85,7 @@ class BenefitTypeController extends Controller
         $variables['selectedSubnavItem'] = 'benefits';
         $variables['type'] = $type;
         $variables['types'] = $this->_getTypes();
+        $variables['benefitTypes'] = $benefitTypesHelper->benefitTypes;
         $variables['providers'] = $this->_getProviders();
         $variables['errors'] = null;
 
@@ -123,7 +126,20 @@ class BenefitTypeController extends Controller
         $type->commissionRate = $request->getBodyParam('commissionRate') ? (float)$request->getBodyParam('commissionRate') : null;
         $type->benefitType = $request->getBodyParam('benefitType');
 
-        $type->arrBenefitTypeGroupCriticalIllnessCover = $request->getBodyParam('benefitTypeGroupCriticalIllnessCover');
+        //set the fields by the selected benefitType
+        if($type->benefitType) {
+            $benefitTypesHelper = new BenefitTypes();
+            switch($type->benefitType) {
+                case 'group-critical-illness-cover':
+                    $fields = array_merge($type->toArray(), $request->getBodyParam('arrBenefitTypeGroupCriticalIllnessCover'));
+                    $type->arrBenefitTypeGroupCriticalIllnessCover = $benefitTypesHelper->setGroupCriticalIllnessCover($fields, false);
+                    break;
+                case 'group-death-in-service':
+                    $fields = array_merge($type->toArray(), $request->getBodyParam('arrBenefitTypeGroupDeathInService'));
+                    $type->arrBenefitTypeGroupDeathInService = $benefitTypesHelper->setGroupDeathInService($fields, false);
+                    break;
+            }
+        }
 
         if($type->validate()) {
             $success = $elementsService->saveElement($type);
@@ -145,7 +161,7 @@ class BenefitTypeController extends Controller
 
         // Render the template
         if($success) {
-            return $this->renderTemplate('staff-management/benefits/types/detail', $variables);
+            return $this->redirect('staff-management/benefits/types');
         }
 
         return $this->renderTemplate('staff-management/benefits/types/form', $variables);

@@ -131,7 +131,7 @@ class m220623_062719_benefit_types extends Migration
                 'freeCoverLevelAutomaticAcceptanceLimit' => $this->float(),
                 'dateRefreshFrequency' => $this->enum('dateRefreshFrequency', ['annual', 'monthly']),
                 'pensionSchemeTaxReferenceNumber' => $this->string(255),
-                'dateOfTrustDeed' => $this->float(),
+                'dateOfTrustDeed' => $this->dateTime(),
                 'eventLimit' => $this->float()
             ]);
 

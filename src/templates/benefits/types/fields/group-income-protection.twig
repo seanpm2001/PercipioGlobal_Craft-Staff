@@ -2,12 +2,12 @@
 
 <hr/>
 
-<h2>Group Critical Illness Cover specific fields</h2>
+<h2>Group Income Protection specific fields</h2>
 
 {{ forms.dateField({
     label: "Rate Review Guarantee Date"|t('staff-management'),
-    id: 'rateReviewGuaranteeDate',
-    name: 'arrBenefitTypeGroupCriticalIllnessCover[rateReviewGuaranteeDate]',
+    id: 'arrBenefitTypeGroupIncomeProtection[rateReviewGuaranteeDate]',
+    name: 'arrBenefitTypeGroupIncomeProtection[rateReviewGuaranteeDate]',
     value: fields ? fields["rateReviewGuaranteeDate"] ?? '' : '',
     errors: errors['rateReviewGuaranteeDate'] ?? null,
 }) }}
@@ -28,8 +28,8 @@
 ] -%}
 {{ forms.selectField({
     label: "Costing Basis"|t('staff-management'),
-    id: 'costingBasis',
-    name: 'arrBenefitTypeGroupCriticalIllnessCover[costingBasis]',
+    id: 'arrBenefitTypeGroupIncomeProtection[costingBasis]',
+    name: 'arrBenefitTypeGroupIncomeProtection[costingBasis]',
     value: fields ? fields["costingBasis"] ?? '' : '',
     options: costingBasisOptions,
     errors: errors['costingBasis'] ?? null,
@@ -52,8 +52,8 @@
 ] -%}
 {{ forms.selectField({
     label: "Unit Rate Suffix"|t('staff-management'),
-    id: 'unitRateSuffix',
-    name: 'arrBenefitTypeGroupCriticalIllnessCover[unitRateSuffix]',
+    id: 'arrBenefitTypeGroupIncomeProtection[unitRateSuffix]',
+    name: 'arrBenefitTypeGroupIncomeProtection[unitRateSuffix]',
     value: fields ? fields["unitRateSuffix"] ?? '' : '',
     options: unitRateSuffixOptions,
     errors: errors['unitRateSuffix'] ?? null,
@@ -62,8 +62,8 @@
 
 {{ forms.textField({
     label: "Unit Rate"|t('staff-management'),
-    id: 'unitRate',
-    name: 'arrBenefitTypeGroupCriticalIllnessCover[unitRate]',
+    id: 'arrBenefitTypeGroupIncomeProtection[unitRate]',
+    name: 'arrBenefitTypeGroupIncomeProtection[unitRate]',
     type: 'number',
     value: fields ? fields['unitRate'] : '',
     errors: errors['unitRate'] ?? null,
@@ -72,8 +72,8 @@
 
 {{ forms.textField({
     label: "Free Cover Level Automatic Acceptance Limit"|t('staff-management'),
-    id: 'freeCoverLevelAutomaticAcceptanceLimit',
-    name: 'arrBenefitTypeGroupCriticalIllnessCover[freeCoverLevelAutomaticAcceptanceLimit]',
+    id: 'arrBenefitTypeGroupIncomeProtection[freeCoverLevelAutomaticAcceptanceLimit]',
+    name: 'arrBenefitTypeGroupIncomeProtection[freeCoverLevelAutomaticAcceptanceLimit]',
     type: 'number',
     value: fields ? fields['freeCoverLevelAutomaticAcceptanceLimit'] : '',
     errors: errors['freeCoverLevelAutomaticAcceptanceLimit'] ?? null,
@@ -96,8 +96,8 @@
 ] -%}
 {{ forms.selectField({
     label: "Date Refresh Frequency"|t('staff-management'),
-    id: 'dateRefreshFrequency',
-    name: 'arrBenefitTypeGroupCriticalIllnessCover[dateRefreshFrequency]',
+    id: 'arrBenefitTypeGroupIncomeProtection[dateRefreshFrequency]',
+    name: 'arrBenefitTypeGroupIncomeProtection[dateRefreshFrequency]',
     value: fields ? fields["dateRefreshFrequency"] ?? '' : '',
     options: dateRefreshFrequencyOptions,
     errors: errors['dateRefreshFrequency'] ?? null,
