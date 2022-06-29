@@ -2,12 +2,12 @@
     import { useEditor, EditorContent } from '@tiptap/vue-3'
     import CharacterCount from '@tiptap/extension-character-count'
     import StarterKit from '@tiptap/starter-kit'
-    import { ref, watch } from 'vue'
+    import { ref } from 'vue'
 
     const props = defineProps({
         content: {
             type: String,
-            default: '<p>The benefit provider description field.</p>'
+            default: ''
         }
     })
 
@@ -40,7 +40,7 @@
         content: props.content,
         editorProps: {
             attributes: {
-                class: 'prose prose-sm sm:prose mx-auto focus:outline-none max-w-full p-4 focus:outline-none focus:shadow-none'
+                class: 'prose prose-sm sm:prose mx-auto focus:outline-none max-w-full p-4 focus:outline-none focus:shadow-none whitespace-pre-wrap'
             }
         },
         extensions: [
@@ -56,16 +56,13 @@
             }),
             CharacterCount,
         ],
+        parseOptions: {
+            preserveWhitespace: 'full'
+        },
         onUpdate: ({ editor }) => {
             let content = editor.getHTML()
             emit('update:content', content)
         }
-    })
-
-    watch(() => props.content, (newValue, oldValue) => {
-        const isSame = newValue === oldValue
-        if (isSame) return
-        editor.value?.commands.setContent(newValue, false)
     })
 
     const setFocus = () => {
@@ -92,7 +89,7 @@
                         editor.isActive('bold') ? 'bg-gray-500/40' : ''
                     ]
                 " 
-                @click.prevent="editor.chain().focus().toggleBold().run()"
+                @click.prevent="editor?.chain().focus().toggleBold().run()"
             >
                 <span class="w-4 h-4 inline-flex fill-current">
                     <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -118,7 +115,7 @@
             </button>
         </div>
 
-        <editor-content :editor="editor"  />
+        <editor-content :editor="editor" />
 
         <div class="border-t border-solid border-gray-200 flex flex-row flex-nowrap space-x-2 px-4 py-2 rounded-[3px]">
             <span class="font-mono text-sm">

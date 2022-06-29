@@ -2,7 +2,6 @@ import { defineConfig } from 'vite'
 import vue from '@vitejs/plugin-vue'
 import ViteRestart from 'vite-plugin-restart'
 import viteCompression from 'vite-plugin-compression'
-import manifestSRI from 'vite-plugin-manifest-sri'
 import { visualizer } from 'rollup-plugin-visualizer'
 import eslintPlugin from 'vite-plugin-eslint'
 import { nodeResolve } from '@rollup/plugin-node-resolve'
@@ -39,13 +38,13 @@ export default defineConfig(({command}) => ({
         ViteRestart({
             reload: [
                 './src/templates/**/*',
+                '../src/**/*',
             ],
         }),
         vue(),
         viteCompression({
             filter: /\.(js|mjs|json|css|map)$/i
         }),
-        manifestSRI(),
         visualizer({
             filename: '../src/web/assets/dist/stats.html',
             template: 'treemap',

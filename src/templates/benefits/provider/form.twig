@@ -1,14 +1,14 @@
-{%- requirePermission "hub:benefits" -%}
+{%- requirePermission 'hub:benefits' -%}
 
 {%- extends 'staff-management/_layouts/hub-cp.twig' -%}
-{%- import "_includes/forms" as forms -%}
+{%- import '_includes/forms' as forms -%}
 
 {%- set sidebar -%}
-    {%- include "staff-management/benefits/_nav" -%}
+    {%- include 'staff-management/benefits/_nav' -%}
 {%- endset -%}
 
 {%- block actionButton -%}
-    {%- include "staff-management/_atoms/buttons/button--submit" with {
+    {%- include 'staff-management/_atoms/buttons/button--submit' with {
         options: {
             title: 'Save Benefit Provider',
             action: 'staff-management/benefit-provider/save'
@@ -71,23 +71,17 @@
         label: 'Provider Description',
         instructions: 'Add a description with a short explanation about the provider.',
         name: 'content',
+        description: provider.content ?? 'this is a test from the template',
     } -%}
 
     <div id="description_tiptap">
-        <tiptap-field content="test" :options="{{- tiptapOptions | json_encode -}}"></tiptap-field>
+        <tiptap-field 
+            content="{{- tiptapOptions.description -}}"
+            :options="{{- tiptapOptions | json_encode -}}"
+        >
+        </tiptap-field>
     </div>
-    {%- if errors['content'] ?? null -%}
-        <ul id="content-errors" class="errors"> 
-            {%- for error in errors['content'] -%}                   
-                <li>
-                    <span class="visually-hidden">Error:</span>
-                    {{- error -}}
-                </li>
-            {%- endfor -%}
-        </ul>
-    {%- endif -%}
 
-    
     {%- if errors['content'] ?? null -%}
         <ul id="content-errors" class="errors"> 
             {%- for error in errors['content'] -%}                   
@@ -108,5 +102,6 @@
             'percipiolondon\\staff\\assetbundles\\staff\\StaffAsset'
         ]
     } -%}
-    {{  craft.staff.register('src/js/tiptap.ts', false, tagOptions, tagOptions) }}
+    {{- craft.staff.register('src/js/tiptap.ts', false, tagOptions) -}}
 {%- endblock -%}
+

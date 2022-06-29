@@ -14,7 +14,7 @@
     } 
 
     const props = withDefaults(defineProps<Props>(), {
-        content: '<p>I’m running Tiptap with Vue.js. 🎉</p>'
+        content: ''
     })
 </script>
 
@@ -42,12 +42,12 @@
             </span>
         </div>
 
-        <editor v-model="content" />
+        <editor v-model:content="content" />
 
         <input 
             type="hidden"
             :id="'fields-' + options.id"
-            :name="'fields-' + options.name"
+            :name="options.name"
             :aria-describedby="'fields-' + options.name + '-instructions'"
             :value="content"
         >
