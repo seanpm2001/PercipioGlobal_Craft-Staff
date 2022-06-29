@@ -17,11 +17,12 @@ export default defineConfig(({command}) => ({
         sourcemap: true,
         rollupOptions: {
             input: {
-                tiptap: 'src/js/tiptap.ts',
-                employers: 'src/js/employers.ts',
-                payruns: 'src/js/payruns.ts',
-                details: 'src/js/payrunDetails.ts',
-                staff: 'src/js/staff.ts',
+                benefitTypes: './src/js/benefitTypes.ts',
+                employers: './src/js/employers.ts',
+                details: './src/js/payrunDetails.ts',
+                payruns: './src/js/payruns.ts',
+                staff: './src/js/staff.ts',
+                tiptap: './src/js/tiptap.ts',
             },
             output: {
                 sourcemap: true

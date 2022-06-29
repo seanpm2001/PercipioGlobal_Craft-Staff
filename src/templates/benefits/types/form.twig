@@ -6,6 +6,17 @@
 {#{% css "/lib/redactor/redactor.css" %}#}
 {#{% js "/lib/redactor/redactor.js" %}#}
 
+{%- set fields = null -%}
+{%- set extendedFields = null -%}
+{%- switch(type.benefitType ?? null) -%}
+    {%- case 'group-critical-illness-cover' -%}
+        {%- set fields = type.arrBenefitTypeGroupCriticalIllnessCover ?? type.benefitTypeGroupCriticalIllnessCover ?? null -%}
+        {%- set extendedFields = 'staff-management/benefits/types/fields/group-critical-illness-cover' -%}
+    {%- case 'group-death-in-service' -%}
+        {%- set fields = type.arrBenefitTypeGroupDeathInService ?? type.benefitTypeGroupDeathInService ?? null -%}
+        {%- set extendedFields = 'staff-management/benefits/types/fields/group-death-in-service' -%}
+{%- endswitch -%}
+
 {%- set sidebar -%}
     {%- include "staff-management/benefits/_nav" -%}
 {%- endset -%}
@@ -32,6 +43,12 @@
                 errors: errors['benefitType'] ?? null,
                 required: true,
             }) }} 
+
+            <div id="benefit-types-container">
+                <benefit-type-field></benefit-type-field>
+            </div>
+        {%- else -%}
+            <input type="hidden" name="benefitType" value="{{- type.benefitType ?? '' -}}" />
         {%- endif -%}
 
         {{ forms.selectField({
@@ -59,7 +76,7 @@
 
 {%- set content -%}
 
-    <h1 class="text-xl font-semibold text-gray-900">{{- type.id ?? null ? type.internalCode : 'New Benefit Type' }}</h1>
+    <h1 class="text-xl font-semibold text-gray-900">{{- type.id ?? null ? ((benefitTypes[type.benefitType] ?? 'Benefit Type') ~ ': ' ~ type.internalCode) : 'New Benefit Type' }}</h1>
 
     <input type="hidden" name="action" value="staff-management/benefit-type/save" />
     <input type="hidden" name="typeId" value="{{- type ? type.id : '' -}}" />
@@ -169,8 +186,6 @@
         errors: errors['providerId'] ?? null,
     }) }} #}
 
-
-
     {%- set tiptapOptions = {
         id: 'content',
         label: 'Content',
@@ -191,10 +206,21 @@
             {%- endfor -%}
         </ul>
     {%- endif -%}
-
-    <hr/>
-
-    {%- include 'staff-management/benefits/types/fields/group-critical-illness-cover' -%}
+    {%- if extendedFields -%}
+        {%- include extendedFields ignore missing with {
+            fields: fields
+        } -%}
+    {%- else -%}
+        {%- for option in types -%}
+            {%- if option.value -%}
+                <div id="fields-{{- option.value -}}">
+                    {%- include 'staff-management/benefits/types/fields/'~option.value ignore missing with {
+                        fields: fields
+                    } -%}
+                </div>
+            {%- endif -%}
+        {%- endfor -%}
+    {%- endif -%}
 
 {%- endset -%}
 
@@ -205,5 +231,6 @@
             'percipiolondon\\staff\\assetbundles\\staff\\StaffAsset'
         ]
     } -%}
-    {{  craft.staff.register('src/js/tiptap.ts', false, tagOptions) }}
+    {{  craft.staff.register('src/js/tiptap.ts', false, tagOptions, tagOptions) }}
+    {{  craft.staff.register('src/js/benefitType.ts', false, tagOptions, tagOptions) }}
 {%- endblock -%}

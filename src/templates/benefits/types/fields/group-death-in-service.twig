@@ -2,12 +2,12 @@
 
 <hr/>
 
-<h2>Group Critical Illness Cover specific fields</h2>
+<h2>Group Death In Service specific fields</h2>
 
 {{ forms.dateField({
     label: "Rate Review Guarantee Date"|t('staff-management'),
-    id: 'rateReviewGuaranteeDate',
-    name: 'arrBenefitTypeGroupCriticalIllnessCover[rateReviewGuaranteeDate]',
+    id: 'arrBenefitTypeGroupDeathInService[rateReviewGuaranteeDate]',
+    name: 'arrBenefitTypeGroupDeathInService[rateReviewGuaranteeDate]',
     value: fields ? fields["rateReviewGuaranteeDate"] ?? '' : '',
     errors: errors['rateReviewGuaranteeDate'] ?? null,
 }) }}
@@ -28,8 +28,8 @@
 ] -%}
 {{ forms.selectField({
     label: "Costing Basis"|t('staff-management'),
-    id: 'costingBasis',
-    name: 'arrBenefitTypeGroupCriticalIllnessCover[costingBasis]',
+    id: 'arrBenefitTypeGroupDeathInService[costingBasis]',
+    name: 'arrBenefitTypeGroupDeathInService[costingBasis]',
     value: fields ? fields["costingBasis"] ?? '' : '',
     options: costingBasisOptions,
     errors: errors['costingBasis'] ?? null,
@@ -52,8 +52,8 @@
 ] -%}
 {{ forms.selectField({
     label: "Unit Rate Suffix"|t('staff-management'),
-    id: 'unitRateSuffix',
-    name: 'arrBenefitTypeGroupCriticalIllnessCover[unitRateSuffix]',
+    id: 'arrBenefitTypeGroupDeathInService[unitRateSuffix]',
+    name: 'arrBenefitTypeGroupDeathInService[unitRateSuffix]',
     value: fields ? fields["unitRateSuffix"] ?? '' : '',
     options: unitRateSuffixOptions,
     errors: errors['unitRateSuffix'] ?? null,
@@ -62,8 +62,8 @@
 
 {{ forms.textField({
     label: "Unit Rate"|t('staff-management'),
-    id: 'unitRate',
-    name: 'arrBenefitTypeGroupCriticalIllnessCover[unitRate]',
+    id: 'arrBenefitTypeGroupDeathInService[unitRate]',
+    name: 'arrBenefitTypeGroupDeathInService[unitRate]',
     type: 'number',
     value: fields ? fields['unitRate'] : '',
     errors: errors['unitRate'] ?? null,
@@ -72,8 +72,8 @@
 
 {{ forms.textField({
     label: "Free Cover Level Automatic Acceptance Limit"|t('staff-management'),
-    id: 'freeCoverLevelAutomaticAcceptanceLimit',
-    name: 'arrBenefitTypeGroupCriticalIllnessCover[freeCoverLevelAutomaticAcceptanceLimit]',
+    id: 'arrBenefitTypeGroupDeathInService[freeCoverLevelAutomaticAcceptanceLimit]',
+    name: 'arrBenefitTypeGroupDeathInService[freeCoverLevelAutomaticAcceptanceLimit]',
     type: 'number',
     value: fields ? fields['freeCoverLevelAutomaticAcceptanceLimit'] : '',
     errors: errors['freeCoverLevelAutomaticAcceptanceLimit'] ?? null,
@@ -96,10 +96,37 @@
 ] -%}
 {{ forms.selectField({
     label: "Date Refresh Frequency"|t('staff-management'),
-    id: 'dateRefreshFrequency',
-    name: 'arrBenefitTypeGroupCriticalIllnessCover[dateRefreshFrequency]',
+    id: 'arrBenefitTypeGroupDeathInService[dateRefreshFrequency]',
+    name: 'arrBenefitTypeGroupDeathInService[dateRefreshFrequency]',
     value: fields ? fields["dateRefreshFrequency"] ?? '' : '',
     options: dateRefreshFrequencyOptions,
     errors: errors['dateRefreshFrequency'] ?? null,
+    required: false,
+}) }}
+
+{{ forms.textField({
+    label: "Pension Scheme Tax Reference Number"|t('staff-management'),
+    id: 'arrBenefitTypeGroupDeathInService[pensionSchemeTaxReferenceNumber]',
+    name: 'arrBenefitTypeGroupDeathInService[pensionSchemeTaxReferenceNumber]',
+    value: fields ? fields['pensionSchemeTaxReferenceNumber'] : '',
+    errors: errors['pensionSchemeTaxReferenceNumber'] ?? null,
+    required: false,
+}) }}
+
+{{ forms.dateField({
+    label: "Date Of Trust Deed"|t('staff-management'),
+    id: 'dateOfTrustDeed',
+    name: 'arrBenefitTypeGroupDeathInService[dateOfTrustDeed]',
+    value: fields ? fields["dateOfTrustDeed"] ?? '' : '',
+    errors: errors['dateOfTrustDeed'] ?? null,
+}) }}
+
+{{ forms.textField({
+    label: "Event Limit"|t('staff-management'),
+    id: 'arrBenefitTypeGroupDeathInService[eventLimit]',
+    name: 'arrBenefitTypeGroupDeathInService[eventLimit]',
+    type: 'number',
+    value: fields ? fields['eventLimit'] : '',
+    errors: errors['eventLimit'] ?? null,
     required: false,
 }) }}
