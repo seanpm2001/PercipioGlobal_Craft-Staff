@@ -19,24 +19,24 @@
     ]
   },
   "src/js/payrunDetails.ts": {
-    "file": "assets/details.4e731f1b.js",
+    "file": "assets/details.9a611a00.js",
     "src": "src/js/payrunDetails.ts",
     "isEntry": true,
     "imports": [
       "_vue.esm-bundler.737af873.js",
       "_useApolloClient.71b035f7.js",
-      "_status--synced.7ac39f7a.js",
+      "_status--synced.8524e11b.js",
       "_plugin-vue_export-helper.21dcd24c.js"
     ]
   },
   "src/js/payruns.ts": {
-    "file": "assets/payruns.5d87eedd.js",
+    "file": "assets/payruns.4378cfee.js",
     "src": "src/js/payruns.ts",
     "isEntry": true,
     "imports": [
       "_vue.esm-bundler.737af873.js",
       "_useApolloClient.71b035f7.js",
-      "_status--synced.7ac39f7a.js",
+      "_status--synced.8524e11b.js",
       "_plugin-vue_export-helper.21dcd24c.js"
     ]
   },
@@ -69,8 +69,8 @@
       "_plugin-vue_export-helper.21dcd24c.js"
     ]
   },
-  "_status--synced.7ac39f7a.js": {
-    "file": "assets/status--synced.7ac39f7a.js",
+  "_status--synced.8524e11b.js": {
+    "file": "assets/status--synced.8524e11b.js",
     "imports": [
       "_useApolloClient.71b035f7.js",
       "_vue.esm-bundler.737af873.js"
