@@ -2,7 +2,7 @@ import { gql } from 'graphql-tag'
 
 export const PAYRUNS = gql`
     query PayRuns($employerId: [ID], $taxYear: [String]) {
-        PayRuns(employerId: $employerId, taxYear: $taxYear, orderBy: "startDate desc") {
+        payruns: PayRuns(employerId: $employerId, taxYear: $taxYear, orderBy: "startDate desc") {
             id,
             employerId
             taxYear
