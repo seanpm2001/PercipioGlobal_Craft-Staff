@@ -142,15 +142,15 @@ class PayRuns extends Component
             $employee = $employee ? $employee->toArray() : [];
 
             //personalDetails
-            $personalDetails = PersonalDetails::findOne($employee['personalDetailsId'] ?? null);
+            $personalDetails = PersonalDetails::findOne(['employeeId' => ($employee['id'] ?? null)]);
             $personalDetails = $personalDetails ? $personalDetails->toArray() : null;
 
             //employmentDetails
-            $employmentDetails = EmploymentDetails::findOne($employee['employmentDetailsId'] ?? null);
+            $employmentDetails = EmploymentDetails::findOne(['employeeId' => ($employee['id'] ?? null)]);
             $employmentDetails = $employmentDetails ? $employmentDetails->toArray() : null;
 
             //totals
-            $totals = PayRunTotals::findOne($entry['totalsId'] ?? null);
+            $totals = PayRunTotals::findOne(["payRunEntryId" => $entry['id'] ?? null]);
             $totals = $totals ? $totals->toArray() : null;
 
             //payLines
