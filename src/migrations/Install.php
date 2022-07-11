@@ -1436,6 +1436,9 @@ class Install extends Migration
         $this->createIndex(null, Table::UMBRELLA_PAYMENT, 'payRunEntryId', false);
         $this->createIndex(null, Table::VALUE_OVERRIDE, 'payRunEntryId', false);
 
+        // Request
+        $this->createIndex(null, Table::REQUESTS, 'status', false);
+
         //Pensions [id]
 //        $this->createIndex(null, Table::PAY_LINES, 'pensionId', false);
 //        $this->createIndex(null, Table::PENSION_SCHEME, 'pensionId', false);
