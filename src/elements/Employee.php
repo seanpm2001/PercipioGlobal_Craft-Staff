@@ -45,10 +45,10 @@ class Employee extends Element
     public $personalDetailsObject;
     public ?bool $isDirector = null;
 
-    private ?$_employmentDetails = null;
-    private ?$_leaveSettings = null;
-    private ?$_personalDetails = null;
-    private ?$_employer = null;
+    private ?array $_employmentDetails = null;
+    private ?array $_leaveSettings = null;
+    private ?array $_personalDetails = null;
+    private ?array $_employer = null;
 
     // Static Methods
     // =========================================================================

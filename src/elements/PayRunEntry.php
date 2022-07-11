@@ -64,9 +64,9 @@ class PayRunEntry extends Element
     public ?string $paymentAfterLearning = null;
     public ?string $pdf = null;
 
-    private $_totals;
-    private $_employee;
-    private $_pensionSummary;
+    private ?array $_totals;
+    private ?array $_employee;
+    private ?array $_pensionSummary;
 
     // Static Methods
     // =========================================================================

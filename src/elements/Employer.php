@@ -43,10 +43,10 @@ class Employer extends Element
     public $defaultPayOptions = null;
     public ?string $employeeCount = null;
 
-    private ?$_currentPayRun = null;
-    private ?$_defaultPayOptions = null;
-    private ?$_hmrcDetails = null;
-    private ?$_address = null;
+    private ?array $_currentPayRun = null;
+    private ?array $_defaultPayOptions = null;
+    private ?array $_hmrcDetails = null;
+    private ?array $_address = null;
 
     // Static Methods
     // =========================================================================
