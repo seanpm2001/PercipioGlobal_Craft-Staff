@@ -304,9 +304,8 @@ class Install extends Migration
                 //fields
                 'dateAdministered' => $this->dateTime()->notNull(),
                 'data' => $this->longText(),
-                'section' => $this->string()->notNull(),
-                'element' => $this->string()->notNull(),
-                'status' => $this->string()->notNull(),
+                'type' => $this->string()->notNull(),
+                'status' => $this->enum('contributionLevelType', ['pending', 'approved', 'declined', 'canceled']),
                 'note' => $this->mediumText(),
             ]);
 
