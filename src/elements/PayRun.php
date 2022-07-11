@@ -35,26 +35,26 @@ class PayRun extends Element
     // Public Properties
     // =========================================================================
 
-    public string $staffologyId;
-    public ?string $taxYear;
-    public ?string $taxMonth;
-    public ?string $payPeriod;
-    public ?string $ordinal;
-    public ?string $period;
-    public ?string $startDate;
-    public ?string $endDate;
-    public ?string $paymentDate;
-    public ?string $employeeCount;
-    public ?string $subContractorCount;
-    public ?string $state;
-    public ?string $dateClosed;
-    public ?string $pdf;
-    public ?string $url;
-    public ?bool $isClosed;
-    public ?int $employerId;
+    public ?string $staffologyId = null;
+    public ?string $taxYear = null;
+    public ?string $taxMonth = null;
+    public ?string $payPeriod = null;
+    public ?string $ordinal = null;
+    public ?string $period = null;
+    public ?string $startDate = null;
+    public ?string $endDate = null;
+    public ?string $paymentDate = null;
+    public ?string $employeeCount = null;
+    public ?string $subContractorCount = null;
+    public ?string $state = null;
+    public ?string $dateClosed = null;
+    public ?string $pdf = null;
+    public ?string $url = null;
+    public ?bool $isClosed = null;
+    public ?int $employerId = null;
 
-    private $_totals;
-    private $_employer;
+    private ?array $_totals = null;
+    private ?array $_employer = null;
 
     // Static Methods
     // =========================================================================

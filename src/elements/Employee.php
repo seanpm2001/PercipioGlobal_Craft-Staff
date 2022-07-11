@@ -37,18 +37,18 @@ class Employee extends Element
     // Public Properties
     // =========================================================================
 
-    public string $staffologyId;
-    public ?int $employerId;
-    public ?int $userId;
-    public ?string $status;
-    public ?string $niNumber;
+    public ?string $staffologyId = null;
+    public ?int $employerId = null;
+    public ?int $userId = null;
+    public ?string $status = null;
+    public ?string $niNumber = null;
     public $personalDetailsObject;
-    public ?bool $isDirector;
+    public ?bool $isDirector = null;
 
-    private $_employmentDetails;
-    private $_leaveSettings;
-    private $_personalDetails;
-    private $_employer;
+    private ?array $_employmentDetails = null;
+    private ?array $_leaveSettings = null;
+    private ?array $_personalDetails = null;
+    private ?array $_employer = null;
 
     // Static Methods
     // =========================================================================
