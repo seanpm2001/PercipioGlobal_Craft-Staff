@@ -32,9 +32,9 @@ class BenefitProvider extends Element
     // =========================================================================
 
     public string $name = '';
-    public string|null $url = null;
-    public int|null $logo = null;
-    public string|null $content = null;
+    public ?string $url = null;
+    public ?int $logo = null;
+    public ?string $content = null;
 
     // Static Methods
     // =========================================================================
