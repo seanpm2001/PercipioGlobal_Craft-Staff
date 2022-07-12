@@ -19,8 +19,7 @@ use percipiolondon\staff\db\Table;
  * @property int $employeeId;
  * @property string $administerId;
  * @property string $data;
- * @property string $section;
- * @property string $element;
+ * @property string $type;
  * @property string $status;
  * @property string $note;
  */

@@ -14,6 +14,7 @@ use Craft;
 use craft\base\Plugin;
 use craft\console\Application as ConsoleApplication;
 use craft\events\RegisterComponentTypesEvent;
+use craft\events\RegisterGqlMutationsEvent;
 use craft\events\RegisterGqlQueriesEvent;
 use craft\events\RegisterGqlSchemaComponentsEvent;
 use craft\events\RegisterGqlTypesEvent;
@@ -37,10 +38,12 @@ use percipiolondon\staff\gql\interfaces\elements\Employer as EmployerInterface;
 use percipiolondon\staff\gql\interfaces\elements\Employee as EmployeeInterface;
 use percipiolondon\staff\gql\interfaces\elements\PayRun as PayRunInterface;
 use percipiolondon\staff\gql\interfaces\elements\PayRunEntry as PayRunEntryInterface;
+use percipiolondon\staff\gql\mutations\RequestMutation;
 use percipiolondon\staff\gql\queries\Employee as EmployeeQueries;
 use percipiolondon\staff\gql\queries\Employer as EmployerQueries;
 use percipiolondon\staff\gql\queries\PayRun as PayRunQueries;
 use percipiolondon\staff\gql\queries\PayRunEntry as PayRunEntryQueries;
+use percipiolondon\staff\gql\resolvers\mutations\Request;
 use percipiolondon\staff\models\Settings;
 use percipiolondon\staff\plugin\Services as StaffServices;
 use percipiolondon\staff\services\Addresses;
@@ -195,6 +198,7 @@ class Staff extends Plugin
         $this->_registerGqlSchemaComponents();
 
         $this->_registerGqlQueries();
+        $this->_registerGqlMutations();
         $this->_registerElementTypes();
         $this->_registerControllers();
 
@@ -461,6 +465,12 @@ class Staff extends Plugin
                         // payruns entries component with read action, labelled “View Payruns” in UI
                         'payrunentries:read' => ['label' => Craft::t('staff-management', 'View Payrun Entries')],
                     ],
+                    'Requests' => [
+                        // request component with read action, labelled "View Request" in UI
+                        'request:read' => ['label' => Craft::t('staff-management', 'View Requests')],
+                        // request component with read action, labelled "View Request" in UI
+                        'request:edit' => ['label' => Craft::t('staff-management', 'Edit Requests')],
+                    ]
                 ]);
             }
         );
@@ -478,6 +488,20 @@ class Staff extends Plugin
                     EmployeeQueries::getQueries(),
                     PayRunQueries::getQueries(),
                     PayRunEntryQueries::getQueries(),
+                );
+            }
+        );
+    }
+
+    private function _registerGqlMutations()
+    {
+        Event::on(
+            Gql::class,
+            Gql::EVENT_REGISTER_GQL_MUTATIONS,
+            function(RegisterGqlMutationsEvent $event) {
+                $event->mutations = array_merge(
+                    $event->mutations,
+                    RequestMutation::getMutations(),
                 );
             }
         );
