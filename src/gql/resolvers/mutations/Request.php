@@ -13,7 +13,7 @@ class Request extends ElementMutationResolver
 {
     protected $immutableAttributes = ['id', 'uid'];
 
-    public function saveRequest($source, array $arguments, $context, ResolveInfo $resolveInfo)
+    public function createRequest($source, array $arguments, $context, ResolveInfo $resolveInfo)
     {
         $this->requireSchemaAction('request', 'edit');
 

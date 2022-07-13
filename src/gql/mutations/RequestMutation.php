@@ -20,12 +20,12 @@ class RequestMutation extends Mutation
 
         if(GqlHelper::canSchema('request','edit')) {
             // Create a new request
-            $mutations['createRequest'] = [
-                'name' => 'createRequest',
+            $mutations['CreateRequest'] = [
+                'name' => 'CreateRequest',
                 'args' => [
                     'employerId' => Type::nonNull(Type::string())
                 ],
-                'resolve' => [$resolver, 'saveRequest'],
+                'resolve' => [$resolver, 'createRequest'],
                 'description' => 'Saves a new request.',
                 'type' => Request::getType()
             ];
