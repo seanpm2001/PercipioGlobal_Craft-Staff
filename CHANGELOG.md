@@ -4,6 +4,15 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](http://keepachangelog.com/) and this project adheres to [Semantic Versioning](http://semver.org/).
 
+## 1.0.0-beta.13 - 2022-14-07
+
+### Changed
+- Changed typings of Payrun to PayRunElementInterface for better type guarding
+
+### Fixed
+- Fixed SchemaVersion
+- Fixed some typings
+
 ## 1.0.0-beta.12 - 2022-14-07
 
 ### Changed
