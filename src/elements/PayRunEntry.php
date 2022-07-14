@@ -33,40 +33,40 @@ class PayRunEntry extends Element
     // Public Properties
     // =========================================================================
 
-    public string $staffologyId;
-    public int $payRunId;
-    public int $employerId;
-    public int $employeeId;
-    public ?string $taxYear;
-    public ?string $startDate;
-    public ?string $endDate;
-    public ?string $note;
-    public ?string $bacsSubReference;
-    public ?string $bacsHashcode;
-    public ?string $percentageOfWorkingDaysPaidAsNormal;
-    public ?string $workingDaysNotPaidAsNormal;
-    public ?string $payPeriod;
-    public ?string $ordinal;
-    public ?string $period;
-    public ?string $isNewStarter;
-    public ?string $unpaidAbsence;
-    public ?string $hasAttachmentOrders;
-    public ?string $paymentDate;
-    public ?string $periodOverrides;
-    public ?string $forcedCisVatAmount;
-    public ?string $holidayAccrued;
-    public ?string $state;
-    public ?string $isClosed;
-    public ?string $manualNi;
-    public ?string $payrollCodeChanged;
-    public ?string $aeNotEnroledWarning;
-    public ?string $receivingOffsetPay;
-    public ?string $paymentAfterLearning;
-    public ?string $pdf;
+    public ?string $staffologyId;
+    public ?int $payRunId = null;
+    public ?int $employerId = null;
+    public ?int $employeeId = null;
+    public ?string $taxYear = null;
+    public ?string $startDate = null;
+    public ?string $endDate = null;
+    public ?string $note = null;
+    public ?string $bacsSubReference = null;
+    public ?string $bacsHashcode = null;
+    public ?string $percentageOfWorkingDaysPaidAsNormal = null;
+    public ?string $workingDaysNotPaidAsNormal = null;
+    public ?string $payPeriod = null;
+    public ?string $ordinal = null;
+    public ?string $period = null;
+    public ?string $isNewStarter = null;
+    public ?string $unpaidAbsence = null;
+    public ?string $hasAttachmentOrders = null;
+    public ?string $paymentDate = null;
+    public ?string $periodOverrides = null;
+    public ?string $forcedCisVatAmount = null;
+    public ?string $holidayAccrued = null;
+    public ?string $state = null;
+    public ?string $isClosed = null;
+    public ?string $manualNi = null;
+    public ?string $payrollCodeChanged = null;
+    public ?string $aeNotEnroledWarning = null;
+    public ?string $receivingOffsetPay = null;
+    public ?string $paymentAfterLearning = null;
+    public ?string $pdf = null;
 
-    private $_totals;
-    private $_employee;
-    private $_pensionSummary;
+    private ?array $_totals;
+    private string|array|null $_employee;
+    private string|array|null $_pensionSummary;
 
     // Static Methods
     // =========================================================================
