@@ -23,7 +23,11 @@ class RequestMutation extends Mutation
             $mutations['CreateRequest'] = [
                 'name' => 'CreateRequest',
                 'args' => [
-                    'employerId' => Type::nonNull(Type::string())
+                    'employerId' => Type::nonNull(Type::int()),
+                    'employeeId' => Type::nonNull(Type::int()),
+                    'type' => Type::nonNull(Type::String()),
+                    'data' => Type::nonNull(Type::String()),
+//                    'data' => Type::nonNull(Type::listOf(Type::String())),
                 ],
                 'resolve' => [$resolver, 'createRequest'],
                 'description' => 'Saves a new request.',
