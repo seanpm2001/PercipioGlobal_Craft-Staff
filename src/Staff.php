@@ -114,21 +114,21 @@ class Staff extends Plugin
      *
      * @var string
      */
-    public string $schemaVersion = '1.0.2';
+    public $schemaVersion = '1.0.2';
 
     /**
      * Set to `true` if the plugin should have its own section (main nav item) in the control panel.
      *
      * @var bool
      */
-    public bool $hasCpSection = true;
+    public $hasCpSection = true;
 
     /**
      * Set to `true` if the plugin should have a settings view in the control panel.
      *
      * @var bool
      */
-    public bool $hasCpSettings = true;
+    public $hasCpSettings = true;
 
 
 
