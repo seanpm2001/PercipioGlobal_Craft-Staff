@@ -43,10 +43,10 @@ class Employer extends Element
     public ?array $defaultPayOptions = null;
     public ?string $employeeCount = null;
 
-    private array|string|bool|null $_currentPayRun;
-    private ?array $_defaultPayOptions;
-    private ?array $_hmrcDetails;
-    private array|null|false $_address;
+    private ?PayRun $_currentPayRun = null;
+    private ?array $_defaultPayOptions = null;
+    private ?array $_hmrcDetails = null;
+    private ?array $_address = null;
 
     // Static Methods
     // =========================================================================
@@ -129,7 +129,7 @@ class Employer extends Element
      *
      * @return bool|string|PayRun|null
      */
-    public function getCurrentPayRun(): bool|string|PayRun|null
+    public function getCurrentPayRun(): ?PayRun
     {
         if ($this->_currentPayRun === null) {
             if ($this->id === null) {

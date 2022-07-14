@@ -105,7 +105,7 @@ class Staff extends Plugin
     /**
      * @var Settings
      */
-    public static $settings;
+    public static Settings $settings;
 
     /**
      * @var View

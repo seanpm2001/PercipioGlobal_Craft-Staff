@@ -68,7 +68,7 @@ class PayRuns extends Component
 
 
     /* GETTERS */
-    public function getLastPayRunByEmployer(int $employerId): ElementInterface|null
+    public function getLastPayRunByEmployer(int $employerId): PayRun
     {
         return PayRun::find()
             ->employerId($employerId)
@@ -77,6 +77,8 @@ class PayRuns extends Component
                 'taxMonth' => SORT_DESC,
             ])
             ->one();
+
+        //return $payrun ? $payrun->toArray() : [];
     }
 
     public function getTotalsById(int $totalsId): array
