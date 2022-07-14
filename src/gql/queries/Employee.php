@@ -23,13 +23,13 @@ class Employee extends Query
         }
 
         return [
-            'employees' => [
+            'Employees' => [
                 'type' => Type::listOf(EmployeeInterface::getType()),
                 'args' => EmployeeArguments::getArguments(),
                 'resolve' => EmployeeResolver::class . '::resolve',
                 'description' => 'This query is used to query for employees.',
             ],
-            'employee' => [
+            'Employee' => [
                 'type' => EmployeeInterface::getType(),
                 'args' => EmployeeArguments::getArguments(),
                 'resolve' => EmployeeResolver::class . '::resolveOne',
