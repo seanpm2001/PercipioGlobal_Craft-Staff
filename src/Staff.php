@@ -99,7 +99,7 @@ class Staff extends Plugin
     /**
      * @var Settings
      */
-    public static $settings;
+    public static Settings $settings;
 
     /**
      * @var View
@@ -114,21 +114,21 @@ class Staff extends Plugin
      *
      * @var string
      */
-    public $schemaVersion = '1.0.1';
+    public string $schemaVersion = '1.0.2';
 
     /**
      * Set to `true` if the plugin should have its own section (main nav item) in the control panel.
      *
      * @var bool
      */
-    public $hasCpSection = true;
+    public bool $hasCpSection = true;
 
     /**
      * Set to `true` if the plugin should have a settings view in the control panel.
      *
      * @var bool
      */
-    public $hasCpSettings = true;
+    public bool $hasCpSettings = true;
 
 
 
@@ -283,11 +283,9 @@ class Staff extends Plugin
             ];
         }
 
-        $navItem = array_merge($navItem, [
+        return array_merge($navItem, [
             'subnav' => $subNavs,
         ]);
-
-        return $navItem;
     }
 
     // Protected Methods
