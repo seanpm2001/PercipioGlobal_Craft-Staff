@@ -1,0 +1,62 @@
+{%- requirePermission "hub:group-benefits" -%}
+
+{%- extends 'staff-management/_layouts/hub-cp.twig' -%}
+
+{%- set sidebar -%}
+    {%- include "staff-management/benefits/_nav" -%}
+{%- endset -%}
+
+{%- block actionButton -%}
+    {%- include "staff-management/_atoms/buttons/button--primary" with {
+        options: {
+            title: 'Create Benefit Type',
+            url: url('staff-management/benefits/types/new')
+        }
+    } -%}
+{%- endblock -%}
+
+{%- set content -%}
+    
+    <div>
+        <h1 class="ml-1 text-xl font-semibold text-gray-900">Benefit Types</h1>
+
+        <div class="overflow-hidden shadow border border-solid border-gray-300 md:rounded-lg">
+            <div class="grid grid-cols-6 border-b border-solid border-gray-300">
+                <div class="py-3.5 pl-4 pr-3 text-left text-sm font-semibold text-gray-900 sm:pl-6">Internal Code</div>
+                <div class="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">Policy Date</div>
+                <div class="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">Policy Renewal Date</div>
+                <div class="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">Status</div>
+                <div class="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">Type</div>
+            </div>
+            
+            {%- for type in (types ?? []) -%}
+
+                {%- set fields = null -%}
+                {%- switch(type.benefitType) -%}
+                    {%- case 'dental' -%}
+                        {%- set fields = type.benefitTypeDental ?? null -%}
+                    {%- case 'group-critical-illness-cover' -%}
+                        {%- set fields = type.benefitTypeGroupCriticalIllnessCover ?? null -%}
+                    {%- case 'group-death-in-service' -%}
+                        {%- set fields = type.benefitTypeGroupDeathInService ?? null -%}
+                {%- endswitch -%}
+
+                {%- if fields -%}
+                    <a href="{{- url('staff-management/benefits/types/edit/' ~ (type.id ?? null)) -}}/{{- (type.benefitType ?? null) -}}" title="Go to {{ fields.internalCode -}}" class="grid grid-cols-6 border-b border-solid border-gray-200 no-underline hover:bg-gray-200">
+                        <div class="flex items-center whitespace-nowrap pl-4 pr-3 py-4 text-sm text-gray-500 sm:pl-6">{{- fields.internalCode -}}</div>
+                        <div class="flex items-center whitespace-nowrap px-3 py-4 text-sm text-gray-500">{{- fields.policyStartDate|date('Y-m-d') -}}</div>
+                        <div class="flex items-center whitespace-nowrap px-3 py-4 text-sm text-gray-500">{{- fields.policyRenewalDate|date('Y-m-d') -}}</div>
+                        <div class="flex items-center whitespace-nowrap px-3 py-4 text-sm text-gray-500">{{- fields.status -}}</div>
+                        <div class="flex items-center whitespace-nowrap px-3 py-4 text-sm text-gray-500">{{- benefitTypes[type.benefitType] ?? '-' -}}</div>
+                    </a>
+                {%- endif -%}
+            {%- endfor -%}
+        </div>
+
+    </div>
+
+{%- endset -%}
+
+{%- block foot -%}
+    {{ parent() }}
+{%- endblock -%}

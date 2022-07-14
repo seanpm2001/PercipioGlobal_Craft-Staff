@@ -2,7 +2,6 @@ import { defineConfig } from 'vite'
 import vue from '@vitejs/plugin-vue'
 import ViteRestart from 'vite-plugin-restart'
 import viteCompression from 'vite-plugin-compression'
-import manifestSRI from 'vite-plugin-manifest-sri'
 import { visualizer } from 'rollup-plugin-visualizer'
 import eslintPlugin from 'vite-plugin-eslint'
 import { nodeResolve } from '@rollup/plugin-node-resolve'
@@ -18,10 +17,12 @@ export default defineConfig(({command}) => ({
         sourcemap: true,
         rollupOptions: {
             input: {
+                benefitTypes: './src/js/benefitTypes.ts',
                 employers: './src/js/employers.ts',
-                payruns: './src/js/payruns.ts',
                 details: './src/js/payrunDetails.ts',
+                payruns: './src/js/payruns.ts',
                 staff: './src/js/staff.ts',
+                tiptap: './src/js/tiptap.ts',
             },
             output: {
                 sourcemap: true
@@ -37,13 +38,13 @@ export default defineConfig(({command}) => ({
         ViteRestart({
             reload: [
                 './src/templates/**/*',
+                '../src/**/*',
             ],
         }),
         vue(),
         viteCompression({
             filter: /\.(js|mjs|json|css|map)$/i
         }),
-        manifestSRI(),
         visualizer({
             filename: '../src/web/assets/dist/stats.html',
             template: 'treemap',
@@ -58,6 +59,7 @@ export default defineConfig(({command}) => ({
         alias: {
             '@': path.resolve(__dirname, './src'),
             '~': path.resolve(__dirname, './src'),
+            vue: 'vue/dist/vue.esm-bundler.js',
         },
         preserveSymlinks: true,
     },
@@ -66,8 +68,8 @@ export default defineConfig(({command}) => ({
             strict: false
         },
         host: '0.0.0.0',
-        origin: 'http://localhost:3050/',
-        port: 3050,
+        origin: 'http://localhost:3951',
+        port: 3951,
         strictPort: true,
     }
 }))

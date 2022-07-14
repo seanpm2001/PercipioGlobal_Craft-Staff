@@ -53,8 +53,8 @@ class PayRun extends Element
     public ?bool $isClosed = null;
     public ?int $employerId = null;
 
-    private $_totals;
-    private $_employer;
+    private ?array $_totals;
+    private ?array $_employer;
 
     // Static Methods
     // =========================================================================

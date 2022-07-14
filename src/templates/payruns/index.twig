@@ -1,4 +1,4 @@
-{%- requirePermission "hub:payruns" -%}
+{%- requirePermission "hub:pay-run" -%}
 
 {%- extends 'staff-management/_layouts/hub-cp.twig' -%}
 
@@ -15,5 +15,5 @@
             'percipiolondon\\staff\\assetbundles\\staff\\StaffAsset'
         ]
     } -%}
-    {{  craft.staff.register('src/js/employers.ts', false, tagOptions, tagOptions) }}
+    {{  craft.staff.register('src/js/employers.ts', false, tagOptions) }}
 {%- endblock -%}

@@ -6,6 +6,7 @@ import { defaultClient } from '~/js/composables/useApolloClient'
 
 
 const payruns = async () => {
+    console.log("yep")
     const payruns = createApp({
         setup() {
             provide(DefaultApolloClient, defaultClient)
