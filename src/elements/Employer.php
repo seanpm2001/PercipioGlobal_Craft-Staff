@@ -40,10 +40,10 @@ class Employer extends Element
     public ?string $crn = null;
     public ?string $startYear = null;
     public ?string $currentYear = null;
-    public $defaultPayOptions = null;
+    public ?array $defaultPayOptions = null;
     public ?string $employeeCount = null;
 
-    private ?array $_currentPayRun = null;
+    private ?PayRun $_currentPayRun = null;
     private ?array $_defaultPayOptions = null;
     private ?array $_hmrcDetails = null;
     private ?array $_address = null;
@@ -129,7 +129,7 @@ class Employer extends Element
      *
      * @return bool|string|PayRun|null
      */
-    public function getCurrentPayRun(): bool|string|PayRun|null
+    public function getCurrentPayRun(): ?PayRun
     {
         if ($this->_currentPayRun === null) {
             if ($this->id === null) {

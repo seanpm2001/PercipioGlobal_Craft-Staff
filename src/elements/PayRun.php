@@ -54,7 +54,7 @@ class PayRun extends Element
     public ?int $employerId = null;
 
     private ?array $_totals = null;
-    private ?array $_employer = null;
+    private string|null|false $_employer = null;
 
     // Static Methods
     // =========================================================================

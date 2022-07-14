@@ -33,7 +33,7 @@ class PayRunEntry extends Element
     // Public Properties
     // =========================================================================
 
-    public ?string $staffologyId = null;
+    public ?string $staffologyId;
     public ?int $payRunId = null;
     public ?int $employerId = null;
     public ?int $employeeId = null;
@@ -64,9 +64,9 @@ class PayRunEntry extends Element
     public ?string $paymentAfterLearning = null;
     public ?string $pdf = null;
 
-    private ?array $_totals = null;
-    private ?array $_employee = null;
-    private ?array $_pensionSummary = null;
+    private ?array $_totals;
+    private string|array|null $_employee;
+    private string|array|null $_pensionSummary;
 
     // Static Methods
     // =========================================================================

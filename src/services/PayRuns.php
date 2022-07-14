@@ -68,7 +68,7 @@ class PayRuns extends Component
 
 
     /* GETTERS */
-    public function getLastPayRunByEmployer(int $employerId): ElementInterface|null
+    public function getLastPayRunByEmployer(int $employerId): PayRun
     {
         return PayRun::find()
             ->employerId($employerId)
@@ -77,6 +77,8 @@ class PayRuns extends Component
                 'taxMonth' => SORT_DESC,
             ])
             ->one();
+
+        //return $payrun ? $payrun->toArray() : [];
     }
 
     public function getTotalsById(int $totalsId): array
@@ -143,15 +145,15 @@ class PayRuns extends Component
 
             //personalDetails
             $personalDetails = PersonalDetails::findOne(['employeeId' => ($employee['id'] ?? null)]);
-            $personalDetails = $personalDetails ? $personalDetails->toArray() : null;
+            $personalDetails = $personalDetails?->toArray();
 
             //employmentDetails
             $employmentDetails = EmploymentDetails::findOne(['employeeId' => ($employee['id'] ?? null)]);
-            $employmentDetails = $employmentDetails ? $employmentDetails->toArray() : null;
+            $employmentDetails = $employmentDetails?->toArray();
 
             //totals
-            $totals = PayRunTotals::findOne($entry['totalsId'] ?? null);
-            $totals = $totals ? $totals->toArray() : null;
+            $totals = PayRunTotals::findOne(["payRunEntryId" => $entry['id'] ?? null]);
+            $totals = $totals?->toArray();
 
             //payLines
             $payLines = PayLineRecord::find()->where(['payOptionsId' => $entry['payOptionsId'] ?? null])->all();
