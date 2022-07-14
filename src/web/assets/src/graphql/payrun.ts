@@ -23,7 +23,7 @@ export const PAYRUNS = gql`
 `
 
 export const PAYRUN = gql`
-    query Payrun($id: [QueryArgument]) {
+    query PayRun($id: [QueryArgument]) {
         payrun: PayRun(id: $id) {
             id,
             paymentDate @formatDateTime(format:"j M, Y")
