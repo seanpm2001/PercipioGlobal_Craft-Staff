@@ -42,13 +42,14 @@ class Employee extends Element
     public ?int $userId = null;
     public ?string $status = null;
     public ?string $niNumber = null;
-    public $personalDetailsObject;
+    public ?array $personalDetailsObject = null;
     public ?bool $isDirector = null;
 
-    private ?array $_employmentDetails = null;
-    private ?array $_leaveSettings = null;
-    private ?array $_personalDetails = null;
-    private ?array $_employer = null;
+    private array|bool|null $_employmentDetails;
+    private array|null|false $_leaveSettings;
+    private array|null|false $_personalDetails;
+    private array|null|false $_employer;
+
 
     // Static Methods
     // =========================================================================

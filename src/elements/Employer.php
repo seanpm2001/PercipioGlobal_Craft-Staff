@@ -34,19 +34,19 @@ class Employer extends Element
     // Public Properties
     // =========================================================================
 
-    public ?string $staffologyId = null;
-    public ?string $name = null;
-    public ?string $logoUrl = null;
-    public ?string $crn = null;
-    public ?string $startYear = null;
-    public ?string $currentYear = null;
-    public $defaultPayOptions = null;
-    public ?string $employeeCount = null;
+    public string $staffologyId;
+    public ?string $name;
+    public ?string $logoUrl;
+    public ?string $crn;
+    public ?string $startYear;
+    public ?string $currentYear;
+    public ?array $defaultPayOptions;
+    public ?string $employeeCount;
 
-    private ?array $_currentPayRun = null;
-    private ?array $_defaultPayOptions = null;
-    private ?array $_hmrcDetails = null;
-    private ?array $_address = null;
+    private array|string|bool|null $_currentPayRun;
+    private ?array $_defaultPayOptions;
+    private ?array $_hmrcDetails;
+    private array|null|false $_address;
 
     // Static Methods
     // =========================================================================
