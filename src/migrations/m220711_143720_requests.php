@@ -27,10 +27,10 @@ class m220711_143720_requests extends Migration
             //FK
             'employerId' => $this->integer()->notNull(), //create FK to Employers [id]
             'employeeId' => $this->integer()->notNull(), //create FK to Employees [id]
-            'administerId' => $this->integer()->notNull(), //create FK to User [id]
+            'administerId' => $this->integer(), //create FK to User [id]
             //fields
-            'dateAdministered' => $this->dateTime()->notNull(),
-            'data' => $this->longText(),
+            'dateAdministered' => $this->dateTime(),
+            'data' => $this->longText()->notNull(),
             'type' => $this->string()->notNull(),
             'status' => $this->enum('contributionLevelType', ['pending', 'approved', 'declined', 'canceled']),
             'note' => $this->mediumText(),
