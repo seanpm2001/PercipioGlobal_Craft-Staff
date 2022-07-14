@@ -1,0 +1,107 @@
+{%- requirePermission 'hub:benefits' -%}
+
+{%- extends 'staff-management/_layouts/hub-cp.twig' -%}
+{%- import '_includes/forms' as forms -%}
+
+{%- set sidebar -%}
+    {%- include 'staff-management/benefits/_nav' -%}
+{%- endset -%}
+
+{%- block actionButton -%}
+    {%- include 'staff-management/_atoms/buttons/button--submit' with {
+        options: {
+            title: 'Save Benefit Provider',
+            action: 'staff-management/benefit-provider/save'
+        }
+    } -%}
+{%- endblock -%}
+
+{%- set fullPageForm = true -%}
+
+{%- set content -%}
+
+    <h1 class="text-xl font-semibold text-gray-900">New Benefit Provider</h1>
+
+    <input type="hidden" name="action" value="staff-management/benefit-provider/save" />
+    <input type="hidden" name="providerId" value="{{- provider ? provider.id : '' -}}" />
+    <input type="hidden" name="siteId" value="{{- provider ? provider.siteId : currentSite.id -}}" />
+
+    {{ forms.textField({
+        first: true,
+        label: "Name"|t('staff-management'),
+        instructions: "What's the name of the benefit provider"|t('staff-management'),
+        id: 'name',
+        name: 'name',
+        value: provider ? provider.name : '',
+        errors: errors['name'] ?? null,
+        autofocus: true,
+        required: true,
+    }) }}
+
+    {{ forms.textField({
+        label: "Url"|t('staff-management'),
+        instructions: "What's the url of the benefit provider"|t('staff-management'),
+        id: 'url',
+        name: 'url',
+        value: provider ? provider.url : '',
+        errors: errors['url'] ?? null,
+        required: false,
+    }) }}
+
+    {%- set asset = provider ? provider.logo ? [craft.assets.id(provider.logo).one()] : [] : [] -%}
+    {{ forms.elementSelectField({
+        label: 'Logo'|t('staff-management'),
+        id: 'logo',
+        name: 'logo',
+        elementType: 'craft\\elements\\Asset',
+        limit: 1,
+        elements:asset,
+        criteria: {
+            'kind': ['image'],
+            'volume': ['branding']
+        },
+        sources: [volume],
+        value: provider ? provider.logo : '',
+        instructions: 'Upload or select a logo'|t('staff-management'),
+        errors: errors['logo'] ?? null,
+    }) }}
+
+    {%- set tiptapOptions = {
+        id: 'provider_description',
+        label: 'Provider Description',
+        instructions: 'Add a description with a short explanation about the provider.',
+        name: 'content',
+        description: provider.content ?? 'this is a test from the template',
+    } -%}
+
+    <div id="description_tiptap">
+        <tiptap-field 
+            content="{{- tiptapOptions.description -}}"
+            :options="{{- tiptapOptions | json_encode -}}"
+        >
+        </tiptap-field>
+    </div>
+
+    {%- if errors['content'] ?? null -%}
+        <ul id="content-errors" class="errors"> 
+            {%- for error in errors['content'] -%}                   
+                <li>
+                    <span class="visually-hidden">Error:</span>
+                    {{- error -}}
+                </li>
+            {%- endfor -%}
+        </ul>
+    {%- endif -%}
+
+{%- endset -%}
+
+{%- block foot -%}
+    {{ parent() }}
+    {%- set tagOptions = {
+        'depends': [
+            'percipiolondon\\staff\\assetbundles\\staff\\StaffAsset'
+        ]
+    } -%}
+    {{- craft.staff.register('src/js/tiptap.ts', false, tagOptions) -}}
+{%- endblock -%}
+

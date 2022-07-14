@@ -11,8 +11,6 @@ namespace percipiolondon\staff\variables;
 use nystudio107\pluginvite\variables\ViteVariableInterface;
 use nystudio107\pluginvite\variables\ViteVariableTrait;
 
-use percipiolondon\staff\Staff;
-
 /**
  * @author    percipio.london
  * @package   Staff

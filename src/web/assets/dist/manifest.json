@@ -1,62 +1,79 @@
 {
+  "src/js/benefitTypes.ts": {
+    "file": "assets/benefitTypes.5fee1a2e.js",
+    "src": "src/js/benefitTypes.ts",
+    "isEntry": true,
+    "imports": [
+      "_vue.esm-bundler.737af873.js",
+      "_plugin-vue_export-helper.21dcd24c.js"
+    ]
+  },
   "src/js/employers.ts": {
-    "file": "assets/employers.d40e8220.js",
+    "file": "assets/employers.cdcd37c7.js",
     "src": "src/js/employers.ts",
     "isEntry": true,
     "imports": [
-      "_vendor.ace9cd94.js",
-      "_useApolloClient.3973916d.js"
-    ],
-    "integrity": "sha384-Ae9yvm+/TJhVmeZnhq75lkkUglAw/9jKd3hxl0D0zA9D/PL7v7dZn8KjnPMLm9qK"
-  },
-  "src/js/payruns.ts": {
-    "file": "assets/payruns.f9e7c00e.js",
-    "src": "src/js/payruns.ts",
-    "isEntry": true,
-    "imports": [
-      "_vendor.ace9cd94.js",
-      "_useApolloClient.3973916d.js",
-      "_status--synced.a1cfbd6e.js"
-    ],
-    "integrity": "sha384-i5nhG+ainr0pozDbJY1Rrn3Ng6ZoXA4gM0J7h5dK9KUcHZc06pcLpxTjj9huUUxM"
+      "_vue.esm-bundler.737af873.js",
+      "_useApolloClient.71b035f7.js",
+      "_plugin-vue_export-helper.21dcd24c.js"
+    ]
   },
   "src/js/payrunDetails.ts": {
-    "file": "assets/details.502eba73.js",
+    "file": "assets/details.9a611a00.js",
     "src": "src/js/payrunDetails.ts",
     "isEntry": true,
     "imports": [
-      "_vendor.ace9cd94.js",
-      "_useApolloClient.3973916d.js",
-      "_status--synced.a1cfbd6e.js"
-    ],
-    "integrity": "sha384-wrXD9j81NiDWtoPNA+uONDAlMMEZUYA5Cpnp7sErNRaej1g5C9ZmKXh7CkBi79aW"
+      "_vue.esm-bundler.737af873.js",
+      "_useApolloClient.71b035f7.js",
+      "_status--synced.8524e11b.js",
+      "_plugin-vue_export-helper.21dcd24c.js"
+    ]
+  },
+  "src/js/payruns.ts": {
+    "file": "assets/payruns.4378cfee.js",
+    "src": "src/js/payruns.ts",
+    "isEntry": true,
+    "imports": [
+      "_vue.esm-bundler.737af873.js",
+      "_useApolloClient.71b035f7.js",
+      "_status--synced.8524e11b.js",
+      "_plugin-vue_export-helper.21dcd24c.js"
+    ]
   },
   "src/js/staff.ts": {
-    "file": "assets/staff.394784cb.js",
+    "file": "assets/staff.46631f2e.js",
     "src": "src/js/staff.ts",
     "isEntry": true,
     "css": [
-      "assets/staff.a3ceef67.css"
-    ],
-    "integrity": "sha384-Kcx0gEO5hnQ/Asv3AznXqh/qp6GulOcvm5sgITSIFxuks6QnKDoQJHq3nrPoa5nu"
+      "assets/staff.1c79e086.css"
+    ]
   },
-  "_vendor.ace9cd94.js": {
-    "file": "assets/vendor.ace9cd94.js",
-    "integrity": "sha384-EMB++SYltrW17dXaPMS9A5tL+NoKhzRKPeRl1+o+XYVileRi7kOUMt3GaZOYescy"
-  },
-  "_useApolloClient.3973916d.js": {
-    "file": "assets/useApolloClient.3973916d.js",
+  "src/js/tiptap.ts": {
+    "file": "assets/tiptap.423fb8d4.js",
+    "src": "src/js/tiptap.ts",
+    "isEntry": true,
     "imports": [
-      "_vendor.ace9cd94.js"
-    ],
-    "integrity": "sha384-C8vZAeap0da1405XoANnvXjnQbIhAeVzEVxzwy5IXf+Id9YfXYLuMLM7q+RgkB0Y"
+      "_vue.esm-bundler.737af873.js"
+    ]
   },
-  "_status--synced.a1cfbd6e.js": {
-    "file": "assets/status--synced.a1cfbd6e.js",
+  "_vue.esm-bundler.737af873.js": {
+    "file": "assets/vue.esm-bundler.737af873.js"
+  },
+  "_plugin-vue_export-helper.21dcd24c.js": {
+    "file": "assets/plugin-vue_export-helper.21dcd24c.js"
+  },
+  "_useApolloClient.71b035f7.js": {
+    "file": "assets/useApolloClient.71b035f7.js",
     "imports": [
-      "_vendor.ace9cd94.js",
-      "_useApolloClient.3973916d.js"
-    ],
-    "integrity": "sha384-JxylcNge8cxiMXZv9362dm4oNxjKvCFRdfrL6sVTIIbaevHKcr+z6pcztq5E6rQ9"
+      "_vue.esm-bundler.737af873.js",
+      "_plugin-vue_export-helper.21dcd24c.js"
+    ]
+  },
+  "_status--synced.8524e11b.js": {
+    "file": "assets/status--synced.8524e11b.js",
+    "imports": [
+      "_useApolloClient.71b035f7.js",
+      "_vue.esm-bundler.737af873.js"
+    ]
   }
 }

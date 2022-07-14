@@ -7,5 +7,9 @@
 </script>
 
 <template>
-    <EmployerListItem v-for="employer in employers" :key="employer.id" :employer="employer" />
+  <EmployerListItem
+    v-for="employer in employers"
+    :key="employer.id"
+    :employer="employer"
+  />
 </template>

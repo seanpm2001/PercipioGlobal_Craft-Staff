@@ -1,0 +1,132 @@
+{%- import "_includes/forms" as forms -%}
+
+<hr/>
+
+<h2>Group Death In Service specific fields</h2>
+
+{{ forms.dateField({
+    label: "Rate Review Guarantee Date"|t('staff-management'),
+    id: 'arrBenefitTypeGroupDeathInService[rateReviewGuaranteeDate]',
+    name: 'arrBenefitTypeGroupDeathInService[rateReviewGuaranteeDate]',
+    value: fields ? fields["rateReviewGuaranteeDate"] ?? '' : '',
+    errors: errors['rateReviewGuaranteeDate'] ?? null,
+}) }}
+
+{%- set costingBasisOptions = [
+    {
+        label: 'Choose a costing basis',
+        value: null
+    },
+    {
+        label: 'Unit Rated',
+        value: 'unit'
+    },
+    {
+        label: 'SP Costed',
+        value: 'sp'
+    },
+] -%}
+{{ forms.selectField({
+    label: "Costing Basis"|t('staff-management'),
+    id: 'arrBenefitTypeGroupDeathInService[costingBasis]',
+    name: 'arrBenefitTypeGroupDeathInService[costingBasis]',
+    value: fields ? fields["costingBasis"] ?? '' : '',
+    options: costingBasisOptions,
+    errors: errors['costingBasis'] ?? null,
+    required: false,
+}) }}
+
+{%- set unitRateSuffixOptions = [
+    {
+        label: 'Choose a rate suffix',
+        value: null
+    },
+    {
+        label: '%',
+        value: '%'
+    },
+    {
+        label: '‰',
+        value: '‰'
+    },
+] -%}
+{{ forms.selectField({
+    label: "Unit Rate Suffix"|t('staff-management'),
+    id: 'arrBenefitTypeGroupDeathInService[unitRateSuffix]',
+    name: 'arrBenefitTypeGroupDeathInService[unitRateSuffix]',
+    value: fields ? fields["unitRateSuffix"] ?? '' : '',
+    options: unitRateSuffixOptions,
+    errors: errors['unitRateSuffix'] ?? null,
+    required: false,
+}) }}
+
+{{ forms.textField({
+    label: "Unit Rate"|t('staff-management'),
+    id: 'arrBenefitTypeGroupDeathInService[unitRate]',
+    name: 'arrBenefitTypeGroupDeathInService[unitRate]',
+    type: 'number',
+    value: fields ? fields['unitRate'] : '',
+    errors: errors['unitRate'] ?? null,
+    required: false,
+}) }}
+
+{{ forms.textField({
+    label: "Free Cover Level Automatic Acceptance Limit"|t('staff-management'),
+    id: 'arrBenefitTypeGroupDeathInService[freeCoverLevelAutomaticAcceptanceLimit]',
+    name: 'arrBenefitTypeGroupDeathInService[freeCoverLevelAutomaticAcceptanceLimit]',
+    type: 'number',
+    value: fields ? fields['freeCoverLevelAutomaticAcceptanceLimit'] : '',
+    errors: errors['freeCoverLevelAutomaticAcceptanceLimit'] ?? null,
+    required: false,
+}) }}
+
+{%- set dateRefreshFrequencyOptions = [
+    {
+        label: 'Choose a date refresh frequency',
+        value: null
+    },
+    {
+        label: 'Annually',
+        value: 'annual'
+    },
+    {
+        label: 'Monthly',
+        value: 'monthly'
+    },
+] -%}
+{{ forms.selectField({
+    label: "Date Refresh Frequency"|t('staff-management'),
+    id: 'arrBenefitTypeGroupDeathInService[dateRefreshFrequency]',
+    name: 'arrBenefitTypeGroupDeathInService[dateRefreshFrequency]',
+    value: fields ? fields["dateRefreshFrequency"] ?? '' : '',
+    options: dateRefreshFrequencyOptions,
+    errors: errors['dateRefreshFrequency'] ?? null,
+    required: false,
+}) }}
+
+{{ forms.textField({
+    label: "Pension Scheme Tax Reference Number"|t('staff-management'),
+    id: 'arrBenefitTypeGroupDeathInService[pensionSchemeTaxReferenceNumber]',
+    name: 'arrBenefitTypeGroupDeathInService[pensionSchemeTaxReferenceNumber]',
+    value: fields ? fields['pensionSchemeTaxReferenceNumber'] : '',
+    errors: errors['pensionSchemeTaxReferenceNumber'] ?? null,
+    required: false,
+}) }}
+
+{{ forms.dateField({
+    label: "Date Of Trust Deed"|t('staff-management'),
+    id: 'dateOfTrustDeed',
+    name: 'arrBenefitTypeGroupDeathInService[dateOfTrustDeed]',
+    value: fields ? fields["dateOfTrustDeed"] ?? '' : '',
+    errors: errors['dateOfTrustDeed'] ?? null,
+}) }}
+
+{{ forms.textField({
+    label: "Event Limit"|t('staff-management'),
+    id: 'arrBenefitTypeGroupDeathInService[eventLimit]',
+    name: 'arrBenefitTypeGroupDeathInService[eventLimit]',
+    type: 'number',
+    value: fields ? fields['eventLimit'] : '',
+    errors: errors['eventLimit'] ?? null,
+    required: false,
+}) }}
