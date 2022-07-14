@@ -11,9 +11,12 @@
 namespace percipiolondon\staff\elements;
 
 use Craft;
+use DateTime;
 use craft\base\Element;
 use craft\elements\db\ElementQueryInterface;
 use percipiolondon\staff\elements\db\RequestQuery;
+use percipiolondon\staff\helpers\requests\CreateAddressRequest;
+use percipiolondon\staff\records\Requests;
 
 /**
  * Request Element
@@ -23,6 +26,39 @@ use percipiolondon\staff\elements\db\RequestQuery;
  */
 class Request extends Element
 {
+    /**
+     * @var DateTime|null
+     */
+    public ?DateTime $dateAdministered = null;
+    /**
+     * @var int|null
+     */
+    public ?int $employerId = null;
+    /**
+     * @var int|null
+     */
+    public ?int $employeeId = null;
+    /**
+     * @var int|null
+     */
+    public ?int $administerId = null;
+    /**
+     * @var string|null
+     */
+    public ?string $data = null;
+    /**
+     * @var string|null
+     */
+    public ?string $type = null;
+    /**
+     * @var string|null
+     */
+    public ?string $status = null;
+    /**
+     * @var string|null
+     */
+    public ?string $note = null;
+
     /**
      * @return string
      */
@@ -55,6 +91,14 @@ class Request extends Element
         return Craft::t('staff-management', 'requests');
     }
 
+    public function defineRules(): array
+    {
+        $rules = parent::defineRules();
+        $rules[] = [['employerId', 'employeeId', 'type'], 'required'];
+
+        return $rules;
+    }
+
     /**
      * @return ElementQueryInterface
      */
@@ -80,6 +124,23 @@ class Request extends Element
      */
     private function _saveRecord(bool $isNew): void
     {
+        $helper = null;
 
+        // convert form submission to saved personal data
+        switch ($this->type) {
+            case 'address':
+                $helper = new CreateAddressRequest();
+                break;
+        }
+
+        // create request
+        $request = new Requests();
+
+        $request->employerId = $this->employerId;
+        $request->employeeId = $this->employeeId;
+        $request->type = $this->type;
+        $request->data = $helper ? $helper->create($this->data) : null;
+
+        $request->save();
     }
 }

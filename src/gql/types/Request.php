@@ -14,12 +14,12 @@ use GraphQL\Type\Definition\Type;
 use percipiolondon\staff\helpers\Security;
 
 /**
- * Class PersonalDetails
+ * Class Request
  *
  * @author Percipio Global Ltd. <support@percipio.london>
  * @since 1.0.0
  */
-class PersonalDetails
+class Request
 {
     use GqlTypeTrait;
 
@@ -28,7 +28,7 @@ class PersonalDetails
      */
     public static function getName(): string
     {
-        return 'personalDetails';
+        return 'request';
     }
 
     /**
