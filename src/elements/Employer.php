@@ -40,13 +40,13 @@ class Employer extends Element
     public ?string $crn;
     public ?string $startYear;
     public ?string $currentYear;
-    public $defaultPayOptions;
+    public ?array $defaultPayOptions;
     public ?string $employeeCount;
 
-    private $_currentPayRun;
-    private $_defaultPayOptions;
-    private $_hmrcDetails;
-    private $_address;
+    private array|string|bool|null $_currentPayRun;
+    private ?array $_defaultPayOptions;
+    private ?array $_hmrcDetails;
+    private array|null|false $_address;
 
     // Static Methods
     // =========================================================================
