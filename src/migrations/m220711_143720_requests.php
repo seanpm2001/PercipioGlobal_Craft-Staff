@@ -42,6 +42,7 @@ class m220711_143720_requests extends Migration
         $this->addForeignKey(null, Table::REQUESTS, ['employerId'], Table::EMPLOYERS, ['id'], 'CASCADE', 'CASCADE');
         $this->addForeignKey(null, Table::REQUESTS, ['employeeId'], Table::EMPLOYEES, ['id'], 'CASCADE', 'CASCADE');
         $this->addForeignKey(null, Table::REQUESTS, ['administerId'], CraftTable::USERS, ['id']);
+        $this->addForeignKey(null, Table::REQUESTS, ['id'], CraftTable::ELEMENTS, ['id'], 'CASCADE', 'CASCADE' );
     }
 
     /**
