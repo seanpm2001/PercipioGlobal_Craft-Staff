@@ -7,8 +7,22 @@ use craft\helpers\Db;
 
 class RequestQuery extends ElementQuery
 {
-    public $status;
     public $employeeId;
+    public $employerId;
+    public $status;
+    public $type;
+
+    public function employeeId($value)
+    {
+        $this->employeeId = $value;
+        return $this;
+    }
+
+    public function employerId($value)
+    {
+        $this->employerId = $value;
+        return $this;
+    }
 
     public function status($value)
     {
@@ -16,9 +30,9 @@ class RequestQuery extends ElementQuery
         return $this;
     }
 
-    public function employeeId($value)
+    public function type($value)
     {
-        $this->employeeId = $value;
+        $this->type = $value;
         return $this;
     }
 
@@ -36,12 +50,20 @@ class RequestQuery extends ElementQuery
             'staff_requests.note',
         ]);
 
+        if ($this->employeeId) {
+            $this->subQuery->andWhere(Db::parseParam('staff_requests.employeeId', $this->employeeId));
+        }
+
+        if ($this->employerId) {
+            $this->subQuery->andWhere(Db::parseParam('staff_requests.employerId', $this->employerId));
+        }
+
         if ($this->status) {
             $this->subQuery->andWhere(Db::parseParam('staff_requests.status', $this->status));
         }
 
-        if ($this->employeeId) {
-            $this->subQuery->andWhere(Db::parseParam('staff_requests.employeeId', $this->employeeId));
+        if ($this->type) {
+            $this->subQuery->andWhere(Db::parseParam('staff_requests.type', $this->type));
         }
 
         return parent::beforePrepare();

@@ -7,8 +7,8 @@ use craft\helpers\Json;
 
 use GraphQL\Type\Definition\ResolveInfo;
 
-use percipiolondon\staff\elements\Employer as EmployerElement;
-use percipiolondon\staff\gql\interfaces\elements\Employer as EmployerInterface;
+use percipiolondon\staff\elements\Request as RequestElement;
+use percipiolondon\staff\gql\interfaces\elements\Request as RequestInterface;
 
 /**
  * Class Employer
@@ -24,7 +24,7 @@ class Request extends Element
     public function __construct(array $config)
     {
         $config['interfaces'] = [
-            EmployerInterface::getType(),
+            RequestInterface::getType(),
         ];
 
         parent::__construct($config);
@@ -35,7 +35,7 @@ class Request extends Element
      */
     protected function resolve($source, $arguments, $context, ResolveInfo $resolveInfo)
     {
-        /** @var EmployerElement $source */
+        /** @var RequestElement $source */
         $fieldName = $resolveInfo->fieldName;
 
         return match ($fieldName) {

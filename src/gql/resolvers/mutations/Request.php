@@ -15,7 +15,7 @@ class Request extends ElementMutationResolver
 
     public function createRequest($source, array $arguments, $context, ResolveInfo $resolveInfo)
     {
-        $this->requireSchemaAction('request', 'edit');
+//        $this->requireSchemaAction('requests', 'create');
 
         $elementService = Craft::$app->getElements();
         $request = $elementService->createElement(RequestElement::class);

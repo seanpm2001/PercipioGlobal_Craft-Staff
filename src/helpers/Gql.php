@@ -23,4 +23,14 @@ class Gql extends \craft\helpers\Gql
     {
         return true;
     }
+
+    public static function canQueryRequests(): bool
+    {
+        return true;
+    }
+
+    public static function canMutateRequests(): bool
+    {
+        return true;
+    }
 }

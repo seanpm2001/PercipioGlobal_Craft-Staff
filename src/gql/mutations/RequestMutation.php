@@ -11,29 +11,29 @@ use GraphQL\Type\Definition\Type;
 
 class RequestMutation extends Mutation
 {
-    public static function getMutations(): array
+    public static function getMutations($checkToken = true): array
     {
-        // TODO: Implement getMutations() method.
+        if ($checkToken && !GqlHelper::canMutateRequests()) {
+            return [];
+        }
+
         $resolver = Craft::createObject(RequestMutationResolver::class);
 
         $mutations = [];
 
-        if(GqlHelper::canSchema('request','edit')) {
-            // Create a new request
-            $mutations['CreateRequest'] = [
-                'name' => 'CreateRequest',
-                'args' => [
-                    'employerId' => Type::nonNull(Type::int()),
-                    'employeeId' => Type::nonNull(Type::int()),
-                    'type' => Type::nonNull(Type::String()),
-                    'data' => Type::nonNull(Type::String()),
-//                    'data' => Type::nonNull(Type::listOf(Type::String())),
-                ],
-                'resolve' => [$resolver, 'createRequest'],
-                'description' => 'Saves a new request.',
-                'type' => Request::getType()
-            ];
-        }
+        // Create a new request
+        $mutations['CreateRequest'] = [
+            'name' => 'CreateRequest',
+            'args' => [
+                'employerId' => Type::nonNull(Type::int()),
+                'employeeId' => Type::nonNull(Type::int()),
+                'type' => Type::nonNull(Type::String()),
+                'data' => Type::nonNull(Type::String()),
+            ],
+            'resolve' => [$resolver, 'createRequest'],
+            'description' => 'Saves a new request.',
+            'type' => Request::getType()
+        ];
 
         return $mutations;
     }

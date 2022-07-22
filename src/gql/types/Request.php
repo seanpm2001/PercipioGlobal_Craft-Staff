@@ -7,10 +7,6 @@ use craft\gql\types\DateTime;
 
 use craft\helpers\DateTimeHelper;
 use craft\helpers\Gql;
-use GraphQL\Type\Definition\ResolveInfo;
-use percipiolondon\staff\gql\types\Address;
-use percipiolondon\staff\gql\types\PartnerDetails;
-use GraphQL\Type\Definition\Type;
 use percipiolondon\staff\helpers\Security;
 
 /**

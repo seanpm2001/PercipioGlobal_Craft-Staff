@@ -34,15 +34,18 @@ use percipiolondon\staff\elements\Employee as EmployeeElement;
 use percipiolondon\staff\elements\Employer as EmployerElement;
 use percipiolondon\staff\elements\PayRun as PayRunElement;
 use percipiolondon\staff\elements\PayRunEntry as PayRunEntryElement;
+use percipiolondon\staff\elements\Request as RequestElement;
 use percipiolondon\staff\gql\interfaces\elements\Employer as EmployerInterface;
 use percipiolondon\staff\gql\interfaces\elements\Employee as EmployeeInterface;
 use percipiolondon\staff\gql\interfaces\elements\PayRun as PayRunInterface;
 use percipiolondon\staff\gql\interfaces\elements\PayRunEntry as PayRunEntryInterface;
+use percipiolondon\staff\gql\interfaces\elements\Request as RequestInterface;
 use percipiolondon\staff\gql\mutations\RequestMutation;
 use percipiolondon\staff\gql\queries\Employee as EmployeeQueries;
 use percipiolondon\staff\gql\queries\Employer as EmployerQueries;
 use percipiolondon\staff\gql\queries\PayRun as PayRunQueries;
 use percipiolondon\staff\gql\queries\PayRunEntry as PayRunEntryQueries;
+use percipiolondon\staff\gql\queries\Request as RequestQueries;
 use percipiolondon\staff\gql\resolvers\mutations\Request;
 use percipiolondon\staff\models\Settings;
 use percipiolondon\staff\plugin\Services as StaffServices;
@@ -440,6 +443,7 @@ class Staff extends Plugin
                 $event->types[] = EmployeeInterface::class;
                 $event->types[] = PayRunInterface::class;
                 $event->types[] = PayRunEntryInterface::class;
+                $event->types[] = RequestInterface::class;
             }
         );
     }
@@ -458,16 +462,19 @@ class Staff extends Plugin
                         'employees:read' => ['label' => Craft::t('staff-management', 'View Employees')],
                         // payruns component with read action, labelled “View Payruns” in UI
                         'payruns:read' => ['label' => Craft::t('staff-management', 'View Payruns')],
+                        // request component with read action, labelled "View Request" in UI
+                        'requests:read' => ['label' => Craft::t('staff-management', 'View Requests')],
                     ],
                     'PayrunEntries' => [
                         // payruns entries component with read action, labelled “View Payruns” in UI
                         'payrunentries:read' => ['label' => Craft::t('staff-management', 'View Payrun Entries')],
                     ],
-                    'Requests' => [
-                        // request component with read action, labelled "View Request" in UI
-                        'request:read' => ['label' => Craft::t('staff-management', 'View Requests')],
-                        // request component with read action, labelled "View Request" in UI
-                        'request:edit' => ['label' => Craft::t('staff-management', 'Edit Requests')],
+                ]);
+
+                $event->mutations = array_merge($event->mutations, [
+                    'Staff Management' => [
+                        // request component with create action, labelled "Create Requests" in UI
+                        'requests:create' => ['label' => Craft::t('staff-management', 'Edit Requests')],
                     ]
                 ]);
             }
@@ -486,6 +493,7 @@ class Staff extends Plugin
                     EmployeeQueries::getQueries(),
                     PayRunQueries::getQueries(),
                     PayRunEntryQueries::getQueries(),
+                    RequestQueries::getQueries()
                 );
             }
         );
@@ -516,6 +524,7 @@ class Staff extends Plugin
                 $event->types[] = EmployeeElement::class;
                 $event->types[] = PayRunElement::class;
                 $event->types[] = PayRunEntryElement::class;
+                $event->types[] = RequestElement::class;
             }
         );
     }

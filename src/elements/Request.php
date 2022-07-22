@@ -108,6 +108,30 @@ class Request extends Element
         return new RequestQuery(static::class);
     }
 
+    // Indexes, etc.
+    // -------------------------------------------------------------------------
+
+    public static function gqlTypeNameByContext($context): string
+    {
+        return 'Request';
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public function getGqlTypeName(): string
+    {
+        return static::gqlTypeNameByContext($this);
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public static function gqlMutationNameByContext(mixed $context): string
+    {
+        return 'CreateMutation';
+    }
+
     /**
      * @param bool $isNew
      */
@@ -125,26 +149,41 @@ class Request extends Element
      */
     private function _saveRecord(bool $isNew): void
     {
-        $helper = null;
+        try {
+            $helper = null;
+            $request = null;
 
-        // convert form submission to saved personal data
-        switch ($this->type) {
-            case 'address':
-                $helper = new CreateAddressRequest();
-                break;
-            case 'personal_details':
-                $helper = new CreatePersonalDetailsRequest();
-                break;
+            if(!$isNew) {
+                $request = Requests::findOne($this->id);
+
+                if(!$request) {
+                    throw new \Exception('Invalid request ID: ' . $this->id);
+                }
+            } else {
+                $request = new Requests();
+                $request->id = $this->id;
+            }
+
+            // convert form submission to saved personal data
+            switch ($this->type) {
+                case 'address':
+                    $helper = new CreateAddressRequest();
+                    break;
+                case 'personal_details':
+                    $helper = new CreatePersonalDetailsRequest();
+                    break;
+            }
+
+            $request->id = $this->id;
+            $request->employerId = $this->employerId;
+            $request->employeeId = $this->employeeId;
+            $request->type = $this->type;
+            $request->status = 'pending';
+            $request->data = $helper ? $helper->create($this->data, $this->employeeId) : null;
+
+            $request->save();
+        } catch (\Exception $e) {
+            Craft::error($e->getMessage(), __METHOD__);
         }
-
-        // create request
-        $request = new Requests();
-
-        $request->employerId = $this->employerId;
-        $request->employeeId = $this->employeeId;
-        $request->type = $this->type;
-        $request->data = $helper ? $helper->create($this->data, $this->employeeId) : null;
-
-        $request->save();
     }
 }

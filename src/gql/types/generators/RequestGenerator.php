@@ -17,7 +17,7 @@ use percipiolondon\staff\gql\interfaces\elements\Request as RequestInterface;
 use percipiolondon\staff\gql\types\elements\Request;
 
 /**
- * Class PayRunGenerator
+ * Class RequestGenerator
  *
  * @author Percipio Global Ltd. <support@percipio.london>
  * @since 1.0.0
@@ -29,7 +29,6 @@ class RequestGenerator extends Generator implements GeneratorInterface, SingleGe
      */
     public static function generateTypes($context = null): array
     {
-        // Payruns have no context
         $type = static::generateType($context);
         return [$type->name => $type];
     }

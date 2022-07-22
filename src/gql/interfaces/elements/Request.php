@@ -8,8 +8,7 @@ use craft\gql\TypeManager;
 use craft\gql\types\DateTime;
 use GraphQL\Type\Definition\InterfaceType;
 use GraphQL\Type\Definition\Type;
-use percipiolondon\staff\elements\Employer as EmployerElement;
-use percipiolondon\staff\gql\types\generators\EmployerGenerator;
+use percipiolondon\staff\elements\Request as RequestElement;
 use percipiolondon\staff\gql\types\generators\RequestGenerator;
 
 class Request extends Element
@@ -31,13 +30,13 @@ class Request extends Element
         $type = GqlEntityRegistry::createEntity(self::getName(), new InterfaceType([
             'name' => static::getName(),
             'fields' => self::class . '::getFieldDefinitions',
-            'description' => 'This is the interface implemented by all employers.',
-            'resolveType' => function(EmployerElement $value) {
+            'description' => 'This is the interface implemented by all requests.',
+            'resolveType' => function(RequestElement $value) {
                 return $value->getGqlTypeName();
             },
         ]));
 
-        EmployerGenerator::generateTypes();
+        RequestGenerator::generateTypes();
 
         return $type;
     }
@@ -56,7 +55,6 @@ class Request extends Element
     public static function getFieldDefinitions(): array
     {
         $parentFields = parent::getFieldDefinitions();
-        unset($parentFields['slug']);
 
         $fields = [
             'dateAdministered' => [
