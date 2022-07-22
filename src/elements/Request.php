@@ -16,6 +16,7 @@ use craft\base\Element;
 use craft\elements\db\ElementQueryInterface;
 use percipiolondon\staff\elements\db\RequestQuery;
 use percipiolondon\staff\helpers\requests\CreateAddressRequest;
+use percipiolondon\staff\helpers\requests\CreatePersonalDetailsRequest;
 use percipiolondon\staff\records\Requests;
 
 /**
@@ -130,6 +131,9 @@ class Request extends Element
         switch ($this->type) {
             case 'address':
                 $helper = new CreateAddressRequest();
+                break;
+            case 'personal_details':
+                $helper = new CreatePersonalDetailsRequest();
                 break;
         }
 

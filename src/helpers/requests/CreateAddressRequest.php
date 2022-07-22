@@ -29,27 +29,27 @@ class CreateAddressRequest
             $savedAddress = $personalDetails['address'] ?? null;
 
             // save line1 if a change has happened
-            if(($savedAddress['line1'] ?? '') !== $data->line1) {
+            if(($data->line1 ?? null) && ($savedAddress['line1'] ?? '') !== $data->line1) {
                 $address['line1'] = $data->line1;
             }
 
             // save line2 if a change has happened
-            if(($savedAddress['line2'] ?? '') !== $data->line2) {
+            if(($data->line2 ?? null) && ($savedAddress['line2'] ?? '') !== $data->line2) {
                 $address['line2'] = $data->line2;
             }
 
             // save line3 if a change has happened
-            if(($savedAddress['line3'] ?? '') !== $data->line3) {
+            if(($data->line3 ?? null) && ($savedAddress['line3'] ?? '') !== $data->line3) {
                 $address['line3'] = $data->line3;
             }
 
             // save postCode if a change has happened
-            if(($savedAddress['postCode'] ?? '') !== $data->postCode) {
+            if(($data->postCode ?? null) && ($savedAddress['postCode'] ?? '') !== $data->postCode) {
                 $address['postCode'] = $data->postCode;
             }
 
             // save country if a change has happened
-            if(($savedAddress['country'] ?? '') !== $data->country) {
+            if(($data->country ?? null) && ($savedAddress['country'] ?? '') !== $data->country) {
                 $address['country'] = $data->country;
             }
         }
