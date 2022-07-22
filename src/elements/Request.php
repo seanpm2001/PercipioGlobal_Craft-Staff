@@ -178,7 +178,7 @@ class Request extends Element
             $request->employerId = $this->employerId;
             $request->employeeId = $this->employeeId;
             $request->type = $this->type;
-            $request->status = 'pending';
+            $request->status = $this->status ?? 'pending';
             $request->data = $helper ? $helper->create($this->data, $this->employeeId) : null;
 
             $request->save();
