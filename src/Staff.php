@@ -465,7 +465,7 @@ class Staff extends Plugin
                         // request component with read action, labelled "View Request" in UI
                         'requests:read' => ['label' => Craft::t('staff-management', 'View Requests')],
                     ],
-                    'PayrunEntries' => [
+                    'PayRunEntries' => [
                         // payruns entries component with read action, labelled “View Payruns” in UI
                         'payrunentries:read' => ['label' => Craft::t('staff-management', 'View Payrun Entries')],
                     ],

@@ -20,14 +20,14 @@ class PayRunEntry extends Query
         }
 
         return [
-            'PayrunEntries' => [
+            'PayRunEntries' => [
                 'type' => Type::listOf(PayRunEntryInterface::getType()),
                 'args' => PayRunEntryArguments::getArguments(),
                 'resolve' => PayRunEntryResolver::class . '::resolve',
                 'description' => 'This query is used to query for all the Payrun Entries.',
                 'complexity' => GqlHelper::relatedArgumentComplexity(),
             ],
-            'PayrunEntry' => [
+            'PayRunEntry' => [
                 'type' => PayRunEntryInterface::getType(),
                 'args' => PayRunEntryArguments::getArguments(),
                 'resolve' => PayRunEntryResolver::class . '::resolveOne',
