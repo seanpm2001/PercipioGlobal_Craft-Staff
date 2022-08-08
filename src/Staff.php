@@ -120,7 +120,7 @@ class Staff extends Plugin
      *
      * @var string
      */
-    public $schemaVersion = '1.0.2';
+    public $schemaVersion = '1.0.3';
 
     /**
      * Set to `true` if the plugin should have its own section (main nav item) in the control panel.

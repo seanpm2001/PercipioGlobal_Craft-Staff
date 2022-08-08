@@ -345,7 +345,6 @@ class Install extends Migration
                 'address2' => $this->string(),
                 'address3' => $this->string(),
                 'address4' => $this->string(),
-                'address5' => $this->string(),
                 'zipCode' => $this->string(),
             ]);
 
