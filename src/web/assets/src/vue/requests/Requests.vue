@@ -3,6 +3,7 @@ import { ref, watch } from 'vue'
 import { useQuery } from '@vue/apollo-composable'
 import { REQUESTS } from '~/graphql/requests.ts'
 import LoadingList from '~/vue/molecules/listitems/listitem--loading.vue'
+import NoResultsList from '~/vue/molecules/listitems/listitem--no-results.vue'
 import RequestList from '~/vue/organisms/lists/list--requests.vue'
 
 const pagination = ref({
@@ -10,10 +11,12 @@ const pagination = ref({
     hitsPerPage: 30,
     total: 0
 })
-const { result, loading, fetchMore, onResult } = useQuery(REQUESTS, {
+const filter = ref('all')
+const variables = ref({
     limit: pagination.value.hitsPerPage,
     offset: pagination.value.currentPage * pagination.value.hitsPerPage
 })
+const { result, loading, fetchMore, onResult } = useQuery(REQUESTS, variables.value)
 
 onResult(queryResult => {
     pagination.value.total = queryResult.data.RequestCount
@@ -23,10 +26,7 @@ const onLoadMore = () => {
     pagination.value.currentPage += 1
 
     fetchMore({
-        variables: {
-            limit: pagination.value.hitsPerPage,
-            offset: pagination.value.currentPage * pagination.value.hitsPerPage
-        },
+        variables: variables.value,
         updateQuery: (previousResult, { fetchMoreResult }) => {
             // No new feed posts
             if (!fetchMoreResult) return previousResult
@@ -37,7 +37,35 @@ const onLoadMore = () => {
                 Requests: [
                     ...previousResult.Requests,
                     ...fetchMoreResult.Requests
-                ]
+                ],
+                RequestCount: fetchMoreResult.RequestCount
+            }
+        },
+    })
+}
+
+const setFilter = (filterValue) => {
+    if(filterValue !== 'all') {
+        variables.value = {
+            limit: pagination.value.hitsPerPage,
+            offset: pagination.value.currentPage * pagination.value.hitsPerPage,
+            status: filterValue
+        }
+    } else {
+        variables.value = {
+            limit: pagination.value.hitsPerPage,
+            offset: pagination.value.currentPage * pagination.value.hitsPerPage,
+        }
+    }
+
+    filter.value = filterValue
+
+    fetchMore({
+        variables: variables.value,
+        updateQuery: (previousResult, { fetchMoreResult }) => {
+            return {
+                Requests: fetchMoreResult.Requests,
+                RequestCount: fetchMoreResult.RequestCount
             }
         },
     })
@@ -51,9 +79,46 @@ const onLoadMore = () => {
             <h1 class="text-xl font-semibold text-gray-900">Requests</h1>
             <p class="mt-2 text-sm text-gray-700">Select a request to handle the employees request.</p>
         </div>
-        <!--div class="mt-4 sm:mt-0 sm:ml-16 sm:flex-none">
-            <button type="button" class="inline-flex items-center justify-center rounded-md border border-transparent bg-indigo-600 px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 sm:w-auto">Add user</button>
-        </div-->
+    </div>
+    <div class="mt-4 flex justify-end">
+        <span class="relative z-0 inline-flex shadow-sm rounded-md">
+            <button
+                @click="() => setFilter('all')"
+                :class="[
+                    'cursor-pointer font-bold relative inline-flex items-center px-4 py-2 rounded-l-md text-sm font-medium focus:z-10 focus:outline-none focus:ring-1 focus:ring-indigo-500 focus:border-indigo-500',
+                    filter === 'all' ? 'bg-indigo-600 text-white' : 'bg-gray-100 text-gray-700 hover:bg-indigo-400 hover:text-white'
+                ]"
+            >
+                All
+            </button>
+            <button
+                @click="() => setFilter('pending')"
+                :class="[
+                    'cursor-pointer font-bold -ml-px relative inline-flex items-center px-4 py-2 text-sm font-medium focus:z-10 focus:outline-none focus:ring-1 focus:ring-indigo-500 focus:border-indigo-500',
+                    filter === 'pending' ? 'bg-indigo-600 text-white' : 'bg-gray-100 text-gray-700 hover:bg-indigo-400 hover:text-white'
+                ]"
+            >
+                Pending
+            </button>
+            <button
+                @click="() => setFilter('approved')"
+                :class="[
+                    'cursor-pointer font-bold -ml-px relative inline-flex items-center px-4 py-2 text-sm font-medium focus:z-10 focus:outline-none focus:ring-1 focus:ring-indigo-500 focus:border-indigo-500',
+                    filter === 'approved' ? 'bg-indigo-600 text-white' : 'bg-gray-100 text-gray-700 hover:bg-indigo-400 hover:text-white'
+                ]"
+            >
+                Approved
+            </button>
+            <button
+                @click="() => setFilter('declined')"
+                :class="[
+                    'cursor-pointer font-bold -ml-px relative inline-flex items-center px-4 py-2 rounded-r-md text-sm font-medium focus:z-10 focus:outline-none focus:ring-1 focus:ring-indigo-500 focus:border-indigo-500',
+                    filter === 'declined' ? 'bg-indigo-600 text-white' : 'bg-gray-100 text-gray-700 hover:bg-indigo-400 hover:text-white'
+                ]"
+            >
+                Declined
+            </button>
+        </span>
     </div>
     <div class="mt-8 flex flex-col w-full">
         <div class="-my-2 overflow-x-auto w-full">
@@ -71,12 +136,13 @@ const onLoadMore = () => {
                     </div>
 
                     <LoadingList v-if="loading" />
+                    <NoResultsList v-if="!loading && result?.Requests?.length === 0" />
                     <RequestList v-if="result" :requests="result.Requests" />
                 </div>
             </div>
         </div>
         <button
-            v-if="result?.Requests?.length !== pagination.total"
+            v-if="result?.Requests?.length !== pagination.total && !loading"
             @click="onLoadMore"
             class="cursor-pointer mt-6 inline-flex items-center justify-center rounded-md border border-transparent bg-indigo-600 disabled:bg-indigo-400 disabled:cursor-not-allowed px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 sm:w-auto"
         >

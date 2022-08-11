@@ -35,7 +35,12 @@ export const REQUESTS = gql`
                 }
             }
         }
-        RequestCount
+        RequestCount(
+            employerId: $employerId
+            employeeId: $employeeId
+            type: $type
+            status: $status
+        )
     }
 `
 
