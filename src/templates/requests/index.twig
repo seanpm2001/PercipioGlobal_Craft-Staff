@@ -1,0 +1,19 @@
+{%- requirePermission "hub:request" -%}
+
+{%- extends 'staff-management/_layouts/hub-cp.twig' -%}
+
+{%- set content -%}
+
+    <div id="request-container"></div>
+
+{%- endset -%}
+
+{%- block foot -%}
+    {{ parent() }}
+    {%- set tagOptions = {
+        'depends': [
+            'percipiolondon\\staff\\assetbundles\\staff\\StaffAsset'
+        ]
+    } -%}
+    {{  craft.staff.register('src/js/requests-overview.ts', false, tagOptions, tagOptions) }}
+{%- endblock -%}

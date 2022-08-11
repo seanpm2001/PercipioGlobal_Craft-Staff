@@ -147,15 +147,16 @@ class Staff extends Plugin
     public function __construct($id, $parent = null, array $config = [])
     {
         $config['components'] = [
+            'staff' => Staff::class,
             // Register the vite service
             'vite' => [
                 'class' => VitePluginService::class,
                 'assetClass' => StaffAsset::class,
                 'useDevServer' => true,
-                'devServerPublic' => 'http://localhost:3050',
-                'serverPublic' => 'http://localhost:8001',
-                'errorEntry' => 'src/js/payrun.ts',
-                'devServerInternal' => 'http://craft-staff-buildchain:3050',
+                'devServerPublic' => 'http://localhost:3951',
+                'serverPublic' => 'http://localhost:3950',
+                'errorEntry' => 'src/js/staff.ts',
+                'devServerInternal' => 'http://craft-staff-buildchain:3951',
                 'checkDevServer' => true,
             ],
         ];
@@ -276,6 +277,12 @@ class Staff extends Plugin
                 'url' => 'staff-management/pay-runs',
             ];
         }
+        if ($currentUser->can('hub:requests')) {
+            $subNavs['requests'] = [
+                'label' => Craft::t('staff-management', 'Requests'),
+                'url' => 'staff-management/requests',
+            ];
+        }
 
         $editableSettings = true;
         // Check against allowAdminChanges
@@ -380,6 +387,8 @@ class Staff extends Plugin
             'staff-management/pay-runs/fetch-pay-run/<payRunId:\d+>' => 'staff-management/pay-run/fetch-pay-run',
             'staff-management/pay-runs/get-logs/<payRunId:\d+>' => 'staff-management/pay-run/get-pay-run-logs',
             'staff-management/pay-runs/download-template/<payRunId:\d+>' => 'staff-management/pay-run/download-template',
+            'staff-management/requests' => 'staff-management/request',
+            'staff-management/requests/<requestId:\d+>' => 'staff-management/request/detail',
         ];
     }
 
@@ -396,6 +405,9 @@ class Staff extends Plugin
             ],
             'hub:payruns' => [
                 'label' => Craft::t('staff-management', 'Pay Runs'),
+            ],
+            'hub:requests' => [
+                'label' => Craft::t('staff-management', 'Requests'),
             ],
             'hub:plugin-settings' => [
                 'label' => Craft::t('staff-management', 'Edit Plugin Settings'),

@@ -69,6 +69,21 @@ class Addresses extends Component
     }
 
     /**
+     * @param int $countryId
+     * @return string|null
+     */
+    public function getCountryById(int $countryId): ?string
+    {
+        $country = Countries::findOne($countryId);
+
+        if(!$country) {
+            return null;
+        }
+
+        return $country->name;
+    }
+
+    /**
      * @param int $id
      * @return Address|null
      */
@@ -103,6 +118,10 @@ class Addresses extends Component
         return $record;
     }
 
+    /**
+     * @param array $address
+     * @return array
+     */
     public function parseAddress(array $address): array
     {
         $address['address1'] = SecurityHelper::decrypt($address['address1']);

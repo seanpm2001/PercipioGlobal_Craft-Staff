@@ -61,4 +61,43 @@ class CreatePersonalDetailsRequest
 
         return json_encode($objPersonalDetails);
     }
+
+    public function parse(string $json): ?string
+    {
+        $data = json_decode($json);
+        $personalDetails = new \stdClass();
+
+        if($data->personalDetails->title ?? null) {
+            $personalDetails->title = $data->personalDetails->title;
+        }
+        if($data->personalDetails->firstName ?? null) {
+            $personalDetails->firstName = $data->personalDetails->firstName;
+        }
+        if($data->personalDetails->middleName ?? null) {
+            $personalDetails->middleName = $data->personalDetails->middleName;
+        }
+        if($data->personalDetails->lastName ?? null) {
+            $personalDetails->lastName = $data->personalDetails->lastName;
+        }
+        if($data->personalDetails->maritalStatus ?? null) {
+            $personalDetails->maritalStatus = $data->personalDetails->maritalStatus;
+        }
+
+        return json_encode($personalDetails);
+    }
+
+    public function current(int $id): ?string
+    {
+        $personalDetails = Staff::$plugin->employees->getPersonalDetailsByEmployee($id);
+        $personalDetails = Staff::$plugin->employees->parsePersonalDetails($personalDetails);
+
+        $current = [];
+        $current['title'] = $personalDetails['title'] ?? '';
+        $current['firstName'] = $personalDetails['firstName'] ?? '';
+        $current['lastName'] = $personalDetails['lastName'] ?? '';
+        $current['middleName'] = $personalDetails['middleName'] ?? '';
+        $current['maritalStatus'] = $personalDetails['maritalStatus'] ?? '';
+
+        return json_encode($current);
+    }
 }

@@ -62,4 +62,44 @@ class CreateAddressRequest
 
         return json_encode($objPersonalDetails);
     }
+
+    public function parse(string $json): ?string
+    {
+        $data = json_decode($json);
+        $address = new \stdClass();
+
+        if($data->personalDetails->address->line1 ?? null) {
+            $address->line1 = $data->personalDetails->address->line1;
+        }
+        if($data->personalDetails->address->line2 ?? null) {
+            $address->line2 = $data->personalDetails->address->line2;
+        }
+        if($data->personalDetails->address->line3 ?? null) {
+            $address->line3 = $data->personalDetails->address->line3;
+        }
+        if($data->personalDetails->address->postCode ?? null) {
+            $address->postCode = $data->personalDetails->address->postCode;
+        }
+        if($data->personalDetails->address->country ?? null) {
+            $address->country = $data->personalDetails->address->country;
+        }
+
+        return json_encode($address);
+    }
+
+    public function current(int $id): ?string
+    {
+        $address = Staff::$plugin->addresses->getAddressByEmployee($id)->toArray();
+        $address = Staff::$plugin->addresses->parseAddress($address);
+
+        $current = [];
+        $current['line1'] = $address['address1'] ?? '';
+        $current['line2'] = $address['address2'] ?? '';
+        $current['line3'] = $address['address3'] ?? '';
+        $current['line4'] = $address['address4'] ?? '';
+        $current['postCode'] = $address['zipCode'] ?? '';
+        $current['country'] = Staff::$plugin->addresses->getCountryById($address['countryId']);
+
+        return json_encode($current);
+    }
 }

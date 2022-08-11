@@ -11,6 +11,7 @@
 namespace percipiolondon\staff\elements;
 
 use Craft;
+use craft\elements\User;
 use DateTime;
 use craft\base\Element;
 use craft\elements\db\ElementQueryInterface;
@@ -18,6 +19,7 @@ use percipiolondon\staff\elements\db\RequestQuery;
 use percipiolondon\staff\helpers\requests\CreateAddressRequest;
 use percipiolondon\staff\helpers\requests\CreatePersonalDetailsRequest;
 use percipiolondon\staff\records\Requests;
+use percipiolondon\staff\Staff;
 
 /**
  * Request Element
@@ -59,6 +61,26 @@ class Request extends Element
      * @var string|null
      */
     public ?string $note = null;
+    /**
+     * @var string|null
+     */
+    private ?string $_admin = null;
+    /**
+     * @var string|null
+     */
+    private ?string $_employer = null;
+    /**
+     * @var array|null
+     */
+    private ?array $_employee = null;
+    /**
+     * @var string|null
+     */
+    private ?string $_request = null;
+    /**
+     * @var string|null
+     */
+    private ?string $_current = null;
 
     /**
      * @return string
@@ -92,6 +114,9 @@ class Request extends Element
         return Craft::t('staff-management', 'requests');
     }
 
+    /**
+     * @return array
+     */
     public function defineRules(): array
     {
         $rules = parent::defineRules();
@@ -111,6 +136,10 @@ class Request extends Element
     // Indexes, etc.
     // -------------------------------------------------------------------------
 
+    /**
+     * @param mixed $context
+     * @return string
+     */
     public static function gqlTypeNameByContext($context): string
     {
         return 'Request';
@@ -130,6 +159,127 @@ class Request extends Element
     public static function gqlMutationNameByContext(mixed $context): string
     {
         return 'CreateMutation';
+    }
+
+    /**
+     * Returns the employer
+     *
+     * @return string|null
+     * @throws InvalidConfigException if [[employerId]] is set but invalid
+     */
+    public function getEmployer()
+    {
+        if ($this->_employer === null) {
+            if ($this->employerId === null) {
+                return null;
+            }
+
+            if (($this->_employer = Staff::$plugin->employers->getEmployerNameById($this->employerId)) === null) {
+                // The author is probably soft-deleted. Just no author is set
+                $this->_employer = null;
+            }
+        }
+
+        return $this->_employer ?: null;
+    }
+
+    /**
+     * Returns the employer
+     *
+     * @return string|null
+     * @throws InvalidConfigException if [[employerId]] is set but invalid
+     */
+    public function getAdmin()
+    {
+        if ($this->_admin === null) {
+            if ($this->administerId === null) {
+                return null;
+            }
+
+            $admin = User::findOne($this->administerId);
+
+            if (count($admin) > 0) {
+                // The author is probably soft-deleted. Just no author is set
+                $this->_admin = $admin->fistName . ' ' . $admin->lastName;
+            }
+        }
+
+        return $this->_admin ?: null;
+    }
+
+    /**
+     * Returns the employer
+     *
+     * @return string|null
+     * @throws InvalidConfigException if [[employerId]] is set but invalid
+     */
+    public function getEmployee(): ?array
+    {
+        if ($this->_employee === null) {
+            if ($this->employeeId === null) {
+                return null;
+            }
+
+            if (($this->_employee = Staff::$plugin->employees->getEmployeeById($this->employeeId)) === null) {
+                // The author is probably soft-deleted. Just no author is set
+                $this->_employee = null;
+            }
+        }
+
+        return $this->_employee ?: null;
+
+        return null;
+    }
+
+    /**
+     * @return string|null
+     */
+    public function getRequest(): ?string
+    {
+        if($this->_request === null) {
+            if($this->type === null) {
+                return null;
+            }
+
+            $helper = null;
+
+            match (true) {
+                $this->type === 'address' => $helper = new CreateAddressRequest(),
+                $this->type === 'personal_details' => $helper = new CreatePersonalDetailsRequest(),
+            };
+
+            if ($helper) {
+                return $helper->parse($this->data);
+            }
+        }
+    }
+
+    /**
+     * @return string|null
+     */
+    public function getCurrent(): ?string
+    {
+        if($this->_current === null) {
+            if($this->type === null) {
+                return null;
+            }
+
+            $helper = null;
+            $current = null;
+
+            switch ($this->type) {
+                case 'address':
+                    $helper = new CreateAddressRequest();
+                    $current = $helper->current($this->employeeId);
+                    break;
+                case 'personal_details':
+                    $helper = new CreatePersonalDetailsRequest();
+                    $current = $helper->current($this->employeeId);
+                    break;
+            };
+
+            return $current;
+        }
     }
 
     /**
@@ -165,23 +315,24 @@ class Request extends Element
             }
 
             // convert form submission to saved personal data
-            switch ($this->type) {
-                case 'address':
-                    $helper = new CreateAddressRequest();
-                    break;
-                case 'personal_details':
-                    $helper = new CreatePersonalDetailsRequest();
-                    break;
-            }
+            match (true) {
+                $this->type === 'address' => $helper = new CreateAddressRequest(),
+                $this->type === 'personal_details' => $helper = new CreatePersonalDetailsRequest(),
+            };
 
+            // save request to the database
             $request->id = $this->id;
             $request->employerId = $this->employerId;
             $request->employeeId = $this->employeeId;
             $request->type = $this->type;
             $request->status = $this->status ?? 'pending';
+
+            // create the data object according to the request type
             $request->data = $helper ? $helper->create($this->data, $this->employeeId) : null;
 
             $request->save();
+
+
         } catch (\Exception $e) {
             Craft::error($e->getMessage(), __METHOD__);
         }

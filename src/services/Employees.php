@@ -51,6 +51,10 @@ class Employees extends Component
 
 
     /* GETTERS */
+    /**
+     * @param int $employeeId
+     * @return array
+     */
     public function getEmployeeById(int $employeeId): array
     {
 
@@ -80,6 +84,25 @@ class Employees extends Component
         return $employee;
     }
 
+    /**
+     * @param int $employeeId
+     * @return string
+     */
+    public function getEmployeeNameById(int $employeeId): string
+    {
+        $employee = Employer::findOne($employeeId);
+
+        if ($employee) {
+            return $employee['name'];
+        }
+
+        return '';
+    }
+
+    /**
+     * @param int $employeeId
+     * @return array
+     */
     public function getPersonalDetailsByEmployee(int $employeeId): array
     {
         $personalDetails = PersonalDetails::findOne(['employeeId' => $employeeId]);
@@ -105,6 +128,10 @@ class Employees extends Component
         return $personalDetails;
     }
 
+    /**
+     * @param int $employeeId
+     * @return array
+     */
     public function getLeaveSettingsByEmployee(int $employeeId): array
     {
         $leaveSettings = LeaveSettings::findOne(['employeeId' => $employeeId]);
@@ -116,6 +143,10 @@ class Employees extends Component
         return $leaveSettings->toArray();
     }
 
+    /**
+     * @param int $employeeId
+     * @return array
+     */
     public function getStarterDetailsByEmployee(int $employeeId): array
     {
         $starterDetails = LeaveSettings::findOne(['employeeId' => $employeeId]);
@@ -127,6 +158,10 @@ class Employees extends Component
         return $starterDetails->toArray();
     }
 
+    /**
+     * @param int $employeeId
+     * @return array
+     */
     public function getEmploymentDetailsByEmployee(int $employeeId): array
     {
         $employmentDetails = EmploymentDetails::findOne(['employeeId' => $employeeId]);
@@ -162,6 +197,9 @@ class Employees extends Component
 
     /* FETCHES */
 
+    /**
+     * @param array $employer
+     */
     public function fetchEmployeesByEmployer(array $employer)
     {
         $queue = Craft::$app->getQueue();
@@ -173,6 +211,10 @@ class Employees extends Component
         ]));
     }
 
+    /**
+     * @param array $employee
+     * @param array $employer
+     */
     public function fetchEmployee(array $employee, array $employer)
     {
         $queue = Craft::$app->getQueue();
@@ -219,6 +261,12 @@ class Employees extends Component
         }
     }
 
+    /**
+     * @param array $employee
+     * @param string $employeeName
+     * @param array $employer
+     * @throws \Throwable
+     */
     public function saveEmployee(array $employee, string $employeeName, array $employer): void
     {
         $logger = new Logger();
@@ -281,6 +329,11 @@ class Employees extends Component
         }
     }
 
+    /**
+     * @param array $personalDetails
+     * @param int|null $employee
+     * @return PersonalDetails
+     */
     public function savePersonalDetails(array $personalDetails, int $employee = null): PersonalDetails
     {
         $record = PersonalDetails::findOne(['employeeId' => $employee]);
@@ -316,6 +369,11 @@ class Employees extends Component
         return $record;
     }
 
+    /**
+     * @param array $employmentDetails
+     * @param int|null $employee
+     * @return EmploymentDetails
+     */
     public function saveEmploymentDetails(array $employmentDetails, int $employee = null): EmploymentDetails
     {
         $record = EmploymentDetails::findOne(['employeeId' => $employee]);
@@ -352,6 +410,11 @@ class Employees extends Component
         return $record;
     }
 
+    /**
+     * @param array $starterDetails
+     * @param int|null $employmentDetailsId
+     * @return StarterDetails
+     */
     public function saveStarterDetails(array $starterDetails, int $employmentDetailsId = null): StarterDetails
     {
         $record = StarterDetails::findOne(['employmentDetailsId' => $employmentDetailsId]);
@@ -371,6 +434,11 @@ class Employees extends Component
         return $record;
     }
 
+    /**
+     * @param array $leaveSettings
+     * @param int|null $employeeId
+     * @return LeaveSettings
+     */
     public function saveLeaveSettings(array $leaveSettings, int $employeeId = null): LeaveSettings
     {
         $record = LeaveSettings::findOne(['employeeId' => $employeeId]);
@@ -414,7 +482,23 @@ class Employees extends Component
 
 
     /* PARSE SECURITY VALUES */
+    /**
+     * @param array $employee
+     * @return array
+     */
+    public function parseEmployee(array $employee): array
+    {
+        $employee['niNumber'] = SecurityHelper::decrypt($employee['niNumber'] ?? '');
+        $employee['personalDetails'] = $this->parsePersonalDetails($employee['personalDetails']);
+        $employee['employmentDetails'] = $this->parseEmploymentDetails($employee['employmentDetails']);
 
+        return $employee;
+    }
+
+    /**
+     * @param array $personalDetails
+     * @return array
+     */
     public function parsePersonalDetails(array $personalDetails): array
     {
         $personalDetails['title'] = $personalDetails['title'] ?? '';
@@ -427,10 +511,15 @@ class Employees extends Component
         $personalDetails['mobile'] = SecurityHelper::decrypt($personalDetails['mobile'] ?? '');
         $personalDetails['niNumber'] = SecurityHelper::decrypt($personalDetails['niNumber'] ?? '');
         $personalDetails['passportNumber'] = SecurityHelper::decrypt($personalDetails['passportNumber'] ?? '');
+        $personalDetails['address'] = Staff::$plugin->addresses->parseAddress($personalDetails['address']);
 
         return $personalDetails;
     }
 
+    /**
+     * @param array $employmentDetails
+     * @return array
+     */
     public function parseEmploymentDetails(array $employmentDetails): array
     {
         $employmentDetails['payrollCode'] = SecurityHelper::decrypt($employmentDetails['payrollCode'] ?? '');
