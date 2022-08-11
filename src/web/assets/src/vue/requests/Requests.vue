@@ -1,11 +1,47 @@
 <script setup lang="ts">
+import { ref, watch } from 'vue'
 import { useQuery } from '@vue/apollo-composable'
 import { REQUESTS } from '~/graphql/requests.ts'
 import LoadingList from '~/vue/molecules/listitems/listitem--loading.vue'
 import RequestList from '~/vue/organisms/lists/list--requests.vue'
 
-const { result, loading } = useQuery(REQUESTS)
+const pagination = ref({
+    currentPage: 0,
+    hitsPerPage: 30,
+    total: 0
+})
+const { result, loading, fetchMore, onResult } = useQuery(REQUESTS, {
+    limit: pagination.value.hitsPerPage,
+    offset: pagination.value.currentPage * pagination.value.hitsPerPage
+})
 
+onResult(queryResult => {
+    pagination.value.total = queryResult.data.RequestCount
+})
+
+const onLoadMore = () => {
+    pagination.value.currentPage += 1
+
+    fetchMore({
+        variables: {
+            limit: pagination.value.hitsPerPage,
+            offset: pagination.value.currentPage * pagination.value.hitsPerPage
+        },
+        updateQuery: (previousResult, { fetchMoreResult }) => {
+            // No new feed posts
+            if (!fetchMoreResult) return previousResult
+
+            // Concat previous feed with new feed posts
+            return {
+                ...previousResult,
+                Requests: [
+                    ...previousResult.Requests,
+                    ...fetchMoreResult.Requests
+                ]
+            }
+        },
+    })
+}
 </script>
 
 <template>
@@ -39,6 +75,14 @@ const { result, loading } = useQuery(REQUESTS)
                 </div>
             </div>
         </div>
+        <button
+            v-if="result?.Requests?.length !== pagination.total"
+            @click="onLoadMore"
+            class="cursor-pointer mt-6 inline-flex items-center justify-center rounded-md border border-transparent bg-indigo-600 disabled:bg-indigo-400 disabled:cursor-not-allowed px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 sm:w-auto"
+        >
+            <span>Load more ({{ pagination.total - result?.Requests?.length }})</span>
+            <svg v-if="loadig" class="animate-spin ml-1 h-3 w-3 text-white mb-0" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path></svg>
+        </button>
     </div>
 
 </template>

@@ -31,7 +31,14 @@ class Request extends Query
                 'resolve' => RequestResolver::class . '::resolveOne',
                 'description' => 'This query is used to query for all the Requests',
                 'complexity' => GqlHelper::relatedArgumentComplexity()
-            ]
+            ],
+            'RequestCount' => [
+                'type' => Type::nonNull(Type::int()),
+                'args' => RequestArguments::getArguments(),
+                'resolve' => RequestResolver::class . '::resolveCount',
+                'description' => 'This query is used to return the number of entries.',
+                'complexity' => GqlHelper::singleQueryComplexity(),
+            ],
         ];
     }
 }

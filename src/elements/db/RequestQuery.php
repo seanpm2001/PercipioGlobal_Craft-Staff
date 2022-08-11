@@ -11,6 +11,7 @@ class RequestQuery extends ElementQuery
     public $employerId;
     public $status;
     public $type;
+    public $limit;
 
     public function employeeId($value)
     {

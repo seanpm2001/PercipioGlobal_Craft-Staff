@@ -30,6 +30,10 @@ class Request extends HardingArguments
                 'name' => 'type',
                 'type' => Type::listOf(Type::string()),
             ],
+            'limit' => [
+                'name' => 'limit',
+                'type' => Type::int()
+            ]
         ]);
     }
 }

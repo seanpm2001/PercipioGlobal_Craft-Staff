@@ -1,8 +1,22 @@
 import { gql } from 'graphql-tag'
 
 export const REQUESTS = gql`
-    query Requests($employerId: [Int], $employeeId: [Int], $type: [String], $status: [String]){
-        Requests(employerId: $employerId, employeeId: $employeeId, type: $type, status: $status) {
+    query Requests(
+        $employerId: [Int], 
+        $employeeId: [Int], 
+        $type: [String], 
+        $status: [String],
+        $limit: Int,
+        $offset: Int,
+    ){
+        Requests(
+            employerId: $employerId 
+            employeeId: $employeeId 
+            type: $type 
+            status: $status
+            limit: $limit,
+            offset: $offset,
+        ) {
             id
             data
             administerId
@@ -21,6 +35,7 @@ export const REQUESTS = gql`
                 }
             }
         }
+        RequestCount
     }
 `
 
