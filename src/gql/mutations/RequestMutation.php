@@ -3,6 +3,7 @@
 namespace percipiolondon\staff\gql\mutations;
 
 use Craft;
+use craft\gql\types\DateTime;
 use percipiolondon\staff\gql\interfaces\elements\Request;
 use percipiolondon\staff\helpers\Gql as GqlHelper;
 use craft\gql\base\Mutation;
@@ -33,6 +34,21 @@ class RequestMutation extends Mutation
             ],
             'resolve' => [$resolver, 'createRequest'],
             'description' => 'Saves a new request.',
+            'type' => Request::getType()
+        ];
+
+        // Update a request
+        $mutations['UpdateRequest'] = [
+            'name' => 'UpdateRequest',
+            'args' => [
+                'id' => Type::int(),
+                'administerId' => Type::int(),
+                'dateAdministered' => DateTime::getType(),
+                'note' => Type::String(),
+                'status' => Type::String(),
+            ],
+            'resolve' => [$resolver, 'updateRequest'],
+            'description' => 'Updates a request.',
             'type' => Request::getType()
         ];
 

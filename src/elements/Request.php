@@ -300,7 +300,6 @@ class Request extends Element
     private function _saveRecord(bool $isNew): void
     {
         try {
-            $helper = null;
             $request = null;
 
             if(!$isNew) {
@@ -314,12 +313,6 @@ class Request extends Element
                 $request->id = $this->id;
             }
 
-            // convert form submission to saved personal data
-            match (true) {
-                $this->type === 'address' => $helper = new CreateAddressRequest(),
-                $this->type === 'personal_details' => $helper = new CreatePersonalDetailsRequest(),
-            };
-
             // save request to the database
             $request->id = $this->id;
             $request->employerId = $this->employerId;
@@ -327,8 +320,17 @@ class Request extends Element
             $request->type = $this->type;
             $request->status = $this->status ?? 'pending';
 
-            // create the data object according to the request type
-            $request->data = $helper ? $helper->create($this->data, $this->employeeId) : null;
+            // create the data object according to the request type if it's a newly created one
+            if($isNew) {
+                $helper = null;
+
+                match (true) {
+                    $this->type === 'address' => $helper = new CreateAddressRequest(),
+                    $this->type === 'personal_details' => $helper = new CreatePersonalDetailsRequest(),
+                };
+
+                $request->data = $helper ? $helper->create($this->data, $this->employeeId) : null;
+            }
 
             $request->save();
 

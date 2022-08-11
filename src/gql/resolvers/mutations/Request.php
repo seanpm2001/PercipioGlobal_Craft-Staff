@@ -38,4 +38,28 @@ class Request extends ElementMutationResolver
         // Return the newly-saved element
         return $elementService->getElementById($request->id, RequestElement::class);
     }
+
+    public function updateRequest($soruce, array $arguments, $context, ResolveInfo $resolveInfo)
+    {
+        $elementService = Craft::$app->getElements();
+        $request = RequestElement::findOne($arguments['id']);
+        // Have Craft populate the element’s content
+        $request = $this->populateElementWithData($request, $arguments);
+        // Save the new element
+        $request = $this->saveElement($request);
+
+        if($request->hasErrors()) {
+            $validationErrors = [];
+
+            foreach ($request->getFirstErrors() as $attribute => $errorMessage) {
+                $validationErrors[] = $errorMessage;
+            }
+
+            // Throw a UserError with validation messages if we can’t save
+            throw new UserError(implode("\n", $validationErrors));
+        }
+
+        // Return the newly-saved element
+        return $elementService->getElementById($request->id, RequestElement::class);
+    }
 }
