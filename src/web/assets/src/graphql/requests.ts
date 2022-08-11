@@ -45,13 +45,12 @@ export const REQUESTS = gql`
 `
 
 export const WRITE_REQUEST = gql`
-    mutation CreateRequest($employerId: Int!, $employeeId: Int!, $type: String!, $status: String, $data: String!) {
+    mutation CreateRequest($id: Int!, $adminId: Int!, $dateHandled: Date!, $status: String) {
       CreateRequest(
-        employeeId: $employeeId,
-        employerId: $employerId,
-        type: $type,
+        id: $id,
+        administerId: $adminId,
+        dateAdministered: $dateHandled,
         status: $status,
-        data: $data
       ) {
         id,
         data

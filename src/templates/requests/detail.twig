@@ -48,11 +48,11 @@
                 <span class="text-xs font-bold text-gray-400 block mb-2">Requested on</span>
                 <span class="text-base mt-1 block">{{ request.dateCreated|date('jS M, Y') }}</span>
             </div>
-            <div class="mb-6 col-span-4 border border-t-2 border-gray-200 border-solid border-r-0 border-l-0 border-b-0 pt-6">
+            <div class="mb-6 col-span-4 border border-t-2 border-gray-200 border-solid border-r-0 border-l-0 py-6">
                 <div class="flex w-full">
                     <div class="flex-grow">
                         <span class="text-xs font-bold text-gray-400 block mb-2">From</span>
-                        <div class="bg-gray-200 p-4 rounded-xl">
+                        <div class="bg-gray-200 p-4 rounded-lg">
                             {%- set current = request.current|json_decode -%}
                             {%- set data = request.request|json_decode -%}
 
@@ -64,7 +64,7 @@
                     <span class="text-blue-600 inline-block text-xl px-4">→</span>
                     <div class="flex-grow">
                         <span class="text-xs font-bold text-gray-400 block mb-2">To</span>
-                        <div class="bg-gray-200 p-4 rounded-xl">
+                        <div class="bg-gray-200 p-4 rounded-lg">
                             {%- for key, value in current -%}
                                 <span class="block text-base mb-2 {{ data[key] ?? null ? 'font-bold' : '' -}}">{{ data[key] ?? value ?? '-' }}</span>
                             {%- endfor -%}
@@ -72,34 +72,34 @@
                     </div>
                 </div>
             </div>
-{#            <div class="mb-6 col-span-3">#}
-{#                <span class="text-xs font-bold text-gray-400 block mb-2">Request</span>#}
-{#                <div class="bg-gray-200 p-4 rounded-xl">#}
-{#                    {%- set current = request.current|json_decode -%}#}
-{#                    {%- set data = request.request|json_decode -%}#}
-
-{#                    {%- for key, value in current -%}#}
-{#                        <div class="grid grid-cols-3 gap-y-2">#}
-{#                            <span class="{{ data[key] ?? null ? 'line-through': 'col-span-3' }}">{{ value|length ? value : '-' }}</span>#}
-{#                            {%- if data[key] ?? null -%}#}
-{#                                <span class="text-blue-600 inline-block text-base">→</span>#}
-{#                                <span>{{ data[key] ?? '-' }}</span>#}
-{#                            {%- endif -%}#}
-{#                        </div>#}
-{#                    {%- endfor -%}#}
-{#                </div>#}
-{#            </div>#}
 
             {% if request.status == 'pending' %}
-                <div class="col-span-4 text-right">
-                    <a href="#" class="inline-block bg-red-300 text-red-900 font-bold mr-2 py-2 px-3 text-sm rounded-lg cursor-pointer">Decline</a>
-                    <a href="#" class="inline-block bg-emerald-300 text-emerald-900 font-bold mr-2 py-2 px-3 text-sm rounded-lg cursor-pointer">Approve</a>
-                </div>
+                <div id="request-container" class="col-span-4"></div>
             {% else %}
-
+                <div class="col-span-4">
+                    <span class="text-xs font-bold text-gray-400 block mb-2 block">Note</span>
+                    {{ request.note ? ('<span>' ~ request.note ~ '</span>') : '<span class="italic text-gray-400">There\'s no note for this request</span>' }}
+                </div>
             {% endif %}
         </div>
 
     </div>
 
 {%- endset -%}
+
+{%- block foot -%}
+    {{ parent() }}
+    {%- set tagOptions = {
+        'depends': [
+            'percipiolondon\\staff\\assetbundles\\staff\\StaffAsset'
+        ]
+    } -%}
+    {{  craft.staff.register('src/js/requests-detail.ts', false, tagOptions, tagOptions) }}
+{%- endblock -%}
+
+{% js %}
+    window.request = {{ {
+        "request": request,
+        "admin": currentUser.id ?? null
+    }|json_encode|raw }}
+{% endjs %}

@@ -1,40 +1,53 @@
 {
   "src/js/employers.ts": {
-    "file": "assets/employers.961f98f7.js",
+    "file": "assets/employers.88e7572c.js",
     "src": "src/js/employers.ts",
     "isEntry": true,
     "imports": [
       "_vendor.a01131e1.js",
-      "_useApolloClient.c6173589.js"
+      "_listitem--loading.69eca668.js",
+      "_useApolloClient.4f887e84.js"
     ]
   },
   "src/js/payrun-details.ts": {
-    "file": "assets/details.f5e5f490.js",
+    "file": "assets/details.b000784b.js",
     "src": "src/js/payrun-details.ts",
     "isEntry": true,
     "imports": [
       "_vendor.a01131e1.js",
-      "_useApolloClient.c6173589.js",
-      "_status--synced.9952e30c.js"
+      "_useApolloClient.4f887e84.js",
+      "_status--synced.0b3f8fc9.js",
+      "_listitem--loading.69eca668.js"
     ]
   },
   "src/js/payruns.ts": {
-    "file": "assets/payruns.457468ab.js",
+    "file": "assets/payruns.36a3f347.js",
     "src": "src/js/payruns.ts",
     "isEntry": true,
     "imports": [
       "_vendor.a01131e1.js",
-      "_useApolloClient.c6173589.js",
-      "_status--synced.9952e30c.js"
+      "_useApolloClient.4f887e84.js",
+      "_status--synced.0b3f8fc9.js",
+      "_listitem--loading.69eca668.js"
     ]
   },
   "src/js/requests-overview.ts": {
-    "file": "assets/requestsOverview.62867b7c.js",
+    "file": "assets/requestsOverview.e51d2099.js",
     "src": "src/js/requests-overview.ts",
     "isEntry": true,
     "imports": [
       "_vendor.a01131e1.js",
-      "_useApolloClient.c6173589.js"
+      "_listitem--loading.69eca668.js",
+      "_useApolloClient.4f887e84.js"
+    ]
+  },
+  "src/js/requests-detail.ts": {
+    "file": "assets/requestsDetail.bcee2a73.js",
+    "src": "src/js/requests-detail.ts",
+    "isEntry": true,
+    "imports": [
+      "_vendor.a01131e1.js",
+      "_useApolloClient.4f887e84.js"
     ]
   },
   "src/js/staff.ts": {
@@ -42,23 +55,29 @@
     "src": "src/js/staff.ts",
     "isEntry": true,
     "css": [
-      "assets/staff.41996fee.css"
+      "assets/staff.fb4ecb7a.css"
     ]
   },
   "_vendor.a01131e1.js": {
     "file": "assets/vendor.a01131e1.js"
   },
-  "_useApolloClient.c6173589.js": {
-    "file": "assets/useApolloClient.c6173589.js",
+  "_useApolloClient.4f887e84.js": {
+    "file": "assets/useApolloClient.4f887e84.js",
     "imports": [
       "_vendor.a01131e1.js"
     ]
   },
-  "_status--synced.9952e30c.js": {
-    "file": "assets/status--synced.9952e30c.js",
+  "_listitem--loading.69eca668.js": {
+    "file": "assets/listitem--loading.69eca668.js",
+    "imports": [
+      "_vendor.a01131e1.js"
+    ]
+  },
+  "_status--synced.0b3f8fc9.js": {
+    "file": "assets/status--synced.0b3f8fc9.js",
     "imports": [
       "_vendor.a01131e1.js",
-      "_useApolloClient.c6173589.js"
+      "_useApolloClient.4f887e84.js"
     ]
   }
 }

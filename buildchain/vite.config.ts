@@ -21,6 +21,7 @@ export default defineConfig(({command}) => ({
                 details: './src/js/payrun-details.ts',
                 payruns: './src/js/payruns.ts',
                 requestsOverview: './src/js/requests-overview.ts',
+                requestsDetail: './src/js/requests-detail.ts',
                 staff: './src/js/staff.ts',
             },
             output: {

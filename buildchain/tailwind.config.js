@@ -8,19 +8,22 @@ module.exports = {
         'border-l-0',
         'border-r-0',
         'border-gray-200',
+        'box-border',
         'col-span-3',
         'col-span-4',
         'gap-x-4',
         'gap-y-2',
         'grid-cols-3',
+        'italic',
         'line-through',
         'mb-2',
         'mb-6',
         'mt-1',
-        'rounded-xl',
+        'rounded-lg',
         'text-blue-600',
         'pt-6',
         'pt-10',
+        'py-6'
     ],
     theme: {
 
