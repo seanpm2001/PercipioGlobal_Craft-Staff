@@ -12,6 +12,7 @@ namespace percipiolondon\staff\elements;
 
 use Craft;
 use craft\elements\User;
+use craft\helpers\DateTimeHelper;
 use DateTime;
 use craft\base\Element;
 use craft\elements\db\ElementQueryInterface;
@@ -30,9 +31,9 @@ use percipiolondon\staff\Staff;
 class Request extends Element
 {
     /**
-     * @var DateTime|null
+     * @var string|null
      */
-    public ?DateTime $dateAdministered = null;
+    public ?string $dateAdministered = null;
     /**
      * @var int|null
      */
@@ -45,6 +46,10 @@ class Request extends Element
      * @var int|null
      */
     public ?int $administerId = null;
+    /**
+     * @var string|null
+     */
+    public ?string $request = null;
     /**
      * @var string|null
      */
@@ -73,10 +78,6 @@ class Request extends Element
      * @var array|null
      */
     private ?array $_employee = null;
-    /**
-     * @var string|null
-     */
-    private ?string $_request = null;
     /**
      * @var string|null
      */
@@ -198,9 +199,9 @@ class Request extends Element
 
             $admin = User::findOne($this->administerId);
 
-            if (count($admin) > 0) {
+            if (isset($admin) > 0) {
                 // The author is probably soft-deleted. Just no author is set
-                $this->_admin = $admin->fistName . ' ' . $admin->lastName;
+                $this->_admin = $admin->getFullName() ?? $admin->username ?? 'Unknown';
             }
         }
 
@@ -229,29 +230,6 @@ class Request extends Element
         return $this->_employee ?: null;
 
         return null;
-    }
-
-    /**
-     * @return string|null
-     */
-    public function getRequest(): ?string
-    {
-        if($this->_request === null) {
-            if($this->type === null) {
-                return null;
-            }
-
-            $helper = null;
-
-            match (true) {
-                $this->type === 'address' => $helper = new CreateAddressRequest(),
-                $this->type === 'personal_details' => $helper = new CreatePersonalDetailsRequest(),
-            };
-
-            if ($helper) {
-                return $helper->parse($this->data);
-            }
-        }
     }
 
     /**
@@ -301,6 +279,7 @@ class Request extends Element
     {
         try {
             $request = null;
+            $helper = null;
 
             if(!$isNew) {
                 $request = Requests::findOne($this->id);
@@ -308,33 +287,44 @@ class Request extends Element
                 if(!$request) {
                     throw new \Exception('Invalid request ID: ' . $this->id);
                 }
+
+                // update the request
+                if($this->status !== "pending") {
+                    $request->administerId = $this->administerId;
+                    $date = new DateTime('now');
+                    $request->dateAdministered = $date;
+                } else {
+                    // reset if the state is from an accepted / declined / canceled to a pending one
+                    $request->administerId = null;
+                    $request->dateAdministered = null;
+                }
             } else {
                 $request = new Requests();
                 $request->id = $this->id;
+                $request->employerId = $this->employerId;
+                $request->employeeId = $this->employeeId;
+                $request->type = $this->type;
             }
 
             // save request to the database
-            $request->id = $this->id;
-            $request->employerId = $this->employerId;
-            $request->employeeId = $this->employeeId;
-            $request->type = $this->type;
             $request->status = $this->status ?? 'pending';
+            $request->note = $this->note ?? '';
+            $request->data = $this->data;
 
             // create the data object according to the request type if it's a newly created one
-            if($isNew) {
-                $helper = null;
+            match (true) {
+                $this->type === 'address' => $helper = new CreateAddressRequest(),
+                $this->type === 'personal_details' => $helper = new CreatePersonalDetailsRequest(),
+            };
 
-                match (true) {
-                    $this->type === 'address' => $helper = new CreateAddressRequest(),
-                    $this->type === 'personal_details' => $helper = new CreatePersonalDetailsRequest(),
-                };
+            $request->request = $helper ? $helper->create($this->data, $this->employeeId) : null;
 
-                $request->data = $helper ? $helper->create($this->data, $this->employeeId) : null;
-            }
+            $save = $request->save();
 
-            $request->save();
-
-
+            // sync with Staffology if the request has been approved
+//            if(!$isNew && $request->status === "approved") {
+//                Staff::$plugin->requests->saveToStaffology($request);
+//            }
         } catch (\Exception $e) {
             Craft::error($e->getMessage(), __METHOD__);
         }

@@ -30,6 +30,7 @@ class m220711_143720_requests extends Migration
             'administerId' => $this->integer(), //create FK to User [id]
             //fields
             'dateAdministered' => $this->dateTime(),
+            'request' => $this->longText()->notNull(),
             'data' => $this->longText()->notNull(),
             'type' => $this->string()->notNull(),
             'status' => $this->enum('contributionLevelType', ['pending', 'approved', 'declined', 'canceled']),

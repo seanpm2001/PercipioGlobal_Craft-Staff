@@ -19,14 +19,12 @@ class CreateAddressRequest
      */
     public function create(string $json, int $employeeId): string
     {
-        $data = json_decode($json);
-
-        $address = [];
-
         // get personal details of employee and check which fields got changed
         if($employeeId) {
-            $personalDetails = Staff::$plugin->employees->getPersonalDetailsByEmployee($employeeId);
-            $savedAddress = $personalDetails['address'] ?? null;
+            $data = json_decode($json);
+            $dbPersonalDetails = Staff::$plugin->employees->getPersonalDetailsByEmployee($employeeId);
+            $savedAddress = $dbPersonalDetails['address'] ?? null;
+            $address = [];
 
             // save line1 if a change has happened
             if(($data->line1 ?? null) && ($savedAddress['line1'] ?? '') !== $data->line1) {
@@ -57,10 +55,15 @@ class CreateAddressRequest
             if(($data->country ?? null) && ($savedAddress['country'] ?? '') !== $data->country) {
                 $address['country'] = $data->country;
             }
+
+            if (!is_null($dbPersonalDetails['dateOfBirth'])) {
+                $dateOfBirth = new DateTime($dbPersonalDetails['dateOfBirth']);
+                $dbPersonalDetails['dateOfBirth'] = $dateOfBirth->format('Y-m-d');
+            }
         }
 
-        $personalDetails = [];
-        $personalDetails['address'] = $address;
+        $dbPersonalDetails['address'] = $address;
+        $personalDetails = $dbPersonalDetails;
 
         $objPersonalDetails = new \stdClass();
         $objPersonalDetails->personalDetails = $personalDetails;

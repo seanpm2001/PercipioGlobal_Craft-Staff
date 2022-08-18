@@ -103,7 +103,7 @@ class Employees extends Component
      * @param int $employeeId
      * @return array
      */
-    public function getPersonalDetailsByEmployee(int $employeeId): array
+    public function getPersonalDetailsByEmployee(int $employeeId, bool $parse = false): array
     {
         $personalDetails = PersonalDetails::findOne(['employeeId' => $employeeId]);
 
@@ -123,6 +123,10 @@ class Employees extends Component
             $address['country'] = $country['name'] ?? '';
 
             $personalDetails['address'] = $address;
+        }
+
+        if ($parse) {
+            $personalDetails = $this->parsePersonalDetails($personalDetails);
         }
 
         return $personalDetails;

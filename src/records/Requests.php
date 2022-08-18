@@ -18,6 +18,7 @@ use percipiolondon\staff\db\Table;
  * @property int $employerId;
  * @property int $employeeId;
  * @property string $administerId;
+ * @property string $request;
  * @property string $data;
  * @property string $type;
  * @property string $status;

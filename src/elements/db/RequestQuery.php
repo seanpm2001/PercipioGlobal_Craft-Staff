@@ -45,6 +45,8 @@ class RequestQuery extends ElementQuery
             'staff_requests.employerId',
             'staff_requests.employeeId',
             'staff_requests.administerId',
+            'staff_requests.dateAdministered',
+            'staff_requests.request',
             'staff_requests.data',
             'staff_requests.type',
             'staff_requests.status',
