@@ -20,7 +20,12 @@ defineProps<Props>()
         <div class="col-span-2 flex items-center whitespace-nowrap px-3 py-4 text-sm text-gray-500">{{ request?.employer ? request.employer : '-' }}</div>
         <div class="col-span-2 flex items-center whitespace-nowrap px-3 py-4 text-sm text-gray-500 capitalize">{{ request?.type ? request.type.replace('_', ' ') : '-' }}</div>
         <div class="col-span-2 flex items-center whitespace-nowrap px-3 py-4 text-sm text-gray-500">{{ request?.dateCreated ? request.dateCreated : '-' }}</div>
-        <div class="col-span-2 flex items-center whitespace-nowrap px-3 py-4 text-sm text-gray-500">{{ request?.administer ? request.administer : '-' }}</div>
+        <div class="col-span-2 flex items-center whitespace-nowrap px-3 py-4 text-sm text-gray-500">
+            {{ request?.admin ? request.admin : '-' }}
+            <span v-if="request?.admin && request?.dateAdministered" class="block">
+                on the {{ request?.dateAdministered ? request.dateAdministered : '-' }}
+            </span>
+        </div>
         <div class="flex items-center whitespace-nowrap px-3 pr-3 py-4 text-sm">
             <span :class="[
                 'rounded-2xl text-xs font-bold px-3 py-1 mb-0',

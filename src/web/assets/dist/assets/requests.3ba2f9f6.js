@@ -1,6 +1,4 @@
-import { gql } from 'graphql-tag'
-
-export const REQUESTS = gql`
+import{g as e}from"./vendor.8d35d0ec.js";const a=e`
     query Requests(
         $employerId: [Int], 
         $employeeId: [Int], 
@@ -43,9 +41,7 @@ export const REQUESTS = gql`
             status: $status
         )
     }
-`
-
-export const WRITE_REQUEST = gql`
+`;e`
     mutation CreateRequest($id: Int!, $adminId: Int!, $dateHandled: Date!, $status: String) {
         CreateRequest(
             id: $id,
@@ -57,9 +53,7 @@ export const WRITE_REQUEST = gql`
             data
         }
     }
-`
-
-export const UPDATE_REQUEST = gql`
+`;const d=e`
     mutation UpdateRequest($id: Int!, $adminId: Int!, $status: String, $note: String) {
         UpdateRequest(
             id: $id
@@ -87,4 +81,5 @@ export const UPDATE_REQUEST = gql`
             admin
         }
     }
-`;
+`;export{a as R,d as U};
+//# sourceMappingURL=requests.3ba2f9f6.js.map

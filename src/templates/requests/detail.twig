@@ -17,11 +17,11 @@
     <div class="sm:flex">
         <div class="sm:flex-auto">
             <div class="flex items-center">
-                <div class="flex items-center">
+                <div class="flex items-center mb-0">
                     <a href="/admin/staff-management/requests" title="Request from {{ request.employee.personalDetails.firstName }} {{ request.employee.personalDetails.lastName }}" class="inline-flex no-underline items-center px-2.5 py-1.5 rounded-full text-sm text-indigo-700 bg-indigo-100 hover:bg-indigo-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500" style="margin-bottom: 0px;">←</a>
                     <h1 class="ml-1 text-xl font-semibold text-gray-900">Request from {{ request.employee.personalDetails.firstName }} {{ request.employee.personalDetails.lastName }}</h1>
                 </div>
-                <span class="inline-flex mt-px rounded-2xl text-xs font-bold px-3 py-1 mb-0 bg-{{- statusColour[request.status] -}}-300 text-{{- statusColour[request.status] -}}-900">{{ request.status }}</span>
+                <span class="inline-flex mt-px rounded-2xl text-xs font-bold px-3 py-1 mb-0 bg-{{- statusColour[request.status] -}}-300 text-{{- statusColour[request.status] -}}-900">{{ request.status }} {{ request.status != 'pending' ? (' on the ' ~ request.dateAdministered|date('jS M, Y')) : '' }}</span>
             </div>
             <p class="mt-2 text-sm text-gray-700">This {{ request.type|replace('_', ' ') }} request has been made by {{ request.employee.personalDetails.firstName }} {{ request.employee.personalDetails.lastName }} of {{ request.employer }} on the {{ request.dateCreated|date('jS M, Y') }}.</p>
         </div>
@@ -49,7 +49,7 @@
                 <span class="text-base mt-1 block">{{ request.dateCreated|date('jS M, Y') }}</span>
             </div>
             <div class="mb-6 col-span-4 border border-t-2 border-gray-200 border-solid border-r-0 border-l-0 py-6">
-                <div class="flex w-full">
+                <div class="flex items-top w-full">
                     <div class="flex-grow">
                         <span class="text-xs font-bold text-gray-400 block mb-2">From</span>
                         <div class="bg-gray-200 p-4 rounded-lg">
@@ -78,7 +78,9 @@
             {% else %}
                 <div class="col-span-4">
                     <span class="text-xs font-bold text-gray-400 block mb-2 block">Note</span>
-                    {{ request.note ? ('<span>' ~ request.note ~ '</span>') : '<span class="italic text-gray-400">There\'s no note for this request</span>' }}
+                    <span class="text-base">
+                        {{ request.note ? request.note : '<span class="italic text-gray-400">There\'s no note for this request</span>' }}
+                    </span>
                 </div>
             {% endif %}
         </div>

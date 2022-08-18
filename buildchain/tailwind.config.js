@@ -15,6 +15,7 @@ module.exports = {
         'gap-y-2',
         'grid-cols-3',
         'italic',
+        'items-top',
         'line-through',
         'mb-2',
         'mb-6',
