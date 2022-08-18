@@ -43,6 +43,11 @@ class CreateAddressRequest
                 $address['line3'] = $data->line3;
             }
 
+            // save line4 if a change has happened
+            if(($data->line4 ?? null) && ($savedAddress['line4'] ?? '') !== $data->line4) {
+                $address['line4'] = $data->line4;
+            }
+
             // save postCode if a change has happened
             if(($data->postCode ?? null) && ($savedAddress['postCode'] ?? '') !== $data->postCode) {
                 $address['postCode'] = $data->postCode;
@@ -76,6 +81,9 @@ class CreateAddressRequest
         }
         if($data->personalDetails->address->line3 ?? null) {
             $address->line3 = $data->personalDetails->address->line3;
+        }
+        if($data->personalDetails->address->line4 ?? null) {
+            $address->line4 = $data->personalDetails->address->line4;
         }
         if($data->personalDetails->address->postCode ?? null) {
             $address->postCode = $data->personalDetails->address->postCode;
