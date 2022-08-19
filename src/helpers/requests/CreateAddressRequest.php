@@ -27,17 +27,8 @@ class CreateAddressRequest
             $address = $savedAddress;
 
             //remap the address for Staffology
-            $address['line1'] = $address['address1'];
-            $address['line2'] = $address['address2'];
-            $address['line3'] = $address['address3'];
-            $address['line4'] = $address['address4'];
-            $address['postCode'] = $address['zipCode'];
-
-            unset($address['address1']);
-            unset($address['address2']);
-            unset($address['address3']);
-            unset($address['address4']);
-            unset($address['zipCode']);
+            $addressHelper = new ParseAddress();
+            $address = $addressHelper->parse($address);
 
             // save line1 if a change has happened
             if(($data->line1 ?? null) && ($savedAddress['line1'] ?? '') !== $data->line1) {
@@ -73,15 +64,17 @@ class CreateAddressRequest
                 $dateOfBirth = new \DateTime($dbPersonalDetails['dateOfBirth']);
                 $dbPersonalDetails['dateOfBirth'] = $dateOfBirth->format('Y-m-d');
             }
+
+            $dbPersonalDetails['address'] = $address;
+            $personalDetails = $dbPersonalDetails;
+
+            $objPersonalDetails = new \stdClass();
+            $objPersonalDetails->personalDetails = $personalDetails;
+
+            return json_encode($objPersonalDetails);
         }
 
-        $dbPersonalDetails['address'] = $address;
-        $personalDetails = $dbPersonalDetails;
-
-        $objPersonalDetails = new \stdClass();
-        $objPersonalDetails->personalDetails = $personalDetails;
-
-        return json_encode($objPersonalDetails);
+        return '';
     }
 
     public function parse(string $json): ?string

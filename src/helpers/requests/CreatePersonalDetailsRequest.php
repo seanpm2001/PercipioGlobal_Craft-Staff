@@ -27,19 +27,8 @@ class CreatePersonalDetailsRequest
             $details = $savedPersonalDetails;
 
             //remap the address for Staffology
-            $dbPersonalDetails['address']['line1'] = $dbPersonalDetails['address']['address1'];
-            $dbPersonalDetails['address']['line2'] = $dbPersonalDetails['address']['address2'];
-            $dbPersonalDetails['address']['line3'] = $dbPersonalDetails['address']['address3'];
-            $dbPersonalDetails['address']['line4'] = $dbPersonalDetails['address']['address4'];
-            $dbPersonalDetails['address']['postCode'] = $dbPersonalDetails['address']['zipCode'];
-
-            unset($dbPersonalDetails['address']['address1']);
-            unset($dbPersonalDetails['address']['address2']);
-            unset($dbPersonalDetails['address']['address3']);
-            unset($dbPersonalDetails['address']['address4']);
-            unset($dbPersonalDetails['address']['zipCode']);
-
-            $details['address'] = $dbPersonalDetails['address'];
+            $addressHelper = new ParseAddress();
+            $details['address'] = $addressHelper->parse($dbPersonalDetails['address']);
 
             // save title if a change has happened
             if (($data->title ?? null) && ($savedPersonalDetails['title'] ?? '') !== $data->title) {
@@ -70,13 +59,14 @@ class CreatePersonalDetailsRequest
                 $dateOfBirth = new \DateTime($details['dateOfBirth']);
                 $details['dateOfBirth'] = $dateOfBirth->format('Y-m-d');
             }
+
+            $objPersonalDetails = new \stdClass();
+            $objPersonalDetails->personalDetails = $details;
+
+            return json_encode($objPersonalDetails);
         }
 
-        $objPersonalDetails = new \stdClass();
-        $objPersonalDetails->personalDetails = $details;
-
-
-        return json_encode($objPersonalDetails);
+        return '';
     }
 
     public function parse(string $json): ?string
