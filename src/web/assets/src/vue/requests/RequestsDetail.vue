@@ -41,7 +41,7 @@ const toggleModal = (evt, state) => {
 <template>
     <span class="text-xs font-bold text-gray-400 block mb-2">Note</span>
     <form @submit="preventSubmit" ref="form">
-        <textarea class="block w-full bg-gray-50 p-4 rounded-lg border border-solid border-gray-200 box-border mb-6" name="note" placeholder="Type a not as additional information when approving or declining"></textarea>
+        <textarea class="block w-full bg-gray-50 p-4 rounded-lg border border-solid border-gray-200 box-border mb-6" name="note" placeholder="Type a note as additional information when approving or declining"></textarea>
 
         <div class="col-span-4 text-right">
             <button v-if="!loading" @click="(evt) => handleSubmit(evt, 'declined')" class="cursor-pointer inline-block bg-red-300 text-red-900 font-bold mr-2 py-2 px-3 text-sm rounded-lg cursor-pointer">Decline</button>
