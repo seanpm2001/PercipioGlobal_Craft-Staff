@@ -22,9 +22,22 @@ class CreateAddressRequest
         // get personal details of employee and check which fields got changed
         if($employeeId) {
             $data = json_decode($json);
-            $dbPersonalDetails = Staff::$plugin->employees->getPersonalDetailsByEmployee($employeeId);
+            $dbPersonalDetails = Staff::$plugin->employees->getPersonalDetailsByEmployee($employeeId, true);
             $savedAddress = $dbPersonalDetails['address'] ?? null;
-            $address = [];
+            $address = $savedAddress;
+
+            //remap the address for Staffology
+            $address['line1'] = $address['address1'];
+            $address['line2'] = $address['address2'];
+            $address['line3'] = $address['address3'];
+            $address['line4'] = $address['address4'];
+            $address['postCode'] = $address['zipCode'];
+
+            unset($address['address1']);
+            unset($address['address2']);
+            unset($address['address3']);
+            unset($address['address4']);
+            unset($address['zipCode']);
 
             // save line1 if a change has happened
             if(($data->line1 ?? null) && ($savedAddress['line1'] ?? '') !== $data->line1) {
@@ -57,7 +70,7 @@ class CreateAddressRequest
             }
 
             if (!is_null($dbPersonalDetails['dateOfBirth'])) {
-                $dateOfBirth = new DateTime($dbPersonalDetails['dateOfBirth']);
+                $dateOfBirth = new \DateTime($dbPersonalDetails['dateOfBirth']);
                 $dbPersonalDetails['dateOfBirth'] = $dateOfBirth->format('Y-m-d');
             }
         }
