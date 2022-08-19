@@ -75,7 +75,7 @@ class History extends Element
     public function defineRules(): array
     {
         $rules = parent::defineRules();
-        $rules[] = [['employerId', 'employeeId', 'type'], 'required'];
+        $rules[] = [['employerId', 'employeeId', 'type', 'message'], 'required'];
         $rules[] = ['type', function($attribute, $params) {
             if (!in_array($this->$attribute, self::TYPES)) {
                 $this->addError($attribute, "$attribute is not a valid type");

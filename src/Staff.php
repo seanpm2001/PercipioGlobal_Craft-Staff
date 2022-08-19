@@ -11,8 +11,10 @@
 namespace percipiolondon\staff;
 
 use Craft;
+use craft\base\Element;
 use craft\base\Plugin;
 use craft\console\Application as ConsoleApplication;
+use craft\elements\User;
 use craft\events\RegisterComponentTypesEvent;
 use craft\events\RegisterGqlMutationsEvent;
 use craft\events\RegisterGqlQueriesEvent;
@@ -20,10 +22,12 @@ use craft\events\RegisterGqlSchemaComponentsEvent;
 use craft\events\RegisterGqlTypesEvent;
 use craft\events\RegisterUrlRulesEvent;
 use craft\events\RegisterUserPermissionsEvent;
+use craft\events\UserEvent;
 use craft\helpers\UrlHelper;
 use craft\services\Elements;
 use craft\services\Gql;
 use craft\services\UserPermissions;
+use craft\services\Users;
 use craft\web\twig\variables\CraftVariable;
 use craft\web\UrlManager;
 
@@ -32,6 +36,7 @@ use nystudio107\pluginvite\services\VitePluginService;
 use percipiolondon\staff\assetbundles\staff\StaffAsset;
 use percipiolondon\staff\elements\Employee as EmployeeElement;
 use percipiolondon\staff\elements\Employer as EmployerElement;
+use percipiolondon\staff\elements\History;
 use percipiolondon\staff\elements\History as HistoryElement;
 use percipiolondon\staff\elements\PayRun as PayRunElement;
 use percipiolondon\staff\elements\PayRunEntry as PayRunEntryElement;
@@ -49,8 +54,10 @@ use percipiolondon\staff\gql\queries\PayRun as PayRunQueries;
 use percipiolondon\staff\gql\queries\PayRunEntry as PayRunEntryQueries;
 use percipiolondon\staff\gql\queries\Request as RequestQueries;
 use percipiolondon\staff\gql\resolvers\mutations\Request;
+use percipiolondon\staff\helpers\HistoryMessages;
 use percipiolondon\staff\models\Settings;
 use percipiolondon\staff\plugin\Services as StaffServices;
+use percipiolondon\staff\records\Employee;
 use percipiolondon\staff\services\Addresses;
 use percipiolondon\staff\services\Employees;
 use percipiolondon\staff\services\Employers;
@@ -62,6 +69,7 @@ use percipiolondon\staff\services\Totals;
 use percipiolondon\staff\variables\StaffVariable;
 
 use yii\base\Event;
+use yii\base\ModelEvent;
 
 /**
  * Craft plugins are very much like little applications in and of themselves. We’ve made
@@ -318,6 +326,47 @@ class Staff extends Plugin
         if ($request->getIsCpRequest() && !$request->getIsConsoleRequest()) {
             $this->installCpEventListeners();
         }
+
+        // save history when user gets activated
+//        Event::on(
+//            Users::class,
+//            Users::EVENT_AFTER_ACTIVATE_USER,
+//            function (UserEvent $event) {
+//                $employee = Employee::findOne(['userId' => $event->user->id]);
+//
+//                $history = new History();
+//                $history->type = 'system';
+//                $history->employeeId = $employee->id;
+//                $history->employerId = $employee->employerId;
+//                $history->message = HistoryMessages::message($history->type, 'user','activate');
+//                $history->data = null;
+//                $history->administerId = null;
+//
+//                Craft::$app->getElements()->saveElement($history);
+//            }
+//        );
+
+        // save history when user sets new password
+        Event::on(
+            User::class,
+            User::EVENT_BEFORE_VALIDATE,
+            function(ModelEvent $event) {
+                if ($event->sender->newPassword) {
+                    $employee = Employee::findOne(['userId' => $event->sender->id]);
+
+                    $history = new History();
+                    $history->type = 'system';
+                    $history->employeeId = $employee->id;
+                    $history->employerId = $employee->employerId;
+                    $history->message = HistoryMessages::message($history->type, 'user','set_password');
+                    $history->data = null;
+                    $history->administerId = null;
+
+                    Craft::$app->getElements()->saveElement($history);
+                }
+            }
+        );
+
     }
 
     /**

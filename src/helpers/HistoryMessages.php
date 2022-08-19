@@ -17,6 +17,8 @@ class HistoryMessages
         'employee_telephone_canceled' => 'employee_telephone_canceled',
         'employee_telephone_declined' => 'employee_telephone_declined',
         'employee_telephone_pending' => 'employee_telephone_pending',
+        'system_user_activate' => 'system_user_active',
+        'system_user_set_password' => 'system_user_set_password',
     ];
 
     public static function message(string $type, string $detail = null, string $status = null): ?string
