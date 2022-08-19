@@ -10,6 +10,8 @@ use percipiolondon\staff\records\Histories;
 
 class History extends Element
 {
+    public const TYPES = ['system', 'employee', 'payroll', 'pension', 'benefit'];
+
     /**
      * @var int|null
      */
@@ -74,6 +76,11 @@ class History extends Element
     {
         $rules = parent::defineRules();
         $rules[] = [['employerId', 'employeeId', 'type'], 'required'];
+        $rules[] = ['type', function($attribute, $params) {
+            if (!in_array($this->$attribute, self::TYPES)) {
+                $this->addError($attribute, "$attribute is not a valid type");
+            }
+        }];
 
         return $rules;
     }
@@ -138,6 +145,8 @@ class History extends Element
             }
 
             $history->message = $this->message;
+            $history->employerId = $this->employerId;
+            $history->employeeId = $this->employeeId;
             $history->data = $this->data;
             $history->administerId = $this->administerId;
             $history->type = $this->type;

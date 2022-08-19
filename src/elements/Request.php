@@ -17,6 +17,7 @@ use DateTime;
 use craft\base\Element;
 use craft\elements\db\ElementQueryInterface;
 use percipiolondon\staff\elements\db\RequestQuery;
+use percipiolondon\staff\helpers\HistoryMessages;
 use percipiolondon\staff\helpers\requests\CreateAddressRequest;
 use percipiolondon\staff\helpers\requests\CreatePersonalDetailsRequest;
 use percipiolondon\staff\helpers\requests\CreateTelephoneRequest;
@@ -31,6 +32,8 @@ use percipiolondon\staff\Staff;
  */
 class Request extends Element
 {
+    CONST STATUSSES = ['approved', 'canceled', 'declined', 'pending'];
+
     /**
      * @var string|null
      */
@@ -123,6 +126,11 @@ class Request extends Element
     {
         $rules = parent::defineRules();
         $rules[] = [['employerId', 'employeeId', 'type'], 'required'];
+        $rules[] = ['status', function($attribute, $params) {
+            if (!in_array($this->$attribute, self::STATUSSES)) {
+                $this->addError($attribute, "$attribute is not a valid type");
+            }
+        }];
 
         return $rules;
     }
@@ -312,6 +320,18 @@ class Request extends Element
 
             // save the request to the database
             $save = $request->save();
+
+            // create a history log
+            if ($save) {
+                $history = new History();
+                $history->type = 'employee';
+                $history->employeeId = $request->employeeId;
+                $history->employerId = $request->employerId;
+                $history->message = HistoryMessages::message($history->type, $request->type, $request->status);
+                $history->data = $request->request;
+                $history->administerId = $request->administerId ?? null;
+                $success = Craft::$app->getElements()->saveElement($history);
+            }
 
             // sync with Staffology if the request has been approved
             if($request->status === "approved") {

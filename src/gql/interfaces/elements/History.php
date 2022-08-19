@@ -6,6 +6,7 @@ use craft\gql\GqlEntityRegistry;
 use craft\gql\interfaces\Element;
 use craft\gql\TypeManager;
 use GraphQL\Type\Definition\InterfaceType;
+use GraphQL\Type\Definition\ResolveInfo;
 use GraphQL\Type\Definition\Type;
 use percipiolondon\staff\gql\types\generators\HistoryGenerator;
 use percipiolondon\staff\elements\History as HistoryElement;
@@ -72,6 +73,10 @@ class History extends Element
                 'name' => 'message',
                 'type' => Type::string(),
                 'description' => 'Message',
+                'resolve' => function ($source, array $arguments, $context, ResolveInfo $resolveInfo) {
+                    //pass the translation 'en' (hardcoded, can be an argument in the future)
+                    return \Craft::t('staff-management', $source->message, 'en');
+                }
             ],
             'data' => [
                 'name' => 'data',
