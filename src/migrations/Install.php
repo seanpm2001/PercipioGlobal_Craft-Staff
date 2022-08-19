@@ -323,7 +323,8 @@ class Install extends Migration
                 'administerId' => $this->integer(), //create FK to Craft User [id] // This can be null
                 //fields
                 'message' => $this->string(255)->notNull(),
-                'type' => $this->string()->notNull(),
+                'data' => $this->longText(),
+                'type' => $this->enum('type', ['system', 'payroll', 'pension', 'employee']),
             ]);
 
 
