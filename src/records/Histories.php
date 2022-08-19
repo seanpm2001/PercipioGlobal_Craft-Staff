@@ -19,10 +19,11 @@ use percipiolondon\staff\db\Table;
  * @property boolean $administerId;
  *
  * @property string $message;
+ * @property string $data;
  * @property string $type;
  */
 
-class History extends ActiveRecord
+class Histories extends ActiveRecord
 {
     // Public Static Methods
     // =========================================================================

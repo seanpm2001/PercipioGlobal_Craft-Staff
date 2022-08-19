@@ -233,34 +233,6 @@ class Request extends Element
     }
 
     /**
-     * @return string|null
-     */
-//    public function getCurrent(): ?string
-//    {
-//        if($this->_current === null) {
-//            if($this->type === null) {
-//                return null;
-//            }
-//
-//            $helper = null;
-//            $current = null;
-//
-//            switch ($this->type) {
-//                case 'address':
-//                    $helper = new CreateAddressRequest();
-//                    $current = $helper->current($this->employeeId);
-//                    break;
-//                case 'personal_details':
-//                    $helper = new CreatePersonalDetailsRequest();
-//                    $current = $helper->current($this->employeeId);
-//                    break;
-//            };
-//
-//            return $current;
-//        }
-//    }
-
-    /**
      * @param bool $isNew
      */
     public function afterSave(bool $isNew): void

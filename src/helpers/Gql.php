@@ -14,6 +14,11 @@ class Gql extends \craft\helpers\Gql
         return true;
     }
 
+    public static function canQueryHistory(): bool
+    {
+        return true;
+    }
+
     public static function canQueryPayruns(): bool
     {
         return true;

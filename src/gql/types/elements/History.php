@@ -7,16 +7,16 @@ use craft\helpers\Json;
 
 use GraphQL\Type\Definition\ResolveInfo;
 
-use percipiolondon\staff\elements\Request as RequestElement;
-use percipiolondon\staff\gql\interfaces\elements\Request as RequestInterface;
+use percipiolondon\staff\elements\History as HistoryElement;
+use percipiolondon\staff\gql\interfaces\elements\History as HistoryInterface;
 
 /**
- * Class Request
+ * Class History
  *
  * @author Percipio Global Ltd. <support@percipio.london>
  * @since 1.0.0
  */
-class Request extends Element
+class History extends Element
 {
     /**
      * @inheritdoc
@@ -24,7 +24,7 @@ class Request extends Element
     public function __construct(array $config)
     {
         $config['interfaces'] = [
-            RequestInterface::getType(),
+            HistoryInterface::getType(),
         ];
 
         parent::__construct($config);
@@ -35,7 +35,7 @@ class Request extends Element
      */
     protected function resolve($source, $arguments, $context, ResolveInfo $resolveInfo)
     {
-        /** @var RequestElement $source */
+        /** @var HistoryElement $source */
         $fieldName = $resolveInfo->fieldName;
 
         return match ($fieldName) {

@@ -32,6 +32,7 @@ use nystudio107\pluginvite\services\VitePluginService;
 use percipiolondon\staff\assetbundles\staff\StaffAsset;
 use percipiolondon\staff\elements\Employee as EmployeeElement;
 use percipiolondon\staff\elements\Employer as EmployerElement;
+use percipiolondon\staff\elements\History as HistoryElement;
 use percipiolondon\staff\elements\PayRun as PayRunElement;
 use percipiolondon\staff\elements\PayRunEntry as PayRunEntryElement;
 use percipiolondon\staff\elements\Request as RequestElement;
@@ -43,6 +44,7 @@ use percipiolondon\staff\gql\interfaces\elements\Request as RequestInterface;
 use percipiolondon\staff\gql\mutations\RequestMutation;
 use percipiolondon\staff\gql\queries\Employee as EmployeeQueries;
 use percipiolondon\staff\gql\queries\Employer as EmployerQueries;
+use percipiolondon\staff\gql\queries\History as HistoryQueries;
 use percipiolondon\staff\gql\queries\PayRun as PayRunQueries;
 use percipiolondon\staff\gql\queries\PayRunEntry as PayRunEntryQueries;
 use percipiolondon\staff\gql\queries\Request as RequestQueries;
@@ -504,6 +506,7 @@ class Staff extends Plugin
                     $event->queries,
                     EmployerQueries::getQueries(),
                     EmployeeQueries::getQueries(),
+                    HistoryQueries::getQueries(),
                     PayRunQueries::getQueries(),
                     PayRunEntryQueries::getQueries(),
                     RequestQueries::getQueries()
@@ -538,6 +541,7 @@ class Staff extends Plugin
                 $event->types[] = PayRunElement::class;
                 $event->types[] = PayRunEntryElement::class;
                 $event->types[] = RequestElement::class;
+                $event->types[] = HistoryElement::class;
             }
         );
     }
