@@ -241,11 +241,11 @@ class Employers extends Component
                 $employers = Json::decodeIfJson($response->getBody()->getContents(), true);
 
                 //TESTING PURPOSE
-                if (App::parseEnv('$HUB_DEV_MODE') && App::parseEnv('$HUB_DEV_MODE') == 1) {
-                    $employers = array_filter($employers, static function($emp) {
-                        return $emp['name'] == 'Acme Limited (Demo)';
-                    });
-                }
+//                if (App::parseEnv('$HUB_DEV_MODE') && App::parseEnv('$HUB_DEV_MODE') == 1) {
+//                    $employers = array_filter($employers, static function($emp) {
+//                        return $emp['name'] == 'Acme Limited (Demo)';
+//                    });
+//                }
 
                 if (count($employers) > 0) {
                     $logger->stdout("End fetching list of " . count($employers) . " employers " . PHP_EOL, $logger::RESET);
