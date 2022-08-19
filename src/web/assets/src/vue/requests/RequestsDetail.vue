@@ -4,9 +4,11 @@ import { useMutation } from '@vue/apollo-composable'
 import { UPDATE_REQUEST } from '~/graphql/requests.ts'
 
 const form = ref(null)
-const { mutate, loading, onDone } = useMutation(UPDATE_REQUEST)
+const loading = ref(false)
+const { mutate, onDone } = useMutation(UPDATE_REQUEST)
 
 onDone( queryResult => {
+    console.og(queryResult)
     window.location.reload(false)
 })
 
@@ -18,15 +20,14 @@ const handleSubmit = (evt, status) => {
     evt.preventDefault()
 
     const formValues = new FormData(form.value)
+    loading.value = true
 
-    if(!loading.value) {
-        mutate({
-            id: parseInt(window.request.request.id),
-            adminId: parseInt(window.request.admin),
-            status: status,
-            note: formValues.get('note')
-        })
-    }
+    mutate({
+        id: parseInt(window.request.request.id),
+        adminId: parseInt(window.request.admin),
+        status: status,
+        note: formValues.get('note')
+    })
 }
 
 </script>

@@ -312,20 +312,23 @@ class Request extends Element
             $request->data = $this->data;
 
             // create the data object according to the request type if it's not an approved request
-            if ($this->status !== 'approved') {
-                switch ($this->type) {
-                    case 'address':
-                        $helper = new CreateAddressRequest();
+
+            switch ($this->type) {
+                case 'address':
+                    $helper = new CreateAddressRequest();
+                    if ($this->status !== 'approved') {
                         $request->current = $helper->current($this->employeeId);
-                        $request->request = $helper->create($this->data, $this->employeeId);
-                        break;
-                    case 'personal_details':
-                        $helper = new CreatePersonalDetailsRequest();
+                    }
+                    $request->request = $helper->create($this->data, $this->employeeId);
+                    break;
+                case 'personal_details':
+                    $helper = new CreatePersonalDetailsRequest();
+                    if ($this->status !== 'approved') {
                         $request->current = $helper->current($this->employeeId);
-                        $request->request = $helper->create($this->data, $this->employeeId);
-                        break;
-                };
-            }
+                    }
+                    $request->request = $helper->create($this->data, $this->employeeId);
+                    break;
+            };
 
             // save the request to the database
             $save = $request->save();
