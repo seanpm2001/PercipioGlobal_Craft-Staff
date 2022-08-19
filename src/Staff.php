@@ -389,6 +389,7 @@ class Staff extends Plugin
             'staff-management/pay-runs/download-template/<payRunId:\d+>' => 'staff-management/pay-run/download-template',
             'staff-management/requests' => 'staff-management/request',
             'staff-management/requests/<requestId:\d+>' => 'staff-management/request/detail',
+            'staff-management/requests/undo/<requestId:\d+>' => 'staff-management/request/undo',
         ];
     }
 

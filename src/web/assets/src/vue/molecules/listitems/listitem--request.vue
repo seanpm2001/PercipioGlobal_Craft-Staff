@@ -34,7 +34,8 @@ defineProps<Props>()
                 request?.status === 'declined' ? 'bg-red-300 text-red-900' : '',
                 request?.status === 'canceled' ? 'bg-gray-300 text-gray-900' : ''
             ]">
-                {{ request?.status ? request.status : '-' }}
+                <span>{{ request?.status ? request.status.slice(0, 2) : '-' }}</span>
+                <span class="hidden lg:inline">{{ request?.status ? request.status.slice(2, request.status.length) : '' }}</span>
             </span>
         </div>
     </a>

@@ -25,66 +25,78 @@
             </div>
             <p class="mt-2 text-sm text-gray-700">This {{ request.type|replace('_', ' ') }} request has been made by {{ request.employee.personalDetails.firstName }} {{ request.employee.personalDetails.lastName }} of {{ request.employer }} on the {{ request.dateCreated|date('jS M, Y') }}.</p>
         </div>
-        <!--div class="mt-4 sm:mt-0 sm:ml-16 sm:flex-none">
-            <button type="button" class="inline-flex items-center justify-center rounded-md border border-transparent bg-indigo-600 px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 sm:w-auto">Add user</button>
-        </div-->
+        {%- if request.status != 'approved' and request.status != 'pending' %}
+            <div class="mt-4 sm:mt-0 sm:ml-16 sm:flex-none">
+                <a href="/admin/staff-management/requests/undo/{{- request.id }}" class="inline-flex items-center justify-center rounded-md border border-transparent bg-indigo-600 px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 sm:w-auto no-underline">Set back to a pending status</a>
+            </div>
+        {%- endif -%}
     </div>
 
     <div class="w-full pt-10">
-        <div class="grid grid-cols-4 gap-x-4">
+        <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-{{- request.status != 'approved' and request.status != 'pending' ? '5' : '4' }} gap-x-4">
             <div class="mb-6">
-                <span class="text-xs font-bold text-gray-400 block">Request type</span>
-                <span class="text-base mt-1 block capitalize">{{ request.type|replace('_', ' ') }}</span>
+                <span class="text-xs font-bold text-gray-400 block mb-2">Request type</span>
+                <span class="text-base block capitalize">{{ request.type|replace('_', ' ') }}</span>
             </div>
             <div class="mb-6">
-                <span class="text-xs font-bold text-gray-400 block">Requested by</span>
-                <span class="text-base mt-1 block">{{ request.employee.personalDetails.firstName }} {{ request.employee.personalDetails.middleName }} {{ request.employee.personalDetails.lastName }}</span>
+                <span class="text-xs font-bold text-gray-400 block mb-2">Requested by</span>
+                <span class="text-base block">{{ request.employee.personalDetails.firstName }} {{ request.employee.personalDetails.middleName }} {{ request.employee.personalDetails.lastName }}</span>
             </div>
             <div class="mb-6">
                 <span class="text-xs font-bold text-gray-400 block mb-2">Employee of</span>
-                <span class="text-base mt-1 block">{{ request.employer }}</span>
+                <span class="text-base block">{{ request.employer }}</span>
             </div>
-            <div class="mb-6">
-                <span class="text-xs font-bold text-gray-400 block mb-2">Requested on</span>
-                <span class="text-base mt-1 block">{{ request.dateCreated|date('jS M, Y') }}</span>
-            </div>
-            <div class="mb-6 col-span-4 border border-t-2 border-gray-200 border-solid border-r-0 border-l-0 py-6">
-                <div class="flex items-top w-full">
-                    <div class="flex-grow">
-                        <span class="text-xs font-bold text-gray-400 block mb-2">From</span>
-                        <div class="bg-gray-200 p-4 rounded-lg">
-                            {%- set current = request.current|json_decode -%}
-                            {%- set data = request.data|json_decode -%}
+            {%- if request.status != 'approved' and request.status != 'pending' %}
+                <div class="mb-6">
+                    <span class="text-xs font-bold text-gray-400 block mb-2">Administered by</span>
+                    <span class="text-base block">{{ request.admin }}</span>
+                </div>
+                <div class="mb-6">
+                    <span class="text-xs font-bold text-gray-400 block mb-2">Handled on</span>
+                    <span class="text-base block">{{ request.dateAdministered|date('jS M, Y') }}</span>
+                </div>
+            {%- else -%}
+                <div class="mb-6">
+                    <span class="text-xs font-bold text-gray-400 block mb-2">Requested on</span>
+                    <span class="text-base block">{{ request.dateCreated|date('jS M, Y') }}</span>
+                </div>
+            {%- endif -%}
+        </div>
+        <div class="mb-6 border border-t-2 border-gray-200 border-solid border-r-0 border-l-0 py-6">
+            <div class="flex items-top w-full">
+                <div class="flex-grow">
+                    <span class="text-xs font-bold text-gray-400 block mb-2">From</span>
+                    <div class="bg-gray-200 p-4 rounded-lg">
+                        {%- set current = request.current|json_decode -%}
+                        {%- set data = request.data|json_decode -%}
 
-                            {%- for key, value in current -%}
-                                <span class="block text-base mb-2 {{ data[key] ?? null ? 'font-bold' : '' -}}">{{ value ?? '-' }}</span>
-                            {%- endfor -%}
-                        </div>
+                        {%- for key, value in current -%}
+                            <span class="block text-base mb-2 {{ data[key] ?? null ? 'font-bold' : '' -}}">{{ value ?? '-' }}</span>
+                        {%- endfor -%}
                     </div>
-                    <span class="text-blue-600 inline-block text-xl px-4">→</span>
-                    <div class="flex-grow">
-                        <span class="text-xs font-bold text-gray-400 block mb-2">To</span>
-                        <div class="bg-gray-200 p-4 rounded-lg">
-                            {%- for key, value in current -%}
-                                <span class="block text-base mb-2 {{ data[key] ?? null ? 'font-bold' : '' -}}">{{ data[key] ?? value ?? '-' }}</span>
-                            {%- endfor -%}
-                        </div>
+                </div>
+                <span class="text-blue-600 inline-block text-xl px-4">→</span>
+                <div class="flex-grow">
+                    <span class="text-xs font-bold text-gray-400 block mb-2">To</span>
+                    <div class="bg-gray-200 p-4 rounded-lg">
+                        {%- for key, value in current -%}
+                            <span class="block text-base mb-2 {{ data[key] ?? null ? 'font-bold' : '' -}}">{{ data[key] ?? value ?? '-' }}</span>
+                        {%- endfor -%}
                     </div>
                 </div>
             </div>
-
-            {% if request.status == 'pending' %}
-                <div id="request-container" class="col-span-4"></div>
-            {% else %}
-                <div class="col-span-4">
-                    <span class="text-xs font-bold text-gray-400 block mb-2 block">Note</span>
-                    <span class="text-base">
-                        {{ request.note ? request.note : '<span class="italic text-gray-400">There\'s no note for this request</span>' }}
-                    </span>
-                </div>
-            {% endif %}
         </div>
 
+        {% if request.status == 'pending' %}
+            <div id="request-container" class="col-span-4"></div>
+        {% else %}
+            <div class="col-span-4">
+                <span class="text-xs font-bold text-gray-400 block mb-2 block">Note</span>
+                <span class="text-base">
+                    {{ request.note ? request.note : '<span class="italic text-gray-400">There\'s no note for this request</span>' }}
+                </span>
+            </div>
+        {% endif %}
     </div>
 
 {%- endset -%}

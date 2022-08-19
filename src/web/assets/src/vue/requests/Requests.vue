@@ -122,8 +122,8 @@ const setFilter = (filterValue) => {
     </div>
     <div class="mt-8 flex flex-col w-full">
         <div class="-my-2 overflow-x-auto w-full">
-            <div class="inline-block min-w-full py-2 align-middle">
-                <div class="overflow-hidden shadow border border-solid border-gray-300 md:rounded-lg">
+            <div class="inline-block min-w-full overflow-scroll py-2 align-middle">
+                <div class="shadow border border-solid border-gray-300 md:rounded-lg">
 
                     <!-- HEADINGS -->
                     <div class="grid grid-cols-11 border-b border-solid border-gray-300">

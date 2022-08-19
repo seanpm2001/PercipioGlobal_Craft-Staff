@@ -70,4 +70,20 @@ class RequestController extends Controller
         // Render the template
         return $this->renderTemplate('staff-management/requests/detail', $variables);
     }
+
+    public function actionUndo(int $requestId): Response
+    {
+        $request = Request::findOne($requestId);
+
+        if (!$request) {
+            throw new NotFoundHttpException();
+        }
+
+        if ($request->status !== 'pending' && $request->status !== 'approved') {
+            $request->status = 'pending';
+            Craft::$app->getElements()->saveElement($request);
+        }
+
+        return Craft::$app->response->redirect(['staff-management/request/detail', 'requestId' => $requestId]);
+    }
 }

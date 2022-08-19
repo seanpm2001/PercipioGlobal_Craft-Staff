@@ -8,7 +8,6 @@ const loading = ref(false)
 const { mutate, onDone } = useMutation(UPDATE_REQUEST)
 
 onDone( queryResult => {
-    console.og(queryResult)
     window.location.reload(false)
 })
 
