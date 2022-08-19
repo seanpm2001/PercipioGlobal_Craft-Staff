@@ -71,7 +71,9 @@
                         {%- set data = request.data|json_decode -%}
 
                         {%- for key, value in current -%}
-                            <span class="block text-base mb-2 {{ data[key] ?? null ? 'font-bold' : '' -}}">{{ value ?? '-' }}</span>
+                            <span class="text-base block capitalize text-gray-400">{{ key }}</span>
+                            {%- set val = value ?? '' -%}
+                            <span class="block text-base mb-2 {{ data[key] ?? null ? 'font-bold' : '' -}}">{{ val|length ? val : '-' }}</span>
                         {%- endfor -%}
                     </div>
                 </div>
@@ -80,7 +82,9 @@
                     <span class="text-xs font-bold text-gray-400 block mb-2">To</span>
                     <div class="bg-gray-200 p-4 rounded-lg">
                         {%- for key, value in current -%}
-                            <span class="block text-base mb-2 {{ data[key] ?? null ? 'font-bold' : '' -}}">{{ data[key] ?? value ?? '-' }}</span>
+                            <span class="text-base block capitalize text-gray-400">{{ key }}</span>
+                            {%- set val = data[key] ?? value ?? '' -%}
+                            <span class="block text-base mb-2 {{ data[key] ?? null ? 'font-bold' : '' -}}">{{ val|length ? val : '-' }}</span>
                         {%- endfor -%}
                     </div>
                 </div>
