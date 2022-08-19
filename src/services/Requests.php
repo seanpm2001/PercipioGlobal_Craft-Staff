@@ -17,12 +17,12 @@ class Requests extends Component
     public function saveToStaffology(RequestRecord $request): void
     {
         match (true) {
-            $request->type === 'address' => $this->_saveEmployee($request),
-            $request->type === 'personal_details' => $this->_saveEmployee($request),
+            $request->type === 'address' => $this->_syncEmployee($request),
+            $request->type === 'personal_details' => $this->_syncEmployee($request),
         };
     }
 
-    private function _saveEmployee(RequestRecord $request): void
+    private function _syncEmployee(RequestRecord $request): void
     {
         $employer = Employer::findOne($request->employerId);
         $employee = Employee::findOne($request->employeeId);
@@ -32,11 +32,11 @@ class Requests extends Component
             $staffologyEmployee = $employee->staffologyId;
             $endpoint = '/employers/'.$staffologyEmployer.'/employees/'.$staffologyEmployee;
 
-            $this->_sync($endpoint, $request->request);
+            $this->_sync($endpoint, $request, 'employee');
         }
     }
 
-    private function _sync(string $endpoint, string $json): bool
+    private function _sync(string $endpoint, RequestRecord $request, string $type): bool
     {
         $api = App::parseEnv(Staff::$plugin->getSettings()->apiKeyStaffology);
         $base_url = 'https://api.staffology.co.uk'.$endpoint;
@@ -47,29 +47,36 @@ class Requests extends Component
             ],
         ]);
 
-        $json = json_decode($json);
+        $json = json_decode($request->request);
         $data = json_decode(json_encode($json), true);
 
         try {
             $response = $client->put(
                 $base_url,
                 [
-                    'json' => [
-                        'personalDetails' => [
-                            'middleName' => 'string',
-                        ]
-                    ],
+                    'json' => $data,
                 ]
             );
 
             $result = Json::decodeIfJson($response->getBody()->getContents(), true);
-            Craft::dd($result);
+
+            match (true) {
+                $type === 'employee' => $this->_saveEmployee($result, $request)
+            };
 
             return true;
         } catch (GuzzleException $e) {
             Craft::error($e->getMessage(), __METHOD__);
-
             return false;
         }
+    }
+
+    private function _saveEmployee(array $employee, RequestRecord $request): void
+    {
+        $employeeName = ($employee['personalDetails']['firstName'] ?? ''). ' ' .($employee['personalDetails']['lastName'] ?? '');
+        $employer = Employer::findOne($request->employerId)->toArray();
+        $employer['id'] = $employer['staffologyId'];
+
+        Staff::$plugin->employees->saveEmployee($employee, $employeeName, $employer);
     }
 }

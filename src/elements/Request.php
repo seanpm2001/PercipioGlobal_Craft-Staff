@@ -57,6 +57,10 @@ class Request extends Element
     /**
      * @var string|null
      */
+    public ?string $current = null;
+    /**
+     * @var string|null
+     */
     public ?string $type = null;
     /**
      * @var string|null
@@ -78,10 +82,6 @@ class Request extends Element
      * @var array|null
      */
     private ?array $_employee = null;
-    /**
-     * @var string|null
-     */
-    private ?string $_current = null;
 
     /**
      * @return string
@@ -235,30 +235,30 @@ class Request extends Element
     /**
      * @return string|null
      */
-    public function getCurrent(): ?string
-    {
-        if($this->_current === null) {
-            if($this->type === null) {
-                return null;
-            }
-
-            $helper = null;
-            $current = null;
-
-            switch ($this->type) {
-                case 'address':
-                    $helper = new CreateAddressRequest();
-                    $current = $helper->current($this->employeeId);
-                    break;
-                case 'personal_details':
-                    $helper = new CreatePersonalDetailsRequest();
-                    $current = $helper->current($this->employeeId);
-                    break;
-            };
-
-            return $current;
-        }
-    }
+//    public function getCurrent(): ?string
+//    {
+//        if($this->_current === null) {
+//            if($this->type === null) {
+//                return null;
+//            }
+//
+//            $helper = null;
+//            $current = null;
+//
+//            switch ($this->type) {
+//                case 'address':
+//                    $helper = new CreateAddressRequest();
+//                    $current = $helper->current($this->employeeId);
+//                    break;
+//                case 'personal_details':
+//                    $helper = new CreatePersonalDetailsRequest();
+//                    $current = $helper->current($this->employeeId);
+//                    break;
+//            };
+//
+//            return $current;
+//        }
+//    }
 
     /**
      * @param bool $isNew
@@ -311,20 +311,29 @@ class Request extends Element
             $request->note = $this->note ?? '';
             $request->data = $this->data;
 
-            // create the data object according to the request type if it's a newly created one
-            match (true) {
-                $this->type === 'address' => $helper = new CreateAddressRequest(),
-                $this->type === 'personal_details' => $helper = new CreatePersonalDetailsRequest(),
-            };
+            // create the data object according to the request type if it's not an approved request
+            if ($this->status !== 'approved') {
+                switch ($this->type) {
+                    case 'address':
+                        $helper = new CreateAddressRequest();
+                        $request->current = $helper->current($this->employeeId);
+                        $request->request = $helper->create($this->data, $this->employeeId);
+                        break;
+                    case 'personal_details':
+                        $helper = new CreatePersonalDetailsRequest();
+                        $request->current = $helper->current($this->employeeId);
+                        $request->request = $helper->create($this->data, $this->employeeId);
+                        break;
+                };
+            }
 
-            $request->request = $helper ? $helper->create($this->data, $this->employeeId) : null;
-
+            // save the request to the database
             $save = $request->save();
 
             // sync with Staffology if the request has been approved
-//            if(!$isNew && $request->status === "approved") {
-//                Staff::$plugin->requests->saveToStaffology($request);
-//            }
+            if($request->status === "approved") {
+                Staff::$plugin->requests->saveToStaffology($request);
+            }
         } catch (\Exception $e) {
             Craft::error($e->getMessage(), __METHOD__);
         }

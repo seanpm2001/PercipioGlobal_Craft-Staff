@@ -38,7 +38,7 @@
             </div>
             <div class="mb-6">
                 <span class="text-xs font-bold text-gray-400 block">Requested by</span>
-                <span class="text-base mt-1 block">{{ request.employee.personalDetails.firstName }} {{ request.employee.personalDetails.lastName }}</span>
+                <span class="text-base mt-1 block">{{ request.employee.personalDetails.firstName }} {{ request.employee.personalDetails.middleName }} {{ request.employee.personalDetails.lastName }}</span>
             </div>
             <div class="mb-6">
                 <span class="text-xs font-bold text-gray-400 block mb-2">Employee of</span>
@@ -54,7 +54,7 @@
                         <span class="text-xs font-bold text-gray-400 block mb-2">From</span>
                         <div class="bg-gray-200 p-4 rounded-lg">
                             {%- set current = request.current|json_decode -%}
-                            {%- set data = request.request|json_decode -%}
+                            {%- set data = request.data|json_decode -%}
 
                             {%- for key, value in current -%}
                                 <span class="block text-base mb-2 {{ data[key] ?? null ? 'font-bold' : '' -}}">{{ value ?? '-' }}</span>

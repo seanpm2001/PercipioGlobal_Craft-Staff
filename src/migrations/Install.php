@@ -303,7 +303,9 @@ class Install extends Migration
                 'administerId' => $this->integer(), //create FK to User [id]
                 //fields
                 'dateAdministered' => $this->dateTime(),
+                'request' => $this->longText()->notNull(),
                 'data' => $this->longText()->notNull(),
+                'current' => $this->longText()->notNull(),
                 'type' => $this->string()->notNull(),
                 'status' => $this->enum('contributionLevelType', ['pending', 'approved', 'declined', 'canceled']),
                 'note' => $this->mediumText(),

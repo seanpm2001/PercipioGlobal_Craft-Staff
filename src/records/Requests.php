@@ -20,6 +20,7 @@ use percipiolondon\staff\db\Table;
  * @property string $administerId;
  * @property string $request;
  * @property string $data;
+ * @property string $current;
  * @property string $type;
  * @property string $status;
  * @property string $note;
