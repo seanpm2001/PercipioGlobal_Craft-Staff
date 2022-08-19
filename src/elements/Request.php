@@ -19,6 +19,7 @@ use craft\elements\db\ElementQueryInterface;
 use percipiolondon\staff\elements\db\RequestQuery;
 use percipiolondon\staff\helpers\requests\CreateAddressRequest;
 use percipiolondon\staff\helpers\requests\CreatePersonalDetailsRequest;
+use percipiolondon\staff\helpers\requests\CreateTelephoneRequest;
 use percipiolondon\staff\records\Requests;
 use percipiolondon\staff\Staff;
 
@@ -295,6 +296,13 @@ class Request extends Element
                     break;
                 case 'personal_details':
                     $helper = new CreatePersonalDetailsRequest();
+                    if ($this->status !== 'approved') {
+                        $request->current = $helper->current($this->employeeId);
+                    }
+                    $request->request = $helper->create($this->data, $this->employeeId);
+                    break;
+                case 'telephone':
+                    $helper = new CreateTelephoneRequest();
                     if ($this->status !== 'approved') {
                         $request->current = $helper->current($this->employeeId);
                     }

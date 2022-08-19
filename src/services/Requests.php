@@ -19,6 +19,7 @@ class Requests extends Component
         match (true) {
             $request->type === 'address' => $this->_syncEmployee($request),
             $request->type === 'personal_details' => $this->_syncEmployee($request),
+            $request->type === 'telephone' => $this->_syncEmployee($request),
         };
     }
 
@@ -67,6 +68,11 @@ class Requests extends Component
             return true;
         } catch (GuzzleException $e) {
             Craft::error($e->getMessage(), __METHOD__);
+            Craft::$app->getSession()->setNotice(Craft::t('staff-management', 'There were validation errors when saving to Staffology'));
+
+            $request->status = "pending";
+            $request->save();
+
             return false;
         }
     }
