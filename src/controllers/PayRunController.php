@@ -205,6 +205,13 @@ class PayRunController extends Controller
     }
 
 
+    /**
+     * @throws \League\Csv\UnableToProcessCsv
+     * @throws \craft\errors\MissingComponentException
+     * @throws Exception
+     * @throws NotFoundHttpException
+     * @throws \yii\web\BadRequestHttpException
+     */
     public function actionImport()
     {
         $this->requireLogin();

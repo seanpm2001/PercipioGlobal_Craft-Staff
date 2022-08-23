@@ -1,0 +1,30 @@
+import TipTap from '~/vue/Tiptap.vue'
+import { createApp } from 'vue'
+
+const tiptapField = async () => {
+
+    const tiptapFields = document.querySelectorAll('[id$=_tiptap]')
+    const tiptapFieldsToMount = new Object()
+
+    tiptapFields.forEach( (tiptapField) => {
+    
+        let field = tiptapField.id.replace('-', '')
+
+        tiptapFieldsToMount[field] = {
+            'id': '#' + tiptapField.id,
+            'tiptap': createApp({ ...TipTap })
+        }
+
+    })
+
+    const tiptap = Object.entries(tiptapFieldsToMount).map(entry => {
+        let field = entry[1]
+        return field.tiptap.mount(field.id)
+    })
+    
+    return tiptap
+}
+
+tiptapField().then( () => {
+    console.log()
+})

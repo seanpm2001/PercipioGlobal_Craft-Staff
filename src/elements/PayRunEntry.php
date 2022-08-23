@@ -33,7 +33,7 @@ class PayRunEntry extends Element
     // Public Properties
     // =========================================================================
 
-    public ?string $staffologyId;
+    public ?string $staffologyId = null;
     public ?int $payRunId = null;
     public ?int $employerId = null;
     public ?int $employeeId = null;

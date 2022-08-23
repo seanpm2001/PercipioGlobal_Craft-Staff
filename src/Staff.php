@@ -34,6 +34,8 @@ use craft\web\UrlManager;
 use nystudio107\pluginvite\services\VitePluginService;
 
 use percipiolondon\staff\assetbundles\staff\StaffAsset;
+use percipiolondon\staff\elements\BenefitProvider;
+use percipiolondon\staff\elements\BenefitType ;
 use percipiolondon\staff\elements\Employee as EmployeeElement;
 use percipiolondon\staff\elements\Employer as EmployerElement;
 use percipiolondon\staff\elements\History;
@@ -41,12 +43,14 @@ use percipiolondon\staff\elements\History as HistoryElement;
 use percipiolondon\staff\elements\PayRun as PayRunElement;
 use percipiolondon\staff\elements\PayRunEntry as PayRunEntryElement;
 use percipiolondon\staff\elements\Request as RequestElement;
+use percipiolondon\staff\gql\interfaces\elements\BenefitProvider as BenefitProviderInterface;
 use percipiolondon\staff\gql\interfaces\elements\Employer as EmployerInterface;
 use percipiolondon\staff\gql\interfaces\elements\Employee as EmployeeInterface;
 use percipiolondon\staff\gql\interfaces\elements\PayRun as PayRunInterface;
 use percipiolondon\staff\gql\interfaces\elements\PayRunEntry as PayRunEntryInterface;
 use percipiolondon\staff\gql\interfaces\elements\Request as RequestInterface;
 use percipiolondon\staff\gql\mutations\RequestMutation;
+use percipiolondon\staff\gql\queries\BenefitProvider as BenefitProviderQueries;
 use percipiolondon\staff\gql\queries\Employee as EmployeeQueries;
 use percipiolondon\staff\gql\queries\Employer as EmployerQueries;
 use percipiolondon\staff\gql\queries\History as HistoryQueries;
@@ -61,6 +65,7 @@ use percipiolondon\staff\records\Employee;
 use percipiolondon\staff\services\Addresses;
 use percipiolondon\staff\services\Employees;
 use percipiolondon\staff\services\Employers;
+use percipiolondon\staff\services\GroupBenefits;
 use percipiolondon\staff\services\PayOptions;
 use percipiolondon\staff\services\PayRunEntries;
 use percipiolondon\staff\services\PayRuns;
@@ -88,6 +93,7 @@ use yii\base\ModelEvent;
  * @property  Settings              $settings
  * @property  VitePluginService     $vite
  * @property  Addresses $addresses
+ * @property  GroupBenefits $groupBenefits
  * @property  Employees $employees
  * @property  Employers $employers
  * @property  PayOptions $payOptions
@@ -190,15 +196,10 @@ class Staff extends Plugin
      * you do not need to load it in your init() method.
      *
      */
-    public function init()
+    public function init(): void
     {
         parent::init();
         self::$plugin = $this;
-
-        // Add in our console commands
-        if (Craft::$app instanceof ConsoleApplication) {
-            $this->controllerNamespace = 'percipiolondon\staff\console\controllers';
-        }
 
         // Initialize properties
         self::$settings = self::$plugin->getSettings();
@@ -252,13 +253,12 @@ class Staff extends Plugin
     public function getSettings()
     {
         return parent::getSettings();
-        ;
     }
 
     /**
      * @inheritdoc
      */
-    public function getSettingsResponse()
+    public function getSettingsResponse(): void
     {
         // redirect to plugin settings page
         Craft::$app->getResponse()->redirect(UrlHelper::cpUrl('staff-management/plugin'));
@@ -281,7 +281,13 @@ class Staff extends Plugin
                 'url' => 'staff-management/dashboard',
             ];
         }
-        if ($currentUser->can('hub:payruns')) {
+        if ($currentUser->can('hub:benefits')) {
+            $subNavs['benefits'] = [
+                'label' => Craft::t('staff-management', 'BenefitProvider'),
+                'url' => 'staff-management/benefits/providers',
+            ];
+        }
+        if ($currentUser->can('hub:pay-runs')) {
             $subNavs['payRuns'] = [
                 'label' => Craft::t('staff-management', 'Pay Runs'),
                 'url' => 'staff-management/pay-runs',
@@ -318,7 +324,7 @@ class Staff extends Plugin
     /**
      * Install our event listeners.
      */
-    protected function installEventListeners()
+    protected function installEventListeners(): void
     {
         $request = Craft::$app->getRequest();
         $this->installGlobalEventListeners();
@@ -372,7 +378,7 @@ class Staff extends Plugin
     /**
      * Install site event listeners for Control Panel requests only
      */
-    protected function installCpEventListeners()
+    protected function installCpEventListeners(): void
     {
 
         // Handler: UrlManager::EVENT_REGISTER_CP_URL_RULES
@@ -427,8 +433,14 @@ class Staff extends Plugin
         return [
             'staff-management' => 'staff-management/settings/dashboard',
             'staff-management/dashboard' => 'staff-management/settings/dashboard',
-            'staff-management/settings/get-gql-token' => 'staff-management/settings/get-gql-token',
-            'staff-management/plugin' => 'staff-management/settings/plugin',
+            'staff-management/benefits/providers' => 'staff-management/benefit-provider',
+            'staff-management/benefits/providers/new' => 'staff-management/benefit-provider/edit',
+            'staff-management/benefits/providers/edit/<providerId:\d+>' => 'staff-management/benefit-provider/edit',
+            'staff-management/benefits/providers/<providerId:\d+>' => 'staff-management/benefit-provider/detail',
+            'staff-management/benefits/types' => 'staff-management/benefit-type',
+            'staff-management/benefits/types/new' => 'staff-management/benefit-type/edit',
+            'staff-management/benefits/types/edit/<typeId:\d+>/<benefitType:\S+>' => 'staff-management/benefit-type/edit',
+            'staff-management/benefits/types/<typeId:\d+>' => 'staff-management/benefit-type/detail',
             'staff-management/pay-runs' => 'staff-management/pay-run',
             'staff-management/pay-runs/queue' => 'staff-management/pay-run/get-queue',
             'staff-management/pay-runs/<employerId:\d+>/<currentYear:\w+>' => 'staff-management/pay-run/pay-run-by-employer',
@@ -441,6 +453,8 @@ class Staff extends Plugin
             'staff-management/requests' => 'staff-management/request',
             'staff-management/requests/<requestId:\d+>' => 'staff-management/request/detail',
             'staff-management/requests/undo/<requestId:\d+>' => 'staff-management/request/undo',
+            'staff-management/plugin' => 'staff-management/settings/plugin',
+            'staff-management/settings/get-gql-token' => 'staff-management/settings/get-gql-token',
         ];
     }
 
@@ -455,7 +469,13 @@ class Staff extends Plugin
             'hub:dashboard' => [
                 'label' => Craft::t('staff-management', 'Dashboard'),
             ],
-            'hub:payruns' => [
+            'hub:benefits' => [
+                'label' => Craft::t('staff-management', 'BenefitProvider'),
+            ],
+            'hub:group-benefits' => [
+                'label' => Craft::t('staff-management', 'Group BenefitProvider'),
+            ],
+            'hub:pay-runs' => [
                 'label' => Craft::t('staff-management', 'Pay Runs'),
             ],
             'hub:requests' => [
@@ -470,7 +490,7 @@ class Staff extends Plugin
     /**
      * Install global event listeners for all request types
      */
-    protected function installGlobalEventListeners()
+    protected function installGlobalEventListeners(): void
     {
         // Handler: CraftVariable::EVENT_INIT
         Event::on(
@@ -497,12 +517,13 @@ class Staff extends Plugin
     // Private Methods
     // =========================================================================
 
-    private function _registerGqlInterfaces()
+    private function _registerGqlInterfaces(): void
     {
         Event::on(
             Gql::class,
             Gql::EVENT_REGISTER_GQL_TYPES,
             function(RegisterGqlTypesEvent $event) {
+                $event->types[] = BenefitProviderInterface::class;
                 $event->types[] = EmployerInterface::class;
                 $event->types[] = EmployeeInterface::class;
                 $event->types[] = PayRunInterface::class;
@@ -512,26 +533,30 @@ class Staff extends Plugin
         );
     }
 
-    private function _registerGqlSchemaComponents()
+    private function _registerGqlSchemaComponents(): void
     {
         Event::on(
             Gql::class,
             Gql::EVENT_REGISTER_GQL_SCHEMA_COMPONENTS,
             function(RegisterGqlSchemaComponentsEvent $event) {
                 $event->queries = array_merge($event->queries, [
+                    'Benefits' => [
+                        // benefits component with read action, labelled “View Benefit Providers” in UI
+                        'benefitproviders:read' => ['label' => Craft::t('staff-management', 'View Benefit Providers')],
+                    ],
                     'Staff Management' => [
                         // employers component with read action, labelled “View Employers” in UI
                         'employers:read' => ['label' => Craft::t('staff-management', 'View Employers')],
                         // employees component with read action, labelled “View Employees” in UI
                         'employees:read' => ['label' => Craft::t('staff-management', 'View Employees')],
-                        // payruns component with read action, labelled “View Payruns” in UI
-                        'payruns:read' => ['label' => Craft::t('staff-management', 'View Payruns')],
                         // request component with read action, labelled "View Request" in UI
                         'requests:read' => ['label' => Craft::t('staff-management', 'View Requests')],
                     ],
                     'PayRunEntries' => [
                         // payruns entries component with read action, labelled “View Payruns” in UI
                         'payrunentries:read' => ['label' => Craft::t('staff-management', 'View Payrun Entries')],
+                        // payruns component with read action, labelled “View Payruns” in UI
+                        'payruns:read' => ['label' => Craft::t('staff-management', 'View Payruns')],
                     ],
                 ]);
 
@@ -545,7 +570,7 @@ class Staff extends Plugin
         );
     }
 
-    private function _registerGqlQueries()
+    private function _registerGqlQueries(): void
     {
         Event::on(
             Gql::class,
@@ -553,6 +578,7 @@ class Staff extends Plugin
             function(RegisterGqlQueriesEvent $event) {
                 $event->queries = array_merge(
                     $event->queries,
+                    BenefitProviderQueries::getQueries(),
                     EmployerQueries::getQueries(),
                     EmployeeQueries::getQueries(),
                     HistoryQueries::getQueries(),
@@ -578,13 +604,15 @@ class Staff extends Plugin
         );
     }
 
-    private function _registerElementTypes()
+    private function _registerElementTypes(): void
     {
         // Register our elements
         Event::on(
             Elements::class,
             Elements::EVENT_REGISTER_ELEMENT_TYPES,
             function(RegisterComponentTypesEvent $event) {
+                $event->types[] = BenefitProvider::class;
+                $event->types[] = BenefitType::class;
                 $event->types[] = EmployerElement::class;
                 $event->types[] = EmployeeElement::class;
                 $event->types[] = PayRunElement::class;
@@ -595,7 +623,7 @@ class Staff extends Plugin
         );
     }
 
-    private function _registerControllers()
+    private function _registerControllers(): void
     {
         // Add in our console commands
         if (Craft::$app instanceof ConsoleApplication) {

@@ -10,6 +10,14 @@ abstract class Table
     const AUTO_ENROLMENT_ASSESSMENT_ACTION = "{{%staff_autoenrolment_assessment_action}}";
     const AUTO_ENROLMENT_SETTINGS = "{{%staff_autoenrolment_settings}}";
     const BANK_DETAILS = "{{%staff_bankdetails}}";
+    const BENEFIT_PROVIDERS = "{{%staff_benefit_providers}}";
+    const BENETFIT_TYPE_DENTAL = "{{%staff_benefit_type_dental%}}";
+    const BENETFIT_TYPE_GROUP_CRITICAL_ILLNESS_COVER = "{{%staff_benefit_type_group_critical_illness_cover%}}";
+    const BENETFIT_TYPE_GROUP_DEATH_IN_SERVICE = "{{%staff_benefit_type_group_death_in_service%}}";
+    const BENETFIT_TYPE_GROUP_INCOME_PROTECTION = "{{%staff_benefit_type_group_income_protection%}}";
+    const BENETFIT_TYPE_GROUP_LIFE_ASSURANCE = "{{%staff_benefit_type_group_life_assurance%}}";
+    const BENETFIT_TYPE_HEALTH_CASH_PLAN = "{{%staff_benefit_type_health_cash_plan%}}";
+    const BENETFIT_TYPE_PRIVATE_MEDICAL_INSURANCE = "{{%staff_benefit_type_private_medical_insurance%}}";
     const CIS_DETAILS = "{{%staff_cis_details}}";
     const CIS_PARTNERSHIP = "{{%staff_cis_partnership}}";
     const CIS_SUBCONTRACTOR = "{{%staff_cis_subcontractor}}";

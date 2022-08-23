@@ -40,6 +40,13 @@ module.exports = {
 
         // Extend the default Tailwind config here
         extend: {
+            colors: {
+                gray: {
+                    50: '#fbfcfe',
+                    500: '#607d9f',
+                    800: '#33404d',
+                }
+            },
             display: {
                 'hide': 'display:none'
             },

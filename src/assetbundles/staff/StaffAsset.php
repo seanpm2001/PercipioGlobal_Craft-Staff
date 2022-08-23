@@ -42,15 +42,14 @@ class StaffAsset extends AssetBundle
      */
     public function init()
     {
-        // define the path that your publishable resources live
+        parent::init();
         $this->sourcePath = "@percipiolondon/staff/web/assets/dist";
 
         // define the dependencies
         $this->depends = [
             CpAsset::class,
-            VueAsset::class,
+            //VueAsset::class,
         ];
-
-        parent::init();
+        
     }
 }

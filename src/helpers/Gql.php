@@ -2,8 +2,15 @@
 
 namespace percipiolondon\staff\helpers;
 
-class Gql extends \craft\helpers\Gql
+use craft\helpers\Gql as CraftGql;
+
+class Gql extends CraftGql
 {
+    public static function canQueryBenefitProviders(): bool
+    {
+        return true;
+    }
+
     public static function canQueryEmployers(): bool
     {
         return true;

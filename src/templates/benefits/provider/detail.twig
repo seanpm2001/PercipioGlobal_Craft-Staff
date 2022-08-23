@@ -1,0 +1,47 @@
+{%- requirePermission "hub:benefits" -%}
+
+{%- extends 'staff-management/_layouts/hub-cp.twig' -%}
+
+{%- set sidebar -%}
+    {%- include "staff-management/benefits/_nav" -%}
+{%- endset -%}
+
+{%- block actionButton -%}
+    {%- include "staff-management/_atoms/buttons/button--primary" with {
+        options: {
+            title: 'Edit Benefit Provider',
+            url: url('staff-management/benefits/providers/edit/' ~ (provider.id ?? null))
+        }
+    } -%}
+{%- endblock -%}
+
+{%- set content -%}
+    
+    <div class="flex items-center w-full">
+        <div class="flex-grow inline-flex items-center">
+            <a
+                href="{{- url('staff-management/benefits/providers') -}}"
+                title="Go back to overview"
+                class="inline-flex no-underline items-center px-2.5 py-1.5 rounded-full text-sm text-indigo-700 bg-indigo-100 hover:bg-indigo-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+                style="margin-bottom: 0px;"
+            >
+                ←
+            </a>
+            <h1 class="ml-2 text-xl font-semibold text-gray-900">{{- provider.name ?? 'Unknown' -}}</h1>
+        </div>
+        {%- if provider.url -%}
+            <a href="{{- provider.url -}}" title="{{- provider.name ?? '' -}}">{{- provider.url -}}</a>
+        {%- endif -%}
+    </div>
+
+    <div class="prose mt-4">
+
+        {{ provider.content|raw }}
+    </div>
+
+
+{%- endset -%}
+
+{%- block foot -%}
+    {{ parent() }}
+{%- endblock -%}
