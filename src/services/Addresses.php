@@ -69,6 +69,21 @@ class Addresses extends Component
     }
 
     /**
+     * @param int $countryId
+     * @return string|null
+     */
+    public function getCountryById(int $countryId): ?string
+    {
+        $country = Countries::findOne($countryId);
+
+        if(!$country) {
+            return null;
+        }
+
+        return $country->name;
+    }
+
+    /**
      * @param int $id
      * @return Address|null
      */
@@ -96,7 +111,6 @@ class Addresses extends Component
         $record->address2 = SecurityHelper::encrypt($address['line2'] ?? '');
         $record->address3 = SecurityHelper::encrypt($address['line3'] ?? '');
         $record->address4 = SecurityHelper::encrypt($address['line4'] ?? '');
-        $record->address5 = SecurityHelper::encrypt($address['line5'] ?? '');
         $record->zipCode = SecurityHelper::encrypt($address['postCode'] ?? '');
 
         $record->save();
@@ -104,13 +118,16 @@ class Addresses extends Component
         return $record;
     }
 
+    /**
+     * @param array $address
+     * @return array
+     */
     public function parseAddress(array $address): array
     {
         $address['address1'] = SecurityHelper::decrypt($address['address1']);
         $address['address2'] = SecurityHelper::decrypt($address['address2']);
         $address['address3'] = SecurityHelper::decrypt($address['address3']);
         $address['address4'] = SecurityHelper::decrypt($address['address4']);
-        $address['address5'] = SecurityHelper::decrypt($address['address5']);
         $address['zipCode'] = SecurityHelper::decrypt($address['zipCode']);
 
         return $address;

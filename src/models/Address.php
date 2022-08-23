@@ -39,11 +39,6 @@ class Address extends Model
     /**
      * @var string|null Name
      */
-    public $address5;
-
-    /**
-     * @var string|null Name
-     */
     public $zipCode;
 
     /**

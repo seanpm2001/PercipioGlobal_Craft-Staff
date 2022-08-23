@@ -65,14 +65,6 @@ class Address
                     return Security::resolve($source, $resolveInfo, 'string');
                 },
             ],
-            'address5' => [
-                'name' => 'address5',
-                'type' => Type::string(),
-                'description' => 'Line 4 of the address type',
-                'resolve' => function ($source, array $arguments, $context, ResolveInfo $resolveInfo) {
-                    return Security::resolve($source, $resolveInfo, 'string');
-                },
-            ],
             'zipCode' => [
                 'name' => 'zipCode',
                 'type' => Type::string(),

@@ -3,6 +3,8 @@ import { createApp, h, provide } from 'vue'
 import { DefaultApolloClient } from '@vue/apollo-composable'
 import { defaultClient } from '~/js/composables/useApolloClient'
 
+console.log("employer test")
+
 const employers = async () => {
     const employers = createApp({
         setup () {
