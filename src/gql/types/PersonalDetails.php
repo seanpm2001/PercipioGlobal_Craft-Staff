@@ -44,32 +44,13 @@ class PersonalDetails
                 'type' => Address::getType(),
                 'description' => 'The address.',
             ],
-            // TODO create Enum
-            'maritalStatus' => [
-                'name' => 'maritalStatus',
-                'type' => Type::string(),
-                'description' => 'Marital Status.',
-
-            ],
-            'title' => [
-                'name' => 'title',
-                'type' => Type::string(),
-                'description' => 'Name title.',
-            ],
-            'firstName' => [
-                'name' => 'firstName',
-                'type' => Type::string(),
-                'description' => 'First name.',
-            ],
-            'middleName' => [
-                'name' => 'middleName',
-                'type' => Type::string(),
-                'description' => 'Middle name.',
-            ],
-            'lastName' => [
-                'name' => 'lastName',
-                'type' => Type::string(),
-                'description' => 'Last name.',
+            'dateOfBirth' => [
+                'name' => 'dateOfBirth',
+                'type' => DateTime::getType(),
+                'description' => 'Mobile number.',
+                'resolve' => function ($source, array $arguments, $context, ResolveInfo $resolveInfo) {
+                    return Gql::applyDirectives($source, $resolveInfo, DateTimeHelper::toDateTime($source['dateOfBirth']));
+                }
             ],
             'email' => [
                 'name' => 'email',
@@ -87,13 +68,32 @@ class PersonalDetails
                     return Security::resolve($source, $resolveInfo, 'string');
                 },
             ],
-            'telephone' => [
-                'name' => 'telephone',
+            'firstName' => [
+                'name' => 'firstName',
                 'type' => Type::string(),
-                'description' => 'Telephone number.',
-                'resolve' => function ($source, array $arguments, $context, ResolveInfo $resolveInfo) {
-                    return Security::resolve($source, $resolveInfo, 'string');
-                },
+                'description' => 'First name.',
+            ],
+            'gender' => [
+                'name' => 'gender',
+                'type' => Type::string(),
+                'description' => 'Gender.',
+            ],
+            'lastName' => [
+                'name' => 'lastName',
+                'type' => Type::string(),
+                'description' => 'Last name.',
+            ],
+            // TODO create Enum
+            'maritalStatus' => [
+                'name' => 'maritalStatus',
+                'type' => Type::string(),
+                'description' => 'Marital Status.',
+
+            ],
+            'middleName' => [
+                'name' => 'middleName',
+                'type' => Type::string(),
+                'description' => 'Middle name.',
             ],
             'mobile' => [
                 'name' => 'mobile',
@@ -103,19 +103,6 @@ class PersonalDetails
                     return Security::resolve($source, $resolveInfo, 'string');
                 },
             ],
-            'dateOfBirth' => [
-                'name' => 'dateOfBirth',
-                'type' => DateTime::getType(),
-                'description' => 'Mobile number.',
-                'resolve' => function ($source, array $arguments, $context, ResolveInfo $resolveInfo) {
-                    return Gql::applyDirectives($source, $resolveInfo, DateTimeHelper::toDateTime($source['dateOfBirth']));
-                }
-            ],
-            'statePensionAge' => [
-                'name' => 'statePensionAge',
-                'type' => Type::int(),
-                'description' => 'Mobile number.',
-            ],
             'niNumber' => [
                 'name' => 'niNumber',
                 'type' => Type::string(),
@@ -123,6 +110,11 @@ class PersonalDetails
                 'resolve' => function ($source, array $arguments, $context, ResolveInfo $resolveInfo) {
                     return Security::resolve($source, $resolveInfo, 'string');
                 },
+            ],
+            'partnerDetails' => [
+                'name' => 'partnerDetails',
+                'type' => PartnerDetails::getType(),
+                'description' => 'Details of the partner.',
             ],
             'passportNumber' => [
                 'name' => 'passportNumber',
@@ -132,10 +124,23 @@ class PersonalDetails
                     return Security::resolve($source, $resolveInfo, 'string');
                 },
             ],
-            'partnerDetails' => [
-                'name' => 'partnerDetails',
-                'type' => PartnerDetails::getType(),
-                'description' => 'Details of the partner.',
+            'statePensionAge' => [
+                'name' => 'statePensionAge',
+                'type' => Type::int(),
+                'description' => 'Mobile number.',
+            ],
+            'telephone' => [
+                'name' => 'telephone',
+                'type' => Type::string(),
+                'description' => 'Telephone number.',
+                'resolve' => function ($source, array $arguments, $context, ResolveInfo $resolveInfo) {
+                    return Security::resolve($source, $resolveInfo, 'string');
+                },
+            ],
+            'title' => [
+                'name' => 'title',
+                'type' => Type::string(),
+                'description' => 'Name title.',
             ],
         ];
     }

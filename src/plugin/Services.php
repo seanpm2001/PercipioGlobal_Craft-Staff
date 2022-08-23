@@ -10,6 +10,7 @@ use percipiolondon\staff\services\PayOptions;
 use percipiolondon\staff\services\PayRunEntries;
 use percipiolondon\staff\services\PayRuns;
 use percipiolondon\staff\services\Pensions;
+use percipiolondon\staff\services\Requests;
 use percipiolondon\staff\services\Totals;
 use percipiolondon\staff\services\UserPermissions;
 
@@ -45,6 +46,7 @@ trait Services
             'pensions' => [
                 'class' => Pensions::class,
             ],
+            'requests'  => Requests::class,
             'totals' => [
                 'class' => Totals::class,
             ],

@@ -19,7 +19,6 @@ use percipiolondon\staff\db\Table;
  * @property string address2;
  * @property string address3;
  * @property string address4;
- * @property string address5;
  * @property string zipCode;
  */
 

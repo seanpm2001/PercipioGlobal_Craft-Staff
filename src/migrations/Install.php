@@ -512,13 +512,14 @@ class Install extends Migration
                 //FK
                 'employerId' => $this->integer()->notNull(), //create FK to Employers [id]
                 'employeeId' => $this->integer()->notNull(), //create FK to Employees [id]
-                'administerId' => $this->integer()->notNull(), //create FK to User [id]
+                'administerId' => $this->integer(), //create FK to User [id]
                 //fields
-                'dateAdministered' => $this->dateTime()->notNull(),
-                'data' => $this->longText(),
-                'section' => $this->string()->notNull(),
-                'element' => $this->string()->notNull(),
-                'status' => $this->string()->notNull(),
+                'dateAdministered' => $this->dateTime(),
+                'request' => $this->longText()->notNull(),
+                'data' => $this->longText()->notNull(),
+                'current' => $this->longText()->notNull(),
+                'type' => $this->string()->notNull(),
+                'status' => $this->enum('contributionLevelType', ['pending', 'approved', 'declined', 'canceled']),
                 'note' => $this->mediumText(),
             ]);
 
@@ -534,7 +535,8 @@ class Install extends Migration
                 'administerId' => $this->integer(), //create FK to Craft User [id] // This can be null
                 //fields
                 'message' => $this->string(255)->notNull(),
-                'type' => $this->string()->notNull(),
+                'data' => $this->longText(),
+                'type' => $this->enum('type', ['system', 'payroll', 'pension', 'employee']),
             ]);
 
 
@@ -558,7 +560,6 @@ class Install extends Migration
                 'address2' => $this->string(),
                 'address3' => $this->string(),
                 'address4' => $this->string(),
-                'address5' => $this->string(),
                 'zipCode' => $this->string(),
             ]);
 
@@ -1670,6 +1671,9 @@ class Install extends Migration
         $this->createIndex(null, Table::UMBRELLA_PAYMENT, 'payRunEntryId', false);
         $this->createIndex(null, Table::VALUE_OVERRIDE, 'payRunEntryId', false);
 
+        // Request
+        $this->createIndex(null, Table::REQUESTS, 'status', false);
+
         //Pensions [id]
 //        $this->createIndex(null, Table::PAY_LINES, 'pensionId', false);
 //        $this->createIndex(null, Table::PENSION_SCHEME, 'pensionId', false);
@@ -1957,6 +1961,7 @@ class Install extends Migration
         $this->addForeignKey(null, Table::EMPLOYERS, ['id'], CraftTable::ELEMENTS, ['id'], 'CASCADE', 'CASCADE' );
         $this->addForeignKey(null, Table::PAY_RUN, ['id'], CraftTable::ELEMENTS, ['id'], 'CASCADE', 'CASCADE' );
         $this->addForeignKey(null, Table::PAY_RUN_ENTRIES, ['id'], CraftTable::ELEMENTS, ['id'], 'CASCADE', 'CASCADE' );
+        $this->addForeignKey(null, Table::REQUESTS, ['id'], CraftTable::ELEMENTS, ['id'], 'CASCADE', 'CASCADE' );
 
         // User [id]
         $this->addForeignKey(null, Table::EMPLOYEES, ['userId'], CraftTable::USERS, ['id']);

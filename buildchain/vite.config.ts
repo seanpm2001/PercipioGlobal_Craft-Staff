@@ -19,8 +19,10 @@ export default defineConfig(({command}) => ({
             input: {
                 benefitTypes: './src/js/benefitTypes.ts',
                 employers: './src/js/employers.ts',
-                details: './src/js/payrunDetails.ts',
+                details: './src/js/payrun-details.ts',
                 payruns: './src/js/payruns.ts',
+                requestsOverview: './src/js/requests-overview.ts',
+                requestsDetail: './src/js/requests-detail.ts',
                 staff: './src/js/staff.ts',
                 tiptap: './src/js/tiptap.ts',
             },

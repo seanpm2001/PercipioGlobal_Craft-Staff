@@ -11,18 +11,23 @@
 namespace percipiolondon\staff;
 
 use Craft;
+use craft\base\Element;
 use craft\base\Plugin;
 use craft\console\Application as ConsoleApplication;
+use craft\elements\User;
 use craft\events\RegisterComponentTypesEvent;
+use craft\events\RegisterGqlMutationsEvent;
 use craft\events\RegisterGqlQueriesEvent;
 use craft\events\RegisterGqlSchemaComponentsEvent;
 use craft\events\RegisterGqlTypesEvent;
 use craft\events\RegisterUrlRulesEvent;
 use craft\events\RegisterUserPermissionsEvent;
+use craft\events\UserEvent;
 use craft\helpers\UrlHelper;
 use craft\services\Elements;
 use craft\services\Gql;
 use craft\services\UserPermissions;
+use craft\services\Users;
 use craft\web\twig\variables\CraftVariable;
 use craft\web\UrlManager;
 
@@ -33,20 +38,30 @@ use percipiolondon\staff\elements\BenefitProvider;
 use percipiolondon\staff\elements\BenefitType ;
 use percipiolondon\staff\elements\Employee as EmployeeElement;
 use percipiolondon\staff\elements\Employer as EmployerElement;
+use percipiolondon\staff\elements\History;
+use percipiolondon\staff\elements\History as HistoryElement;
 use percipiolondon\staff\elements\PayRun as PayRunElement;
 use percipiolondon\staff\elements\PayRunEntry as PayRunEntryElement;
+use percipiolondon\staff\elements\Request as RequestElement;
 use percipiolondon\staff\gql\interfaces\elements\BenefitProvider as BenefitProviderInterface;
 use percipiolondon\staff\gql\interfaces\elements\Employer as EmployerInterface;
 use percipiolondon\staff\gql\interfaces\elements\Employee as EmployeeInterface;
 use percipiolondon\staff\gql\interfaces\elements\PayRun as PayRunInterface;
 use percipiolondon\staff\gql\interfaces\elements\PayRunEntry as PayRunEntryInterface;
+use percipiolondon\staff\gql\interfaces\elements\Request as RequestInterface;
+use percipiolondon\staff\gql\mutations\RequestMutation;
 use percipiolondon\staff\gql\queries\BenefitProvider as BenefitProviderQueries;
 use percipiolondon\staff\gql\queries\Employee as EmployeeQueries;
 use percipiolondon\staff\gql\queries\Employer as EmployerQueries;
+use percipiolondon\staff\gql\queries\History as HistoryQueries;
 use percipiolondon\staff\gql\queries\PayRun as PayRunQueries;
 use percipiolondon\staff\gql\queries\PayRunEntry as PayRunEntryQueries;
+use percipiolondon\staff\gql\queries\Request as RequestQueries;
+use percipiolondon\staff\gql\resolvers\mutations\Request;
+use percipiolondon\staff\helpers\HistoryMessages;
 use percipiolondon\staff\models\Settings;
 use percipiolondon\staff\plugin\Services as StaffServices;
+use percipiolondon\staff\records\Employee;
 use percipiolondon\staff\services\Addresses;
 use percipiolondon\staff\services\Employees;
 use percipiolondon\staff\services\Employers;
@@ -59,6 +74,7 @@ use percipiolondon\staff\services\Totals;
 use percipiolondon\staff\variables\StaffVariable;
 
 use yii\base\Event;
+use yii\base\ModelEvent;
 
 /**
  * Craft plugins are very much like little applications in and of themselves. We’ve made
@@ -120,7 +136,7 @@ class Staff extends Plugin
      *
      * @var string
      */
-    public $schemaVersion = '1.0.2';
+    public $schemaVersion = '1.0.3';
 
     /**
      * Set to `true` if the plugin should have its own section (main nav item) in the control panel.
@@ -197,6 +213,7 @@ class Staff extends Plugin
         $this->_registerGqlSchemaComponents();
 
         $this->_registerGqlQueries();
+        $this->_registerGqlMutations();
         $this->_registerElementTypes();
         $this->_registerControllers();
 
@@ -276,6 +293,12 @@ class Staff extends Plugin
                 'url' => 'staff-management/pay-runs',
             ];
         }
+        if ($currentUser->can('hub:requests')) {
+            $subNavs['requests'] = [
+                'label' => Craft::t('staff-management', 'Requests'),
+                'url' => 'staff-management/requests',
+            ];
+        }
 
         $editableSettings = true;
         // Check against allowAdminChanges
@@ -309,6 +332,47 @@ class Staff extends Plugin
         if ($request->getIsCpRequest() && !$request->getIsConsoleRequest()) {
             $this->installCpEventListeners();
         }
+
+        // save history when user gets activated
+//        Event::on(
+//            Users::class,
+//            Users::EVENT_AFTER_ACTIVATE_USER,
+//            function (UserEvent $event) {
+//                $employee = Employee::findOne(['userId' => $event->user->id]);
+//
+//                $history = new History();
+//                $history->type = 'system';
+//                $history->employeeId = $employee->id;
+//                $history->employerId = $employee->employerId;
+//                $history->message = HistoryMessages::message($history->type, 'user','activate');
+//                $history->data = null;
+//                $history->administerId = null;
+//
+//                Craft::$app->getElements()->saveElement($history);
+//            }
+//        );
+
+        // save history when user sets new password
+        Event::on(
+            User::class,
+            User::EVENT_BEFORE_VALIDATE,
+            function(ModelEvent $event) {
+                if ($event->sender->newPassword) {
+                    $employee = Employee::findOne(['userId' => $event->sender->id]);
+
+                    $history = new History();
+                    $history->type = 'system';
+                    $history->employeeId = $employee->id;
+                    $history->employerId = $employee->employerId;
+                    $history->message = HistoryMessages::message($history->type, 'user','set_password');
+                    $history->data = null;
+                    $history->administerId = null;
+
+                    Craft::$app->getElements()->saveElement($history);
+                }
+            }
+        );
+
     }
 
     /**
@@ -386,6 +450,9 @@ class Staff extends Plugin
             'staff-management/pay-runs/fetch-pay-run/<payRunId:\d+>' => 'staff-management/pay-run/fetch-pay-run',
             'staff-management/pay-runs/get-logs/<payRunId:\d+>' => 'staff-management/pay-run/get-pay-run-logs',
             'staff-management/pay-runs/download-template/<payRunId:\d+>' => 'staff-management/pay-run/download-template',
+            'staff-management/requests' => 'staff-management/request',
+            'staff-management/requests/<requestId:\d+>' => 'staff-management/request/detail',
+            'staff-management/requests/undo/<requestId:\d+>' => 'staff-management/request/undo',
             'staff-management/plugin' => 'staff-management/settings/plugin',
             'staff-management/settings/get-gql-token' => 'staff-management/settings/get-gql-token',
         ];
@@ -410,6 +477,9 @@ class Staff extends Plugin
             ],
             'hub:pay-runs' => [
                 'label' => Craft::t('staff-management', 'Pay Runs'),
+            ],
+            'hub:requests' => [
+                'label' => Craft::t('staff-management', 'Requests'),
             ],
             'hub:plugin-settings' => [
                 'label' => Craft::t('staff-management', 'Edit Plugin Settings'),
@@ -458,6 +528,7 @@ class Staff extends Plugin
                 $event->types[] = EmployeeInterface::class;
                 $event->types[] = PayRunInterface::class;
                 $event->types[] = PayRunEntryInterface::class;
+                $event->types[] = RequestInterface::class;
             }
         );
     }
@@ -478,13 +549,22 @@ class Staff extends Plugin
                         'employers:read' => ['label' => Craft::t('staff-management', 'View Employers')],
                         // employees component with read action, labelled “View Employees” in UI
                         'employees:read' => ['label' => Craft::t('staff-management', 'View Employees')],
+                        // request component with read action, labelled "View Request" in UI
+                        'requests:read' => ['label' => Craft::t('staff-management', 'View Requests')],
                     ],
-                    'PayrunEntries' => [
+                    'PayRunEntries' => [
                         // payruns entries component with read action, labelled “View Payruns” in UI
                         'payrunentries:read' => ['label' => Craft::t('staff-management', 'View Payrun Entries')],
                         // payruns component with read action, labelled “View Payruns” in UI
                         'payruns:read' => ['label' => Craft::t('staff-management', 'View Payruns')],
                     ],
+                ]);
+
+                $event->mutations = array_merge($event->mutations, [
+                    'Staff Management' => [
+                        // request component with create action, labelled "Create Requests" in UI
+                        'requests:create' => ['label' => Craft::t('staff-management', 'Edit Requests')],
+                    ]
                 ]);
             }
         );
@@ -501,8 +581,24 @@ class Staff extends Plugin
                     BenefitProviderQueries::getQueries(),
                     EmployerQueries::getQueries(),
                     EmployeeQueries::getQueries(),
+                    HistoryQueries::getQueries(),
                     PayRunQueries::getQueries(),
                     PayRunEntryQueries::getQueries(),
+                    RequestQueries::getQueries()
+                );
+            }
+        );
+    }
+
+    private function _registerGqlMutations()
+    {
+        Event::on(
+            Gql::class,
+            Gql::EVENT_REGISTER_GQL_MUTATIONS,
+            function(RegisterGqlMutationsEvent $event) {
+                $event->mutations = array_merge(
+                    $event->mutations,
+                    RequestMutation::getMutations(),
                 );
             }
         );
@@ -521,6 +617,8 @@ class Staff extends Plugin
                 $event->types[] = EmployeeElement::class;
                 $event->types[] = PayRunElement::class;
                 $event->types[] = PayRunEntryElement::class;
+                $event->types[] = RequestElement::class;
+                $event->types[] = HistoryElement::class;
             }
         );
     }
