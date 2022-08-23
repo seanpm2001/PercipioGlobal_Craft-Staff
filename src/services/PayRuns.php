@@ -12,13 +12,10 @@ namespace percipiolondon\staff\services;
 
 use Craft;
 use craft\base\Component;
-use craft\base\ElementInterface;
 use craft\helpers\App;
 use craft\queue\QueueInterface;
 use percipiolondon\staff\elements\Employer;
-use GuzzleHttp\Exception\GuzzleException;
 use percipiolondon\staff\elements\PayRun;
-use percipiolondon\staff\elements\PayRunEntry;
 use percipiolondon\staff\helpers\Csv as CsvHelper;
 use percipiolondon\staff\helpers\Logger;
 use percipiolondon\staff\helpers\Security as SecurityHelper;
@@ -31,7 +28,6 @@ use percipiolondon\staff\jobs\FetchPayCodesListJob;
 use percipiolondon\staff\records\Employee as EmployeeRecord;
 use percipiolondon\staff\records\Employer as EmployerRecord;
 use percipiolondon\staff\records\EmploymentDetails;
-use percipiolondon\staff\records\FpsFields;
 use percipiolondon\staff\records\PayCode;
 use percipiolondon\staff\records\PayCode as PayCodeRecord;
 use percipiolondon\staff\records\PayLine as PayLineRecord;
@@ -40,12 +36,8 @@ use percipiolondon\staff\records\PayRun as PayRunRecord;
 use percipiolondon\staff\records\PayRunEntry as PayRunEntryRecord;
 use percipiolondon\staff\records\PayRunLog;
 use percipiolondon\staff\records\PayRunTotals;
-use percipiolondon\staff\records\PensionSummary;
 use percipiolondon\staff\records\PersonalDetails;
-use percipiolondon\staff\records\WorkerGroup;
 use percipiolondon\staff\Staff;
-use phpseclib3\Math\BigInteger\Engines\PHP;
-use yii\db\Exception;
 use yii\queue\redis\Queue as RedisQueue;
 
 /**
@@ -68,7 +60,7 @@ class PayRuns extends Component
 
 
     /* GETTERS */
-    public function getLastPayRunByEmployer(int $employerId): PayRun
+    public function getLastPayRunByEmployer(int $employerId): ?PayRun
     {
         return PayRun::find()
             ->employerId($employerId)

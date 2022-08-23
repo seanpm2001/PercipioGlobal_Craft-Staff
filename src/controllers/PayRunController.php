@@ -113,17 +113,16 @@ class PayRunController extends Controller
         }
 
 //        $payRuns = PayRunRecord::findAll(['employerId' => $employer['id']]);
-        $employerName = SecurityHelper::decrypt($employer['name']) ?? '';
         $taxYear = $payRun['taxYear'] ?? '';
         $period = $payRun['period'] ?? '';
-        
+
         $pluginName = Staff::$settings->pluginName;
-        $templateTitle = Craft::t('staff-management', 'Pay Runs > ' . $employerName . ' > ' . $taxYear . ' / ' . $period);
+        $templateTitle = Craft::t('staff-management', 'Pay Runs > ' . $employer->name . ' > ' . $taxYear . ' / ' . $period);
 
         $variables['controllerHandle'] = 'payruns';
         $variables['pluginName'] = Staff::$settings->pluginName;
         $variables['title'] = $templateTitle;
-        $variables['docTitle'] = "{$pluginName} - {$templateTitle} - {$employerName}";
+        $variables['docTitle'] = "{$pluginName} - {$templateTitle} - {$employer->name}";
         $variables['selectedSubnavItem'] = 'payRuns';
 
         $variables['employerId'] = $employer['id'];
