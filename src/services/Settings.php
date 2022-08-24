@@ -4,7 +4,7 @@ namespace percipiolondon\staff\services;
 
 use craft\base\Component;
 use percipiolondon\staff\records\Settings as SettingsRecord;
-use percipiolondon\staff\records\SettingsEmployee;
+use percipiolondon\staff\elements\SettingsEmployee;
 
 class Settings extends Component
 {
@@ -18,7 +18,8 @@ class Settings extends Component
                 $record = new SettingsEmployee();
                 $record->settingsId = $setting['id'];
                 $record->employeeId = $employeeId;
-                $record->save();
+
+                \Craft::$app->getElements()->saveElement($record);
             }
         }
     }

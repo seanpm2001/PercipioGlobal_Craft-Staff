@@ -43,6 +43,7 @@ use percipiolondon\staff\elements\History as HistoryElement;
 use percipiolondon\staff\elements\PayRun as PayRunElement;
 use percipiolondon\staff\elements\PayRunEntry as PayRunEntryElement;
 use percipiolondon\staff\elements\Request as RequestElement;
+use percipiolondon\staff\elements\SettingsEmployee;
 use percipiolondon\staff\gql\interfaces\elements\BenefitProvider as BenefitProviderInterface;
 use percipiolondon\staff\gql\interfaces\elements\Employer as EmployerInterface;
 use percipiolondon\staff\gql\interfaces\elements\Employee as EmployeeInterface;
@@ -57,11 +58,10 @@ use percipiolondon\staff\gql\queries\History as HistoryQueries;
 use percipiolondon\staff\gql\queries\PayRun as PayRunQueries;
 use percipiolondon\staff\gql\queries\PayRunEntry as PayRunEntryQueries;
 use percipiolondon\staff\gql\queries\Request as RequestQueries;
-use percipiolondon\staff\gql\resolvers\mutations\Request;
-use percipiolondon\staff\helpers\HistoryMessages;
+use percipiolondon\staff\gql\queries\SettingsEmployee as SettingsEmployeeQueries;
+use percipiolondon\staff\gql\queries\Settings as SettingsQueries;
 use percipiolondon\staff\models\Settings;
 use percipiolondon\staff\plugin\Services as StaffServices;
-use percipiolondon\staff\records\Employee;
 use percipiolondon\staff\services\Addresses;
 use percipiolondon\staff\services\Employees;
 use percipiolondon\staff\services\Employers;
@@ -545,7 +545,9 @@ class Staff extends Plugin
                     HistoryQueries::getQueries(),
                     PayRunQueries::getQueries(),
                     PayRunEntryQueries::getQueries(),
-                    RequestQueries::getQueries()
+                    RequestQueries::getQueries(),
+                    SettingsQueries::getQueries(),
+                    SettingsEmployeeQueries::getQueries(),
                 );
             }
         );
@@ -576,10 +578,11 @@ class Staff extends Plugin
                 $event->types[] = BenefitType::class;
                 $event->types[] = EmployerElement::class;
                 $event->types[] = EmployeeElement::class;
+                $event->types[] = HistoryElement::class;
                 $event->types[] = PayRunElement::class;
                 $event->types[] = PayRunEntryElement::class;
                 $event->types[] = RequestElement::class;
-                $event->types[] = HistoryElement::class;
+                $event->types[] = SettingsEmployee::class;
             }
         );
     }

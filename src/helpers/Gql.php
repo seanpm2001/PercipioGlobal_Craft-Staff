@@ -41,6 +41,16 @@ class Gql extends CraftGql
         return true;
     }
 
+    public static function canQuerySettingsEmployee(): bool
+    {
+        return true;
+    }
+
+    public static function canQuerySettings(): bool
+    {
+        return true;
+    }
+
     public static function canMutateRequests(): bool
     {
         return true;

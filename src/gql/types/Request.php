@@ -4,10 +4,7 @@ namespace percipiolondon\staff\gql\types;
 
 use craft\gql\base\GqlTypeTrait;
 use craft\gql\types\DateTime;
-
-use craft\helpers\DateTimeHelper;
-use craft\helpers\Gql;
-use percipiolondon\staff\helpers\Security;
+use GraphQL\Type\Definition\Type;
 
 /**
  * Class Request

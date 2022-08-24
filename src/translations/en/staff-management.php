@@ -22,6 +22,8 @@
  */
 return [
     'staff-management plugin loaded' => 'Test staff-management plugin loaded!',
+
+    //HISTORY
     'employee_address_approved' => 'This is the translated message for address approved.',
     'employee_address_canceled' => 'This is the translated message for address canceled.',
     'employee_address_declined' => 'This is the translated message for address declined.',
@@ -36,4 +38,12 @@ return [
     'employee_telephone_pending' => 'This is the translated message for telephone pending.',
     'system_user_active' => 'Your account has been activated.',
     'system_user_set_password' => 'A new password has been set.',
+
+    //SETTINGS
+    'notifications:app' => 'Notification emails about the app',
+    'notifications:benefits' => 'Notification emails about your benefits',
+    'notifications:employees' => 'Notification emails about your personal details',
+    'notifications:payroll' => 'Notification emails about your payroll',
+    'notifications:pension' => 'Notification emails about your pension',
+    'notifications:system' => 'Notification emails about the system',
 ];
