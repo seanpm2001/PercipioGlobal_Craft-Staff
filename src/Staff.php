@@ -333,46 +333,7 @@ class Staff extends Plugin
             $this->installCpEventListeners();
         }
 
-        // save history when user gets activated
-//        Event::on(
-//            Users::class,
-//            Users::EVENT_AFTER_ACTIVATE_USER,
-//            function (UserEvent $event) {
-//                $employee = Employee::findOne(['userId' => $event->user->id]);
-//
-//                $history = new History();
-//                $history->type = 'system';
-//                $history->employeeId = $employee->id;
-//                $history->employerId = $employee->employerId;
-//                $history->message = HistoryMessages::message($history->type, 'user','activate');
-//                $history->data = null;
-//                $history->administerId = null;
-//
-//                Craft::$app->getElements()->saveElement($history);
-//            }
-//        );
-
-        // save history when user sets new password
-        Event::on(
-            User::class,
-            User::EVENT_BEFORE_VALIDATE,
-            function(ModelEvent $event) {
-                if ($event->sender->newPassword) {
-                    $employee = Employee::findOne(['userId' => $event->sender->id]);
-
-                    $history = new History();
-                    $history->type = 'system';
-                    $history->employeeId = $employee->id;
-                    $history->employerId = $employee->employerId;
-                    $history->message = HistoryMessages::message($history->type, 'user','set_password');
-                    $history->data = null;
-                    $history->administerId = null;
-
-                    Craft::$app->getElements()->saveElement($history);
-                }
-            }
-        );
-
+        self::$plugin->history->catchEventListeners();
     }
 
     /**

@@ -98,7 +98,7 @@ class TestDataController extends Controller
         $logger = new Logger();
         $logger->stdout('✓ Save employee Test...', $logger::RESET);
 
-        $acmeEmployer = Employer::findOne(['staffologyId' => 'e303dcbe-1b46-4639-9b54-dc5328e648cf']);
+        $acmeEmployer = Employer::findOne(['staffologyId' => '64c5de94-7462-4bc6-a0e8-86a1bd52277d']);
 
         $testEmployee = Employee::findOne(['staffologyId' => '123']);
 
@@ -110,7 +110,7 @@ class TestDataController extends Controller
         $testEmployee->staffologyId = '123';
         $testEmployee->siteId = Craft::$app->getSites()->currentSite->id;
         $testEmployee->status = 1;
-        $testEmployee->personalDetails = 'personalDetails';
+        $testEmployee->personalDetailsObject = [];
         $testEmployee->niNumber = '123456';
         $testEmployee->userId = null;
         $testEmployee->isDirector = false;

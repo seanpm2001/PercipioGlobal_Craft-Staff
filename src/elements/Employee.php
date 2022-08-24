@@ -323,7 +323,7 @@ class Employee extends Element
             $record->save();
 
             if ($isNew) {
-                //assign permissions to employee
+                // assign permissions to employee
                 if ($this->isDirector) {
                     $permissions = Permission::find()->all();
                 } else {
@@ -331,6 +331,9 @@ class Employee extends Element
                 }
 
                 Staff::$plugin->userPermissions->createPermissions($permissions, $this->userId, $this->id);
+
+                // create settings for this employee
+                Staff::$plugin->staffSettings->createInitSettingsForEmployee($this->id);
             }
         } catch (\Exception $e) {
             $logger = new Logger();
