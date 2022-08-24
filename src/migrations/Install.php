@@ -352,6 +352,21 @@ class Install extends Migration
                 'relationshipStatus' => $this->enum('relationshipStatus', ['Cohabitate', 'Partner', 'Spouse', 'Child', 'Sibling', 'Parent', 'Other']),
             ]);
 
+            $this->createTable(Table::NOTIFICATIONS, [
+                'id' => $this->primaryKey(),
+                'dateCreated' => $this->dateTime()->notNull(),
+                'dateUpdated' => $this->dateTime()->notNull(),
+                'uid' => $this->uid(),
+                //FK
+                //internal
+                'employerId' => $this->integer()->notNull(), //create FK to Employer [id]
+                'employeeId' => $this->integer()->notNull(), //create FK to Employee [id]
+                //fields
+                'message' => $this->string(255)->notNull(),
+                'type' => $this->enum('type', ['app', 'system', 'payroll', 'pension', 'employee', 'benefit']),
+                'viewed' => $this->boolean()
+            ]);
+
             $this->createTable(Table::PAY_RUN_IMPORTS, [
                 'id' => $this->primaryKey(),
                 'dateCreated' => $this->dateTime()->notNull(),
@@ -536,7 +551,27 @@ class Install extends Migration
                 //fields
                 'message' => $this->string(255)->notNull(),
                 'data' => $this->longText(),
-                'type' => $this->enum('type', ['system', 'payroll', 'pension', 'employee']),
+                'type' => $this->enum('type', ['system', 'payroll', 'pension', 'employee', 'benefit']),
+            ]);
+
+            $this->createTable(Table::SETTINGS, [
+                'id' => $this->primaryKey(),
+                'dateCreated' => $this->dateTime()->notNull(),
+                'dateUpdated' => $this->dateTime()->notNull(),
+                'uid' => $this->uid(),
+                //fields
+                'name' => $this->string(255)->notNull(),
+            ]);
+
+            $this->createTable(Table::SETTINGS_EMPOYEE, [
+                'id' => $this->primaryKey(),
+                'dateCreated' => $this->dateTime()->notNull(),
+                'dateUpdated' => $this->dateTime()->notNull(),
+                'uid' => $this->uid(),
+                //FK
+                //internal
+                'settingsId' => $this->integer()->notNull(), //create FK to Settings [id]
+                'employeeId' => $this->integer()->notNull(), //create FK to Employee [id]
             ]);
 
 
@@ -1621,6 +1656,7 @@ class Install extends Migration
         $this->createIndex(null, Table::EMPLOYMENT_DETAILS, 'employeeId', true);
         $this->createIndex(null, Table::FAMILY_DETAILS, 'employeeId', false);
         $this->createIndex(null, Table::HISTORY, 'employeeId', false);
+        $this->createIndex(null, Table::NOTIFICATIONS, 'employeeId', false);
         $this->createIndex(null, Table::LEAVE_SETTINGS, 'employeeId', false);
         $this->createIndex(null, Table::PAY_OPTIONS, 'employeeId', false);
         $this->createIndex(null, Table::PAY_RUN_ENTRIES, 'employeeId', false);
@@ -1630,6 +1666,7 @@ class Install extends Migration
         $this->createIndex(null, Table::REQUESTS, 'employeeId', false);
         $this->createIndex(null, Table::RIGHT_TO_WORK, 'employeeId', false);
         $this->createIndex(null, Table::RTI_EMPLOYEE_ADDRESS, 'employeeId', false);
+        $this->createIndex(null, Table::SETTINGS_EMPOYEE, 'employeeId', false);
 
         //Employer [id]
         $this->createIndex(null, Table::ADDRESSES, 'employerId', true);
@@ -1641,6 +1678,7 @@ class Install extends Migration
         $this->createIndex(null, Table::HISTORY, 'employerId', false);
         $this->createIndex(null, Table::HMRC_DETAILS, 'employerId', true);
         $this->createIndex(null, Table::LEAVE_SETTINGS, 'employerId', false);
+        $this->createIndex(null, Table::NOTIFICATIONS, 'employerId', false);
         $this->createIndex(null, Table::PAY_CODES, 'employerId', false);
         $this->createIndex(null, Table::PAY_OPTIONS, 'employerId', false);
         $this->createIndex(null, Table::PAY_RUN, 'employerId', false);
@@ -1718,6 +1756,9 @@ class Install extends Migration
         $this->createIndex(null, Table::ITEMS, 'noteId', false);
         $this->createIndex(null, Table::ITEM_RELATIONS, 'noteId', false);
 
+        //Notifications
+        $this->createIndex(null, Table::NOTIFICATIONS, 'type', false);
+
         //Item [id]
         $this->createIndex(null, Table::ITEM_RELATIONS, 'itemId', false);
 
@@ -1755,6 +1796,8 @@ class Install extends Migration
         $this->createIndex(null, Table::RTI_AGENT, 'rtiSubmissionSettingsId', false);
         $this->createIndex(null, Table::RTI_CONTACT, 'rtiSubmissionSettingsId', false);
 
+        //Settings
+        $this->createIndex(null, Table::SETTINGS_EMPOYEE, 'settingsId', false);
 
         //Starter Details [id]
         $this->createIndex(null, Table::OVERSEAS_EMPLOYER_DETAILS, 'starterDetailsId', false);
@@ -1810,6 +1853,7 @@ class Install extends Migration
         $this->addForeignKey(null, Table::FAMILY_DETAILS, ['employeeId'], Table::EMPLOYEES, ['id'], 'CASCADE', 'CASCADE');
         $this->addForeignKey(null, Table::HISTORY, ['employeeId'], Table::EMPLOYEES, ['id'], 'CASCADE', 'CASCADE');
         $this->addForeignKey(null, Table::LEAVE_SETTINGS, ['employeeId'], Table::EMPLOYEES, ['id'], 'CASCADE', 'CASCADE');
+        $this->addForeignKey(null, Table::NOTIFICATIONS, ['employerId'], Table::EMPLOYERS, ['id'], 'CASCADE', 'CASCADE');
         $this->addForeignKey(null, Table::PAY_OPTIONS, ['employeeId'], Table::EMPLOYEES, ['id'], 'CASCADE', 'CASCADE');
         $this->addForeignKey(null, Table::PAY_RUN_ENTRIES, ['employeeId'], Table::EMPLOYEES, ['id'], 'CASCADE', 'CASCADE');
 //        $this->addForeignKey(null, Table::PENSIONS, ['employeeId'], Table::EMPLOYEES, ['id'], 'CASCADE', 'CASCADE');
@@ -1818,6 +1862,7 @@ class Install extends Migration
         $this->addForeignKey(null, Table::REQUESTS, ['employeeId'], Table::EMPLOYEES, ['id'], 'CASCADE', 'CASCADE');
         $this->addForeignKey(null, Table::RIGHT_TO_WORK, ['employeeId'], Table::EMPLOYEES, ['id'], 'CASCADE', 'CASCADE');
         $this->addForeignKey(null, Table::RTI_EMPLOYEE_ADDRESS, ['employeeId'], Table::EMPLOYEES, ['id'], 'CASCADE', 'CASCADE');
+        $this->addForeignKey(null, Table::SETTINGS_EMPOYEE, ['employeeId'], Table::EMPLOYEES, ['id'], 'CASCADE', 'CASCADE');
 
         //Employer [id]
         $this->addForeignKey(null, Table::ADDRESSES, ['employerId'], Table::EMPLOYERS, ['id'], 'CASCADE', 'CASCADE');
@@ -1829,6 +1874,7 @@ class Install extends Migration
         $this->addForeignKey(null, Table::HISTORY, ['employerId'], Table::EMPLOYERS, ['id'], 'CASCADE', 'CASCADE');
         $this->addForeignKey(null, Table::HMRC_DETAILS, ['employerId'], Table::EMPLOYERS, ['id'], 'CASCADE', 'CASCADE');
         $this->addForeignKey(null, Table::LEAVE_SETTINGS, ['employerId'], Table::EMPLOYERS, ['id'], 'CASCADE', 'CASCADE');
+        $this->addForeignKey(null, Table::NOTIFICATIONS, ['employeeId'], Table::EMPLOYEES, ['id'], 'CASCADE', 'CASCADE');
         $this->addForeignKey(null, Table::PAY_CODES, ['employerId'], Table::EMPLOYERS, ['id'], 'CASCADE', 'CASCADE');
         $this->addForeignKey(null, Table::PAY_OPTIONS, ['employerId'], Table::EMPLOYERS, ['id'], 'CASCADE', 'CASCADE');
         $this->addForeignKey(null, Table::PAY_RUN, ['employerId'], Table::EMPLOYERS, ['id'], 'CASCADE', 'CASCADE');
@@ -1869,6 +1915,9 @@ class Install extends Migration
 
         //Permissions [id]
         $this->addForeignKey(null, Table::PERMISSIONS_USERS, ['permissionId'], Table::PERMISSIONS, ['id'], 'CASCADE', 'CASCADE');
+
+        //Settings [id]
+        $this->addForeignKey(null, Table::SETTINGS_EMPOYEE, ['settingsId'], Table::SETTINGS, ['id'], 'CASCADE', 'CASCADE');
 
         /** LINKAGE **/
         //Employment Details [id]
@@ -1966,6 +2015,7 @@ class Install extends Migration
         // User [id]
         $this->addForeignKey(null, Table::EMPLOYEES, ['userId'], CraftTable::USERS, ['id']);
         $this->addForeignKey(null, Table::HISTORY, ['administerId'], CraftTable::USERS, ['id']);
+        $this->addForeignKey(null, Table::NOTIFICATIONS, ['id'], CraftTable::ELEMENTS, ['id'], 'CASCADE', 'CASCADE' );
         $this->addForeignKey(null, Table::PAY_RUN_IMPORTS, ['approvedBy'], CraftTable::USERS, ['id']);
         $this->addForeignKey(null, Table::PAY_RUN_IMPORTS, ['uploadedBy'], CraftTable::USERS, ['id']);
         $this->addForeignKey(null, Table::PERMISSIONS_USERS, ['userId'], CraftTable::USERS, ['id']);
@@ -1979,6 +2029,7 @@ class Install extends Migration
     {
         $this->_createPermissions();
         $this->_defaultCountries();
+        $this->_createSettings();
     }
 
     /**
@@ -2027,5 +2078,19 @@ class Install extends Migration
         $rows[] = ['purchase:voluntarybenefits'];
 
         $this->batchInsert(Table::PERMISSIONS, ['name'], $rows);
+    }
+
+    private function _createSettings(): void
+    {
+        $rows = [];
+
+        $rows[] = ['notifications:app'];
+        $rows[] = ['notifications:benefits'];
+        $rows[] = ['notifications:employees'];
+        $rows[] = ['notifications:payroll'];
+        $rows[] = ['notifications:pension'];
+        $rows[] = ['notifications:system'];
+
+        $this->batchInsert(Table::SETTINGS, ['name'], $rows);
     }
 }

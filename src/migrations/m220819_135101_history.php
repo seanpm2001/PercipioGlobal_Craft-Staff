@@ -32,7 +32,7 @@ class m220819_135101_history extends Migration
             //fields
             'message' => $this->string(255)->notNull(),
             'data' => $this->longText(),
-            'type' => $this->enum('type', ['system', 'payroll', 'pension', 'employee']),
+            'type' => $this->enum('type', ['system', 'payroll', 'pension', 'employee', 'benefit']),
         ]);
 
         $this->createIndex(null, Table::HISTORY, 'employeeId', false);

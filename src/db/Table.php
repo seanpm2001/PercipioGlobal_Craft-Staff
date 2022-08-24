@@ -40,6 +40,7 @@ abstract class Table
     const LEAVER_DETAILS = "{{%staff_leaver_details}}";
     const NATIONAL_INSURANCE_CALCULATION = "{{%staff_national_insurance_calculations}}";
     const NOTE = "{{%staff_notes}}";
+    const NOTIFICATIONS = "{{%staff_notifications}}";
     const OVERSEAS_EMPLOYER_DETAILS = "{{%staff_overseas_employer_details}}";
     const PAY_CODES = "{{%staff_pay_codes}}";
     const PAY_LINES = "{{%staff_pay_lines}}";
@@ -66,6 +67,8 @@ abstract class Table
     const RTI_EMPLOYEE_ADDRESS = "{{%staff_rti_employee_address}}";
     const RTI_EMPLOYEE_NAME = "{{%staff_rti_employee_name}}";
     const RTI_SUBMISSION_SETTINGS = "{{%staff_rti_submission_settings}}";
+    const SETTINGS = '{{%staff_settings}}';
+    const SETTINGS_EMPOYEE = '{{%staff_settings_employee}}';
     const STARTER_DETAILS = "{{%staff_starter_details}}";
     const TAX_AND_NI = "{{%staff_tax_and_ni}}";
     const TEACHER_PENSION_DETAILS = "{{%staff_teacher_pension_details}}";
