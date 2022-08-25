@@ -27,6 +27,11 @@ class Gql extends CraftGql
         return true;
     }
 
+    public static function canQueryNotification(): bool
+    {
+        return true;
+    }
+
     public static function canQueryPayruns(): bool
     {
         return true;

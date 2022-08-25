@@ -28,7 +28,7 @@ use percipiolondon\staff\records\Notifications as NotificationsRecord;
  * @property-read null|string $admin
  * @property-read null|string|array $employee
  */
-class Notifications extends Element
+class Notification extends Element
 {
     public const TYPES = ['app', 'system', 'payroll', 'pension', 'employee', 'benefit'];
 

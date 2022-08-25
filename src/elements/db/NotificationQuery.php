@@ -60,6 +60,10 @@ class NotificationQuery extends ElementQuery
             $this->subQuery->andWhere(Db::parseParam('staff_notifications.type', $this->type));
         }
 
+        if ($this->viewed) {
+            $this->subQuery->andWhere(Db::parseParam('staff_notifications.viewed', $this->viewed));
+        }
+
         return parent::beforePrepare();
     }
 }

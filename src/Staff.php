@@ -38,8 +38,8 @@ use percipiolondon\staff\elements\BenefitProvider;
 use percipiolondon\staff\elements\BenefitType ;
 use percipiolondon\staff\elements\Employee as EmployeeElement;
 use percipiolondon\staff\elements\Employer as EmployerElement;
-use percipiolondon\staff\elements\History;
 use percipiolondon\staff\elements\History as HistoryElement;
+use percipiolondon\staff\elements\Notification as NotificationElement;
 use percipiolondon\staff\elements\PayRun as PayRunElement;
 use percipiolondon\staff\elements\PayRunEntry as PayRunEntryElement;
 use percipiolondon\staff\elements\Request as RequestElement;
@@ -47,6 +47,8 @@ use percipiolondon\staff\elements\SettingsEmployee;
 use percipiolondon\staff\gql\interfaces\elements\BenefitProvider as BenefitProviderInterface;
 use percipiolondon\staff\gql\interfaces\elements\Employer as EmployerInterface;
 use percipiolondon\staff\gql\interfaces\elements\Employee as EmployeeInterface;
+use percipiolondon\staff\gql\interfaces\elements\History as HistoryInterface;
+use percipiolondon\staff\gql\interfaces\elements\Notification as NotificationInterface;
 use percipiolondon\staff\gql\interfaces\elements\PayRun as PayRunInterface;
 use percipiolondon\staff\gql\interfaces\elements\PayRunEntry as PayRunEntryInterface;
 use percipiolondon\staff\gql\interfaces\elements\Request as RequestInterface;
@@ -56,6 +58,7 @@ use percipiolondon\staff\gql\queries\BenefitProvider as BenefitProviderQueries;
 use percipiolondon\staff\gql\queries\Employee as EmployeeQueries;
 use percipiolondon\staff\gql\queries\Employer as EmployerQueries;
 use percipiolondon\staff\gql\queries\History as HistoryQueries;
+use percipiolondon\staff\gql\queries\Notifications as NotificationQueries;
 use percipiolondon\staff\gql\queries\PayRun as PayRunQueries;
 use percipiolondon\staff\gql\queries\PayRunEntry as PayRunEntryQueries;
 use percipiolondon\staff\gql\queries\Request as RequestQueries;
@@ -488,6 +491,8 @@ class Staff extends Plugin
                 $event->types[] = BenefitProviderInterface::class;
                 $event->types[] = EmployerInterface::class;
                 $event->types[] = EmployeeInterface::class;
+                $event->types[] = HistoryInterface::class;
+                $event->types[] = NotificationInterface::class;
                 $event->types[] = PayRunInterface::class;
                 $event->types[] = PayRunEntryInterface::class;
                 $event->types[] = RequestInterface::class;
@@ -544,6 +549,7 @@ class Staff extends Plugin
                     EmployerQueries::getQueries(),
                     EmployeeQueries::getQueries(),
                     HistoryQueries::getQueries(),
+                    NotificationQueries::getQueries(),
                     PayRunQueries::getQueries(),
                     PayRunEntryQueries::getQueries(),
                     RequestQueries::getQueries(),
@@ -581,6 +587,7 @@ class Staff extends Plugin
                 $event->types[] = EmployerElement::class;
                 $event->types[] = EmployeeElement::class;
                 $event->types[] = HistoryElement::class;
+                $event->types[] = NotificationElement::class;
                 $event->types[] = PayRunElement::class;
                 $event->types[] = PayRunEntryElement::class;
                 $event->types[] = RequestElement::class;

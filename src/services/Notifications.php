@@ -10,7 +10,7 @@ use craft\helpers\Template;
 use craft\mail\Message;
 use percipiolondon\staff\elements\Employee;
 use percipiolondon\staff\elements\SettingsEmployee;
-use percipiolondon\staff\elements\Notifications as NotificationsElement;
+use percipiolondon\staff\elements\Notification as NotificationsElement;
 use percipiolondon\staff\records\Settings;
 use percipiolondon\staff\Staff;
 use yii\helpers\Markdown;
