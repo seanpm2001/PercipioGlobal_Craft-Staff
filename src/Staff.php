@@ -284,7 +284,7 @@ class Staff extends Plugin
         }
         if ($currentUser->can('hub:benefits')) {
             $subNavs['benefits'] = [
-                'label' => Craft::t('staff-management', 'BenefitProvider'),
+                'label' => Craft::t('staff-management', 'Group Benefits'),
                 'url' => 'staff-management/benefits/providers',
             ];
         }
@@ -432,10 +432,10 @@ class Staff extends Plugin
                 'label' => Craft::t('staff-management', 'Dashboard'),
             ],
             'hub:benefits' => [
-                'label' => Craft::t('staff-management', 'BenefitProvider'),
+                'label' => Craft::t('staff-management', 'Benefit Provider'),
             ],
             'hub:group-benefits' => [
-                'label' => Craft::t('staff-management', 'Group BenefitProvider'),
+                'label' => Craft::t('staff-management', 'Group Benefit Provider'),
             ],
             'hub:pay-runs' => [
                 'label' => Craft::t('staff-management', 'Pay Runs'),
