@@ -51,6 +51,7 @@ use percipiolondon\staff\gql\interfaces\elements\PayRun as PayRunInterface;
 use percipiolondon\staff\gql\interfaces\elements\PayRunEntry as PayRunEntryInterface;
 use percipiolondon\staff\gql\interfaces\elements\Request as RequestInterface;
 use percipiolondon\staff\gql\mutations\RequestMutation;
+use percipiolondon\staff\gql\mutations\SettingsEmployeeMutation;
 use percipiolondon\staff\gql\queries\BenefitProvider as BenefitProviderQueries;
 use percipiolondon\staff\gql\queries\Employee as EmployeeQueries;
 use percipiolondon\staff\gql\queries\Employer as EmployerQueries;
@@ -562,6 +563,7 @@ class Staff extends Plugin
                 $event->mutations = array_merge(
                     $event->mutations,
                     RequestMutation::getMutations(),
+                    SettingsEmployeeMutation::getMutations(),
                 );
             }
         );

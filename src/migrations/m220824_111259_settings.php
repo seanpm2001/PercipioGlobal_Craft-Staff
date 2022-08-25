@@ -4,6 +4,7 @@ namespace percipiolondon\staff\migrations;
 
 use Craft;
 use craft\db\Migration;
+use craft\db\Table as CraftTable;
 use percipiolondon\staff\db\Table;
 
 /**
@@ -55,6 +56,7 @@ class m220824_111259_settings extends Migration
 
         $this->addForeignKey(null, Table::SETTINGS_EMPOYEE, ['settingsId'], Table::SETTINGS, ['id'], 'CASCADE', 'CASCADE');
         $this->addForeignKey(null, Table::SETTINGS_EMPOYEE, ['employeeId'], Table::EMPLOYEES, ['id'], 'CASCADE', 'CASCADE');
+        $this->addForeignKey(null, Table::SETTINGS_EMPOYEE, ['id'], CraftTable::ELEMENTS, ['id'], 'CASCADE', 'CASCADE' );
 
         $this->_createSettings();
     }

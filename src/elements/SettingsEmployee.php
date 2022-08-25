@@ -215,6 +215,7 @@ class SettingsEmployee extends Element
                 }
             } else {
                 $settingsEmployee = new SettingsEmployeeRecord();
+                $settingsEmployee->id = $this->id;
             }
 
             $setting = Settings::findOne($this->settingsId);

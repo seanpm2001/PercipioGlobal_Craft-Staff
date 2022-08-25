@@ -6,6 +6,7 @@ use craft\helpers\Gql as CraftGql;
 
 class Gql extends CraftGql
 {
+    // QUERIES
     public static function canQueryBenefitProviders(): bool
     {
         return true;
@@ -51,7 +52,13 @@ class Gql extends CraftGql
         return true;
     }
 
+    // MUTATIONS
     public static function canMutateRequests(): bool
+    {
+        return true;
+    }
+
+    public static function canMutateSettingsEmployee(): bool
     {
         return true;
     }
