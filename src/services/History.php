@@ -29,8 +29,8 @@ class History extends Component
             function (UserEvent $event) {
                 $employee = Employee::findOne(['userId' => $event->user->id]);
 
-                if($employee) {
-                   $this->saveHistory($employee, 'system', HistoryMessages::message('system', 'user','activate'));
+                if ($employee) {
+                   $this->saveHistory($employee, 'system', HistoryMessages::getMessage('system', 'user','activate'));
                 }
             }
         );
@@ -43,8 +43,8 @@ class History extends Component
                 if ($event->sender->newPassword) {
                     $employee = Employee::findOne(['userId' => $event->sender->id]);
 
-                    if($employee) {
-                        $this->saveHistory($employee, 'system', HistoryMessages::message('system', 'user','set_password'));
+                    if ($employee) {
+                        $this->saveHistory($employee, 'system', HistoryMessages::getMessage('system', 'user','set_password'));
                     }
                 }
             }
@@ -53,7 +53,7 @@ class History extends Component
 
     public function saveHistory(Employee $employee, string $type, string $message, string $data = null, int $administerId = null): void
     {
-        if($employee) {
+        if ($employee) {
             $history = new HistoryElement();
             $history->type = $type;
             $history->employeeId = $employee->id;

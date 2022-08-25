@@ -7,6 +7,7 @@ use percipiolondon\staff\services\Employees;
 use percipiolondon\staff\services\Employers;
 use percipiolondon\staff\services\GroupBenefits;
 use percipiolondon\staff\services\History;
+use percipiolondon\staff\services\Notifications;
 use percipiolondon\staff\services\PayOptions;
 use percipiolondon\staff\services\PayRunEntries;
 use percipiolondon\staff\services\PayRuns;
@@ -26,7 +27,7 @@ trait Services
             'employees' => Employees::class,
             'groupBenefits' => GroupBenefits::class,
             'history' => History::class,
-            'userPermissions' => UserPermissions::class,
+            'notifications' => Notifications::class,
             'payOptions' => PayOptions::class,
             'payRuns' => PayRuns::class,
             'payRunEntries' => PayRunEntries::class,
@@ -34,6 +35,7 @@ trait Services
             'requests'  => Requests::class,
             'staffSettings'  => Settings::class,
             'totals' => Totals::class,
+            'userPermissions' => UserPermissions::class,
         ]);
     }
 }

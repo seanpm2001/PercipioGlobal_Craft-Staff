@@ -21,7 +21,7 @@ class HistoryMessages
         'system_user_set_password' => 'system_user_set_password',
     ];
 
-    public static function message(string $type, string $detail = null, string $status = null): ?string
+    public static function getMessage(string $type, string $detail = null, string $status = null): ?string
     {
         return self::MESSAGES[$type.($detail ? '_'.$detail : '').($status ? '_'.$status : '')] ?? null;
     }

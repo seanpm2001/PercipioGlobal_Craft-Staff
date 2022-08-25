@@ -18,9 +18,11 @@ use craft\base\Element;
 use craft\elements\db\ElementQueryInterface;
 use percipiolondon\staff\elements\db\RequestQuery;
 use percipiolondon\staff\helpers\HistoryMessages;
+use percipiolondon\staff\helpers\NotificationMessage;
 use percipiolondon\staff\helpers\requests\CreateAddressRequest;
 use percipiolondon\staff\helpers\requests\CreatePersonalDetailsRequest;
 use percipiolondon\staff\helpers\requests\CreateTelephoneRequest;
+use percipiolondon\staff\records\Employee;
 use percipiolondon\staff\records\Requests;
 use percipiolondon\staff\Staff;
 
@@ -32,7 +34,7 @@ use percipiolondon\staff\Staff;
  */
 class Request extends Element
 {
-    CONST STATUSSES = ['approved', 'canceled', 'declined', 'pending'];
+    public const STATUSES = ['approved', 'canceled', 'declined', 'pending'];
 
     /**
      * @var string|null
@@ -127,7 +129,7 @@ class Request extends Element
         $rules = parent::defineRules();
         $rules[] = [['employerId', 'employeeId', 'type'], 'required'];
         $rules[] = ['status', function($attribute, $params) {
-            if (!in_array($this->$attribute, self::STATUSSES)) {
+            if (!in_array($this->$attribute, self::STATUSES, true)) {
                 $this->addError($attribute, "$attribute is not a valid type");
             }
         }];
@@ -197,7 +199,6 @@ class Request extends Element
      * Returns the employer
      *
      * @return string|null
-     * @throws InvalidConfigException if [[employerId]] is set but invalid
      */
     public function getAdmin()
     {
@@ -221,7 +222,6 @@ class Request extends Element
      * Returns the employer
      *
      * @return string|null
-     * @throws InvalidConfigException if [[employerId]] is set but invalid
      */
     public function getEmployee(): ?array
     {
@@ -237,8 +237,6 @@ class Request extends Element
         }
 
         return $this->_employee ?: null;
-
-        return null;
     }
 
     /**
@@ -323,14 +321,14 @@ class Request extends Element
 
             // create a history log
             if ($save) {
-                $history = new History();
-                $history->type = 'employee';
-                $history->employeeId = $request->employeeId;
-                $history->employerId = $request->employerId;
-                $history->message = HistoryMessages::message($history->type, $request->type, $request->status);
-                $history->data = $request->request;
-                $history->administerId = $request->administerId ?? null;
-                $success = Craft::$app->getElements()->saveElement($history);
+                $employee = Employee::findOne($request->employeeId);
+                Staff::$plugin->history->saveHistory($employee, 'employee', HistoryMessages::getMessage('employee', $request->type, $request->status), $request->request, $request->administerId ?? null);
+
+                if ($request->status === 'approved') {
+                    $notificationMessage = NotificationMessage::getNotification('employee', $request->type, $request->status);
+                    $emailMessage = NotificationMessage::getEmail('employee', $request->type, $request->status);
+                    Staff::$plugin->notifications->createNotification($request->employeeId, 'employee', $notificationMessage, $emailMessage);
+                }
             }
 
             // sync with Staffology if the request has been approved

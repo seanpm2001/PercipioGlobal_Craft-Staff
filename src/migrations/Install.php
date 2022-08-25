@@ -2085,8 +2085,8 @@ class Install extends Migration
         $rows = [];
 
         $rows[] = ['notifications:app'];
-        $rows[] = ['notifications:benefits'];
-        $rows[] = ['notifications:employees'];
+        $rows[] = ['notifications:benefit'];
+        $rows[] = ['notifications:employee'];
         $rows[] = ['notifications:payroll'];
         $rows[] = ['notifications:pension'];
         $rows[] = ['notifications:system'];
