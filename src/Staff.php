@@ -305,6 +305,11 @@ class Staff extends Plugin
             ];
         }
 
+        $subNavs['user-settings'] = [
+            'label' => Craft::t('staff-management', 'User Settings'),
+            'url' => 'staff-management/settings/user-settings',
+        ];
+
         $editableSettings = true;
         // Check against allowAdminChanges
         if (!Craft::$app->getConfig()->getGeneral()->allowAdminChanges) {
@@ -421,6 +426,7 @@ class Staff extends Plugin
             'staff-management/requests/undo/<requestId:\d+>' => 'staff-management/request/undo',
             'staff-management/plugin' => 'staff-management/settings/plugin',
             'staff-management/settings/get-gql-token' => 'staff-management/settings/get-gql-token',
+            'staff-management/settings/user-settings' => 'staff-management/settings/user-settings',
         ];
     }
 
@@ -508,30 +514,25 @@ class Staff extends Plugin
             Gql::EVENT_REGISTER_GQL_SCHEMA_COMPONENTS,
             function(RegisterGqlSchemaComponentsEvent $event) {
                 $event->queries = array_merge($event->queries, [
-                    'Benefits' => [
-                        // benefits component with read action, labelled “View Benefit Providers” in UI
-                        'benefitproviders:read' => ['label' => Craft::t('staff-management', 'View Benefit Providers')],
-                    ],
                     'Staff Management' => [
-                        // employers component with read action, labelled “View Employers” in UI
+                        'benefit-providers:read' => ['label' => Craft::t('staff-management', 'View Benefit Providers')],
                         'employers:read' => ['label' => Craft::t('staff-management', 'View Employers')],
-                        // employees component with read action, labelled “View Employees” in UI
                         'employees:read' => ['label' => Craft::t('staff-management', 'View Employees')],
-                        // request component with read action, labelled "View Request" in UI
+                        'history:read' => ['label' => Craft::t('staff-management', 'View History')],
+                        'notifications:read' => ['label' => Craft::t('staff-management', 'View Notifications')],
+                        'pay-run-entries:read' => ['label' => Craft::t('staff-management', 'View Pay Run Entries')],
+                        'pay-runs:read' => ['label' => Craft::t('staff-management', 'View Pay Runs')],
                         'requests:read' => ['label' => Craft::t('staff-management', 'View Requests')],
-                    ],
-                    'PayRunEntries' => [
-                        // payruns entries component with read action, labelled “View Payruns” in UI
-                        'payrunentries:read' => ['label' => Craft::t('staff-management', 'View Payrun Entries')],
-                        // payruns component with read action, labelled “View Payruns” in UI
-                        'payruns:read' => ['label' => Craft::t('staff-management', 'View Payruns')],
+                        'settings-employee:read' => ['label' => Craft::t('staff-management', 'View Employee Settings')],
+                        'settings:read' => ['label' => Craft::t('staff-management', 'View Settings')],
                     ],
                 ]);
 
                 $event->mutations = array_merge($event->mutations, [
                     'Staff Management' => [
-                        // request component with create action, labelled "Create Requests" in UI
+                        'notifications:update' => ['label' => Craft::t('staff-management', 'Update Notifications')],
                         'requests:create' => ['label' => Craft::t('staff-management', 'Edit Requests')],
+                        'settings-employee:update' => ['label' => Craft::t('staff-management', 'Update Employee Settings')],
                     ]
                 ]);
             }
