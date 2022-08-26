@@ -58,6 +58,11 @@ class Gql extends CraftGql
     }
 
     // MUTATIONS
+    public static function canMutateNotifications(): bool
+    {
+        return true;
+    }
+
     public static function canMutateRequests(): bool
     {
         return true;
