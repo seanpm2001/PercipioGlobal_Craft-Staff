@@ -563,6 +563,17 @@ class Install extends Migration
                 'name' => $this->string(255)->notNull(),
             ]);
 
+            $this->createTable(Table::SETTINGS_ADMIN, [
+                'id' => $this->primaryKey(),
+                'dateCreated' => $this->dateTime()->notNull(),
+                'dateUpdated' => $this->dateTime()->notNull(),
+                'uid' => $this->uid(),
+                //FK
+                //internal
+                'settingsId' => $this->integer()->notNull(), //create FK to Settings [id]
+                'userId' => $this->integer()->notNull(), //create FK to Employee [id]
+            ]);
+
             $this->createTable(Table::SETTINGS_EMPOYEE, [
                 'id' => $this->primaryKey(),
                 'dateCreated' => $this->dateTime()->notNull(),
@@ -1723,6 +1734,10 @@ class Install extends Migration
         //Permissions [id]
         $this->createIndex(null, Table::PERMISSIONS_USERS, 'permissionId', false);
 
+        //Settings
+        $this->createIndex(null, Table::SETTINGS_ADMIN, 'settingsId', false);
+        $this->createIndex(null, Table::SETTINGS_ADMIN, 'employeeId', false);
+
         /** LINKAGE **/
         //Employment Details [id]
         $this->createIndex(null, Table::CIS_DETAILS, 'employmentDetailsId', false);
@@ -1917,6 +1932,7 @@ class Install extends Migration
         $this->addForeignKey(null, Table::PERMISSIONS_USERS, ['permissionId'], Table::PERMISSIONS, ['id'], 'CASCADE', 'CASCADE');
 
         //Settings [id]
+        $this->addForeignKey(null, Table::SETTINGS_ADMIN, ['settingsId'], Table::SETTINGS, ['id'], 'CASCADE', 'CASCADE');
         $this->addForeignKey(null, Table::SETTINGS_EMPOYEE, ['settingsId'], Table::SETTINGS, ['id'], 'CASCADE', 'CASCADE');
 
         /** LINKAGE **/
@@ -2011,6 +2027,8 @@ class Install extends Migration
         $this->addForeignKey(null, Table::PAY_RUN, ['id'], CraftTable::ELEMENTS, ['id'], 'CASCADE', 'CASCADE' );
         $this->addForeignKey(null, Table::PAY_RUN_ENTRIES, ['id'], CraftTable::ELEMENTS, ['id'], 'CASCADE', 'CASCADE' );
         $this->addForeignKey(null, Table::REQUESTS, ['id'], CraftTable::ELEMENTS, ['id'], 'CASCADE', 'CASCADE' );
+        $this->addForeignKey(null, Table::SETTINGS_ADMIN, ['id'], CraftTable::ELEMENTS, ['id'], 'CASCADE', 'CASCADE' );
+        $this->addForeignKey(null, Table::SETTINGS_EMPOYEE, ['id'], CraftTable::ELEMENTS, ['id'], 'CASCADE', 'CASCADE' );
 
         // User [id]
         $this->addForeignKey(null, Table::EMPLOYEES, ['userId'], CraftTable::USERS, ['id']);
@@ -2020,6 +2038,7 @@ class Install extends Migration
         $this->addForeignKey(null, Table::PAY_RUN_IMPORTS, ['uploadedBy'], CraftTable::USERS, ['id']);
         $this->addForeignKey(null, Table::PERMISSIONS_USERS, ['userId'], CraftTable::USERS, ['id']);
         $this->addForeignKey(null, Table::REQUESTS, ['administerId'], CraftTable::USERS, ['id']);
+        $this->addForeignKey(null, Table::SETTINGS_ADMIN, ['userId'], CraftTable::USERS, ['id']);
     }
 
     /**

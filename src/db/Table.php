@@ -68,6 +68,7 @@ abstract class Table
     const RTI_EMPLOYEE_NAME = "{{%staff_rti_employee_name}}";
     const RTI_SUBMISSION_SETTINGS = "{{%staff_rti_submission_settings}}";
     const SETTINGS = '{{%staff_settings}}';
+    const SETTINGS_ADMIN = '{{%staff_settings_admin}}';
     const SETTINGS_EMPOYEE = '{{%staff_settings_employee}}';
     const STARTER_DETAILS = "{{%staff_starter_details}}";
     const TAX_AND_NI = "{{%staff_tax_and_ni}}";

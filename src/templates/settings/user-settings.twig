@@ -1,0 +1,40 @@
+{%- requirePermission "hub:request" -%}
+
+{%- extends 'staff-management/_layouts/hub-cp.twig' -%}
+
+{%- set content -%}
+
+    <form method="post">
+        <input type="hidden" name="action" value="staff-management/settings/save-user-settings">
+        <input type="hidden" name="CRAFT_CSRF_TOKEN" value="{{ craft.app.request.csrfToken }}">
+        <input type="hidden" name="userId" value="{{- currentUser.id -}}">
+
+        <div class="user-permissions">
+            <h3>Notifications</h3>
+            <ul>
+                {%- for setting in settings -%}
+                    {%- if 'notifications' in setting.name %}
+                    <li>
+                        <input type="checkbox" id="checkbox{{- setting.id -}}" {{ currentSettings[setting.id] ?? null ? 'checked' : '' }} class="checkbox" name="settings[]" value="{{- setting.id -}}">
+                        <label for="checkbox{{- setting.id -}}">
+                            {{ setting.name|t('staff-management') }}
+                        </label>
+                    </li>
+                    {%- endif -%}
+                {%- endfor -%}
+            </ul>
+
+        </div>
+    </form>
+
+{%- endset -%}
+
+{%- block foot -%}
+{#    {{ parent() }}#}
+{#    {%- set tagOptions = {#}
+{#        'depends': [#}
+{#            'percipiolondon\\staff\\assetbundles\\staff\\StaffAsset'#}
+{#        ]#}
+{#    } -%}#}
+{#    {{  craft.staff.register('src/js/settings.ts', false, tagOptions, tagOptions) }}#}
+{%- endblock -%}
