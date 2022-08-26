@@ -41,15 +41,15 @@ return [
 
     //SETTINGS
     'notifications:app' => 'Notification emails about the app',
-    'notifications:benefits' => 'Notification emails about your benefits',
-    'notifications:employees' => 'Notification emails about your personal details',
+    'notifications:benefit' => 'Notification emails about your benefits',
+    'notifications:employee' => 'Notification emails about your personal details',
     'notifications:payroll' => 'Notification emails about your payroll',
     'notifications:pension' => 'Notification emails about your pension',
     'notifications:system' => 'Notification emails about the system',
 
     //EMAILS
-    'employee_address_approved' => 'Dear {name}<br><br>Your request to update your address information has been approved and can now be viewed on the Harding Hub.<br><br>Kind regards,<br>The Harding Hub team',
-    'employee_address_declined' => 'Dear {name}<br><br>Your request to update your address information has been declined. More details can be found on the Harding Hub in the history log.<br><br>Kind regards,<br>The Harding Hub team',
+    'email_employee_address_approved' => 'Dear {name}<br><br>Your request to update your address information has been approved and can now be viewed on the Harding Hub.<br><br>Kind regards,<br>The Harding Hub team',
+    'email_employee_address_declined' => 'Dear {name}<br><br>Your request to update your address information has been declined. More details can be found on the Harding Hub in the history log.<br><br>Kind regards,<br>The Harding Hub team',
     'email_employee_personal_details_approved' => 'Dear {name}<br><br>Your request to update your personal information has been approved and can now be viewed on the Harding Hub.<br><br>Kind regards,<br>The Harding Hub team',
     'email_employee_personal_details_declined' => 'Dear {name}<br><br>Your request to update your personal information has been declined. More details can be found on the Harding Hub in the history log.<br><br>Kind regards,<br>The Harding Hub team',
     'email_employee_telephone_approved' => 'Dear {name}<br><br>Your request to update your contact information has been approved and can now be viewed on the Harding Hub.<br><br>Kind regards,<br>The Harding Hub team',
