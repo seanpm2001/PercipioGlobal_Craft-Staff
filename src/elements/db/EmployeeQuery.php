@@ -27,7 +27,7 @@ class EmployeeQuery extends ElementQuery
     /**
      * @var
      */
-    public $isDirector;
+    public ?bool $isDirector = null;
     /**
      * @var
      */
@@ -112,7 +112,7 @@ class EmployeeQuery extends ElementQuery
             $this->subQuery->andWhere(Db::parseParam('staff_employees.userId', $this->userId));
         }
 
-        if ($this->isDirector) {
+        if (!is_null($this->isDirector)) {
             $this->subQuery->andWhere(Db::parseParam('staff_employees.isDirector', $this->isDirector, '=', false));
         }
 

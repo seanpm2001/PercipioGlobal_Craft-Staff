@@ -7,10 +7,10 @@ use craft\helpers\Db;
 
 class NotificationQuery extends ElementQuery
 {
-    public $employeeId;
-    public $employerId;
-    public $type;
-    public $viewed;
+    public ?int $employeeId = null;
+    public ?int $employerId = null;
+    public ?string $type = null;
+    public ?bool $viewed = null;
 
     public function employeeId($value)
     {
@@ -60,7 +60,7 @@ class NotificationQuery extends ElementQuery
             $this->subQuery->andWhere(Db::parseParam('staff_notifications.type', $this->type));
         }
 
-        if ($this->viewed) {
+        if (!is_null($this->viewed)) {
             $this->subQuery->andWhere(Db::parseParam('staff_notifications.viewed', $this->viewed));
         }
 
