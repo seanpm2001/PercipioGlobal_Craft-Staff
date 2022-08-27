@@ -12,6 +12,7 @@ namespace percipiolondon\staff\elements;
 
 use Craft;
 use craft\elements\User;
+use craft\helpers\App;
 use craft\helpers\DateTimeHelper;
 use DateTime;
 use craft\base\Element;
@@ -257,9 +258,6 @@ class Request extends Element
     private function _saveRecord(bool $isNew): void
     {
         try {
-            $request = null;
-            $helper = null;
-
             if(!$isNew) {
                 $request = Requests::findOne($this->id);
 
@@ -320,14 +318,26 @@ class Request extends Element
             $save = $request->save();
 
             if ($save) {
-                // create a history log
                 $employee = Employee::findOne($request->employeeId);
-                Staff::$plugin->history->saveHistory($employee, 'employee', HistoryMessages::getMessage('employee', $request->type, $request->status), $request->request, $request->administerId ?? null);
 
-                // create a notification
-                $notificationMessage = NotificationMessage::getNotification('employee' , $request->type, $request->status);
-                $emailMessage = NotificationMessage::getEmail('employee', $request->type, $request->status);
-                Staff::$plugin->notifications->createNotification($request->employeeId, 'employee', ($request->status === 'approved' || $request->status === 'declined'), $notificationMessage, $emailMessage);
+                if ($employee) {
+                    // create a history log
+                    Staff::$plugin->history->saveHistory($employee, 'employee', HistoryMessages::getMessage('employee', $request->type, $request->status), $request->request, $request->administerId ?? null);
+
+                    // create a notification for the employoee
+                    $notificationMessage = NotificationMessage::getNotification('employee' , $request->type, $request->status);
+                    $emailMessage = NotificationMessage::getEmail('employee', $request->type, $request->status);
+                    Staff::$plugin->notifications->createNotificationByEmployee($request->employeeId, 'employee', ($request->status === 'approved' || $request->status === 'declined'), $notificationMessage, $emailMessage);
+
+                    // create an admin notification
+                    if ($request->status === 'pending') {
+                        foreach (User::find()->group('hardingAdmin')->all() as $user) {
+                            $adminEmailMessage = NotificationMessage::getAdminEmail('employee', $request->type, $request->status);
+                            $url = App::parseEnv('$SITE_URL') . '/admin/staff-management/requests/' . $request->id;
+                            Staff::$plugin->notifications->sendNotificationByUser($user->id, $adminEmailMessage, ['adminUrl' => $url]);
+                        }
+                    }
+                }
             }
 
             // sync with Staffology if the request has been approved

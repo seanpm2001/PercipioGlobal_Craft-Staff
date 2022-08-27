@@ -71,6 +71,7 @@ use percipiolondon\staff\services\Addresses;
 use percipiolondon\staff\services\Employees;
 use percipiolondon\staff\services\Employers;
 use percipiolondon\staff\services\GroupBenefits;
+use percipiolondon\staff\services\Notifications;
 use percipiolondon\staff\services\PayOptions;
 use percipiolondon\staff\services\PayRunEntries;
 use percipiolondon\staff\services\PayRuns;
@@ -101,12 +102,14 @@ use yii\base\ModelEvent;
  * @property  GroupBenefits $groupBenefits
  * @property  Employees $employees
  * @property  Employers $employers
+ * @property  Notifications $notifications
  * @property  PayOptions $payOptions
  * @property  PayRunEntries $payRunEntries
  * @property  PayRuns $payRuns
  * @property  Pensions $pensions
- * @property  Totals $totals
  * @property  UserPermissions $userPermissions
+ * @property  \percipiolondon\staff\services\Settings $staffSettings
+ * @property  Totals $totals
  */
 class Staff extends Plugin
 {

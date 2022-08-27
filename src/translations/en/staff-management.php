@@ -49,11 +49,17 @@ return [
     'notifications:system' => 'Notification emails about the system',
 
     //EMAILS
+    'email_admin_employee_address_pending' => 'Dear {name}<br><br>There is an incoming request to update address information. View request in <a href="{adminUrl}">the admin panel</a><br><br>Kind regards,<br>The Harding Hub team',
     'email_employee_address_approved' => 'Dear {name}<br><br>Your request to update your address information has been approved and can now be viewed on the Harding Hub.<br><br>Kind regards,<br>The Harding Hub team',
     'email_employee_address_declined' => 'Dear {name}<br><br>Your request to update your address information has been declined. More details can be found on the Harding Hub in the history log.<br><br>Kind regards,<br>The Harding Hub team',
+    'email_employee_address_pending' => 'Dear {name}<br><br>Your request to update your address information has been sent to our team. More details can be found on the Harding Hub in the history log.<br><br>Kind regards,<br>The Harding Hub team',
+    'email_admin_employee_personal_details_pending' => 'Dear {name}<br><br>There is an incoming request to update personal information. View request in <a href="{adminUrl}">the admin panel</a><br><br>Kind regards,<br>The Harding Hub team',
     'email_employee_personal_details_approved' => 'Dear {name}<br><br>Your request to update your personal information has been approved and can now be viewed on the Harding Hub.<br><br>Kind regards,<br>The Harding Hub team',
     'email_employee_personal_details_declined' => 'Dear {name}<br><br>Your request to update your personal information has been declined. More details can be found on the Harding Hub in the history log.<br><br>Kind regards,<br>The Harding Hub team',
+    'email_employee_personal_details_pending' => 'Dear {name}<br><br>Your request to update your personal information has sent to our team. More details can be found on the Harding Hub in the history log.<br><br>Kind regards,<br>The Harding Hub team',
+    'email_admin_employee_telephone_pending' => 'Dear {name}<br><br>There is an incoming request to update contact information. View request in <a href="{adminUrl}">the admin panel</a><br><br>Kind regards,<br>The Harding Hub team',
     'email_employee_telephone_approved' => 'Dear {name}<br><br>Your request to update your contact information has been approved and can now be viewed on the Harding Hub.<br><br>Kind regards,<br>The Harding Hub team',
     'email_employee_telephone_declined' => 'Dear {name}<br><br>Your request to update your contact information has been declined. More details can be found on the Harding Hub in the history log.<br><br>Kind regards,<br>The Harding Hub team',
+    'email_employee_telephone_pending' => 'Dear {name}<br><br>Your request to update your contact information has been sent to our team. More details can be found on the Harding Hub in the history log.<br><br>Kind regards,<br>The Harding Hub team',
     'email_payroll_payslip' => 'Dear {name}<br><br>There is a new payslip available on the Harding Hub. You can view it in the Payroll History.<br><br>Kind regards,<br>The Harding Hub team',
 ];

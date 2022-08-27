@@ -386,7 +386,7 @@ class PayRunEntry extends Element
                     // create a notification
                     $notificationMessage = NotificationMessage::getNotification('payroll' , 'payslip');
                     $emailMessage = NotificationMessage::getEmail('payroll' , 'payslip');
-                    Staff::$plugin->notifications->createNotification($employee->id, 'payroll', true, $notificationMessage, $emailMessage);
+                    Staff::$plugin->notifications->createNotificationByEmployee($employee->id, 'payroll', true, $notificationMessage, $emailMessage);
                 }
             }
         } catch (\Exception $e) {

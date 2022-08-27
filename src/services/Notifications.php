@@ -31,7 +31,7 @@ class Notifications extends Component
      * @throws \craft\errors\ElementNotFoundException
      * @throws \yii\base\Exception
      */
-    public function createNotification(int $employeeId, string $type, bool $sendMail, string $notificationMessage, string $emailMessage = null): void
+    public function createNotificationByEmployee(int $employeeId, string $type, bool $sendMail, string $notificationMessage, string $emailMessage = null): void
     {
         $setting = Settings::findOne(['name' => 'notifications:'.$type]);
         $employee = Employee::findOne($employeeId);
@@ -49,13 +49,30 @@ class Notifications extends Component
         }
 
         // check if an email need to be send
-        if ($setting && $employee && SettingsEmployee::findOne(['settingsId' => $setting->id, 'employeeId' => $employeeId])) {
+        if ($setting && $employee && $sendMail && SettingsEmployee::findOne(['settingsId' => $setting->id, 'employeeId' => $employeeId])) {
             // approval to send notifications
             $user = User::findOne($employee->userId);
 
             if($user) {
-                $this->_sendNotification($user, $employeeId, $emailMessage);
+                $personalDetails = Staff::$plugin->employees->getPersonalDetailsByEmployee($employeeId, true);
+                $this->_sendNotification($user, $personalDetails['firstName'], $personalDetails['lastName'], $emailMessage);
             }
+        }
+    }
+
+    public function sendNotificationByUser(int $userId, string $emailMessage, array $parameters = []): void
+    {
+        $user = User::findOne($userId);
+
+        if($user) {
+            $firstName = $user->firstName ?? '';
+            $lastName = $user->lastName ?? '';
+
+            if ($firstName == '' && $lastName == '') {
+                $firstName = $user->email;
+            }
+
+            $this->_sendNotification($user, $firstName, $lastName, $emailMessage, $parameters);
         }
     }
 
@@ -86,7 +103,7 @@ class Notifications extends Component
      * @throws \Twig\Error\SyntaxError
      * @throws \yii\base\Exception
      */
-    private function _sendNotification(User $user, int $employeeId, string $body): void
+    private function _sendNotification(User $user, string $firstName, string $lastName, string $body, array $parameters = []): void
     {
         $settings = (new \craft\services\ProjectConfig)->get('email');
         $message = new Message();
@@ -94,15 +111,15 @@ class Notifications extends Component
         $message->setTo($user->email);
         $message->setSubject('Notification on the Harding Hub');
 
-        $personalDetails = Staff::$plugin->employees->getPersonalDetailsByEmployee($employeeId, true);
-
         $view = Craft::$app->getView();
-        $name = $personalDetails['firstName'] . ' ' . $personalDetails['lastName'];
-        $content = Craft::t('staff-management', $body, ['name' => $name], 'en');
+        $name = $firstName . ' ' . $lastName;
+        $content = Craft::t('staff-management', $body, array_merge(['name' => $name], $parameters), 'en');
         $message->setHtmlBody($view->renderTemplate($settings['template'], array_merge([], [
             'body' => Template::raw(Markdown::process($content)),
         ]), 'site'));
 
-        Craft::$app->getMailer()->send($message);
+        if(!App::parseEnv('$HUB_PREVENT_MAILS')) {
+            Craft::$app->getMailer()->send($message);
+        }
     }
 }
