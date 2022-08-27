@@ -28,7 +28,11 @@ class NotificationMessage
         'employee_telephone_declined' => [
             'email' => 'email_employee_telephone_declined',
             'notification' => 'employee_telephone_declined'
-        ]
+        ],
+        'payroll_payslip' => [
+            'email' => 'email_payroll_payslip',
+            'notification' => 'payroll_payslip'
+        ],
     ];
 
     public static function getEmail(string $type, string $detail = null, string $status = null): ?string

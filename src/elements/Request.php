@@ -319,16 +319,15 @@ class Request extends Element
             // save the request to the database
             $save = $request->save();
 
-            // create a history log
             if ($save) {
+                // create a history log
                 $employee = Employee::findOne($request->employeeId);
                 Staff::$plugin->history->saveHistory($employee, 'employee', HistoryMessages::getMessage('employee', $request->type, $request->status), $request->request, $request->administerId ?? null);
 
-                if ($request->status === 'approved') {
-                    $notificationMessage = NotificationMessage::getNotification('employee', $request->type, $request->status);
-                    $emailMessage = NotificationMessage::getEmail('employee', $request->type, $request->status);
-                    Staff::$plugin->notifications->createNotification($request->employeeId, 'employee', $notificationMessage, $emailMessage);
-                }
+                // create a notification
+                $notificationMessage = NotificationMessage::getNotification('employee' , $request->type, $request->status);
+                $emailMessage = NotificationMessage::getEmail('employee', $request->type, $request->status);
+                Staff::$plugin->notifications->createNotification($request->employeeId, 'employee', ($request->status === 'approved' || $request->status === 'declined'), $notificationMessage, $emailMessage);
             }
 
             // sync with Staffology if the request has been approved

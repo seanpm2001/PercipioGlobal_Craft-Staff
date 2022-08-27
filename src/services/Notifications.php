@@ -31,7 +31,7 @@ class Notifications extends Component
      * @throws \craft\errors\ElementNotFoundException
      * @throws \yii\base\Exception
      */
-    public function createNotification(int $employeeId, string $type, string $notificationMessage, string $emailMessage = null): void
+    public function createNotification(int $employeeId, string $type, bool $sendMail, string $notificationMessage, string $emailMessage = null): void
     {
         $setting = Settings::findOne(['name' => 'notifications:'.$type]);
         $employee = Employee::findOne($employeeId);

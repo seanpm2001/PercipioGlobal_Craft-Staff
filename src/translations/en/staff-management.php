@@ -36,6 +36,7 @@ return [
     'employee_telephone_canceled' => 'This is the translated message for telephone canceled.',
     'employee_telephone_declined' => 'This is the translated message for telephone declined.',
     'employee_telephone_pending' => 'This is the translated message for telephone pending.',
+    'payroll_payslip' => 'There is a new payslip available',
     'system_user_active' => 'Your account has been activated.',
     'system_user_set_password' => 'A new password has been set.',
 
@@ -54,4 +55,5 @@ return [
     'email_employee_personal_details_declined' => 'Dear {name}<br><br>Your request to update your personal information has been declined. More details can be found on the Harding Hub in the history log.<br><br>Kind regards,<br>The Harding Hub team',
     'email_employee_telephone_approved' => 'Dear {name}<br><br>Your request to update your contact information has been approved and can now be viewed on the Harding Hub.<br><br>Kind regards,<br>The Harding Hub team',
     'email_employee_telephone_declined' => 'Dear {name}<br><br>Your request to update your contact information has been declined. More details can be found on the Harding Hub in the history log.<br><br>Kind regards,<br>The Harding Hub team',
+    'email_payroll_payslip' => 'Dear {name}<br><br>There is a new payslip available on the Harding Hub. You can view it in the Payroll History.<br><br>Kind regards,<br>The Harding Hub team',
 ];

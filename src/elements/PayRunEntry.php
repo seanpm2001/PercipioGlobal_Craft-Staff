@@ -14,10 +14,15 @@ use Craft;
 use craft\base\Element;
 use craft\elements\db\ElementQueryInterface;
 
+use craft\helpers\App;
 use percipiolondon\staff\elements\db\PayRunEntryQuery;
+use percipiolondon\staff\helpers\HistoryMessages;
 use percipiolondon\staff\helpers\Logger;
+use percipiolondon\staff\helpers\NotificationMessage;
+use percipiolondon\staff\records\Employee;
 use percipiolondon\staff\records\PayRunEntry as PayRunEntryRecord;
 
+use percipiolondon\staff\records\PayRunTotals;
 use percipiolondon\staff\Staff;
 use yii\base\InvalidConfigException;
 use yii\db\Exception;
@@ -362,6 +367,27 @@ class PayRunEntry extends Element
 
                 $logger->stdout($errors . PHP_EOL, $logger::FG_RED);
                 Craft::error($record->errors, __METHOD__);
+            } else {
+                $employee = Employee::findOne($record->employeeId);
+                $payRunTotals = PayRunTotals::findOne(['payRunEntryId' => $this->id]);
+
+                if ($employee && $this->isClosed) {
+                    // create a history log
+                    $payslipData = [];
+                    $payslipData['paymentDate'] = $this->paymentDate;
+                    $payslipData['taxYear'] = $this->taxYear;
+                    $payslipData['startDate'] = $this->startDate;
+                    $payslipData['endDate'] = $this->endDate;
+                    $payslipData['period'] = $this->period;
+                    $payslipData['payRunTotals'] = $payRunTotals ? $payRunTotals->id : null;
+
+                    Staff::$plugin->history->saveHistory($employee, 'payroll', HistoryMessages::getMessage('payroll', 'payslip'), json_encode($payslipData, JSON_THROW_ON_ERROR));
+
+                    // create a notification
+                    $notificationMessage = NotificationMessage::getNotification('payroll' , 'payslip');
+                    $emailMessage = NotificationMessage::getEmail('payroll' , 'payslip');
+                    Staff::$plugin->notifications->createNotification($employee->id, 'payroll', true, $notificationMessage, $emailMessage);
+                }
             }
         } catch (\Exception $e) {
             $logger->stdout(PHP_EOL, $logger::RESET);
