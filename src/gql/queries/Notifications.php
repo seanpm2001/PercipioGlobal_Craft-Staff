@@ -26,7 +26,7 @@ class Notifications extends Query
                 'description' => 'This query is used to query for all the payruns.',
                 'complexity' => GqlHelper::relatedArgumentComplexity(),
             ],
-            'NotificationCount' => [
+            'NotificationsCount' => [
                 'type' => Type::nonNull(Type::int()),
                 'args' => NotificationArguments::getArguments(),
                 'resolve' => NotificationResolver::class . '::resolveCount',
