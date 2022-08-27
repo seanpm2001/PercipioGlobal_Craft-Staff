@@ -23,7 +23,7 @@ class Notifications extends Query
                 'type' => Type::listOf(NotificationInterface::getType()),
                 'args' => NotificationArguments::getArguments(),
                 'resolve' => NotificationResolver::class . '::resolve',
-                'description' => 'This query is used to query for all the payruns.',
+                'description' => 'This query is used to query for all the notifications.',
                 'complexity' => GqlHelper::relatedArgumentComplexity(),
             ],
             'NotificationsCount' => [

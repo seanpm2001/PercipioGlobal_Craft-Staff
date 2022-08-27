@@ -145,14 +145,10 @@ class SettingsAdmin extends Element
     {
         $settingsIds = [];
 
-        $settings = (new Query())
-            ->from('{{%staff_settings_admin}}')
-            ->where('userId='.Craft::$app->getUser()->id)
-            ->select('id')
-            ->all();
+        $settings = self::findAll(['userId' => Craft::$app->getUser()->id]);
 
         foreach ($settings as $setting) {
-            $settingsIds[] = $setting['id'];
+            $settingsIds[] = $setting['settingsId'];
         }
 
         return $settingsIds;

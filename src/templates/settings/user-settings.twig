@@ -15,7 +15,7 @@
                 {%- for setting in settings -%}
                     {%- if 'notifications' in setting.name %}
                     <li>
-                        <input type="checkbox" id="checkbox{{- setting.id -}}" {{ currentSettings[setting.id] ?? null ? 'checked' : '' }} class="checkbox" name="settings[]" value="{{- setting.id -}}">
+                        <input type="checkbox" id="checkbox{{- setting.id -}}" {{ setting.id in currentSettings ? 'checked' : '' }} class="checkbox" name="settings[]" value="{{- setting.id -}}">
                         <label for="checkbox{{- setting.id -}}">
                             {{ setting.name|t('staff-management') }}
                         </label>

@@ -87,6 +87,7 @@ class Settings extends Component
             }
         }
 
+
         // loop through the current settings to delete settings that aren't in the arguments settings
         foreach ($currentSettings as $currentSetting) {
             if (!in_array($currentSetting->settingsId, $settings, true)) {
