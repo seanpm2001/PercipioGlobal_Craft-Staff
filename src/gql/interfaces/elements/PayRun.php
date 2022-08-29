@@ -7,7 +7,10 @@ use craft\gql\interfaces\Element;
 use craft\gql\TypeManager;
 use craft\gql\types\DateTime;
 
+use craft\helpers\DateTimeHelper;
+use craft\helpers\Gql;
 use GraphQL\Type\Definition\InterfaceType;
+use GraphQL\Type\Definition\ResolveInfo;
 use GraphQL\Type\Definition\Type;
 
 use percipiolondon\staff\elements\PayRun as PayRunElement;
@@ -100,16 +103,25 @@ class PayRun extends Element
                 'name' => 'startDate',
                 'type' => DateTime::getType(),
                 'description' => 'The start date of the period this PayRun covers.',
+                'resolve' => function ($source, array $arguments, $context, ResolveInfo $resolveInfo) {
+                    return Gql::applyDirectives($source, $resolveInfo, DateTimeHelper::toDateTime($source->startDate));
+                }
             ],
             'endDate' => [
                 'name' => 'endDate',
                 'type' => DateTime::getType(),
                 'description' => 'The end date of the period this PayRun covers.',
+                'resolve' => function ($source, array $arguments, $context, ResolveInfo $resolveInfo) {
+                    return Gql::applyDirectives($source, $resolveInfo, DateTimeHelper::toDateTime($source->endDate));
+                }
             ],
             'paymentDate' => [
                 'name' => 'paymentDate',
                 'type' => DateTime::getType(),
                 'description' => 'The intended date that Employees will be paid, although this can be changed on a per PayRunEntry basis.',
+                'resolve' => function ($source, array $arguments, $context, ResolveInfo $resolveInfo) {
+                    return Gql::applyDirectives($source, $resolveInfo, DateTimeHelper::toDateTime($source->paymentDate));
+                }
             ],
             'employeeCount' => [
                 'name' => 'employeeCount',

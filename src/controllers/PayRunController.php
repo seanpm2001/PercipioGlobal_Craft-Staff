@@ -67,20 +67,19 @@ class PayRunController extends Controller
 
         $employer = Employer::findOne($employerId);
 
-        if (!$employer) {
-            throw new NotFoundHttpException();
+        if(is_null($employer)) {
+            throw new NotFoundHttpException('Employer does not exist');
         }
 
 //        $payRuns = PayRunRecord::findAll(['employerId' => $employer['id']]);
-        $employerName = SecurityHelper::decrypt($employer['name']) ?? '';
 
         $pluginName = Staff::$settings->pluginName;
-        $templateTitle = Craft::t('staff-management', 'Pay Runs > ' . $employerName);
+        $templateTitle = Craft::t('staff-management', 'Pay Runs > ' . $employer['name']);
 
         $variables['controllerHandle'] = 'payruns';
         $variables['pluginName'] = Staff::$settings->pluginName;
         $variables['title'] = $templateTitle;
-        $variables['docTitle'] = "{$pluginName} - {$templateTitle} - {$employerName}";
+        $variables['docTitle'] = "{$pluginName} - {$templateTitle} - {$employer['name']}";
         $variables['selectedSubnavItem'] = 'payRuns';
 
         $variables['employerId'] = $employer['id'];

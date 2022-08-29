@@ -12,9 +12,9 @@ namespace percipiolondon\staff\services;
 
 use craft\base\Component;
 use craft\helpers\DateTimeHelper;
-use percipiolondon\staff\records\BenefitTypeDental;
-use percipiolondon\staff\records\BenefitTypeGroupCriticalIllnessCover;
-use percipiolondon\staff\records\BenefitTypeGroupDeathInService;
+use percipiolondon\staff\records\BenefitPolicy;
+use percipiolondon\staff\records\BenefitVariantGcic;
+use percipiolondon\staff\records\BenefitVariantGdis;
 
 class GroupBenefits extends Component
 {
@@ -23,9 +23,9 @@ class GroupBenefits extends Component
     public function getBenefitTypeData(int $id, ?string $type): ?array
     {
         $query = match ($type) {
-            'dental' => new BenefitTypeDental(),
-            'group-critical-illness-cover' => new BenefitTypeGroupCriticalIllnessCover(),
-            'group-death-in-service' => new BenefitTypeGroupDeathInService(),
+            'dental' => new BenefitPolicy(),
+            'group-critical-illness-cover' => new BenefitVariantGcic(),
+            'group-death-in-service' => new BenefitVariantGdis(),
             'group-income-protection', 'group-life-assurance', 'health-cash-plan', 'private-medical-insurance' => null,
             default => null,
         };

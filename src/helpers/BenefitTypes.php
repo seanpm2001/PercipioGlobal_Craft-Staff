@@ -4,9 +4,9 @@ namespace percipiolondon\staff\helpers;
 
 use craft\db\ActiveRecord;
 use craft\helpers\Db;
-use percipiolondon\staff\records\BenefitTypeDental;
-use percipiolondon\staff\records\BenefitTypeGroupCriticalIllnessCover;
-use percipiolondon\staff\records\BenefitTypeGroupDeathInService;
+use percipiolondon\staff\records\BenefitPolicy;
+use percipiolondon\staff\records\BenefitVariantGcic;
+use percipiolondon\staff\records\BenefitVariantGdis;
 
 class BenefitTypes
 {
@@ -43,10 +43,10 @@ class BenefitTypes
     public function setGroupCriticalIllnessCover(array $fields, bool $save = true): bool|array
     {
 
-        $type = BenefitTypeGroupCriticalIllnessCover::findOne($fields['id'] ?? null);
+        $type = BenefitVariantGcic::findOne($fields['id'] ?? null);
 
         if(!$type){
-            $type = new BenefitTypeGroupCriticalIllnessCover();
+            $type = new BenefitVariantGcic();
         }
 
         //generic
@@ -70,10 +70,10 @@ class BenefitTypes
     public function setGroupDeathInService(array $fields, bool $save = true): bool|array
     {
 
-        $type = BenefitTypeGroupDeathInService::findOne($fields['id'] ?? null);
+        $type = BenefitVariantGdis::findOne($fields['id'] ?? null);
 
         if(!$type){
-            $type = new BenefitTypeGroupDeathInService();
+            $type = new BenefitVariantGdis();
         }
 
         //generic

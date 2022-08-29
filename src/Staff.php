@@ -35,7 +35,6 @@ use nystudio107\pluginvite\services\VitePluginService;
 
 use percipiolondon\staff\assetbundles\staff\StaffAsset;
 use percipiolondon\staff\elements\BenefitProvider;
-use percipiolondon\staff\elements\BenefitType ;
 use percipiolondon\staff\elements\Employee as EmployeeElement;
 use percipiolondon\staff\elements\Employer as EmployerElement;
 use percipiolondon\staff\elements\History as HistoryElement;
@@ -291,7 +290,7 @@ class Staff extends Plugin
         }
         if ($currentUser->can('hub:benefits')) {
             $subNavs['benefits'] = [
-                'label' => Craft::t('staff-management', 'Group Benefits'),
+                'label' => Craft::t('staff-management', 'Benefits'),
                 'url' => 'staff-management/benefits/providers',
             ];
         }
@@ -407,14 +406,13 @@ class Staff extends Plugin
         return [
             'staff-management' => 'staff-management/settings/dashboard',
             'staff-management/dashboard' => 'staff-management/settings/dashboard',
+            // benefits
             'staff-management/benefits/providers' => 'staff-management/benefit-provider',
             'staff-management/benefits/providers/new' => 'staff-management/benefit-provider/edit',
             'staff-management/benefits/providers/edit/<providerId:\d+>' => 'staff-management/benefit-provider/edit',
-            'staff-management/benefits/providers/<providerId:\d+>' => 'staff-management/benefit-provider/detail',
-            'staff-management/benefits/types' => 'staff-management/benefit-type',
-            'staff-management/benefits/types/new' => 'staff-management/benefit-type/edit',
-            'staff-management/benefits/types/edit/<typeId:\d+>/<benefitType:\S+>' => 'staff-management/benefit-type/edit',
-            'staff-management/benefits/types/<typeId:\d+>' => 'staff-management/benefit-type/detail',
+            'staff-management/benefits/employers' => 'staff-management/benefit-employer',
+            'staff-management/benefits/employers/<employerId:\d+>' => 'staff-management/benefit-employer/detail',
+            // pay runs
             'staff-management/pay-runs' => 'staff-management/pay-run',
             'staff-management/pay-runs/queue' => 'staff-management/pay-run/get-queue',
             'staff-management/pay-runs/<employerId:\d+>/<currentYear:\w+>' => 'staff-management/pay-run/pay-run-by-employer',
@@ -424,9 +422,11 @@ class Staff extends Plugin
             'staff-management/pay-runs/fetch-pay-run/<payRunId:\d+>' => 'staff-management/pay-run/fetch-pay-run',
             'staff-management/pay-runs/get-logs/<payRunId:\d+>' => 'staff-management/pay-run/get-pay-run-logs',
             'staff-management/pay-runs/download-template/<payRunId:\d+>' => 'staff-management/pay-run/download-template',
+            // requests
             'staff-management/requests' => 'staff-management/request',
             'staff-management/requests/<requestId:\d+>' => 'staff-management/request/detail',
             'staff-management/requests/undo/<requestId:\d+>' => 'staff-management/request/undo',
+            // settings
             'staff-management/plugin' => 'staff-management/settings/plugin',
             'staff-management/settings/get-gql-token' => 'staff-management/settings/get-gql-token',
             'staff-management/settings/user-settings' => 'staff-management/settings/user-settings',
@@ -589,7 +589,6 @@ class Staff extends Plugin
             Elements::EVENT_REGISTER_ELEMENT_TYPES,
             function(RegisterComponentTypesEvent $event) {
                 $event->types[] = BenefitProvider::class;
-                $event->types[] = BenefitType::class;
                 $event->types[] = EmployerElement::class;
                 $event->types[] = EmployeeElement::class;
                 $event->types[] = HistoryElement::class;
