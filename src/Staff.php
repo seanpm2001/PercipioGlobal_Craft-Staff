@@ -38,34 +38,40 @@ use percipiolondon\staff\elements\BenefitProvider;
 use percipiolondon\staff\elements\BenefitType ;
 use percipiolondon\staff\elements\Employee as EmployeeElement;
 use percipiolondon\staff\elements\Employer as EmployerElement;
-use percipiolondon\staff\elements\History;
 use percipiolondon\staff\elements\History as HistoryElement;
+use percipiolondon\staff\elements\Notification as NotificationElement;
 use percipiolondon\staff\elements\PayRun as PayRunElement;
 use percipiolondon\staff\elements\PayRunEntry as PayRunEntryElement;
 use percipiolondon\staff\elements\Request as RequestElement;
+use percipiolondon\staff\elements\SettingsEmployee;
 use percipiolondon\staff\gql\interfaces\elements\BenefitProvider as BenefitProviderInterface;
 use percipiolondon\staff\gql\interfaces\elements\Employer as EmployerInterface;
 use percipiolondon\staff\gql\interfaces\elements\Employee as EmployeeInterface;
+use percipiolondon\staff\gql\interfaces\elements\History as HistoryInterface;
+use percipiolondon\staff\gql\interfaces\elements\Notification as NotificationInterface;
 use percipiolondon\staff\gql\interfaces\elements\PayRun as PayRunInterface;
 use percipiolondon\staff\gql\interfaces\elements\PayRunEntry as PayRunEntryInterface;
 use percipiolondon\staff\gql\interfaces\elements\Request as RequestInterface;
+use percipiolondon\staff\gql\mutations\NotificationMutation;
 use percipiolondon\staff\gql\mutations\RequestMutation;
+use percipiolondon\staff\gql\mutations\SettingsEmployeeMutation;
 use percipiolondon\staff\gql\queries\BenefitProvider as BenefitProviderQueries;
 use percipiolondon\staff\gql\queries\Employee as EmployeeQueries;
 use percipiolondon\staff\gql\queries\Employer as EmployerQueries;
 use percipiolondon\staff\gql\queries\History as HistoryQueries;
+use percipiolondon\staff\gql\queries\Notifications as NotificationQueries;
 use percipiolondon\staff\gql\queries\PayRun as PayRunQueries;
 use percipiolondon\staff\gql\queries\PayRunEntry as PayRunEntryQueries;
 use percipiolondon\staff\gql\queries\Request as RequestQueries;
-use percipiolondon\staff\gql\resolvers\mutations\Request;
-use percipiolondon\staff\helpers\HistoryMessages;
+use percipiolondon\staff\gql\queries\SettingsEmployee as SettingsEmployeeQueries;
+use percipiolondon\staff\gql\queries\Settings as SettingsQueries;
 use percipiolondon\staff\models\Settings;
 use percipiolondon\staff\plugin\Services as StaffServices;
-use percipiolondon\staff\records\Employee;
 use percipiolondon\staff\services\Addresses;
 use percipiolondon\staff\services\Employees;
 use percipiolondon\staff\services\Employers;
 use percipiolondon\staff\services\GroupBenefits;
+use percipiolondon\staff\services\Notifications;
 use percipiolondon\staff\services\PayOptions;
 use percipiolondon\staff\services\PayRunEntries;
 use percipiolondon\staff\services\PayRuns;
@@ -96,12 +102,14 @@ use yii\base\ModelEvent;
  * @property  GroupBenefits $groupBenefits
  * @property  Employees $employees
  * @property  Employers $employers
+ * @property  Notifications $notifications
  * @property  PayOptions $payOptions
  * @property  PayRunEntries $payRunEntries
  * @property  PayRuns $payRuns
  * @property  Pensions $pensions
- * @property  Totals $totals
  * @property  UserPermissions $userPermissions
+ * @property  \percipiolondon\staff\services\Settings $staffSettings
+ * @property  Totals $totals
  */
 class Staff extends Plugin
 {
@@ -283,7 +291,7 @@ class Staff extends Plugin
         }
         if ($currentUser->can('hub:benefits')) {
             $subNavs['benefits'] = [
-                'label' => Craft::t('staff-management', 'BenefitProvider'),
+                'label' => Craft::t('staff-management', 'Group Benefits'),
                 'url' => 'staff-management/benefits/providers',
             ];
         }
@@ -299,6 +307,11 @@ class Staff extends Plugin
                 'url' => 'staff-management/requests',
             ];
         }
+
+        $subNavs['user-settings'] = [
+            'label' => Craft::t('staff-management', 'User Settings'),
+            'url' => 'staff-management/settings/user-settings',
+        ];
 
         $editableSettings = true;
         // Check against allowAdminChanges
@@ -333,46 +346,7 @@ class Staff extends Plugin
             $this->installCpEventListeners();
         }
 
-        // save history when user gets activated
-//        Event::on(
-//            Users::class,
-//            Users::EVENT_AFTER_ACTIVATE_USER,
-//            function (UserEvent $event) {
-//                $employee = Employee::findOne(['userId' => $event->user->id]);
-//
-//                $history = new History();
-//                $history->type = 'system';
-//                $history->employeeId = $employee->id;
-//                $history->employerId = $employee->employerId;
-//                $history->message = HistoryMessages::message($history->type, 'user','activate');
-//                $history->data = null;
-//                $history->administerId = null;
-//
-//                Craft::$app->getElements()->saveElement($history);
-//            }
-//        );
-
-        // save history when user sets new password
-        Event::on(
-            User::class,
-            User::EVENT_BEFORE_VALIDATE,
-            function(ModelEvent $event) {
-                if ($event->sender->newPassword) {
-                    $employee = Employee::findOne(['userId' => $event->sender->id]);
-
-                    $history = new History();
-                    $history->type = 'system';
-                    $history->employeeId = $employee->id;
-                    $history->employerId = $employee->employerId;
-                    $history->message = HistoryMessages::message($history->type, 'user','set_password');
-                    $history->data = null;
-                    $history->administerId = null;
-
-                    Craft::$app->getElements()->saveElement($history);
-                }
-            }
-        );
-
+        self::$plugin->history->catchEventListeners();
     }
 
     /**
@@ -455,6 +429,7 @@ class Staff extends Plugin
             'staff-management/requests/undo/<requestId:\d+>' => 'staff-management/request/undo',
             'staff-management/plugin' => 'staff-management/settings/plugin',
             'staff-management/settings/get-gql-token' => 'staff-management/settings/get-gql-token',
+            'staff-management/settings/user-settings' => 'staff-management/settings/user-settings',
         ];
     }
 
@@ -470,10 +445,10 @@ class Staff extends Plugin
                 'label' => Craft::t('staff-management', 'Dashboard'),
             ],
             'hub:benefits' => [
-                'label' => Craft::t('staff-management', 'BenefitProvider'),
+                'label' => Craft::t('staff-management', 'Benefit Provider'),
             ],
             'hub:group-benefits' => [
-                'label' => Craft::t('staff-management', 'Group BenefitProvider'),
+                'label' => Craft::t('staff-management', 'Group Benefit Provider'),
             ],
             'hub:pay-runs' => [
                 'label' => Craft::t('staff-management', 'Pay Runs'),
@@ -526,6 +501,8 @@ class Staff extends Plugin
                 $event->types[] = BenefitProviderInterface::class;
                 $event->types[] = EmployerInterface::class;
                 $event->types[] = EmployeeInterface::class;
+                $event->types[] = HistoryInterface::class;
+                $event->types[] = NotificationInterface::class;
                 $event->types[] = PayRunInterface::class;
                 $event->types[] = PayRunEntryInterface::class;
                 $event->types[] = RequestInterface::class;
@@ -540,30 +517,25 @@ class Staff extends Plugin
             Gql::EVENT_REGISTER_GQL_SCHEMA_COMPONENTS,
             function(RegisterGqlSchemaComponentsEvent $event) {
                 $event->queries = array_merge($event->queries, [
-                    'Benefits' => [
-                        // benefits component with read action, labelled “View Benefit Providers” in UI
-                        'benefitproviders:read' => ['label' => Craft::t('staff-management', 'View Benefit Providers')],
-                    ],
                     'Staff Management' => [
-                        // employers component with read action, labelled “View Employers” in UI
+                        'benefit-providers:read' => ['label' => Craft::t('staff-management', 'View Benefit Providers')],
                         'employers:read' => ['label' => Craft::t('staff-management', 'View Employers')],
-                        // employees component with read action, labelled “View Employees” in UI
                         'employees:read' => ['label' => Craft::t('staff-management', 'View Employees')],
-                        // request component with read action, labelled "View Request" in UI
+                        'history:read' => ['label' => Craft::t('staff-management', 'View History')],
+                        'notifications:read' => ['label' => Craft::t('staff-management', 'View Notifications')],
+                        'pay-run-entries:read' => ['label' => Craft::t('staff-management', 'View Pay Run Entries')],
+                        'pay-runs:read' => ['label' => Craft::t('staff-management', 'View Pay Runs')],
                         'requests:read' => ['label' => Craft::t('staff-management', 'View Requests')],
-                    ],
-                    'PayRunEntries' => [
-                        // payruns entries component with read action, labelled “View Payruns” in UI
-                        'payrunentries:read' => ['label' => Craft::t('staff-management', 'View Payrun Entries')],
-                        // payruns component with read action, labelled “View Payruns” in UI
-                        'payruns:read' => ['label' => Craft::t('staff-management', 'View Payruns')],
+                        'settings-employee:read' => ['label' => Craft::t('staff-management', 'View Employee Settings')],
+                        'settings:read' => ['label' => Craft::t('staff-management', 'View Settings')],
                     ],
                 ]);
 
                 $event->mutations = array_merge($event->mutations, [
                     'Staff Management' => [
-                        // request component with create action, labelled "Create Requests" in UI
+                        'notifications:update' => ['label' => Craft::t('staff-management', 'Update Notifications')],
                         'requests:create' => ['label' => Craft::t('staff-management', 'Edit Requests')],
+                        'settings-employee:update' => ['label' => Craft::t('staff-management', 'Update Employee Settings')],
                     ]
                 ]);
             }
@@ -582,9 +554,12 @@ class Staff extends Plugin
                     EmployerQueries::getQueries(),
                     EmployeeQueries::getQueries(),
                     HistoryQueries::getQueries(),
+                    NotificationQueries::getQueries(),
                     PayRunQueries::getQueries(),
                     PayRunEntryQueries::getQueries(),
-                    RequestQueries::getQueries()
+                    RequestQueries::getQueries(),
+                    SettingsQueries::getQueries(),
+                    SettingsEmployeeQueries::getQueries(),
                 );
             }
         );
@@ -598,7 +573,9 @@ class Staff extends Plugin
             function(RegisterGqlMutationsEvent $event) {
                 $event->mutations = array_merge(
                     $event->mutations,
+                    NotificationMutation::getMutations(),
                     RequestMutation::getMutations(),
+                    SettingsEmployeeMutation::getMutations(),
                 );
             }
         );
@@ -615,10 +592,12 @@ class Staff extends Plugin
                 $event->types[] = BenefitType::class;
                 $event->types[] = EmployerElement::class;
                 $event->types[] = EmployeeElement::class;
+                $event->types[] = HistoryElement::class;
+                $event->types[] = NotificationElement::class;
                 $event->types[] = PayRunElement::class;
                 $event->types[] = PayRunEntryElement::class;
                 $event->types[] = RequestElement::class;
-                $event->types[] = HistoryElement::class;
+                $event->types[] = SettingsEmployee::class;
             }
         );
     }

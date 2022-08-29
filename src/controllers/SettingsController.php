@@ -14,6 +14,8 @@ use craft\errors\MissingComponentException;
 use craft\helpers\App;
 use craft\web\Controller;
 
+use percipiolondon\staff\elements\SettingsAdmin;
+use percipiolondon\staff\records\Settings;
 use percipiolondon\staff\Staff;
 use yii\web\BadRequestHttpException;
 use yii\web\ForbiddenHttpException;
@@ -124,6 +126,43 @@ class SettingsController extends Controller
 
         // Render the template
         return $this->renderTemplate('staff-management/settings/hub-settings', $variables);
+    }
+
+    public function actionUserSettings(): Response
+    {
+        $variables = [];
+        $pluginName = Staff::$settings->pluginName;
+        $templateTitle = Craft::t('staff-management', 'User Settings');
+
+        $settings = Settings::find()->all();
+        $currentSettings = SettingsAdmin::getSettingsAdminIds();
+
+        $variables['fullPageForm'] = true;
+        $variables['pluginName'] = Staff::$settings->pluginName;
+        $variables['title'] = $templateTitle;
+        $variables['docTitle'] = "{$pluginName} - {$templateTitle}";
+        $variables['selectedSubnavItem'] = 'user-settings';
+        $variables['settings'] = $settings;
+        $variables['currentSettings'] = $currentSettings;
+
+        // Render the template
+        return $this->renderTemplate('staff-management/settings/user-settings', $variables);
+    }
+
+    /**
+     * @throws BadRequestHttpException
+     */
+    public function actionSaveUserSettings(): Response
+    {
+        $this->requirePostRequest();
+
+        $request = Craft::$app->getRequest();
+        $userId = $request->getBodyParam('userId');
+        $settings = $request->getBodyParam('settings');
+
+        Staff::$plugin->staffSettings->setSettingsAdmin($settings, $userId);
+
+        return $this->redirectToPostedUrl();
     }
 
     /**
