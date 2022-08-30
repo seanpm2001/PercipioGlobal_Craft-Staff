@@ -8,6 +8,11 @@
 
 {%- set content -%}
 
+    {%- set status = {
+        'active': 'bg-emerald-300 text-emerald-900',
+        'inactive': 'bg-red-300 text-red-900'
+    } -%}
+
     <div class="md:flex items-start">
         <div class="flex-grow pr-4 mb-0">
             <div class="flex items-center">
@@ -17,8 +22,8 @@
                         {{ policy.policyName }}
                     </h1>
                 </div>
-                {%- if policy.active -%}
-                    <span class="inline-flex mt-px rounded-2xl text-xs font-bold px-3 py-1 mb-0 bg-emerald-300 text-emerald-900">active</span>
+                {%- if status[policy.status] ?? null -%}
+                    <span class="inline-flex mt-px rounded-2xl text-xs font-bold px-3 py-1 mb-0 {{ status[policy.status] -}}">{{ policy.status }}</span>
                 {%- else -%}
                     <span class="inline-flex mt-px rounded-2xl text-xs font-bold px-3 py-1 mb-0 bg-red-300 text-red-900">inactive</span>
                 {%- endif -%}

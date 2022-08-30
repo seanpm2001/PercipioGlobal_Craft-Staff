@@ -15,12 +15,14 @@ use percipiolondon\staff\db\Table;
 
 /**
  * @property integer $providerId
+ * @property integer $employerId
+ * @property integer $benefitTypeId
  * @property string $internalCode
  * @property string $status
  * @property string $policyName
  * @property string $policyNumber
  * @property string $policyHolder
- * @property string $content
+ * @property string $description
  * @property \DateTime $policyStartDate
  * @property \DateTime $policyRenewalDate
  * @property string $paymentFrequency
@@ -32,6 +34,24 @@ class BenefitPolicy extends ActiveRecord
 {
     // Public Static Methods
     // =========================================================================
+    public function rules()
+    {
+        $rules = parent::rules();
+        $rules[] = [[
+            'internalCode',
+            'providerId',
+            'status',
+            'policyName',
+            'policyNumber',
+            'policyHolder',
+            'policyStartDate',
+            'policyRenewalDate',
+            'paymentFrequency',
+            'commissionRate'
+        ], 'required'];
+
+        return $rules;
+    }
 
     /**
      * Declares the name of the database table associated with this AR class.

@@ -1,0 +1,236 @@
+{%- requirePermission 'hub:benefits' -%}
+
+{%- extends 'staff-management/_layouts/hub-cp.twig' -%}
+{%- import '_includes/forms' as forms -%}
+{%- import 'timeloop/fields/timeloop-input' as timeloop %}
+
+{%- set sidebar -%}
+    {%- include 'staff-management/benefits/_nav' -%}
+{%- endset -%}
+
+{%- block actionButton -%}
+    {%- include 'staff-management/_atoms/buttons/button--submit' with {
+        options: {
+            title: 'Save Benefit Policy',
+            action: 'staff-management/benefit/policy-save'
+        }
+    } -%}
+{%- endblock -%}
+
+{%- set fullPageForm = true -%}
+
+{%- set content -%}
+
+    <h1 class="text-xl font-semibold text-gray-900">New Benefit policy</h1>
+
+    <input type="hidden" name="action" value="staff-management/benefit/policy-save" />
+    <input type="hidden" name="policyId" value="{{- policy ? policy.id : '' -}}" />
+    <input type="hidden" name="benefitTypeId" value="{{- benefit ? benefit.id : '' -}}" />
+    <input type="hidden" name="employerId" value="{{- employer ? employer.id : '' -}}" />
+
+    <section class="mt-8 grid grid-cols-1 md:grid-cols-2 gap-6">
+        <div>
+            {{ forms.textField({
+                first: true,
+                label: "Name"|t('staff-management'),
+                instructions: "Name of the policy"|t('staff-management'),
+                id: 'policyName',
+                name: 'policyName',
+                value: policy ? policy.policyName : '',
+                errors: errors['policyName'] ?? null,
+                autofocus: true,
+                required: true,
+            }) }}
+        </div>
+
+        <div>
+            {{ forms.textField({
+                first: false,
+                label: "Number"|t('staff-management'),
+                instructions: "Number of the policy"|t('staff-management'),
+                id: 'policyNumber',
+                name: 'policyNumber',
+                value: policy ? policy.policyNumber : '',
+                errors: errors['policyNumber'] ?? null,
+                required: true,
+            }) }}
+        </div>
+
+        <div>
+            {{ forms.textField({
+                first: false,
+                label: "Internal Code"|t('staff-management'),
+                instructions: "Internal code of the policy"|t('staff-management'),
+                id: 'internalCode',
+                name: 'internalCode',
+                value: policy ? policy.internalCode : '',
+                errors: errors['internalCode'] ?? null,
+                required: true,
+            }) }}
+        </div>
+
+        <div>
+            {{ forms.textField({
+                first: false,
+                label: "Holder"|t('staff-management'),
+                instructions: "Holder of the policy"|t('staff-management'),
+                id: 'policyHolder',
+                name: 'policyHolder',
+                value: policy ? policy.policyHolder : '',
+                errors: errors['policyHolder'] ?? null,
+                required: true,
+            }) }}
+        </div>
+
+        <div>
+            {{ forms.selectField({
+                label: "Benefit Provider"|t('staff-management'),
+                instructions: "Choose the benefit provider for this policy"|t('staff-management'),
+                id: 'providerId',
+                name: 'providerId',
+                value: policy ? policy.providerId : null,
+                options: providers ?? [],
+                errors: errors['providerId'] ?? null,
+                required: false,
+            }) }}
+        </div>
+
+        <div>
+            {%- set statusFields = [
+                {
+                    label: 'Choose a status',
+                    value: null
+                },
+                {
+                    label: 'Active',
+                    value: 'active'
+                },
+                {
+                    label: 'Inactive',
+                    value: 'inactive'
+                },
+            ] -%}
+            {{ forms.selectField({
+                label: "Status"|t('staff-management'),
+                instructions: "Status of the policy payment"|t('staff-management'),
+                id: 'status',
+                name: 'status',
+                value: policy ? policy["status"] ?? '' : '',
+                options: statusFields,
+                errors: errors['status'] ?? null,
+                required: true,
+            }) }}
+        </div>
+
+        <div>
+            {{ forms.dateField({
+                label: "Start Date"|t('staff-management'),
+                instructions: "Start date of the policy"|t('staff-management'),
+                id: 'policyStartDate',
+                name: 'policyStartDate',
+                value: policy ? policy.policyStartDate : '',
+                errors: errors['policyStartDate'] ?? null,
+                required: true,
+            }) }}
+        </div>
+
+        <div>
+            {{ forms.dateField({
+                label: "Renewal Date"|t('staff-management'),
+                instructions: "Renewal date of the policy"|t('staff-management'),
+                id: 'policyRenewalDate',
+                name: 'policyRenewalDate',
+                value: policy ? policy.policyRenewalDate : '',
+                errors: errors['policyRenewalDate'] ?? null,
+                required: true,
+            }) }}
+        </div>
+
+        <div>
+            {%- set paymentFrequencyFields = [
+                {
+                    label: 'Choose frequency',
+                    value: null
+                },
+                {
+                    label: 'Annual',
+                    value: 'annual'
+                },
+                {
+                    label: 'Monthly',
+                    value: 'monthly'
+                },
+            ] -%}
+            {{ forms.selectField({
+                label: "Payment Frequency"|t('staff-management'),
+                instructions: "Frequency of the policy payment"|t('staff-management'),
+                id: 'paymentFrequency',
+                name: 'paymentFrequency',
+                value: policy ? policy["paymentFrequency"] ?? '' : '',
+                options: paymentFrequencyFields,
+                errors: errors['paymentFrequency'] ?? null,
+                required: true,
+            }) }}
+        </div>
+
+        <div>
+            {{ forms.textField({
+                label: "Comission Rate"|t('staff-management'),
+                instructions: "Comission rate of the policy"|t('staff-management'),
+                id: 'commissionRate',
+                name: 'commissionRate',
+                type: 'number',
+                value: policy ? policy['commissionRate'] : '',
+                errors: errors['commissionRate'] ?? null,
+                required: true,
+            }) }}
+        </div>
+
+        <div class="md:col-span-2">
+            {%- set tiptapOptions = {
+                id: 'description',
+                label: 'Description',
+                instructions: 'Add a description with a short explanation about the policy.',
+                name: 'description',
+                description: policy.description ?? '',
+            } -%}
+
+            <div id="description_tiptap">
+                <tiptap-field
+                    content="{{- tiptapOptions.description -}}"
+                    :options="{{- tiptapOptions | json_encode -}}"
+                >
+                </tiptap-field>
+            </div>
+
+            {%- if errors['description'] ?? null -%}
+                <ul id="content-errors" class="errors">
+                    {%- for error in errors['description'] -%}
+                        <li>
+                            <span class="visually-hidden">Error:</span>
+                            {{- error -}}
+                        </li>
+                    {%- endfor -%}
+                </ul>
+            {%- endif -%}
+        </div>
+    </section>
+
+
+
+
+
+
+
+{%- endset -%}
+
+{%- block foot -%}
+    {{ parent() }}
+    {%- set tagOptions = {
+        'depends': [
+            'percipiolondon\\staff\\assetbundles\\staff\\StaffAsset'
+        ]
+    } -%}
+    {{- craft.staff.register('src/js/tiptap.ts', false, tagOptions) -}}
+{%- endblock -%}
+

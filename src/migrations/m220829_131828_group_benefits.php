@@ -83,7 +83,7 @@ class m220829_131828_group_benefits extends Migration
                 'benefitTypeId' => $this->integer(),
                 //generic fields
                 'internalCode' => $this->string(255)->notNull(),
-                'active' => $this->boolean(),
+                'status' => $this->string(255)->notNull(),
                 'policyName' => $this->string(255)->notNull(),
                 'policyNumber' => $this->string(255)->notNull(),
                 'policyHolder' => $this->string(255)->notNull(),
