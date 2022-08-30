@@ -76,7 +76,8 @@
         </div>
     </section>
 
-    <section class="mt-8 bg-gray-100 p-6 pt-10 -mt-2.5 -ml-6 relative">
+    {# VARIANTS #}
+    <section class="mt-8 bg-gray-100 pl-6 pb-6 pt-10 -mt-2.5 -ml-6 relative">
 
         <div class="md:flex items-start">
             <div class="flex-grow pr-4 mb-0">
@@ -100,39 +101,25 @@
             <i class="text-gray-500">There are currently no variants in this Policy</i>
         </div>
 
-{#        <div class="grid grid-cols-1 md:grid-cols-3 gap-3 mt-8">#}
-{#            <article class="bg-white shadow rounded-lg overflow-hidden no-underline flex flex-col">#}
-{#                <header class="flex-grow w-full m-0 mr-0 box-border pt-6 px-6" style="margin-right:0!important;">#}
-{#                    <h2 class="text-lg mb-1 pt-0">Variant Name</h2>#}
-{#                    <div class="mt-4 mb-6">#}
-{#                        <div class="flex items-end mb-2">#}
-{#                            <h3 class="font-light text-4xl text-indigo-900 mt-0 mb-0">#}
-{#                                £ 100.00#}
-{#                            </h3>#}
-{#                            <span class="text-xs font-bold text-indigo-900 mb-0">TRS</span>#}
-{#                        </div>#}
-{#                        <span class="text-xs font-bold text-gray-400 block mb-2"><span class="text-emerald-500">11 employees</span> are assigned</span>#}
-{#                    </div>#}
-{#                </header>#}
-{#                <div class="grid grid-cols-2 w-full m-0 mr-0" style="margin-right:0!important;">#}
-{#                    <a href="#" class="border border-solid border-b-0 border-l-0 text-indigo-600 hover:bg-indigo-600 hover:text-white border-gray-200 text-center py-3 flex items-center justify-center no-underline">#}
-{#                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-5 h-5 mb-0">#}
-{#                            <path stroke-linecap="round" stroke-linejoin="round" d="M16.862 4.487l1.687-1.688a1.875 1.875 0 112.652 2.652L10.582 16.07a4.5 4.5 0 01-1.897 1.13L6 18l.8-2.685a4.5 4.5 0 011.13-1.897l8.932-8.931zm0 0L19.5 7.125M18 14v4.75A2.25 2.25 0 0115.75 21H5.25A2.25 2.25 0 013 18.75V8.25A2.25 2.25 0 015.25 6H10" />#}
-{#                        </svg>#}
-{#                        <span class="mb-0">Edit</span>#}
-{#                    </a>#}
-{#                    <a href="#" class="border-t border-solid border-gray-200 text-indigo-600 hover:bg-indigo-600 hover:text-white text-center py-3 flex items-center justify-center no-underline">#}
-{#                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-5 h-5 mb-0">#}
-{#                            <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 6a3.75 3.75 0 11-7.5 0 3.75 3.75 0 017.5 0zM4.501 20.118a7.5 7.5 0 0114.998 0A17.933 17.933 0 0112 21.75c-2.676 0-5.216-.584-7.499-1.632z" />#}
-{#                        </svg>#}
-{#                        <span class="mb-0">Employees</span>#}
-{#                    </a>#}
-{#                </div>#}
-{#            </article>#}
-{#        </div>#}
-
         <div class="block bg-gray-100 w-6 left-full pb-6 top-0 h-full absolute"></div>
         <div class="block bg-gray-100 h-6 top-full left-0 w-full absolute"></div>
     </section>
 
+    <section class="flex justify-end mt-8 pt-6 w-full">
+        <div id="benefit-policy-container"></div>
+    </section>
+
 {%- endset -%}
+
+{%- block foot -%}
+    <script>
+        const policyId = "{{ policy['id'] ?? null }}"
+    </script>
+    {{ parent() }}
+    {%- set tagOptions = {
+        'depends': [
+            'percipiolondon\\staff\\assetbundles\\staff\\StaffAsset'
+        ]
+    } -%}
+    {{  craft.staff.register('src/js/benefit-policy.ts', false, tagOptions) }}
+{%- endblock -%}

@@ -27,23 +27,27 @@
             {%- for benefit in benefits -%}
                 {%- set policiesLength = (benefit['policies'] ?? [])|length %}
                 <article class="bg-white shadow rounded-lg overflow-hidden no-underline flex flex-col">
-                    <header class="flex-grow w-full m-0 mr-0 box-border p-6" style="margin-right:0!important;">
-                        <h2 class="text-base mb-1 pt-0">{{ benefit['name'] }}</h2>
-                        <h3 class="font-light text-4xl text-indigo-900 mt-2 mb-4">
+                    <header class="flex-grow flex flex-col w-full justify-start m-0 mr-0 box-border p-6" style="margin-right:0!important;">
+                        <h2 class="text-base mb-1 pt-0 w-full">{{ benefit['name'] }}</h2>
+                        <h3 class="font-light text-4xl text-indigo-900 mt-2 mb-4 w-full">
                             {{ policiesLength }} {{ policiesLength == 0 or policiesLength > 1 ? 'policies' : 'policy' }}
                         </h3>
-                        {%- if policiesLength > 0 -%}
-                            <ul>
+                        <ul class="bg-gray-100 rounded-lg p-2 w-full flex-grow">
+                            {%- if policiesLength > 0 -%}
                                 {%- for policy in benefit['policies'] -%}
-                                    <li class="text-xs flex">
-                                        <span class="pr-1 mb-0" style="margin-right:0!important">Policy {{ loop.index }}:</span>
-                                        <a href="/admin/staff-management/benefits/employers/{{- employer.id -}}/policy/{{- policy.id -}}" class="text-indigo-600 mb-0 pl-px flex no-underline hover:text-indigo-800">
-                                            <span class="mb-0 pr-1 mr-0" style="margin-right:0!important">{{ policy.internalCode }}</span>
+                                    <li class="text-xs flex py-1">
+                                        <a href="/admin/staff-management/benefits/employers/{{- employer.id -}}/policy/{{- policy.id -}}" class="text-indigo-600 mb-0 pl-px flex justify-between no-underline hover:text-indigo-800 w-full">
+                                            <span class="mb-0 pr-1 mr-0" style="margin-right:0!important">{{ policy.policyName }}</span>
+                                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-4 h-4 mb-0">
+                                                <path stroke-linecap="round" stroke-linejoin="round" d="M17.25 8.25L21 12m0 0l-3.75 3.75M21 12H3" />
+                                            </svg>
                                         </a>
                                     </li>
                                 {%- endfor -%}
-                            </ul>
-                        {%- endif -%}
+                            {%- else -%}
+                                <li class="text-xs flex py-1"><i>There are no policies to list out</i></li>
+                            {%- endif -%}
+                        </ul>
                     </header>
                     <div class="w-full m-0 mr-0" style="margin-right:0!important;">
                         <a href="/admin/staff-management/benefits/employers/{{- employer.id -}}/policy/{{- benefit['id'] -}}/add" class="border-t border-solid border-gray-200 text-indigo-600 hover:bg-indigo-600 hover:text-white text-center py-3 flex items-center justify-center no-underline">
