@@ -65,11 +65,11 @@
     ]
   },
   "src/js/staff.ts": {
-    "file": "assets/staff.6fba1412.js",
+    "file": "assets/staff.9907f410.js",
     "src": "src/js/staff.ts",
     "isEntry": true,
     "css": [
-      "assets/staff.b0d29069.css"
+      "assets/staff.ef47cf4e.css"
     ]
   },
   "src/js/tiptap.ts": {

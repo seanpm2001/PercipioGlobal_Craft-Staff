@@ -23,26 +23,25 @@
     </div>
 
     <section class="mt-8 bg-gray-100 p-6 pt-10 -mt-2.5 -ml-6 relative">
+
         <div class="grid grid-cols-1 md:grid-cols-3 gap-3 pl-6">
             {%- for benefit in benefits -%}
                 <article class="bg-white shadow rounded-lg overflow-hidden no-underline flex flex-col">
-                    <header class="flex-grow w-full m-0 mr-0" style="margin-right:0!important;">
-                        <dt class="px-4 pt-6 mb-1 text-xl font-semibold text-gray-900 text-center">
-                            {{ benefit['name'] }}
-                        </dt>
-                        <dd class="pb-6 text-sm font-medium text-gray-500 truncate text-center">
+                    <header class="w-full p-6 m-0 mr-0 box-border" style="margin-right:0!important;">
+                        <h2 class="font-light text-3xl text-indigo-600 mb-2 mt-2">
                             {%- set policiesLength = (benefit['policies'] ?? [])|length %}
-                            {{ policiesLength }} {{ policiesLength == 0 or policiesLength > 1 ? 'policies' : 'policy' }} attached
-                        </dd>
+                            {{ policiesLength }} {{ policiesLength == 0 or policiesLength > 1 ? 'policies' : 'policy' }}
+                        </h2>
+                        <h3 class="text-base mt-0 pt-0">{{ benefit['name'] }}</h3>
                     </header>
-                    <div class="grid grid-cols-2 w-full m-0 mr-0" style="margin-right:0!important;">
-                        <a href="#" class="border border-solid border-b-0 border-l-0 hover:bg-indigo-600 hover:text-white border-gray-200 text-center py-3 flex items-center justify-center no-underline">
+                    <div class="grid grid-cols-2 w-full m-0 mr-0 box-border" style="margin-right:0!important;">
+                        <a href="#" class="border border-solid border-b-0 border-l-0 text-indigo-600 hover:bg-indigo-600 hover:text-white border-gray-200 text-center py-3 flex items-center justify-center no-underline">
                             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-5 h-5 mb-0">
                                 <path stroke-linecap="round" stroke-linejoin="round" d="M16.862 4.487l1.687-1.688a1.875 1.875 0 112.652 2.652L10.582 16.07a4.5 4.5 0 01-1.897 1.13L6 18l.8-2.685a4.5 4.5 0 011.13-1.897l8.932-8.931zm0 0L19.5 7.125M18 14v4.75A2.25 2.25 0 0115.75 21H5.25A2.25 2.25 0 013 18.75V8.25A2.25 2.25 0 015.25 6H10" />
                             </svg>
                             <span class="mb-0">Manage</span>
                         </a>
-                        <a href="#" class="border-t border-solid border-gray-200 hover:bg-indigo-600 hover:text-white text-center py-3 flex items-center justify-center no-underline">
+                        <a href="#" class="border-t border-solid border-gray-200 text-indigo-600 hover:bg-indigo-600 hover:text-white text-center py-3 flex items-center justify-center no-underline">
                             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-5 h-5 mb-0">
                                 <path stroke-linecap="round" stroke-linejoin="round" d="M12 10.5v6m3-3H9m4.06-7.19l-2.12-2.12a1.5 1.5 0 00-1.061-.44H4.5A2.25 2.25 0 002.25 6v12a2.25 2.25 0 002.25 2.25h15A2.25 2.25 0 0021.75 18V9a2.25 2.25 0 00-2.25-2.25h-5.379a1.5 1.5 0 01-1.06-.44z" />
                             </svg>
@@ -52,6 +51,67 @@
                 </article>
             {%- endfor -%}
         </div>
+
+        <!-- VIEW TEST 2 -->
+{#        <div class="grid grid-cols-1 md:grid-cols-3 gap-3 pl-6">#}
+{#            {%- for benefit in benefits -%}#}
+{#                <article class="bg-white shadow rounded-lg overflow-hidden no-underline flex flex-col px-6 py-4">#}
+{#                    <header class="flex-grow w-full m-0 mr-0 mb-6 justify-end flex box-border" style="margin-right:0!important;">#}
+{#                        <a href="#" class="inline-flex py-1 bg-gray-200 rounded-sm px-2">#}
+{#                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-4 h-4 mb-0 mr-2">#}
+{#                                <path stroke-linecap="round" stroke-linejoin="round" d="M16.862 4.487l1.687-1.688a1.875 1.875 0 112.652 2.652L10.582 16.07a4.5 4.5 0 01-1.897 1.13L6 18l.8-2.685a4.5 4.5 0 011.13-1.897l8.932-8.931zm0 0L19.5 7.125M18 14v4.75A2.25 2.25 0 0115.75 21H5.25A2.25 2.25 0 013 18.75V8.25A2.25 2.25 0 015.25 6H10" />#}
+{#                            </svg>#}
+{#                            <span class="text-xs">Manage</span>#}
+{#                        </a>#}
+{#                        <a href="#" class="inline-flex py-1 bg-indigo-600 text-white rounded-sm px-2">#}
+{#                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-4 h-4 mb-0 mr-2">#}
+{#                                <path stroke-linecap="round" stroke-linejoin="round" d="M12 10.5v6m3-3H9m4.06-7.19l-2.12-2.12a1.5 1.5 0 00-1.061-.44H4.5A2.25 2.25 0 002.25 6v12a2.25 2.25 0 002.25 2.25h15A2.25 2.25 0 0021.75 18V9a2.25 2.25 0 00-2.25-2.25h-5.379a1.5 1.5 0 01-1.06-.44z" />#}
+{#                            </svg>#}
+{#                            <span class="text-xs">Add Policy</span>#}
+{#                        </a>#}
+{#                    </header>#}
+{#                    <div class="w-full">#}
+{#                        <h2 class="font-light text-3xl text-indigo-600 mb-2 mt-2">
+                           {%- set policiesLength = (benefit['policies'] ?? [])|length %}#}
+        {#                            {{ policiesLength }} {{ policiesLength == 0 or policiesLength > 1 ? 'policies' : 'policy' }}
+                           </h2>#}
+{#                        <h3 class="font-normal text-base mt-0 pt-0">{{ benefit['name'] }}</h3>#}
+{#                    </div>#}
+{#                </article>#}
+{#            {%- endfor -%}#}
+{#        </div>#}
+
+        <!-- VIEW TEST 3 -->
+{#        <div class="grid grid-cols-1 md:grid-cols-3 gap-3 pl-6">#}
+{#            {%- for benefit in benefits -%}#}
+{#                <article class="bg-white shadow rounded-lg overflow-hidden no-underline flex flex-col">#}
+{#                    <header class="flex-grow w-full m-0 mr-0" style="margin-right:0!important;">#}
+{#                        <dt class="px-4 pt-6 mb-1 text-xl font-semibold text-gray-900 text-center">#}
+{#                            {{ benefit['name'] }}#}
+{#                        </dt>#}
+{#                        <dd class="pb-6 text-sm font-medium text-indigo-600 truncate text-center">#}
+{#                            {%- set policiesLength = (benefit['policies'] ?? [])|length %}#}
+{#                            {{ policiesLength }} {{ policiesLength == 0 or policiesLength > 1 ? 'policies' : 'policy' }} attached#}
+{#                        </dd>#}
+{#                    </header>#}
+{#                    <div class="grid grid-cols-2 w-full m-0 mr-0" style="margin-right:0!important;">#}
+{#                        <a href="#" class="border border-solid border-b-0 border-l-0 text-indigo-600 hover:bg-indigo-600 hover:text-white border-gray-200 text-center py-3 flex items-center justify-center no-underline">#}
+{#                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-5 h-5 mb-0">#}
+{#                                <path stroke-linecap="round" stroke-linejoin="round" d="M16.862 4.487l1.687-1.688a1.875 1.875 0 112.652 2.652L10.582 16.07a4.5 4.5 0 01-1.897 1.13L6 18l.8-2.685a4.5 4.5 0 011.13-1.897l8.932-8.931zm0 0L19.5 7.125M18 14v4.75A2.25 2.25 0 0115.75 21H5.25A2.25 2.25 0 013 18.75V8.25A2.25 2.25 0 015.25 6H10" />#}
+{#                            </svg>#}
+{#                            <span class="mb-0">Manage</span>#}
+{#                        </a>#}
+{#                        <a href="#" class="border-t border-solid border-gray-200 text-indigo-600 hover:bg-indigo-600 hover:text-white text-center py-3 flex items-center justify-center no-underline">#}
+{#                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-5 h-5 mb-0">#}
+{#                                <path stroke-linecap="round" stroke-linejoin="round" d="M12 10.5v6m3-3H9m4.06-7.19l-2.12-2.12a1.5 1.5 0 00-1.061-.44H4.5A2.25 2.25 0 002.25 6v12a2.25 2.25 0 002.25 2.25h15A2.25 2.25 0 0021.75 18V9a2.25 2.25 0 00-2.25-2.25h-5.379a1.5 1.5 0 01-1.06-.44z" />#}
+{#                            </svg>#}
+{#                            <span class="mb-0">Add Policy</span>#}
+{#                        </a>#}
+{#                    </div>#}
+{#                </article>#}
+{#            {%- endfor -%}#}
+{#        </div>#}
+
         <div class="block bg-gray-100 w-6 left-full pb-6 top-0 h-full absolute"></div>
         <div class="block bg-gray-100 h-6 top-full left-0 w-full absolute"></div>
     </section>
