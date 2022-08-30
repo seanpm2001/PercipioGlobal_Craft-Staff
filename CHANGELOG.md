@@ -4,6 +4,15 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](http://keepachangelog.com/) and this project adheres to [Semantic Versioning](http://semver.org/).
 
+## 1.0.0-beta.15 - 2022-08-30
+
+### Added
+- Added notifications for the hub user when a request has been handled, and a new payslip is available
+- Added email notifications to inform the hub user when a new payslip is available, or a request has been handled
+- Added email notifications for the admin to let him/her know when a new request has been sent
+- Added settings for the hub user to define which emails he/she wants to receive
+- Added settings for the admin to define which emails he/she wants to receive
+
 ## 1.0.0-beta.14 - 2022-08-23
 
 ### Added
