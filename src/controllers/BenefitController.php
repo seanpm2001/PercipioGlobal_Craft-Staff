@@ -11,7 +11,7 @@ use percipiolondon\staff\Staff;
 use yii\web\NotFoundHttpException;
 use yii\web\Response;
 
-class BenefitEmployerController extends Controller
+class BenefitController extends Controller
 {
     /**
      * Benefit Employer display
@@ -89,5 +89,42 @@ class BenefitEmployerController extends Controller
 
         // Render the template
         return $this->renderTemplate('staff-management/benefits/employers/detail', $variables);
+    }
+
+    public function actionPolicy(int $employerId, int $policyId): Response
+    {
+        $this->requireLogin();
+
+        $employer = Employer::findOne($employerId);
+        $policy = BenefitPolicy::findOne($policyId);
+
+        if(is_null($employer) || is_null($policy)) {
+            throw new NotFoundHttpException('Employer does not exist');
+        }
+
+        $variables = [];
+
+        $pluginName = Staff::$settings->pluginName;
+        $templateTitle = Craft::t('staff-management', 'Policy "' . $policy->policyName . '"');
+
+        $variables['pluginName'] = $pluginName;
+        $variables['title'] = $templateTitle;
+        $variables['docTitle'] = "{$pluginName} - {$templateTitle}";
+        $variables['selectedSubnavItem'] = 'benefits';
+        $variables['employer'] = $employer;
+        $variables['policy'] = $policy;
+
+        // Render the template
+        return $this->renderTemplate('staff-management/benefits/policy', $variables);
+    }
+
+    public function actionPolicyEdit(int $employerId, int $policyId): Response
+    {
+        Craft::dd("edit");
+    }
+
+    public function actionPolicyAdd(int $employerId, int $policyId): Response
+    {
+        Craft::dd('add');
     }
 }

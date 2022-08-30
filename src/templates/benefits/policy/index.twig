@@ -1,0 +1,133 @@
+{%- requirePermission "hub:group-benefits" -%}
+
+{%- extends 'staff-management/_layouts/hub-cp.twig' -%}
+
+{%- set sidebar -%}
+    {%- include "staff-management/benefits/_nav" -%}
+{%- endset -%}
+
+{%- set content -%}
+
+    <div class="md:flex items-start">
+        <div class="flex-grow pr-4 mb-0">
+            <div class="flex items-center">
+                <div class="flex items-center mb-0">
+                    <a href="{{url('staff-management') ~ '/benefits/employers/' ~ employer.id }}" title="Go back to overview" class="inline-flex no-underline items-center px-2.5 py-1.5 rounded-full text-sm text-indigo-700 bg-indigo-100 hover:bg-indigo-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 mb-0">&larr;</a>
+                    <h1 class="ml-2 text-xl font-semibold text-gray-900">
+                        {{ policy.policyName }}
+                    </h1>
+                </div>
+                {%- if policy.active -%}
+                    <span class="inline-flex mt-px rounded-2xl text-xs font-bold px-3 py-1 mb-0 bg-emerald-300 text-emerald-900">active</span>
+                {%- else -%}
+                    <span class="inline-flex mt-px rounded-2xl text-xs font-bold px-3 py-1 mb-0 bg-red-300 text-red-900">inactive</span>
+                {%- endif -%}
+            </div>
+            <p class="mt-2 text-sm text-gray-700">
+                This policy is part of the {{ employer.name }} company.
+            </p>
+        </div>
+        <div class="mt-4 md:mt-0 flex">
+            <a href="/admin/staff-management/benefits/employers/{{- employer.id -}}/policy/{{- policy.id -}}/edit" class="cursor-pointer inline-flex items-center justify-center rounded-md border border-transparent bg-indigo-600 disabled:bg-indigo-400 disabled:cursor-not-allowed px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 sm:w-auto">Edit Policy</a>
+        </div>
+    </div>
+
+    <section class="mt-8 grid grid-cols-1 md:grid-cols-2 gap-4">
+        <div>
+            <span class="text-xs font-bold text-gray-400 block mb-2">Policy Name</span>
+            <span class="text-base block capitalize">{{ policy.policyName ?? '-' }}</span>
+        </div>
+        <div>
+            <span class="text-xs font-bold text-gray-400 block mb-2">Policy Number</span>
+            <span class="text-base block capitalize">{{ policy.policyNumber ?? '-' }}</span>
+        </div>
+        <div>
+            <span class="text-xs font-bold text-gray-400 block mb-2">Policy Holder</span>
+            <span class="text-base block capitalize">{{ policy.policyHolder ?? '-' }}</span>
+        </div>
+        <div>
+            <span class="text-xs font-bold text-gray-400 block mb-2">Internal Code</span>
+            <span class="text-base block capitalize">{{ policy.internalCode ?? '-' }}</span>
+        </div>
+        <div>
+            <span class="text-xs font-bold text-gray-400 block mb-2">Start date</span>
+            <span class="text-base block capitalize">{{ policy.policyStartDate ?? '-' }}</span>
+        </div>
+        <div>
+            <span class="text-xs font-bold text-gray-400 block mb-2">Renewal Date</span>
+            <span class="text-base block capitalize">{{ policy.policyRenewalDate ?? '-' }}</span>
+        </div>
+        <div>
+            <span class="text-xs font-bold text-gray-400 block mb-2">Payment Frequency</span>
+            <span class="text-base block capitalize">{{ policy.paymentFrequency ?? '-' }}</span>
+        </div>
+        <div>
+            <span class="text-xs font-bold text-gray-400 block mb-2">Comission Rate</span>
+            <span class="text-base block capitalize">{{ policy.commissionRate ?? '-' }}</span>
+        </div>
+        <div>
+            <span class="text-xs font-bold text-gray-400 block mb-2">Description</span>
+            <span class="text-base block capitalize">{{ policy.description ?? '-' }}</span>
+        </div>
+    </section>
+
+    <section class="mt-8 bg-gray-100 p-6 pt-10 -mt-2.5 -ml-6 relative">
+
+        <div class="md:flex items-start">
+            <div class="flex-grow pr-4 mb-0">
+                <div class="flex items-center mb-0">
+                    <div class="flex items-center mb-0">
+                        <h1 class="text-xl font-semibold text-gray-900">
+                            Variants
+                        </h1>
+                    </div>
+                </div>
+                <p class="text-sm text-gray-700 mt-2">
+                    These are the variants assigned to this policy
+                </p>
+            </div>
+            <div class="mt-4 md:mt-0 flex">
+                <a href="/admin/staff-management/benefits/employers/{{- employer.id -}}/policy/{{- policy.id -}}/variants/add" class="cursor-pointer inline-flex items-center justify-center rounded-md border border-transparent bg-indigo-600 disabled:bg-indigo-400 disabled:cursor-not-allowed px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 sm:w-auto">Add variant</a>
+            </div>
+        </div>
+
+        <div class="mt-8">
+            <i class="text-gray-500">There are currently no variants in this Policy</i>
+        </div>
+
+{#        <div class="grid grid-cols-1 md:grid-cols-3 gap-3 mt-8">#}
+{#            <article class="bg-white shadow rounded-lg overflow-hidden no-underline flex flex-col">#}
+{#                <header class="flex-grow w-full m-0 mr-0 box-border pt-6 px-6" style="margin-right:0!important;">#}
+{#                    <h2 class="text-lg mb-1 pt-0">Variant Name</h2>#}
+{#                    <div class="mt-4 mb-6">#}
+{#                        <div class="flex items-end mb-2">#}
+{#                            <h3 class="font-light text-4xl text-indigo-900 mt-0 mb-0">#}
+{#                                £ 100.00#}
+{#                            </h3>#}
+{#                            <span class="text-xs font-bold text-indigo-900 mb-0">TRS</span>#}
+{#                        </div>#}
+{#                        <span class="text-xs font-bold text-gray-400 block mb-2"><span class="text-emerald-500">11 employees</span> are assigned</span>#}
+{#                    </div>#}
+{#                </header>#}
+{#                <div class="grid grid-cols-2 w-full m-0 mr-0" style="margin-right:0!important;">#}
+{#                    <a href="#" class="border border-solid border-b-0 border-l-0 text-indigo-600 hover:bg-indigo-600 hover:text-white border-gray-200 text-center py-3 flex items-center justify-center no-underline">#}
+{#                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-5 h-5 mb-0">#}
+{#                            <path stroke-linecap="round" stroke-linejoin="round" d="M16.862 4.487l1.687-1.688a1.875 1.875 0 112.652 2.652L10.582 16.07a4.5 4.5 0 01-1.897 1.13L6 18l.8-2.685a4.5 4.5 0 011.13-1.897l8.932-8.931zm0 0L19.5 7.125M18 14v4.75A2.25 2.25 0 0115.75 21H5.25A2.25 2.25 0 013 18.75V8.25A2.25 2.25 0 015.25 6H10" />#}
+{#                        </svg>#}
+{#                        <span class="mb-0">Edit</span>#}
+{#                    </a>#}
+{#                    <a href="#" class="border-t border-solid border-gray-200 text-indigo-600 hover:bg-indigo-600 hover:text-white text-center py-3 flex items-center justify-center no-underline">#}
+{#                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-5 h-5 mb-0">#}
+{#                            <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 6a3.75 3.75 0 11-7.5 0 3.75 3.75 0 017.5 0zM4.501 20.118a7.5 7.5 0 0114.998 0A17.933 17.933 0 0112 21.75c-2.676 0-5.216-.584-7.499-1.632z" />#}
+{#                        </svg>#}
+{#                        <span class="mb-0">Employees</span>#}
+{#                    </a>#}
+{#                </div>#}
+{#            </article>#}
+{#        </div>#}
+
+        <div class="block bg-gray-100 w-6 left-full pb-6 top-0 h-full absolute"></div>
+        <div class="block bg-gray-100 h-6 top-full left-0 w-full absolute"></div>
+    </section>
+
+{%- endset -%}

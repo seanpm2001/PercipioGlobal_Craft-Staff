@@ -410,8 +410,11 @@ class Staff extends Plugin
             'staff-management/benefits/providers' => 'staff-management/benefit-provider',
             'staff-management/benefits/providers/new' => 'staff-management/benefit-provider/edit',
             'staff-management/benefits/providers/edit/<providerId:\d+>' => 'staff-management/benefit-provider/edit',
-            'staff-management/benefits/employers' => 'staff-management/benefit-employer',
-            'staff-management/benefits/employers/<employerId:\d+>' => 'staff-management/benefit-employer/detail',
+            'staff-management/benefits/employers' => 'staff-management/benefit',
+            'staff-management/benefits/employers/<employerId:\d+>' => 'staff-management/benefit/detail',
+            'staff-management/benefits/employers/<employerId:\d+>/policy/<policyId:\d>' => 'staff-management/benefit/policy',
+            'staff-management/benefits/employers/<employerId:\d+>/policy/<policyId:\d>/edit' => 'staff-management/benefit/policy-edit',
+            'staff-management/benefits/employers/<employerId:\d+>/policy/<policyId:\d>/add' => 'staff-management/benefit/policy-add',
             // pay runs
             'staff-management/pay-runs' => 'staff-management/pay-run',
             'staff-management/pay-runs/queue' => 'staff-management/pay-run/get-queue',
@@ -445,7 +448,7 @@ class Staff extends Plugin
                 'label' => Craft::t('staff-management', 'Dashboard'),
             ],
             'hub:benefits' => [
-                'label' => Craft::t('staff-management', 'Benefit Provider'),
+                'label' => Craft::t('staff-management', 'Benefits'),
             ],
             'hub:group-benefits' => [
                 'label' => Craft::t('staff-management', 'Group Benefit Provider'),
@@ -518,7 +521,7 @@ class Staff extends Plugin
             function(RegisterGqlSchemaComponentsEvent $event) {
                 $event->queries = array_merge($event->queries, [
                     'Staff Management' => [
-                        'benefit-providers:read' => ['label' => Craft::t('staff-management', 'View Benefit Providers')],
+                        'benefits:read' => ['label' => Craft::t('staff-management', 'View Benefits')],
                         'employers:read' => ['label' => Craft::t('staff-management', 'View Employers')],
                         'employees:read' => ['label' => Craft::t('staff-management', 'View Employees')],
                         'history:read' => ['label' => Craft::t('staff-management', 'View History')],
