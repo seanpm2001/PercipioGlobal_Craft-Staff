@@ -4,15 +4,24 @@ namespace percipiolondon\staff\controllers;
 
 use Craft;
 use craft\helpers\DateTimeHelper;
+use craft\helpers\Db;
 use craft\web\Controller;
 use percipiolondon\staff\elements\BenefitProvider;
+use percipiolondon\staff\helpers\variants\VariantDental;
 use percipiolondon\staff\records\BenefitPolicy;
 use percipiolondon\staff\records\BenefitType;
 use percipiolondon\staff\elements\Employer;
+use percipiolondon\staff\records\BenefitVariantDental;
+use percipiolondon\staff\records\TotalRewardsStatement;
 use percipiolondon\staff\Staff;
 use yii\web\NotFoundHttpException;
 use yii\web\Response;
 
+/**
+ * Class BenefitController
+ *
+ * @package percipiolondon\staff\controllers
+ */
 class BenefitController extends Controller
 {
     /**
@@ -93,6 +102,12 @@ class BenefitController extends Controller
         return $this->renderTemplate('staff-management/benefits/employers/detail', $variables);
     }
 
+    /**
+     * @param int $employerId
+     * @param int $policyId
+     * @return Response
+     * @throws NotFoundHttpException
+     */
     public function actionPolicy(int $employerId, int $policyId): Response
     {
         $this->requireLogin();
@@ -104,22 +119,41 @@ class BenefitController extends Controller
             throw new NotFoundHttpException('Employer does not exist');
         }
 
-        $variables = [];
+        $policy->policyStartDate = DateTimeHelper::toDateTime($policy->policyStartDate)->format('jS M, Y');
+        $policy->policyRenewalDate = DateTimeHelper::toDateTime($policy->policyRenewalDate)->format('jS M, Y');
+
+        $benefit = BenefitType::findOne($policy->benefitTypeId);
+        $variants = match ($benefit->name ?? '') {
+            'Dental' => BenefitVariantDental::find(['policyId' => $policyId])
+                ->alias('variant')
+                ->select('variant.*, title')
+                ->leftJoin('staff_benefit_trs', 'staff_benefit_trs.id = variant.id')
+                ->all(),
+            default => []
+        };
 
         $pluginName = Staff::$settings->pluginName;
         $templateTitle = Craft::t('staff-management', 'Policy "' . $policy->policyName . '"');
 
+        $variables = [];
         $variables['pluginName'] = $pluginName;
         $variables['title'] = $templateTitle;
         $variables['docTitle'] = "{$pluginName} - {$templateTitle}";
         $variables['selectedSubnavItem'] = 'benefits';
         $variables['employer'] = $employer;
         $variables['policy'] = $policy;
+        $variables['variants'] = $variants;
 
         // Render the template
         return $this->renderTemplate('staff-management/benefits/policy', $variables);
     }
 
+    /**
+     * @param int $employerId
+     * @param int $policyId
+     * @return Response
+     * @throws NotFoundHttpException
+     */
     public function actionPolicyEdit(int $employerId, int $policyId): Response
     {
         $this->requireLogin();
@@ -146,11 +180,16 @@ class BenefitController extends Controller
         $variables['policy'] = $policy;
         $variables['benefit'] = $benefit;
         $variables['providers'] = $this->_getProviders();
-
         // Render the template
         return $this->renderTemplate('staff-management/benefits/policy/form', $variables);
     }
 
+    /**
+     * @param int $employerId
+     * @param int $benefitTypeId
+     * @return Response
+     * @throws NotFoundHttpException
+     */
     public function actionPolicyAdd(int $employerId, int $benefitTypeId): Response
     {
         $this->requireLogin();
@@ -180,6 +219,12 @@ class BenefitController extends Controller
         return $this->renderTemplate('staff-management/benefits/policy/form', $variables);
     }
 
+    /**
+     * @return Response
+     * @throws NotFoundHttpException
+     * @throws \yii\base\ExitException
+     * @throws \yii\web\BadRequestHttpException
+     */
     public function actionPolicySave(): Response
     {
         $this->requireLogin();
@@ -212,8 +257,8 @@ class BenefitController extends Controller
         $policy->policyName = $request->getBodyParam('policyName');
         $policy->policyNumber = $request->getBodyParam('policyNumber');
         $policy->policyHolder = $request->getBodyParam('policyHolder');
-        $policy->policyStartDate = DateTimeHelper::toDateTime($request->getBodyParam('policyStartDate'));
-        $policy->policyRenewalDate = DateTimeHelper::toDateTime($request->getBodyParam('policyRenewalDate'));
+        $policy->policyStartDate = Db::prepareDateForDb($request->getBodyParam('policyStartDate'));
+        $policy->policyRenewalDate = Db::prepareDateForDb($request->getBodyParam('policyRenewalDate'));
         $policy->paymentFrequency = $request->getBodyParam('paymentFrequency');
         $policy->commissionRate = $request->getBodyParam('commissionRate') ? (float)$request->getBodyParam('commissionRate') : null;
         $policy->description = $request->getBodyParam('description');
@@ -228,8 +273,6 @@ class BenefitController extends Controller
 
         $pluginName = Staff::$settings->pluginName;
         $templateTitle = Craft::t('staff-management', ($policyId ? 'Edit Policy' : 'Add Policy'));
-
-        Craft::dd($policy->getErrors());
 
         $variables = [];
         $variables['pluginName'] = $pluginName;
@@ -265,7 +308,103 @@ class BenefitController extends Controller
         return $this->redirect('/admin/staff-management/benefits/employers/' . $employer->id);
     }
 
+    public function actionVariantAdd(int $policyId): Response
+    {
+        $this->requireLogin();
 
+        $policy = BenefitPolicy::findOne($policyId);
+
+        if(is_null($policy)) {
+            throw new NotFoundHttpException('Policy does not exist');
+        }
+
+        $variables = [];
+
+        $pluginName = Staff::$settings->pluginName;
+        $templateTitle = Craft::t('staff-management', 'Add Variant');
+
+        $variables['pluginName'] = $pluginName;
+        $variables['title'] = $templateTitle;
+        $variables['docTitle'] = "{$pluginName} - {$templateTitle}";
+        $variables['selectedSubnavItem'] = 'benefits';
+        $variables['policy'] = $policy;
+        $variables['employer'] = Employer::findOne($policy->employerId);
+        $variables['benefitType'] = BenefitType::findOne($policy->benefitTypeId);
+        $variables['trs'] = null;
+        $variables['variant'] = null;
+        $variables['errors'] = null;
+        $variables['errorsTrs'] = null;
+
+        // Render the template
+        return $this->renderTemplate('staff-management/benefits/variant/form', $variables);
+    }
+
+    public function actionVariantSave(): Response
+    {
+        $this->requireLogin();
+        $this->requirePostRequest();
+
+        $request = Craft::$app->getRequest();
+
+        $policyId = $request->getBodyParam('policyId');
+        $trsId = $request->getBodyParam('trsId');
+        $variantId = $request->getBodyParam('variantId');
+
+        $policy = BenefitPolicy::findOne($policyId);
+
+        if(is_null($policy)) {
+            throw new NotFoundHttpException('Policy does not exist');
+        }
+
+        $benefitType = BenefitType::findOne($policy->benefitTypeId);
+
+        // save TRS
+        if ($trsId) {
+            $trs = TotalRewardsStatement::findOne($trsId);
+        } else {
+            $trs = new TotalRewardsStatement();
+        }
+
+        $trs->title = $request->getBodyParam('trsTitle');
+        $trs->monetaryValue = $request->getBodyParam('trsMonetaryValue');
+        $trs->startDate = Db::prepareDateForDb($request->getBodyParam('trsStartDate'));
+        $trs->endDate = Db::prepareDateForDb($request->getBodyParam('trsEndDate'));
+
+        $successTrs = $trs->save();
+
+        $variant = match ($benefitType->name ?? '') {
+            "Dental" => VariantDental::saveVariant($variantId == '' ? null : (int)$variantId, $successTrs ? $trs->id : null, $policy->id, $request),
+        };
+
+        $successVariant = $variant->save();
+
+        if ($successTrs && $successVariant) {
+            return $this->redirect('/admin/staff-management/benefits/employers/' . $policy->employerId . '/policy/' . $policy->id);
+        }
+
+
+        $pluginName = Staff::$settings->pluginName;
+        $templateTitle = Craft::t('staff-management', ($variantId ? 'Edit Variant' : 'Add Variant'));
+
+        $variables['pluginName'] = $pluginName;
+        $variables['title'] = $templateTitle;
+        $variables['docTitle'] = "{$pluginName} - {$templateTitle}";
+        $variables['selectedSubnavItem'] = 'benefits';
+        $variables['policy'] = $policy;
+        $variables['employer'] = Employer::findOne($policy->employerId);
+        $variables['benefitType'] = BenefitType::findOne($policy->benefitTypeId);
+        $variables['trs'] = $trs;
+        $variables['variant'] = $variant;
+        $variables['errors'] = $variant->getErrors();
+        $variables['errorsTrs'] = $trs->getErrors();
+
+        // Render the template
+        return $this->renderTemplate('staff-management/benefits/variant/form', $variables);
+    }
+
+    /**
+     * @return array[]
+     */
     private function _getProviders(): array {
         $providers = [[
             'label' => Craft::t('staff-management', 'Choose a Benefit Provider'),

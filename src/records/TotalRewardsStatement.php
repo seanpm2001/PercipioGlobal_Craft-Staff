@@ -10,47 +10,30 @@
 
 namespace percipiolondon\staff\records;
 
-use DateTime;
 use craft\db\ActiveRecord;
 use percipiolondon\staff\db\Table;
 
 /**
- * @property integer $id
- * @property integer $providerId
- * @property integer $employerId
- * @property integer $benefitTypeId
- * @property string $internalCode
- * @property string $status
- * @property string $policyName
- * @property string $policyNumber
- * @property string $policyHolder
- * @property string $description
- * @property DateTime $policyStartDate
- * @property DateTime $policyRenewalDate
- * @property string $paymentFrequency
- * @property float $commissionRate
- *
+ * @property int $id
+ * @property string $title
+ * @property float $monetaryValue
+ * @property \DateTime $startDate
+ * @property \DateTime $endDate
  */
-
-class BenefitPolicy extends ActiveRecord
+class TotalRewardsStatement extends ActiveRecord
 {
-
     // Public Static Methods
     // =========================================================================
+
     public function rules()
     {
         $rules = parent::rules();
+
         $rules[] = [[
-            'internalCode',
-            'providerId',
-            'status',
-            'policyName',
-            'policyNumber',
-            'policyHolder',
-            'policyStartDate',
-            'policyRenewalDate',
-            'paymentFrequency',
-            'commissionRate'
+            'title',
+            'monetaryValue',
+            'startDate',
+            'endDate',
         ], 'required'];
 
         return $rules;
@@ -70,6 +53,6 @@ class BenefitPolicy extends ActiveRecord
      */
     public static function tableName(): string
     {
-        return Table::BENEFIT_POLICIES;
+        return Table::BENEFIT_TRS;
     }
 }

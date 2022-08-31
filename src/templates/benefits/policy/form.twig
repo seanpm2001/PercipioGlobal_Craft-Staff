@@ -21,7 +21,18 @@
 
 {%- set content -%}
 
-    <h1 class="text-xl font-semibold text-gray-900">New Benefit policy</h1>
+    <div class="md:flex items-start">
+        <div class="flex-grow pr-4 mb-0">
+            <div class="flex items-center">
+                <div class="flex items-center mb-0">
+                    <a href="{{url('staff-management') ~ '/benefits/employers/' ~ employer.id }}" title="Go back to overview" class="inline-flex no-underline items-center px-2.5 py-1.5 rounded-full text-sm text-indigo-700 bg-indigo-100 hover:bg-indigo-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 mb-0">&larr;</a>
+                    <h1 class="ml-2 text-xl font-semibold text-gray-900">
+                        {{ policy ? 'Edit' : 'New' }} Benefit Policy
+                    </h1>
+                </div>
+            </div>
+        </div>
+    </div>
 
     <input type="hidden" name="action" value="staff-management/benefit/policy-save" />
     <input type="hidden" name="policyId" value="{{- policy ? policy.id : '' -}}" />
@@ -187,32 +198,43 @@
         </div>
 
         <div class="md:col-span-2">
-            {%- set tiptapOptions = {
+            {{ forms.textareaField({
+                label: "Description"|t('staff-management'),
+                instructions: 'Add a description with a short explanation about the policy.'|t('staff-management'),
                 id: 'description',
-                label: 'Description',
-                instructions: 'Add a description with a short explanation about the policy.',
                 name: 'description',
-                description: policy.description ?? '',
-            } -%}
+                type: 'number',
+                value: policy ? policy['description'] : '',
+                errors: errors['description'] ?? null,
+                required: true,
+            }) }}
 
-            <div id="description_tiptap">
-                <tiptap-field
-                    content="{{- tiptapOptions.description -}}"
-                    :options="{{- tiptapOptions | json_encode -}}"
-                >
-                </tiptap-field>
-            </div>
+{#            {%- set tiptapOptions = { #}
+{#                id: 'description',#}
+{#                label: 'Description',#}
+{#                instructions: 'Add a description with a short explanation about the policy.',#}
+{#                name: 'description',#}
+{#                description: policy.description ?? '',#}
+{#            } -%}#}
 
-            {%- if errors['description'] ?? null -%}
-                <ul id="content-errors" class="errors">
-                    {%- for error in errors['description'] -%}
-                        <li>
-                            <span class="visually-hidden">Error:</span>
-                            {{- error -}}
-                        </li>
-                    {%- endfor -%}
-                </ul>
-            {%- endif -%}
+{#            <div id="description_tiptap">#}
+{#                <tiptap-field#}
+{#                    content="{{- tiptapOptions.description -}}"#}
+{#                    :options="{{- tiptapOptions | json_encode -}}"#}
+{#                >#}
+{#                </tiptap-field>#}
+{#            </div>#}
+
+{#            {%- if errors['description'] ?? null -%}#}
+{#                <ul id="content-errors" class="errors">#}
+{#                    {%- for error in errors['description'] -%}#}
+{#                        <li>#}
+{#                            <span class="visually-hidden">Error:</span>#}
+{#                            {{- error -}}#}
+{#                        </li>#}
+{#                    {%- endfor -%}#}
+{#                </ul>#}
+{#            {%- endif -%}#}
         </div>
     </section>
 

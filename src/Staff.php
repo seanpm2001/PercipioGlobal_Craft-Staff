@@ -406,16 +406,20 @@ class Staff extends Plugin
         return [
             'staff-management' => 'staff-management/settings/dashboard',
             'staff-management/dashboard' => 'staff-management/settings/dashboard',
-            // benefits
+            // benefits providers
             'staff-management/benefits/providers' => 'staff-management/benefit-provider',
             'staff-management/benefits/providers/new' => 'staff-management/benefit-provider/edit',
             'staff-management/benefits/providers/edit/<providerId:\d+>' => 'staff-management/benefit-provider/edit',
+            // benefit employers
             'staff-management/benefits/employers' => 'staff-management/benefit',
             'staff-management/benefits/employers/<employerId:\d+>' => 'staff-management/benefit/detail',
+            // benefit policy
             'staff-management/benefits/employers/<employerId:\d+>/policy/<policyId:\d>' => 'staff-management/benefit/policy',
             'staff-management/benefits/employers/<employerId:\d+>/policy/<benefitTypeId:\d>/add' => 'staff-management/benefit/policy-add',
             'staff-management/benefits/employers/<employerId:\d+>/policy/<policyId:\d>/edit' => 'staff-management/benefit/policy-edit',
             'staff-management/benefits/policy/<policyId:\d>/delete' => 'staff-management/benefit/policy-delete',
+            // benefit policy variants
+            'staff-management/benefits/policy/<policyId:\d>/variants/add' => 'staff-management/benefit/variant-add',
             // pay runs
             'staff-management/pay-runs' => 'staff-management/pay-run',
             'staff-management/pay-runs/queue' => 'staff-management/pay-run/get-queue',

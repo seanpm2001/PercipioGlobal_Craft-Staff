@@ -10,6 +10,7 @@
 
 namespace percipiolondon\staff\records;
 
+use craft\db\ActiveQuery;
 use craft\db\ActiveRecord;
 use percipiolondon\staff\db\Table;
 

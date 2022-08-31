@@ -1,0 +1,48 @@
+{%- import "_includes/forms" as forms -%}
+
+<hr/>
+
+<h2>Private Medical Insurance fields</h2>
+
+<section class="mt-8 grid grid-cols-1 md:grid-cols-2 gap-6">
+    <div>
+        {%- set underwritingBasisOptions = [
+            {
+                label: 'Choose a basis',
+                value: null
+            },
+            {
+                label: 'Moratorium',
+                value: 'moratorium'
+            },
+            {
+                label: 'Medical History Disregarded',
+                value: 'medical-history-disregarded'
+            },
+            {
+                label: 'Full Medical Underwriting',
+                value: 'full-medical-underwriting'
+            },
+        ] -%}
+        {{ forms.selectField({
+            label: "Underwritting Basis"|t('staff-management'),
+            id: 'arrBenefitTypePrivateMedicalInsurance[underwritingBasis]',
+            name: 'arrBenefitTypePrivateMedicalInsurance[underwritingBasis]',
+            value: variant ? variant["underwritingBasis"] ?? '' : '',
+            options: underwritingBasisOptions,
+            errors: errors['underwritingBasis'] ?? null,
+            required: false,
+        }) }}
+    </div>
+
+    <div>
+        {{ forms.textField({
+            label: "Hospital List"|t('staff-management'),
+            id: 'arrBenefitTypePrivateMedicalInsurance[hospitalList]',
+            name: 'arrBenefitTypePrivateMedicalInsurance[hospitalList]',
+            value: variant ? variant['hospitalList'] : '',
+            errors: errors['hospitalList'] ?? null,
+            required: false,
+        }) }}
+    </div>
+</section>

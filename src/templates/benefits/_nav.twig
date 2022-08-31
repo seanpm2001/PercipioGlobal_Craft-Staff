@@ -10,7 +10,7 @@
         </li>
         <li>
             {%- set benefitProvidersUrl = pluginCpUrl ~ '/benefits/employers' -%}
-            <a href="{{- benefitProvidersUrl -}}"title="Employers" class="{{- benefitProvidersUrl in craft.app.request.absoluteUrl ? 'sel' : '' -}}">
+            <a href="{{- benefitProvidersUrl -}}"title="Employers" class="{{- (benefitProvidersUrl in craft.app.request.absoluteUrl or 'variants' in craft.app.request.absoluteUrl) ? 'sel' : '' -}}">
                 <span class="label">Employers</span>
             </a>
         </li>

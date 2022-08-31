@@ -1,0 +1,152 @@
+{%- import "_includes/forms" as forms -%}
+
+<hr/>
+
+<h2>Group Death In Service fields</h2>
+
+<section class="mt-8 grid grid-cols-1 md:grid-cols-2 gap-6">
+    <div>
+        {{ forms.dateField({
+            label: "Rate Review Guarantee Date"|t('staff-management'),
+            id: 'arrBenefitTypeGroupDeathInService[rateReviewGuaranteeDate]',
+            name: 'arrBenefitTypeGroupDeathInService[rateReviewGuaranteeDate]',
+            value: variant ? variant["rateReviewGuaranteeDate"] ?? '' : '',
+            errors: errors['rateReviewGuaranteeDate'] ?? null,
+        }) }}
+    </div>
+
+    <div>
+        {%- set costingBasisOptions = [
+            {
+                label: 'Choose a costing basis',
+                value: null
+            },
+            {
+                label: 'Unit Rated',
+                value: 'unit'
+            },
+            {
+                label: 'SP Costed',
+                value: 'sp'
+            },
+        ] -%}
+        {{ forms.selectField({
+            label: "Costing Basis"|t('staff-management'),
+            id: 'arrBenefitTypeGroupDeathInService[costingBasis]',
+            name: 'arrBenefitTypeGroupDeathInService[costingBasis]',
+            value: variant ? variant["costingBasis"] ?? '' : '',
+            options: costingBasisOptions,
+            errors: errors['costingBasis'] ?? null,
+            required: false,
+        }) }}
+    </div>
+
+    <div>
+        {%- set unitRateSuffixOptions = [
+            {
+                label: 'Choose a rate suffix',
+                value: null
+            },
+            {
+                label: '%',
+                value: '%'
+            },
+            {
+                label: '‰',
+                value: '‰'
+            },
+        ] -%}
+        {{ forms.selectField({
+            label: "Unit Rate Suffix"|t('staff-management'),
+            id: 'arrBenefitTypeGroupDeathInService[unitRateSuffix]',
+            name: 'arrBenefitTypeGroupDeathInService[unitRateSuffix]',
+            value: variant ? variant["unitRateSuffix"] ?? '' : '',
+            options: unitRateSuffixOptions,
+            errors: errors['unitRateSuffix'] ?? null,
+            required: false,
+        }) }}
+    </div>
+
+    <div>
+        {{ forms.textField({
+            label: "Unit Rate"|t('staff-management'),
+            id: 'arrBenefitTypeGroupDeathInService[unitRate]',
+            name: 'arrBenefitTypeGroupDeathInService[unitRate]',
+            type: 'number',
+            value: variant ? variant['unitRate'] : '',
+            errors: errors['unitRate'] ?? null,
+            required: false,
+        }) }}
+    </div>
+
+    <div>
+        {{ forms.textField({
+            label: "Free Cover Level Automatic Acceptance Limit"|t('staff-management'),
+            id: 'arrBenefitTypeGroupDeathInService[freeCoverLevelAutomaticAcceptanceLimit]',
+            name: 'arrBenefitTypeGroupDeathInService[freeCoverLevelAutomaticAcceptanceLimit]',
+            type: 'number',
+            value: variant ? variant['freeCoverLevelAutomaticAcceptanceLimit'] : '',
+            errors: errors['freeCoverLevelAutomaticAcceptanceLimit'] ?? null,
+            required: false,
+        }) }}
+    </div>
+
+    <div>
+        {%- set dateRefreshFrequencyOptions = [
+            {
+                label: 'Choose a date refresh frequency',
+                value: null
+            },
+            {
+                label: 'Annually',
+                value: 'annual'
+            },
+            {
+                label: 'Monthly',
+                value: 'monthly'
+            },
+        ] -%}
+        {{ forms.selectField({
+            label: "Date Refresh Frequency"|t('staff-management'),
+            id: 'arrBenefitTypeGroupDeathInService[dateRefreshFrequency]',
+            name: 'arrBenefitTypeGroupDeathInService[dateRefreshFrequency]',
+            value: variant ? variant["dateRefreshFrequency"] ?? '' : '',
+            options: dateRefreshFrequencyOptions,
+            errors: errors['dateRefreshFrequency'] ?? null,
+            required: false,
+        }) }}
+    </div>
+
+    <div>
+        {{ forms.textField({
+            label: "Pension Scheme Tax Reference Number"|t('staff-management'),
+            id: 'arrBenefitTypeGroupDeathInService[pensionSchemeTaxReferenceNumber]',
+            name: 'arrBenefitTypeGroupDeathInService[pensionSchemeTaxReferenceNumber]',
+            value: variant ? variant['pensionSchemeTaxReferenceNumber'] : '',
+            errors: errors['pensionSchemeTaxReferenceNumber'] ?? null,
+            required: false,
+        }) }}
+    </div>
+
+    <div>
+        {{ forms.dateField({
+            label: "Date Of Trust Deed"|t('staff-management'),
+            id: 'arrBenefitTypeGroupDeathInService[dateOfTrustDeed]',
+            name: 'arrBenefitTypeGroupDeathInService[dateOfTrustDeed]',
+            value: variant ? variant["dateOfTrustDeed"] ?? '' : '',
+            errors: errors['dateOfTrustDeed'] ?? null,
+        }) }}
+    </div>
+
+    <div>
+        {{ forms.textField({
+            label: "Event Limit"|t('staff-management'),
+            id: 'arrBenefitTypeGroupDeathInService[eventLimit]',
+            name: 'arrBenefitTypeGroupDeathInService[eventLimit]',
+            type: 'number',
+            value: variant ? variant['eventLimit'] : '',
+            errors: errors['eventLimit'] ?? null,
+            required: false,
+        }) }}
+    </div>
+</section>
