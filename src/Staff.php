@@ -415,6 +415,7 @@ class Staff extends Plugin
             'staff-management/benefits/employers/<employerId:\d+>/policy/<policyId:\d>' => 'staff-management/benefit/policy',
             'staff-management/benefits/employers/<employerId:\d+>/policy/<benefitTypeId:\d>/add' => 'staff-management/benefit/policy-add',
             'staff-management/benefits/employers/<employerId:\d+>/policy/<policyId:\d>/edit' => 'staff-management/benefit/policy-edit',
+            'staff-management/benefits/policy/<policyId:\d>/delete' => 'staff-management/benefit/policy-delete',
             // pay runs
             'staff-management/pay-runs' => 'staff-management/pay-run',
             'staff-management/pay-runs/queue' => 'staff-management/pay-run/get-queue',

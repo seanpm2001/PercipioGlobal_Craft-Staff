@@ -246,6 +246,25 @@ class BenefitController extends Controller
         return $this->renderTemplate('staff-management/benefits/policy/form', $variables);
     }
 
+    /**
+     * @throws \yii\db\StaleObjectException
+     * @throws NotFoundHttpException
+     */
+    public function actionPolicyDelete(int $policyId): Response
+    {
+        $policy = BenefitPolicy::findOne($policyId);
+
+        if(is_null($policy)) {
+            throw new NotFoundHttpException('Employer or benefit does not exist');
+        }
+
+        $employer = Employer::findOne($policy->employerId);
+
+        $policy->delete();
+
+        return $this->redirect('/admin/staff-management/benefits/employers/' . $employer->id);
+    }
+
 
     private function _getProviders(): array {
         $providers = [[

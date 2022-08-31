@@ -60,6 +60,7 @@ module.exports = {
         'pl-6',
         'pl-px',
         'pr-1',
+        'pr-6',
         'pt-6',
         'pt-10',
         'px-6',
