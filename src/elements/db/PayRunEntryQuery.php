@@ -13,6 +13,7 @@ class PayRunEntryQuery extends ElementQuery
     public $employeeId;
     public $isClosed;
     public $isYtd;
+    public $taxYear;
 
     public function staffologyId($value)
     {
@@ -47,6 +48,12 @@ class PayRunEntryQuery extends ElementQuery
     public function isYtd($value)
     {
         $this->isYtd = $value;
+        return $this;
+    }
+
+    public function taxYear($value)
+    {
+        $this->taxYear = $value;
         return $this;
     }
 
@@ -109,6 +116,10 @@ class PayRunEntryQuery extends ElementQuery
 
         if ($this->isYtd) {
             $this->subQuery->andWhere(Db::parseParam('staff_pay_run_entries.isYtd', $this->isYtd, '=', false));
+        }
+
+        if ($this->taxYear) {
+            $this->subQuery->andWhere(Db::parseParam('staff_pay_run_entries.taxYear', $this->taxYear));
         }
 
         return parent::beforePrepare();
