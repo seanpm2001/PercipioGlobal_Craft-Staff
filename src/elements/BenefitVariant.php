@@ -7,7 +7,7 @@ use craft\base\Element;
 use craft\elements\db\ElementQueryInterface;
 use craft\web\Request;
 use percipiolondon\staff\elements\db\BenefitVariantQuery;
-use percipiolondon\staff\helpers\variants\VariantDental;
+use percipiolondon\staff\helpers\variants\VariantGcic;
 use percipiolondon\staff\records\BenefitEmployeeVariant;
 use percipiolondon\staff\records\BenefitPolicy;
 use percipiolondon\staff\records\BenefitType;

@@ -22,7 +22,7 @@ use percipiolondon\staff\db\Table;
  *
  */
 
-class BenefitVariantDental extends ActiveRecord
+class BenefitVariant extends ActiveRecord
 {
     // Public Static Methods
     // =========================================================================
@@ -52,6 +52,6 @@ class BenefitVariantDental extends ActiveRecord
      */
     public static function tableName(): string
     {
-        return Table::BENEFIT_VARIANT_DENTAL;
+        return Table::BENEFIT_VARIANT;
     }
 }

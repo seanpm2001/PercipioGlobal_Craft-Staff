@@ -119,9 +119,30 @@ class m220829_131828_group_benefits extends Migration
             ]);
         }
 
-        $tableSchema = Craft::$app->db->schema->getTableSchema(Table::BENEFIT_VARIANT_DENTAL);
+        $tableSchema = Craft::$app->db->schema->getTableSchema(Table::BENEFIT_VARIANT_GCIC);
         if ($tableSchema === null) {
-            $this->createTable(Table::BENEFIT_VARIANT_DENTAL, [
+            $this->createTable(Table::BENEFIT_VARIANT_GCIC, [
+                'id' => $this->primaryKey(),
+                'dateCreated' => $this->dateTime()->notNull(),
+                'dateUpdated' => $this->dateTime()->notNull(),
+                'uid' => $this->uid(),
+                //FK
+                //custom fields
+                'rateReviewGuaranteeDate' => $this->dateTime(),
+                'costingBasis' => $this->enum('costingBasis', ['unit', 'sp']),
+                'unitRate' => $this->float(),
+                'unitRateSuffix' => $this->enum('unitRateSuffix', ['%', '‰']),
+                'freeCoverLevelAutomaticAcceptanceLimit' => $this->float(),
+                'dateRefreshFrequency' => $this->enum('dateRefreshFrequency', ['annual', 'monthly'])
+            ]);
+
+            // foreign key
+            $this->addForeignKey(null, Table::BENEFIT_VARIANT_GCIC, ['id'], \craft\db\Table::ELEMENTS, ['id'], 'CASCADE', 'CASCADE');
+        }
+
+        $tableSchema = Craft::$app->db->schema->getTableSchema(Table::BENEFIT_VARIANT);
+        if ($tableSchema === null) {
+            $this->createTable(Table::BENEFIT_VARIANT, [
                 'id' => $this->primaryKey(),
                 'dateCreated' => $this->dateTime()->notNull(),
                 'dateUpdated' => $this->dateTime()->notNull(),
@@ -135,9 +156,9 @@ class m220829_131828_group_benefits extends Migration
             ]);
 
             // foreign key
-            $this->addForeignKey(null, Table::BENEFIT_VARIANT_DENTAL, ['id'], \craft\db\Table::ELEMENTS, ['id'], 'CASCADE', 'CASCADE');
-            $this->addForeignKey(null, Table::BENEFIT_VARIANT_DENTAL, ['trsId'], Table::BENEFIT_TRS, ['id'], 'CASCADE', 'CASCADE');
-            $this->addForeignKey(null, Table::BENEFIT_VARIANT_DENTAL, ['policyId'], Table::BENEFIT_POLICIES, ['id'], 'CASCADE', 'CASCADE');
+            $this->addForeignKey(null, Table::BENEFIT_VARIANT, ['id'], \craft\db\Table::ELEMENTS, ['id'], 'CASCADE', 'CASCADE');
+            $this->addForeignKey(null, Table::BENEFIT_VARIANT, ['trsId'], Table::BENEFIT_TRS, ['id'], 'CASCADE', 'CASCADE');
+            $this->addForeignKey(null, Table::BENEFIT_VARIANT, ['policyId'], Table::BENEFIT_POLICIES, ['id'], 'CASCADE', 'CASCADE');
         }
 
         $tableSchema = Craft::$app->db->schema->getTableSchema(Table::BENEFIT_EMPLOYEES_VARIANTS);

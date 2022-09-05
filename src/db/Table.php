@@ -15,7 +15,7 @@ abstract class Table
     const BENEFIT_PROVIDERS = "{{%staff_benefit_providers}}";
     const BENEFIT_TRS = "{{%staff_benefit_trs%}}";
     const BENEFIT_TYPES = "{{%staff_benefit_types%}}";
-    const BENEFIT_VARIANT_DENTAL = "{{%staff_benefit_variant_dental%}}";
+    const BENEFIT_VARIANT = "{{%staff_benefit_variant%}}";
     const BENEFIT_VARIANT_GCIC = "{{%staff_benefit_variant_gcic%}}";
     const BENEFIT_VARIANT_GDIS = "{{%staff_benefit_variant_gdis%}}";
     const BENEFIT_VARIANT_GIP = "{{%staff_benefit_variant_gip%}}";
