@@ -76,14 +76,14 @@ class Policy
                 'name' => 'policyStartDate',
                 'type' => DateTime::getType(),
                 'resolve' => function ($source, array $arguments, $context, ResolveInfo $resolveInfo) {
-                    return Gql::applyDirectives($source, $resolveInfo, DateTimeHelper::toDateTime($source['policyStartDate']));
+                    return Gql::applyDirectives($source, $resolveInfo, DateTimeHelper::toDateTime($source->policyStartDate));
                 }
             ],
             'policyRenewalDate' => [
                 'name' => 'policyRenewalDate',
                 'type' => DateTime::getType(),
                 'resolve' => function ($source, array $arguments, $context, ResolveInfo $resolveInfo) {
-                    return Gql::applyDirectives($source, $resolveInfo, DateTimeHelper::toDateTime($source['policyRenewalDate']));
+                    return Gql::applyDirectives($source, $resolveInfo, DateTimeHelper::toDateTime($source->policyRenewalDate));
                 }
             ],
             'paymentFrequency' => [

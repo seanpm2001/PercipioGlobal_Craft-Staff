@@ -48,14 +48,14 @@ class TotalRewardsStatement
                 'name' => 'startDate',
                 'type' => DateTime::getType(),
                 'resolve' => function ($source, array $arguments, $context, ResolveInfo $resolveInfo) {
-                    return Gql::applyDirectives($source, $resolveInfo, DateTimeHelper::toDateTime($source['startDate']));
+                    return Gql::applyDirectives($source, $resolveInfo, DateTimeHelper::toDateTime($source->startDate));
                 }
             ],
             'endDate' => [
                 'name' => 'endDate',
                 'type' => DateTime::getType(),
                 'resolve' => function ($source, array $arguments, $context, ResolveInfo $resolveInfo) {
-                    return Gql::applyDirectives($source, $resolveInfo, DateTimeHelper::toDateTime($source['endDate']));
+                    return Gql::applyDirectives($source, $resolveInfo, DateTimeHelper::toDateTime($source->endDate));
                 }
             ],
         ];

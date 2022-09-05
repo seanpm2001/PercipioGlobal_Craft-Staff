@@ -342,18 +342,6 @@ class BenefitController extends Controller
             throw new NotFoundHttpException('Policy does not exist');
         }
 
-        // save TRS
-        if ($trsId) {
-            $trs = TotalRewardsStatement::findOne($trsId);
-        } else {
-            $trs = new TotalRewardsStatement();
-        }
-        $trs->title = $request->getBodyParam('trsTitle');
-        $trs->monetaryValue = $request->getBodyParam('trsMonetaryValue');
-        $trs->startDate = Db::prepareDateForDb($request->getBodyParam('trsStartDate'));
-        $trs->endDate = Db::prepareDateForDb($request->getBodyParam('trsEndDate'));
-        $trs->save();
-
         // save benefit variant
         $variant = BenefitVariant::findOne($variantId);
 
@@ -361,10 +349,23 @@ class BenefitController extends Controller
             $variant = new BenefitVariant();
         }
 
-        $variant->trs = $trs;
         $variant->policyId = $policyId;
+        $variant->name = $request->getBodyParam('name');
         $variant->request = $request;
         $success = Craft::$app->getElements()->saveElement($variant);
+
+        // save TRS
+        if ($trsId) {
+            $trs = TotalRewardsStatement::findOne($trsId);
+        } else {
+            $trs = new TotalRewardsStatement();
+        }
+        $trs->variantId = $variant->id;
+        $trs->title = $request->getBodyParam('trsTitle');
+        $trs->monetaryValue = $request->getBodyParam('trsMonetaryValue');
+        $trs->startDate = Db::prepareDateForDb($request->getBodyParam('trsStartDate'));
+        $trs->endDate = Db::prepareDateForDb($request->getBodyParam('trsEndDate'));
+        $trs->save();
 
         if ($success) {
             return $this->redirect('/admin/staff-management/benefits/employers/' . $policy->employerId . '/policy/' . $policy->id);

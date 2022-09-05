@@ -17,7 +17,6 @@ use percipiolondon\staff\db\Table;
 /**
  * @property integer $id
  * @property integer $policyId
- * @property integer $trsId
  * @property string $name
  *
  */

@@ -3,6 +3,7 @@
 namespace percipiolondon\staff\elements;
 
 use Craft;
+use DateTime;
 use craft\base\Element;
 use craft\elements\db\ElementQueryInterface;
 use craft\web\Request;
@@ -11,21 +12,33 @@ use percipiolondon\staff\helpers\variants\VariantGcic;
 use percipiolondon\staff\records\BenefitEmployeeVariant;
 use percipiolondon\staff\records\BenefitPolicy;
 use percipiolondon\staff\records\BenefitType;
+use percipiolondon\staff\records\BenefitVariantGcic;
 use percipiolondon\staff\records\TotalRewardsStatement;
+use percipiolondon\staff\records\BenefitVariant as BenefitVariantRecord;
 use yii\web\NotFoundHttpException;
 
+/**
+ *
+ * @property-read string $gqlTypeName
+ * @property-read null|array $provider
+ * @property-read null|array $employees
+ * @property-read null|\percipiolondon\staff\records\BenefitPolicy $policy
+ * @property-read \percipiolondon\staff\records\TotalRewardsStatement|null $totalRewardsStatement
+ */
 class BenefitVariant extends Element
 {
     public ?TotalRewardsStatement $trs = null;
     public ?int $policyId = null;
-    public ?int $trsId = null;
     public ?Request $request = null;
     public ?string $name = null;
 
-    private ?array $_totalRewardsStatement = null;
-    private ?array $_policy = null;
-    private ?array $_provider = null;
+    private ?TotalRewardsStatement $_totalRewardsStatement = null;
+    private ?BenefitPolicy $_policy = null;
+    private ?BenefitProvider $_provider = null;
     private ?array $_employees = null;
+    private ?string $_type = null;
+
+    private ?BenefitVariantGcic $_gcic = null;
 
     /**
      * @return string
@@ -91,33 +104,33 @@ class BenefitVariant extends Element
         return new BenefitVariantQuery(static::class);
     }
 
-    public function getTotalRewardsStatement(): ?array
+    public function getTotalRewardsStatement(): ?TotalRewardsStatement
     {
         if ($this->_totalRewardsStatement === null) {
-            if ($this->trsId === null) {
+            if ($this->id === null) {
                 return null;
             }
 
-            $this->_totalRewardsStatement = TotalRewardsStatement::findOne($this->trsId)->toArray();
+            $this->_totalRewardsStatement = TotalRewardsStatement::findOne(['variantId' => $this->id]);
 
             return $this->_totalRewardsStatement;
         }
     }
 
-    public function getPolicy(): ?array
+    public function getPolicy(): ?BenefitPolicy
     {
         if ($this->_policy === null) {
             if ($this->policyId === null) {
                 return null;
             }
 
-            $this->_policy = BenefitPolicy::findOne($this->policyId)->toArray();
-
-            return $this->_policy;
+            $this->_policy = BenefitPolicy::findOne($this->policyId);
         }
+
+        return $this->_policy;
     }
 
-    public function getProvider(): ?array
+    public function getProvider(): ?BenefitProvider
     {
         if ($this->_provider === null) {
             if ($this->policyId === null) {
@@ -130,10 +143,10 @@ class BenefitVariant extends Element
                 return null;
             }
 
-            $this->_provider = BenefitProvider::findOne($this->_policy['providerId'])->toArray();
-
-            return $this->_provider;
+            $this->_provider = BenefitProvider::findOne($this->_policy['providerId']);
         }
+
+        return $this->_provider;
     }
 
     public function getEmployees(): ?array
@@ -150,13 +163,35 @@ class BenefitVariant extends Element
         }
     }
 
+    public function getType(): ?string
+    {
+        $benefitType = BenefitType::findOne($this->getPolicy()->benefitTypeId ?? null);
+        $this->_type = match ($benefitType->name ?? '') {
+            'Dental' => 'dental',
+            'Group Critical Illness Cover' => 'gcic',
+            default => null
+        };
+
+        return $this->_type;
+    }
+
+    public function getGcic(): ?BenefitVariantGcic
+    {
+        if ($this->_gcic === null) {
+            $this->_gcic = BenefitVariantGcic::findOne($this->id);
+        }
+
+        return $this->_gcic;
+    }
+
     public function getFields(string $benefitTypeName): ?array
     {
         $variant = match ($benefitTypeName ?? '') {
-            'Dental' => VariantDental::getVariant($this->id, $this->request),
+            'Group Critical Illness Cover' => VariantGcic::getVariant($this->id, $this->request),
+            default => null
         };
 
-        if($variant) {
+        if ($variant) {
             return $variant;
         }
 
@@ -186,17 +221,35 @@ class BenefitVariant extends Element
                 throw new NotFoundHttpException(Craft::t('staff-management', 'Policy does not exist'));
             }
 
-            $benefitType = BenefitType::findOne($policy->benefitTypeId);
+            //save benefit variant generic
+            $benefit = BenefitVariantRecord::findOne($this->id);
 
-            // save benefit
+            if (is_null($benefit)) {
+                $benefit = new BenefitVariantRecord();
+                $benefit->id = $this->id;
+            }
+
+            $benefit->name = $this->name;
+            $benefit->policyId = $this->policyId;
+            $successBenefit = $benefit->save();
+
+            if(!$successBenefit) {
+                Craft::error(Craft::t('staff-management','The save of the Benefit Variant wasn\'t successfull'));
+            }
+
+            // save benefit type variants
+            $benefitType = BenefitType::findOne($policy->benefitTypeId);
             $variant = match ($benefitType->name ?? '') {
-                'Dental' => VariantDental::saveVariant($this->id ?? null, $this->trs->id ?? null, $policy->id, $this->request),
+                'Group Critical Illness Cover' => VariantGcic::saveVariant($this->id ?? null, $this->request),
+                default => null
             };
 
-            $successVariant = $variant->save();
+            if ($variant) {
+                $successVariant = $variant->save();
 
-            if(!$successVariant) {
-                Craft::error(Craft::t('staff-management','The save of the Benefit Variant wasn\'t successfull'));
+                if(!$successVariant) {
+                    Craft::error(Craft::t('staff-management','The save of the Benefit Type specific Variant wasn\'t successfull'));
+                }
             }
 
         } catch (\Exception $e) {

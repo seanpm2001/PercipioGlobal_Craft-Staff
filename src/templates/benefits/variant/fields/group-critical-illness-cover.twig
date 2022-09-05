@@ -9,7 +9,7 @@
         {{ forms.dateField({
             label: "Rate Review Guarantee Date"|t('staff-management'),
             id: 'rateReviewGuaranteeDate',
-            name: 'arrBenefitTypeGroupCriticalIllnessCover[rateReviewGuaranteeDate]',
+            name: 'rateReviewGuaranteeDate',
             value: variant ? variant["rateReviewGuaranteeDate"] ?? '' : '',
             errors: errors['rateReviewGuaranteeDate'] ?? null,
         }) }}
@@ -33,7 +33,7 @@
         {{ forms.selectField({
             label: "Costing Basis"|t('staff-management'),
             id: 'costingBasis',
-            name: 'arrBenefitTypeGroupCriticalIllnessCover[costingBasis]',
+            name: 'costingBasis',
             value: variant ? variant["costingBasis"] ?? '' : '',
             options: costingBasisOptions,
             errors: errors['costingBasis'] ?? null,
@@ -59,7 +59,7 @@
         {{ forms.selectField({
             label: "Unit Rate Suffix"|t('staff-management'),
             id: 'unitRateSuffix',
-            name: 'arrBenefitTypeGroupCriticalIllnessCover[unitRateSuffix]',
+            name: 'unitRateSuffix',
             value: variant ? variant["unitRateSuffix"] ?? '' : '',
             options: unitRateSuffixOptions,
             errors: errors['unitRateSuffix'] ?? null,
@@ -71,7 +71,7 @@
         {{ forms.textField({
             label: "Unit Rate"|t('staff-management'),
             id: 'unitRate',
-            name: 'arrBenefitTypeGroupCriticalIllnessCover[unitRate]',
+            name: 'unitRate',
             type: 'number',
             value: variant ? variant['unitRate'] : '',
             errors: errors['unitRate'] ?? null,
@@ -83,7 +83,7 @@
         {{ forms.textField({
             label: "Free Cover Level Automatic Acceptance Limit"|t('staff-management'),
             id: 'freeCoverLevelAutomaticAcceptanceLimit',
-            name: 'arrBenefitTypeGroupCriticalIllnessCover[freeCoverLevelAutomaticAcceptanceLimit]',
+            name: 'freeCoverLevelAutomaticAcceptanceLimit',
             type: 'number',
             value: variant ? variant['freeCoverLevelAutomaticAcceptanceLimit'] : '',
             errors: errors['freeCoverLevelAutomaticAcceptanceLimit'] ?? null,
@@ -109,7 +109,7 @@
         {{ forms.selectField({
             label: "Date Refresh Frequency"|t('staff-management'),
             id: 'dateRefreshFrequency',
-            name: 'arrBenefitTypeGroupCriticalIllnessCover[dateRefreshFrequency]',
+            name: 'dateRefreshFrequency',
             value: variant ? variant["dateRefreshFrequency"] ?? '' : '',
             options: dateRefreshFrequencyOptions,
             errors: errors['dateRefreshFrequency'] ?? null,

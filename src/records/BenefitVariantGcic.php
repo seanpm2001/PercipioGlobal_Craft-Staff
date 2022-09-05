@@ -14,11 +14,6 @@ use craft\db\ActiveRecord;
 use percipiolondon\staff\db\Table;
 
 /**
- * @property integer $id
- * @property integer $policyId
- * @property integer $trsId
- * @property string $name
-
  * @property \DateTime $rateReviewGuaranteeDate
  * @property string $costingBasis
  * @property float $unitRate
@@ -35,21 +30,7 @@ class BenefitVariantGcic extends ActiveRecord
 
     public function rules()
     {
-        $rules = parent::rules();
-
-        $rules[] = [[
-            'internalCode',
-            'status',
-            'policyName',
-            'policyNumber',
-            'policyHolder',
-            'policyStartDate',
-            'policyRenewalDate',
-            'paymentFrequency',
-            'commissionRate'
-        ], 'required'];
-
-        return $rules;
+        return parent::rules();
     }
 
     /**

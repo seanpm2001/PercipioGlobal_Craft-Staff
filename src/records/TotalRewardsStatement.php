@@ -15,6 +15,7 @@ use percipiolondon\staff\db\Table;
 
 /**
  * @property int $id
+ * @property int $variantId
  * @property string $title
  * @property float $monetaryValue
  * @property \DateTime $startDate

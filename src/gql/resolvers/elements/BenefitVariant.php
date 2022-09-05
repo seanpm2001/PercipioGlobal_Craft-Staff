@@ -21,6 +21,7 @@ class BenefitVariant extends ElementResolver
 
             if (is_null($employeeId)) {
                 $query = Element::find();
+//                \Craft::dd($query->getRawSql());
             } else {
                 $employees = (new Query())
                     ->from(Table::BENEFIT_EMPLOYEES_VARIANTS)
