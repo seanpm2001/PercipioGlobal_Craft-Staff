@@ -73,10 +73,10 @@ class BenefitVariant extends Element
                 'type' => Type::string(),
                 'description' => 'Get the admin name that handled the request',
             ],
-            'trs' => [
-                'name' => 'trs',
+            'totalRewardsStatement' => [
+                'name' => 'totalRewardsStatement',
                 'type' => TotalRewardsStatement::getType(),
-                'description' => 'The trs'
+                'description' => 'The total rewards statement'
             ],
             'policy' => [
                 'name' => 'policy',

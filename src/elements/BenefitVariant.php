@@ -6,12 +6,10 @@ use Craft;
 use craft\base\Element;
 use craft\elements\db\ElementQueryInterface;
 use craft\web\Request;
-use DateTime;
-use percipiolondon\staff\elements\db\BenefitVariantDentalQuery;
+use percipiolondon\staff\elements\db\BenefitVariantQuery;
 use percipiolondon\staff\helpers\variants\VariantDental;
 use percipiolondon\staff\records\BenefitPolicy;
 use percipiolondon\staff\records\BenefitType;
-use percipiolondon\staff\records\BenefitVariantDental as BenefitVariantDentalRecord;
 use percipiolondon\staff\records\TotalRewardsStatement;
 use yii\web\NotFoundHttpException;
 
@@ -23,7 +21,7 @@ class BenefitVariant extends Element
     public ?Request $request = null;
     public ?string $name = null;
 
-    private ?array $_trs = null;
+    private ?array $_totalRewardsStatement = null;
     private ?array $_policy = null;
     private ?array $_provider = null;
 
@@ -64,8 +62,7 @@ class BenefitVariant extends Element
      */
     public function defineRules(): array
     {
-        $rules = parent::defineRules();
-        return $rules;
+        return parent::defineRules();
     }
     /**
      * @param mixed $context
@@ -89,19 +86,19 @@ class BenefitVariant extends Element
      */
     public static function find(): ElementQueryInterface
     {
-        return new BenefitVariantDentalQuery(static::class);
+        return new BenefitVariantQuery(static::class);
     }
 
-    public function getTrs(): ?array
+    public function getTotalRewardsStatement(): ?array
     {
-        if ($this->_trs === null) {
+        if ($this->_totalRewardsStatement === null) {
             if ($this->trsId === null) {
                 return null;
             }
 
-            $this->_trs = TotalRewardsStatement::findOne($this->trsId)->toArray();
+            $this->_totalRewardsStatement = TotalRewardsStatement::findOne($this->trsId)->toArray();
 
-            return $this->_trs;
+            return $this->_totalRewardsStatement;
         }
     }
 

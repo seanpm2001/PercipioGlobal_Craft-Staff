@@ -97,7 +97,7 @@
             </div>
         </div>
 
-        <div class="mt-8" id="benefit-variants"></div>
+        <div class="mt-8" id="benefit-variants-container"></div>
 
         <div class="block bg-gray-100 w-6 left-full pb-6 top-0 h-full absolute"></div>
         <div class="block bg-gray-100 h-6 top-full left-0 w-full absolute"></div>
@@ -120,4 +120,5 @@
         ]
     } -%}
     {{  craft.staff.register('src/js/benefit-policy.ts', false, tagOptions) }}
+    {{  craft.staff.register('src/js/benefit-variants.ts', false, tagOptions) }}
 {%- endblock -%}

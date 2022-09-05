@@ -1,75 +1,84 @@
 {
-  "src/js/benefit-policy.ts": {
-    "file": "assets/benefitPolicy.6ad0c866.js",
-    "src": "src/js/benefit-policy.ts",
-    "isEntry": true,
-    "imports": [
-      "_vue.esm-bundler.806d9d8b.js"
-    ]
-  },
   "src/js/benefit-employers.ts": {
-    "file": "assets/benefitEmployers.165ee843.js",
+    "file": "assets/benefitEmployers.71ee2560.js",
     "src": "src/js/benefit-employers.ts",
     "isEntry": true,
     "imports": [
-      "_vue.esm-bundler.806d9d8b.js",
-      "_useApolloClient.dd8eacf8.js",
-      "_employers.05882340.js",
-      "_listitem--loading.91d09a4c.js"
+      "_vue.esm-bundler.9a334c3a.js",
+      "_useApolloClient.63c21703.js",
+      "_employers.1faded57.js",
+      "_listitem--loading.832421a9.js"
+    ]
+  },
+  "src/js/benefit-policy.ts": {
+    "file": "assets/benefitPolicy.d3562964.js",
+    "src": "src/js/benefit-policy.ts",
+    "isEntry": true,
+    "imports": [
+      "_vue.esm-bundler.9a334c3a.js"
+    ]
+  },
+  "src/js/benefit-variants.ts": {
+    "file": "assets/benefitVariants.f67535ee.js",
+    "src": "src/js/benefit-variants.ts",
+    "isEntry": true,
+    "imports": [
+      "_vue.esm-bundler.9a334c3a.js",
+      "_useApolloClient.63c21703.js"
     ]
   },
   "src/js/employers.ts": {
-    "file": "assets/employers.d088f9e7.js",
+    "file": "assets/employers.2852b255.js",
     "src": "src/js/employers.ts",
     "isEntry": true,
     "imports": [
-      "_vue.esm-bundler.806d9d8b.js",
-      "_useApolloClient.dd8eacf8.js",
-      "_employers.05882340.js",
-      "_listitem--loading.91d09a4c.js"
+      "_vue.esm-bundler.9a334c3a.js",
+      "_useApolloClient.63c21703.js",
+      "_employers.1faded57.js",
+      "_listitem--loading.832421a9.js"
     ]
   },
   "src/js/payrun-details.ts": {
-    "file": "assets/details.b6a2225d.js",
+    "file": "assets/details.7887e64d.js",
     "src": "src/js/payrun-details.ts",
     "isEntry": true,
     "imports": [
-      "_vue.esm-bundler.806d9d8b.js",
-      "_useApolloClient.dd8eacf8.js",
-      "_status--synced.63513420.js",
-      "_listitem--loading.91d09a4c.js"
+      "_vue.esm-bundler.9a334c3a.js",
+      "_useApolloClient.63c21703.js",
+      "_status--synced.396ef640.js",
+      "_listitem--loading.832421a9.js"
     ]
   },
   "src/js/payruns.ts": {
-    "file": "assets/payruns.e041f3b1.js",
+    "file": "assets/payruns.50569d9e.js",
     "src": "src/js/payruns.ts",
     "isEntry": true,
     "imports": [
-      "_vue.esm-bundler.806d9d8b.js",
-      "_useApolloClient.dd8eacf8.js",
-      "_status--synced.63513420.js",
-      "_listitem--loading.91d09a4c.js"
+      "_vue.esm-bundler.9a334c3a.js",
+      "_useApolloClient.63c21703.js",
+      "_status--synced.396ef640.js",
+      "_listitem--loading.832421a9.js"
     ]
   },
   "src/js/requests-overview.ts": {
-    "file": "assets/requestsOverview.6b26032a.js",
+    "file": "assets/requestsOverview.a98dd052.js",
     "src": "src/js/requests-overview.ts",
     "isEntry": true,
     "imports": [
-      "_vue.esm-bundler.806d9d8b.js",
-      "_useApolloClient.dd8eacf8.js",
-      "_requests.aaf6746f.js",
-      "_listitem--loading.91d09a4c.js"
+      "_vue.esm-bundler.9a334c3a.js",
+      "_useApolloClient.63c21703.js",
+      "_requests.b8fd2940.js",
+      "_listitem--loading.832421a9.js"
     ]
   },
   "src/js/requests-detail.ts": {
-    "file": "assets/requestsDetail.efcd8dde.js",
+    "file": "assets/requestsDetail.65f06a21.js",
     "src": "src/js/requests-detail.ts",
     "isEntry": true,
     "imports": [
-      "_vue.esm-bundler.806d9d8b.js",
-      "_useApolloClient.dd8eacf8.js",
-      "_requests.aaf6746f.js"
+      "_vue.esm-bundler.9a334c3a.js",
+      "_useApolloClient.63c21703.js",
+      "_requests.b8fd2940.js"
     ]
   },
   "src/js/staff.ts": {
@@ -81,45 +90,45 @@
     ]
   },
   "src/js/tiptap.ts": {
-    "file": "assets/tiptap.88e46940.js",
+    "file": "assets/tiptap.8d337c90.js",
     "src": "src/js/tiptap.ts",
     "isEntry": true,
     "imports": [
-      "_vue.esm-bundler.806d9d8b.js"
+      "_vue.esm-bundler.9a334c3a.js"
     ]
   },
-  "_vue.esm-bundler.806d9d8b.js": {
-    "file": "assets/vue.esm-bundler.806d9d8b.js"
+  "_vue.esm-bundler.9a334c3a.js": {
+    "file": "assets/vue.esm-bundler.9a334c3a.js"
   },
-  "_useApolloClient.dd8eacf8.js": {
-    "file": "assets/useApolloClient.dd8eacf8.js",
+  "_useApolloClient.63c21703.js": {
+    "file": "assets/useApolloClient.63c21703.js",
     "imports": [
-      "_vue.esm-bundler.806d9d8b.js"
+      "_vue.esm-bundler.9a334c3a.js"
     ]
   },
-  "_employers.05882340.js": {
-    "file": "assets/employers.05882340.js",
+  "_employers.1faded57.js": {
+    "file": "assets/employers.1faded57.js",
     "imports": [
-      "_useApolloClient.dd8eacf8.js"
+      "_useApolloClient.63c21703.js"
     ]
   },
-  "_listitem--loading.91d09a4c.js": {
-    "file": "assets/listitem--loading.91d09a4c.js",
+  "_listitem--loading.832421a9.js": {
+    "file": "assets/listitem--loading.832421a9.js",
     "imports": [
-      "_vue.esm-bundler.806d9d8b.js"
+      "_vue.esm-bundler.9a334c3a.js"
     ]
   },
-  "_status--synced.63513420.js": {
-    "file": "assets/status--synced.63513420.js",
+  "_status--synced.396ef640.js": {
+    "file": "assets/status--synced.396ef640.js",
     "imports": [
-      "_useApolloClient.dd8eacf8.js",
-      "_vue.esm-bundler.806d9d8b.js"
+      "_useApolloClient.63c21703.js",
+      "_vue.esm-bundler.9a334c3a.js"
     ]
   },
-  "_requests.aaf6746f.js": {
-    "file": "assets/requests.aaf6746f.js",
+  "_requests.b8fd2940.js": {
+    "file": "assets/requests.b8fd2940.js",
     "imports": [
-      "_useApolloClient.dd8eacf8.js"
+      "_useApolloClient.63c21703.js"
     ]
   }
 }
