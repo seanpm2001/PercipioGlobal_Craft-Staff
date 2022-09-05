@@ -31,6 +31,11 @@ class Employee
     public static function getFieldDefinitions(): array
     {
         return [
+            'id' => [
+                'name' => 'id',
+                'type' => Type::id(),
+                'description' => 'The employee id'
+            ],
             'staffologyId' => [
                 'name' => 'staffologyId',
                 'type' => Type::nonNull(Type::id()),

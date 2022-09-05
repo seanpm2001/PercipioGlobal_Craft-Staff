@@ -19,7 +19,7 @@
     ]
   },
   "src/js/benefit-variants.ts": {
-    "file": "assets/benefitVariants.f67535ee.js",
+    "file": "assets/benefitVariants.eb147283.js",
     "src": "src/js/benefit-variants.ts",
     "isEntry": true,
     "imports": [
@@ -82,11 +82,11 @@
     ]
   },
   "src/js/staff.ts": {
-    "file": "assets/staff.8dea2bf8.js",
+    "file": "assets/staff.6b318d6f.js",
     "src": "src/js/staff.ts",
     "isEntry": true,
     "css": [
-      "assets/staff.d570683b.css"
+      "assets/staff.aafbd7bc.css"
     ]
   },
   "src/js/tiptap.ts": {

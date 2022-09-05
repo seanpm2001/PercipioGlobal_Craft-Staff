@@ -82,6 +82,11 @@ class BenefitVariant extends Element
                 'name' => 'policy',
                 'type' => Policy::getType(),
                 'description' => 'Get policy information'
+            ],
+            'employees' => [
+                'name' => 'employees',
+                'type' => Type::listOf(\percipiolondon\staff\gql\types\Employee::getType()),
+                'description' => 'Get employees'
             ]
         ];
 

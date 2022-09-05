@@ -8,6 +8,7 @@ use craft\elements\db\ElementQueryInterface;
 use craft\web\Request;
 use percipiolondon\staff\elements\db\BenefitVariantQuery;
 use percipiolondon\staff\helpers\variants\VariantDental;
+use percipiolondon\staff\records\BenefitEmployeeVariant;
 use percipiolondon\staff\records\BenefitPolicy;
 use percipiolondon\staff\records\BenefitType;
 use percipiolondon\staff\records\TotalRewardsStatement;
@@ -24,6 +25,7 @@ class BenefitVariant extends Element
     private ?array $_totalRewardsStatement = null;
     private ?array $_policy = null;
     private ?array $_provider = null;
+    private ?array $_employees = null;
 
     /**
      * @return string
@@ -131,6 +133,20 @@ class BenefitVariant extends Element
             $this->_provider = BenefitProvider::findOne($this->_policy['providerId'])->toArray();
 
             return $this->_provider;
+        }
+    }
+
+    public function getEmployees(): ?array
+    {
+        if ($this->_employees === null) {
+            $variantEmployees = BenefitEmployeeVariant::findAll(['variantId' => $this->id]);
+
+            $this->_employees = [];
+            foreach($variantEmployees as $employee) {
+                $this->_employees[] = Employee::findOne($employee);
+            }
+
+            return $this->_employees;
         }
     }
 

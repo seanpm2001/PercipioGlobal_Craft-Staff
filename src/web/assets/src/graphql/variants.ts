@@ -21,6 +21,19 @@ export const VARIANTS = gql`
                   commissionRate
                   description
             }
+            totalRewardsStatement {
+                  title
+                  monetaryValue
+                  startDate
+                  endDate
+            }
+            employees {
+                  id
+                  personalDetails{
+                        firstName
+                        lastName
+                  }
+            }
         }
     }
 `
