@@ -11,7 +11,6 @@ use percipiolondon\staff\elements\BenefitVariant;
 use percipiolondon\staff\records\BenefitPolicy;
 use percipiolondon\staff\records\BenefitType;
 use percipiolondon\staff\elements\Employer;
-use percipiolondon\staff\records\BenefitVariantDental;
 use percipiolondon\staff\records\TotalRewardsStatement;
 use percipiolondon\staff\Staff;
 use yii\web\NotFoundHttpException;
@@ -101,6 +100,13 @@ class BenefitController extends Controller
         // Render the template
         return $this->renderTemplate('staff-management/benefits/employers/detail', $variables);
     }
+
+
+
+
+    /* -------------------------------
+     * POLICIES
+     --------------------------------- */
 
     /**
      * @param int $employerId
@@ -293,6 +299,51 @@ class BenefitController extends Controller
         $policy->delete();
 
         return $this->redirect('/admin/staff-management/benefits/employers/' . $employer->id);
+    }
+
+
+
+
+    /* -------------------------------
+     * VARIANTS
+     --------------------------------- */
+
+    /**
+     * @param int $variantId
+     * @param int $policyId
+     * @return Response
+     * @throws NotFoundHttpException
+     */
+    public function actionVariant(int $variantId): Response
+    {
+        $this->requireLogin();
+
+        $variant = BenefitVariant::findOne($variantId);
+
+        if(is_null($variant)) {
+            throw new NotFoundHttpException('Variant does not exist');
+        }
+
+        $policy = $variant->getPolicy();
+        $benefitType = BenefitType::findOne($policy->benefitTypeId ?? null);
+
+        $variantValues = $variant->toArray();
+        $variantValues['policy'] = $policy;
+        $variantValues['benefitType'] = $benefitType;
+        $variantValues = array_merge($variantValues, $variant->getValues($benefitType->name ?? ''));
+
+        $pluginName = Staff::$settings->pluginName;
+        $templateTitle = Craft::t('staff-management', 'Variant');
+
+        $variables = [];
+        $variables['pluginName'] = $pluginName;
+        $variables['title'] = $templateTitle;
+        $variables['docTitle'] = "{$pluginName} - {$templateTitle}";
+        $variables['selectedSubnavItem'] = 'benefits';
+        $variables['variant'] = $variantValues;
+
+        // Render the template
+        return $this->renderTemplate('staff-management/benefits/variant', $variables);
     }
 
     public function actionVariantAdd(int $policyId): Response

@@ -29,7 +29,7 @@ const { result, loading } = useQuery(VARIANTS)
     </svg>
 
     <div class="grid sm:grid-cols-2 md:grid-cols-3" v-if="result">
-        <a :href="`/admin/staff-management/benefits/policy/${variant?.policy?.id}/variants/${variant.id}`" class="bg-white shadow rounded-lg overflow-hidden no-underline p-4" v-for="variant in result?.BenefitVariants">
+        <a :href="`/admin/staff-management/benefits/variant/${variant.id}`" class="bg-white shadow rounded-lg overflow-hidden no-underline p-4" v-for="variant in result?.BenefitVariants">
             <h2 class="text-base mb-1 pt-0 w-full" style="margin-right:0!important;">{{ variant.name }}</h2>
             <h3 class="font-light text-4xl text-indigo-900 mt-2 mb-4 w-full" style="margin-right:0!important;">
                 £ {{ variant?.totalRewardsStatement?.monetaryValue ?? '-' }}

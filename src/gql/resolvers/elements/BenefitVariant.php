@@ -9,8 +9,6 @@ use craft\gql\base\ElementResolver;
 use percipiolondon\staff\db\Table;
 use percipiolondon\staff\elements\BenefitVariant as Element;
 use percipiolondon\staff\helpers\Gql as GqlHelper;
-use percipiolondon\staff\records\BenefitEmployeeVariant;
-use yii\base\BaseObject;
 
 class BenefitVariant extends ElementResolver
 {
@@ -21,8 +19,8 @@ class BenefitVariant extends ElementResolver
 
             if (is_null($employeeId)) {
                 $query = Element::find();
-//                \Craft::dd($query->getRawSql());
             } else {
+                // fetch variants only attached to employee
                 $employees = (new Query())
                     ->from(Table::BENEFIT_EMPLOYEES_VARIANTS)
                     ->select('*')

@@ -7,6 +7,7 @@ use DateTime;
 use craft\base\Element;
 use craft\elements\db\ElementQueryInterface;
 use craft\web\Request;
+use percipiolondon\staff\db\Table;
 use percipiolondon\staff\elements\db\BenefitVariantQuery;
 use percipiolondon\staff\helpers\variants\VariantGcic;
 use percipiolondon\staff\records\BenefitEmployeeVariant;
@@ -15,6 +16,7 @@ use percipiolondon\staff\records\BenefitType;
 use percipiolondon\staff\records\BenefitVariantGcic;
 use percipiolondon\staff\records\TotalRewardsStatement;
 use percipiolondon\staff\records\BenefitVariant as BenefitVariantRecord;
+use yii\base\BaseObject;
 use yii\web\NotFoundHttpException;
 
 /**
@@ -196,6 +198,14 @@ class BenefitVariant extends Element
         }
 
         return null;
+    }
+
+    public function getValues(string $benefitTypeName): ?array
+    {
+        return match ($benefitTypeName ?? '') {
+            'Group Critical Illness Cover' => $this->_gcic ? $this->_gcic->toArray() : $this->getGcic()->toArray(),
+            default => null
+        };
     }
 
     /**

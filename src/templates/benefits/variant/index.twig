@@ -1,0 +1,116 @@
+{%- requirePermission "hub:group-benefits" -%}
+
+{%- extends 'staff-management/_layouts/hub-cp.twig' -%}
+
+{%- set sidebar -%}
+    {%- include "staff-management/benefits/_nav" -%}
+{%- endset -%}
+
+{%- set content -%}
+
+    {%- set status = {
+        'active': 'bg-emerald-300 text-emerald-900',
+        'inactive': 'bg-red-300 text-red-900'
+    } -%}
+
+    <div class="md:flex items-start">
+        <div class="flex-grow pr-4 mb-0">
+            <div class="flex items-center">
+                <div class="flex items-center mb-0">
+{#                    {{url('staff-management') ~ '/benefits/employers/' ~ employer.id }}#}
+                    <a href="#" title="Go back to overview" class="inline-flex no-underline items-center px-2.5 py-1.5 rounded-full text-sm text-indigo-700 bg-indigo-100 hover:bg-indigo-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 mb-0">&larr;</a>
+                    <h1 class="ml-2 text-xl font-semibold text-gray-900">
+                        {{ variant.name }}
+                    </h1>
+                </div>
+            </div>
+            <p class="mt-2 text-sm text-gray-700">
+                text
+            </p>
+        </div>
+        <div class="mt-4 md:mt-0 flex">
+            <a href="staff-management/benefits/variant/{{- variant.id -}}/edit" class="cursor-pointer inline-flex items-center justify-center rounded-md border border-transparent bg-indigo-600 disabled:bg-indigo-400 disabled:cursor-not-allowed px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 sm:w-auto">Edit Variant</a>
+        </div>
+    </div>
+
+    <section class="mt-8 grid grid-cols-1 md:grid-cols-2 gap-4">
+        <div>
+            <span class="text-xs font-bold text-gray-400 block mb-2">Variant Name</span>
+            <span class="text-base block capitalize">{{ variant.name ?? '-' }}</span>
+        </div>
+{#        <div>#}
+{#            <span class="text-xs font-bold text-gray-400 block mb-2">Policy Number</span>#}
+{#            <span class="text-base block capitalize">{{ policy.policyNumber ?? '-' }}</span>#}
+{#        </div>#}
+{#        <div>#}
+{#            <span class="text-xs font-bold text-gray-400 block mb-2">Policy Holder</span>#}
+{#            <span class="text-base block capitalize">{{ policy.policyHolder ?? '-' }}</span>#}
+{#        </div>#}
+{#        <div>#}
+{#            <span class="text-xs font-bold text-gray-400 block mb-2">Internal Code</span>#}
+{#            <span class="text-base block capitalize">{{ policy.internalCode ?? '-' }}</span>#}
+{#        </div>#}
+{#        <div>#}
+{#            <span class="text-xs font-bold text-gray-400 block mb-2">Start date</span>#}
+{#            <span class="text-base block capitalize">{{ policy.policyStartDate ?? '-' }}</span>#}
+{#        </div>#}
+{#        <div>#}
+{#            <span class="text-xs font-bold text-gray-400 block mb-2">Renewal Date</span>#}
+{#            <span class="text-base block capitalize">{{ policy.policyRenewalDate ?? '-' }}</span>#}
+{#        </div>#}
+{#        <div>#}
+{#            <span class="text-xs font-bold text-gray-400 block mb-2">Payment Frequency</span>#}
+{#            <span class="text-base block capitalize">{{ policy.paymentFrequency ?? '-' }}</span>#}
+{#        </div>#}
+{#        <div>#}
+{#            <span class="text-xs font-bold text-gray-400 block mb-2">Comission Rate</span>#}
+{#            <span class="text-base block capitalize">{{ policy.commissionRate ?? '-' }}</span>#}
+{#        </div>#}
+{#        <div>#}
+{#            <span class="text-xs font-bold text-gray-400 block mb-2">Description</span>#}
+{#            <span class="text-base block">{{ policy.description ?? '-' }}</span>#}
+{#        </div>#}
+    </section>
+
+    {# VARIANTS #}
+    <section class="mt-8 bg-gray-100 pl-6 pb-6 pt-10 -mt-2.5 -ml-6 relative">
+
+        <div class="md:flex items-start">
+            <div class="flex-grow pr-4 mb-0">
+                <div class="flex items-center mb-0">
+                    <div class="flex items-center mb-0">
+                        <h1 class="text-xl font-semibold text-gray-900">
+                            Employees
+                        </h1>
+                    </div>
+                </div>
+                <p class="text-sm text-gray-700 mt-2">
+                    These are the employees who are attached to this variant
+                </p>
+            </div>
+        </div>
+
+        <div class="mt-8" id="benefit-variants-container"></div>
+
+        <div class="block bg-gray-100 w-6 left-full pb-6 top-0 h-full absolute"></div>
+        <div class="block bg-gray-100 h-6 top-full left-0 w-full absolute"></div>
+    </section>
+
+    <section class="flex justify-end absolute top-full text-right mt-4 w-full box-border left-0 pr-6">
+        <div id="benefit-employees-container"></div>
+    </section>
+
+{%- endset -%}
+
+{%- block foot -%}
+    <script>
+        const policyId = "{{ policy['id'] ?? null }}"
+    </script>
+    {{ parent() }}
+    {%- set tagOptions = {
+        'depends': [
+            'percipiolondon\\staff\\assetbundles\\staff\\StaffAsset'
+        ]
+    } -%}
+    {{  craft.staff.register('src/js/benefit-employees.ts', false, tagOptions) }}
+{%- endblock -%}

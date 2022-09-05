@@ -414,12 +414,14 @@ class Staff extends Plugin
             'staff-management/benefits/employers' => 'staff-management/benefit',
             'staff-management/benefits/employers/<employerId:\d+>' => 'staff-management/benefit/detail',
             // benefit policy
-            'staff-management/benefits/employers/<employerId:\d+>/policy/<policyId:\d>' => 'staff-management/benefit/policy',
-            'staff-management/benefits/employers/<employerId:\d+>/policy/<benefitTypeId:\d>/add' => 'staff-management/benefit/policy-add',
-            'staff-management/benefits/employers/<employerId:\d+>/policy/<policyId:\d>/edit' => 'staff-management/benefit/policy-edit',
+            'staff-management/benefits/employers/<employerId:\d+>/policy/<policyId:\d+>' => 'staff-management/benefit/policy',
+            'staff-management/benefits/employers/<employerId:\d+>/policy/<benefitTypeId:\d+>/add' => 'staff-management/benefit/policy-add',
+            'staff-management/benefits/employers/<employerId:\d+>/policy/<policyId:\d+>/edit' => 'staff-management/benefit/policy-edit',
             'staff-management/benefits/policy/<policyId:\d>/delete' => 'staff-management/benefit/policy-delete',
             // benefit policy variants
-            'staff-management/benefits/policy/<policyId:\d>/variants/add' => 'staff-management/benefit/variant-add',
+            'staff-management/benefits/variant/<variantId:\d+>' => 'staff-management/benefit/variant',
+            'staff-management/benefits/policy/<policyId:\d+>/variants/add' => 'staff-management/benefit/variant-add',
+            'staff-management/benefits/variant/<variantId:\d+>/edit' => 'staff-management/benefit/variant-edit',
             // pay runs
             'staff-management/pay-runs' => 'staff-management/pay-run',
             'staff-management/pay-runs/queue' => 'staff-management/pay-run/get-queue',
