@@ -14,6 +14,13 @@ class Gql extends CraftGql
     {
         return CraftGql::canSchema('benefit-providers');
     }
+    /**
+     * @throws \craft\errors\GqlException
+     */
+    public static function canQueryGroupBenefits(): bool
+    {
+        return CraftGql::canSchema('group-benefits');
+    }
 
     /**
      * @throws \craft\errors\GqlException

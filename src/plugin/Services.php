@@ -3,9 +3,9 @@
 namespace percipiolondon\staff\plugin;
 
 use percipiolondon\staff\services\Addresses;
+use percipiolondon\staff\services\Benefits;
 use percipiolondon\staff\services\Employees;
 use percipiolondon\staff\services\Employers;
-use percipiolondon\staff\services\GroupBenefits;
 use percipiolondon\staff\services\History;
 use percipiolondon\staff\services\Notifications;
 use percipiolondon\staff\services\PayOptions;
@@ -25,7 +25,7 @@ trait Services
             'addresses' => Addresses::class,
             'employers' => Employers::class,
             'employees' => Employees::class,
-            'groupBenefits' => GroupBenefits::class,
+            'benefits' => Benefits::class,
             'history' => History::class,
             'notifications' => Notifications::class,
             'payOptions' => PayOptions::class,

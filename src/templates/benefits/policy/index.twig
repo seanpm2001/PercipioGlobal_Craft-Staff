@@ -97,17 +97,7 @@
             </div>
         </div>
 
-        <div class="mt-8">
-            {%- if variants|length > 0 -%}
-                {%- for variant in variants -%}
-                    <pre>
-                        {{ dump(variant) }}
-                    </pre>
-                {%- endfor -%}
-            {%- else -%}
-                <i class="text-gray-500">There are currently no variants in this Policy</i>
-            {%- endif -%}
-        </div>
+        <div class="mt-8" id="benefit-variants"></div>
 
         <div class="block bg-gray-100 w-6 left-full pb-6 top-0 h-full absolute"></div>
         <div class="block bg-gray-100 h-6 top-full left-0 w-full absolute"></div>

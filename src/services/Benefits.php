@@ -11,12 +11,16 @@
 namespace percipiolondon\staff\services;
 
 use craft\base\Component;
+use craft\base\Element;
 use craft\helpers\DateTimeHelper;
+use percipiolondon\staff\elements\BenefitVariant;
 use percipiolondon\staff\records\BenefitPolicy;
 use percipiolondon\staff\records\BenefitVariantGcic;
 use percipiolondon\staff\records\BenefitVariantGdis;
+use percipiolondon\staff\records\TotalRewardsStatement;
+use yii\web\Request;
 
-class GroupBenefits extends Component
+class Benefits extends Component
 {
     // Public Methods
     // =========================================================================

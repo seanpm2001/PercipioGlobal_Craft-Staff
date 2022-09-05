@@ -20,9 +20,9 @@ abstract class Table
     const BENEFIT_VARIANT_GDIS = "{{%staff_benefit_variant_gdis%}}";
     const BENEFIT_VARIANT_GIP = "{{%staff_benefit_variant_gip%}}";
     const BENEFIT_VARIANT_GLA = "{{%staff_benefit_variant_gla%}}";
-    const BENEFIT_VARIANT_HCP = "{{%staff_benefit_type_hcp%}}";
-    const BENEFIT_VARIANT_HS = "{{%staff_benefit_type_hs%}}";
-    const BENEFIT_VARIANT_PMI = "{{%staff_benefit_type_pmi%}}";
+    const BENEFIT_VARIANT_HCP = "{{%staff_benefit_variant_hcp%}}";
+    const BENEFIT_VARIANT_HS = "{{%staff_benefit_variant_hs%}}";
+    const BENEFIT_VARIANT_PMI = "{{%staff_benefit_variant_pmi%}}";
     const CIS_DETAILS = "{{%staff_cis_details}}";
     const CIS_PARTNERSHIP = "{{%staff_cis_partnership}}";
     const CIS_SUBCONTRACTOR = "{{%staff_cis_subcontractor}}";

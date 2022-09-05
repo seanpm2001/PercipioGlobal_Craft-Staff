@@ -28,13 +28,14 @@ class m220829_131828_group_benefits extends Migration
 
     public function deleteBenefitTypes(): void
     {
-        if(Craft::$app->db->schema->getTableSchema('{{%staff_benefit_type_dental%}}') !== null){ $this->dropTable('{{%staff_benefit_type_dental%}}'); }
-        if(Craft::$app->db->schema->getTableSchema('{{%staff_benefit_type_group_critical_illness_cover%}}') !== null){ $this->dropTable('{{%staff_benefit_type_group_critical_illness_cover%}}'); }
-        if(Craft::$app->db->schema->getTableSchema('{{%staff_benefit_type_group_death_in_service%}}') !== null){ $this->dropTable('{{%staff_benefit_type_group_death_in_service%}}'); }
-        if(Craft::$app->db->schema->getTableSchema('{{%staff_benefit_type_group_income_protection%}}') !== null){ $this->dropTable('{{%staff_benefit_type_group_income_protection%}}'); }
-        if(Craft::$app->db->schema->getTableSchema('{{%staff_benefit_type_group_life_assurance%}}') !== null){ $this->dropTable('{{%staff_benefit_type_group_life_assurance%}}'); }
-        if(Craft::$app->db->schema->getTableSchema('{{%staff_benefit_type_health_cash_plan%}}') !== null){ $this->dropTable('{{%staff_benefit_type_health_cash_plan%}}'); }
-        if(Craft::$app->db->schema->getTableSchema('{{%staff_benefit_type_private_medical_insurance%}}') !== null){ $this->dropTable('{{%staff_benefit_type_private_medical_insurance%}}'); }
+        if(Craft::$app->db->schema->getTableSchema('{{%staff_benefit_variant_dental%}}') !== null){ $this->dropTable('{{%staff_benefit_variant_dental%}}'); }
+        if(Craft::$app->db->schema->getTableSchema('{{%staff_benefit_variant_gcic%}}') !== null){ $this->dropTable('{{%staff_benefit_variant_gcic%}}'); }
+        if(Craft::$app->db->schema->getTableSchema('{{%staff_benefit_variant_gdis%}}') !== null){ $this->dropTable('{{%staff_benefit_variant_gdis%}}'); }
+        if(Craft::$app->db->schema->getTableSchema('{{%staff_benefit_variant_gip%}}') !== null){ $this->dropTable('{{%staff_benefit_variant_gip%}}'); }
+        if(Craft::$app->db->schema->getTableSchema('{{%staff_benefit_variant_gla%}}') !== null){ $this->dropTable('{{%staff_benefit_variant_gla%}}'); }
+        if(Craft::$app->db->schema->getTableSchema('{{%staff_benefit_variant_hcp%}}') !== null){ $this->dropTable('{{%staff_benefit_variant_hcp%}}'); }
+        if(Craft::$app->db->schema->getTableSchema('{{%staff_benefit_variant_hs%}}') !== null){ $this->dropTable('{{%staff_benefit_variant_hs%}}'); }
+        if(Craft::$app->db->schema->getTableSchema('{{%staff_benefit_variant_pmi%}}') !== null){ $this->dropTable('{{%staff_benefit_variant_pmi%}}'); }
     }
 
     public function createTables(): bool
@@ -134,6 +135,7 @@ class m220829_131828_group_benefits extends Migration
             ]);
 
             // foreign key
+            $this->addForeignKey(null, Table::BENEFIT_VARIANT_DENTAL, ['id'], \craft\db\Table::ELEMENTS, ['id'], 'CASCADE', 'CASCADE');
             $this->addForeignKey(null, Table::BENEFIT_VARIANT_DENTAL, ['trsId'], Table::BENEFIT_TRS, ['id'], 'CASCADE', 'CASCADE');
             $this->addForeignKey(null, Table::BENEFIT_VARIANT_DENTAL, ['policyId'], Table::BENEFIT_POLICIES, ['id'], 'CASCADE', 'CASCADE');
         }
@@ -148,12 +150,12 @@ class m220829_131828_group_benefits extends Migration
                 //FK
                 //intern
                 'employeeId' => $this->integer(),
-                'dentalId' => $this->integer()
+                'variantId' => $this->integer()
             ]);
 
             // foreign key
             $this->addForeignKey(null, Table::BENEFIT_EMPLOYEES_VARIANTS, ['employeeId'], Table::EMPLOYEES, ['id'], 'CASCADE', 'CASCADE');
-            $this->addForeignKey(null, Table::BENEFIT_EMPLOYEES_VARIANTS, ['dentalId'], Table::BENEFIT_VARIANT_DENTAL, ['id'], 'CASCADE', 'CASCADE');
+            $this->addForeignKey(null, Table::BENEFIT_EMPLOYEES_VARIANTS, ['variantId'], \craft\db\Table::ELEMENTS, ['id'], 'CASCADE', 'CASCADE');
         }
 
         return true;

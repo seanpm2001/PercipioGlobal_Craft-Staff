@@ -11,7 +11,6 @@
 namespace percipiolondon\staff;
 
 use Craft;
-use craft\base\Element;
 use craft\base\Plugin;
 use craft\console\Application as ConsoleApplication;
 use craft\elements\User;
@@ -22,12 +21,10 @@ use craft\events\RegisterGqlSchemaComponentsEvent;
 use craft\events\RegisterGqlTypesEvent;
 use craft\events\RegisterUrlRulesEvent;
 use craft\events\RegisterUserPermissionsEvent;
-use craft\events\UserEvent;
 use craft\helpers\UrlHelper;
 use craft\services\Elements;
 use craft\services\Gql;
 use craft\services\UserPermissions;
-use craft\services\Users;
 use craft\web\twig\variables\CraftVariable;
 use craft\web\UrlManager;
 
@@ -35,6 +32,7 @@ use nystudio107\pluginvite\services\VitePluginService;
 
 use percipiolondon\staff\assetbundles\staff\StaffAsset;
 use percipiolondon\staff\elements\BenefitProvider;
+use percipiolondon\staff\elements\BenefitVariant;
 use percipiolondon\staff\elements\Employee as EmployeeElement;
 use percipiolondon\staff\elements\Employer as EmployerElement;
 use percipiolondon\staff\elements\History as HistoryElement;
@@ -44,6 +42,7 @@ use percipiolondon\staff\elements\PayRunEntry as PayRunEntryElement;
 use percipiolondon\staff\elements\Request as RequestElement;
 use percipiolondon\staff\elements\SettingsEmployee;
 use percipiolondon\staff\gql\interfaces\elements\BenefitProvider as BenefitProviderInterface;
+use percipiolondon\staff\gql\interfaces\elements\BenefitVariant as BenefitVariantInterface;
 use percipiolondon\staff\gql\interfaces\elements\Employer as EmployerInterface;
 use percipiolondon\staff\gql\interfaces\elements\Employee as EmployeeInterface;
 use percipiolondon\staff\gql\interfaces\elements\History as HistoryInterface;
@@ -55,6 +54,7 @@ use percipiolondon\staff\gql\mutations\NotificationMutation;
 use percipiolondon\staff\gql\mutations\RequestMutation;
 use percipiolondon\staff\gql\mutations\SettingsEmployeeMutation;
 use percipiolondon\staff\gql\queries\BenefitProvider as BenefitProviderQueries;
+use percipiolondon\staff\gql\queries\BenefitVariant as BenefitVariantQueries;
 use percipiolondon\staff\gql\queries\Employee as EmployeeQueries;
 use percipiolondon\staff\gql\queries\Employer as EmployerQueries;
 use percipiolondon\staff\gql\queries\History as HistoryQueries;
@@ -69,7 +69,7 @@ use percipiolondon\staff\plugin\Services as StaffServices;
 use percipiolondon\staff\services\Addresses;
 use percipiolondon\staff\services\Employees;
 use percipiolondon\staff\services\Employers;
-use percipiolondon\staff\services\GroupBenefits;
+use percipiolondon\staff\services\Benefits;
 use percipiolondon\staff\services\Notifications;
 use percipiolondon\staff\services\PayOptions;
 use percipiolondon\staff\services\PayRunEntries;
@@ -98,7 +98,7 @@ use yii\base\ModelEvent;
  * @property  Settings              $settings
  * @property  VitePluginService     $vite
  * @property  Addresses $addresses
- * @property  GroupBenefits $groupBenefits
+ * @property  Benefits $benefits
  * @property  Employees $employees
  * @property  Employers $employers
  * @property  Notifications $notifications
@@ -507,6 +507,7 @@ class Staff extends Plugin
             Gql::EVENT_REGISTER_GQL_TYPES,
             function(RegisterGqlTypesEvent $event) {
                 $event->types[] = BenefitProviderInterface::class;
+                $event->types[] = BenefitVariantInterface::class;
                 $event->types[] = EmployerInterface::class;
                 $event->types[] = EmployeeInterface::class;
                 $event->types[] = HistoryInterface::class;
@@ -526,7 +527,7 @@ class Staff extends Plugin
             function(RegisterGqlSchemaComponentsEvent $event) {
                 $event->queries = array_merge($event->queries, [
                     'Staff Management' => [
-                        'benefits:read' => ['label' => Craft::t('staff-management', 'View Benefits')],
+                        'group-benefits:read' => ['label' => Craft::t('staff-management', 'View Group Benefits')],
                         'employers:read' => ['label' => Craft::t('staff-management', 'View Employers')],
                         'employees:read' => ['label' => Craft::t('staff-management', 'View Employees')],
                         'history:read' => ['label' => Craft::t('staff-management', 'View History')],
@@ -559,6 +560,7 @@ class Staff extends Plugin
                 $event->queries = array_merge(
                     $event->queries,
                     BenefitProviderQueries::getQueries(),
+                    BenefitVariantQueries::getQueries(),
                     EmployerQueries::getQueries(),
                     EmployeeQueries::getQueries(),
                     HistoryQueries::getQueries(),
@@ -597,6 +599,7 @@ class Staff extends Plugin
             Elements::EVENT_REGISTER_ELEMENT_TYPES,
             function(RegisterComponentTypesEvent $event) {
                 $event->types[] = BenefitProvider::class;
+                $event->types[] = BenefitVariant::class;
                 $event->types[] = EmployerElement::class;
                 $event->types[] = EmployeeElement::class;
                 $event->types[] = HistoryElement::class;
