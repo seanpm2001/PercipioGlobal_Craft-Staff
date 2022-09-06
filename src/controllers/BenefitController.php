@@ -325,11 +325,10 @@ class BenefitController extends Controller
         }
 
         $policy = $variant->getPolicy();
+        $trs = $variant->getTotalRewardsStatement();
         $benefitType = BenefitType::findOne($policy->benefitTypeId ?? null);
 
         $variantValues = $variant->toArray();
-        $variantValues['policy'] = $policy;
-        $variantValues['benefitType'] = $benefitType;
         $variantValues = array_merge($variantValues, $variant->getValues($benefitType->name ?? ''));
 
         $pluginName = Staff::$settings->pluginName;
@@ -341,6 +340,9 @@ class BenefitController extends Controller
         $variables['docTitle'] = "{$pluginName} - {$templateTitle}";
         $variables['selectedSubnavItem'] = 'benefits';
         $variables['variant'] = $variantValues;
+        $variables['benefitType'] = $benefitType;
+        $variables['policy'] = $policy;
+        $variables['trs'] = $trs;
 
         // Render the template
         return $this->renderTemplate('staff-management/benefits/variant', $variables);

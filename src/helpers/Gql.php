@@ -107,6 +107,14 @@ class Gql extends CraftGql
     /**
      * @throws \craft\errors\GqlException
      */
+    public static function canMutateBenefitEmployees(): bool
+    {
+        return CraftGql::canSchema('benefits-employees','create');
+    }
+
+    /**
+     * @throws \craft\errors\GqlException
+     */
     public static function canMutateNotifications(): bool
     {
         return CraftGql::canSchema('notifications','update');
