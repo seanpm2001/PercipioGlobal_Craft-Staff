@@ -21,7 +21,8 @@ class BenefitVariantEmployee extends ElementMutationResolver
         $employee = null;
         $variantIds = [];
 
-        $policy = BenefitPolicy::findOne($arguments['policyId'] ?? null);
+        $variant = BenefitVariant::findOne($arguments['variantId']);
+        $policy = BenefitPolicy::findOne($variant['policyId'] ?? null);
 
         if ($policy) {
             //get all variants from the policy and collect their ids
@@ -30,10 +31,13 @@ class BenefitVariantEmployee extends ElementMutationResolver
                 $variantIds[] = $variant['id'];
             }
 
-            $benefitVariantEmployee = BenefitEmployeeVariant::findOne(['variantId' => $variants, 'employeeId' => $arguments['employeeId']]);
+            $benefitVariantEmployee = BenefitEmployeeVariant::findOne(['variantId' => $variantIds, 'employeeId' => $arguments['employeeId']]);
 
-            if (!$benefitVariantEmployee) {
-
+            if (is_null($benefitVariantEmployee)) {
+                $employee = new BenefitEmployeeVariant();
+                $employee->employeeId = $arguments['employeeId'];
+                $employee->variantId = $arguments['variantId'];
+                $employee->save();
             }
         }
 

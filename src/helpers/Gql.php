@@ -109,7 +109,7 @@ class Gql extends CraftGql
      */
     public static function canMutateBenefitEmployees(): bool
     {
-        return CraftGql::canSchema('benefits-employees','create');
+        return CraftGql::canSchema('benefit-employees','create');
     }
 
     /**

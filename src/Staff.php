@@ -50,6 +50,7 @@ use percipiolondon\staff\gql\interfaces\elements\Notification as NotificationInt
 use percipiolondon\staff\gql\interfaces\elements\PayRun as PayRunInterface;
 use percipiolondon\staff\gql\interfaces\elements\PayRunEntry as PayRunEntryInterface;
 use percipiolondon\staff\gql\interfaces\elements\Request as RequestInterface;
+use percipiolondon\staff\gql\mutations\BenefitVariantEmployeesMutation;
 use percipiolondon\staff\gql\mutations\NotificationMutation;
 use percipiolondon\staff\gql\mutations\RequestMutation;
 use percipiolondon\staff\gql\mutations\SettingsEmployeeMutation;
@@ -544,6 +545,7 @@ class Staff extends Plugin
 
                 $event->mutations = array_merge($event->mutations, [
                     'Staff Management' => [
+                        'benefit-employees:create' => ['label' => Craft::t('staff-management', 'Add Employees To A Benefit Variant')],
                         'notifications:update' => ['label' => Craft::t('staff-management', 'Update Notifications')],
                         'requests:create' => ['label' => Craft::t('staff-management', 'Edit Requests')],
                         'settings-employee:update' => ['label' => Craft::t('staff-management', 'Update Employee Settings')],
@@ -585,6 +587,7 @@ class Staff extends Plugin
             function(RegisterGqlMutationsEvent $event) {
                 $event->mutations = array_merge(
                     $event->mutations,
+                    BenefitVariantEmployeesMutation::getMutations(),
                     NotificationMutation::getMutations(),
                     RequestMutation::getMutations(),
                     SettingsEmployeeMutation::getMutations(),

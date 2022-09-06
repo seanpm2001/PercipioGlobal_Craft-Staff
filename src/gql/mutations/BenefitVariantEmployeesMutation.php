@@ -5,9 +5,10 @@ namespace percipiolondon\staff\gql\mutations;
 use Craft;
 use craft\gql\types\DateTime;
 use percipiolondon\staff\gql\interfaces\elements\Request;
+use percipiolondon\staff\gql\types\Employee;
 use percipiolondon\staff\helpers\Gql as GqlHelper;
 use craft\gql\base\Mutation;
-use percipiolondon\staff\gql\resolvers\mutations\Request as Resolver;
+use percipiolondon\staff\gql\resolvers\mutations\BenefitVariantEmployee as Resolver;
 use GraphQL\Type\Definition\Type;
 
 class BenefitVariantEmployeesMutation extends Mutation
@@ -26,15 +27,12 @@ class BenefitVariantEmployeesMutation extends Mutation
         $mutations['AddEmployee'] = [
             'name' => 'AddEmployee',
             'args' => [
-                'data' => Type::nonNull(Type::String()),
-                'employerId' => Type::nonNull(Type::int()),
                 'employeeId' => Type::nonNull(Type::int()),
-                'type' => Type::nonNull(Type::String()),
-                'status' => Type::String(),
+                'variantId' => Type::nonNull(Type::int()),
             ],
             'resolve' => [$resolver, 'addEmployee'],
-            'description' => 'Saves a new request.',
-            'type' => Request::getType()
+            'description' => 'Add a new employee to a variant',
+            'type' => Employee::getType()
         ];
 
         // Delete a benefit variant employee

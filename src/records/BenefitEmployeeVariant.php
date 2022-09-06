@@ -17,7 +17,7 @@ use percipiolondon\staff\db\Table;
 /**
  * @property integer $id
  * @property integer $employeeId
- * @property integer $dentalId
+ * @property integer $variantId
  *
  */
 
