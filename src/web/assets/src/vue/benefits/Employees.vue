@@ -1,12 +1,12 @@
 <script setup lang="ts">
 import { ref } from 'vue';
 import { VueDraggableNext } from 'vue-draggable-next'
-import { useQuery } from '@vue/apollo-composable'
-import { VARIANT_ELIGIBLE_EMPLOYEES } from '~/graphql/variants.ts'
-import { VARIANT } from '~/graphql/variants.ts'
+import {useMutation, useQuery} from '@vue/apollo-composable'
+import { VARIANT_ELIGIBLE_EMPLOYEES, VARIANT, ADD_VARIANT_EMPLOYEE } from '~/graphql/variants.ts'
 
 const { result:employees, loading:loadingEmployees, refetch:refetchEligibleEmployees } = useQuery(VARIANT_ELIGIBLE_EMPLOYEES, {'policyId': parseInt(policyId)})
 const { result:variant, loading:loadingVariant, refetch:refetchVariant, onResult } = useQuery(VARIANT, {'id': parseInt(variantId)})
+const { mutate, onDone } = useMutation(ADD_VARIANT_EMPLOYEE)
 const list2 = ref([])
 
 const handleRemove = (id) => {
@@ -15,11 +15,23 @@ const handleRemove = (id) => {
 
 const handleUpdate = (evt) => {
     console.log("handleUpdate", evt)
+    if(evt?.added) {
+        mutate({
+            variantId: parseInt(variantId),
+            employeeId: parseInt(evt.added.element.id)
+        })
+    }
 }
 
 onResult(queryResult => {
     list2.value = queryResult.data.BenefitVariant.employees
 })
+
+onDone( queryResult => {
+    refetchEligibleEmployees()
+    refetchVariant()
+})
+
 </script>
 
 <template>

@@ -1,6 +1,4 @@
-import { gql } from 'graphql-tag'
-
-export const VARIANT = gql`
+import{g as e}from"./useApolloClient.457b3af6.js";const a=e`
     query BenefitVariant($id: [QueryArgument]) {
         BenefitVariant(id: $id) {
             id
@@ -36,9 +34,7 @@ export const VARIANT = gql`
             }
         }
     }
-`
-
-export const VARIANTS = gql`
+`,i=e`
     query BenefitVariants($employeeId: Int, $policyId: Int) {
         BenefitVariants(policyId: $policyId, employeeId: $employeeId) {
             id
@@ -74,9 +70,7 @@ export const VARIANTS = gql`
             }
         }
     }
-`
-
-export const VARIANT_ELIGIBLE_EMPLOYEES = gql`
+`,l=e`
     query BenefitVariantEligibleEmployees($policyId: Int!) {
           BenefitVariantEligibleEmployees(policyId: $policyId) {
                 id,
@@ -87,9 +81,7 @@ export const VARIANT_ELIGIBLE_EMPLOYEES = gql`
           }
     }
 
-`
-
-export const ADD_VARIANT_EMPLOYEE = gql`
+`,o=e`
     mutation AddEmployee($employeeId: Int!, $variantId: Int!) {
           AddEmployee(employeeId: $employeeId, variantId: $variantId) {
                 id,
@@ -100,4 +92,5 @@ export const ADD_VARIANT_EMPLOYEE = gql`
           }
     }
 
-`
+`;export{o as A,l as V,a,i as b};
+//# sourceMappingURL=variants.ff3b683a.js.map

@@ -1,6 +1,6 @@
 {% macro show_number(n) %}
     {%- spaceless %}
         {% set decimals = n | split('.')[1] | default('') | length %}
-        {{ n | number_format(decimals, '.', ',') }}
+        £ {{ n | number_format(decimals, '.', ',') }}
     {% endspaceless -%}
 {% endmacro %}
