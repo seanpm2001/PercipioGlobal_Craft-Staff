@@ -15,15 +15,10 @@ use craft\base\Plugin;
 use craft\console\Application as ConsoleApplication;
 use craft\elements\User;
 use craft\events\RegisterComponentTypesEvent;
-use craft\events\RegisterGqlMutationsEvent;
-use craft\events\RegisterGqlQueriesEvent;
-use craft\events\RegisterGqlSchemaComponentsEvent;
-use craft\events\RegisterGqlTypesEvent;
 use craft\events\RegisterUrlRulesEvent;
 use craft\events\RegisterUserPermissionsEvent;
 use craft\helpers\UrlHelper;
 use craft\services\Elements;
-use craft\services\Gql;
 use craft\services\UserPermissions;
 use craft\web\twig\variables\CraftVariable;
 use craft\web\UrlManager;
@@ -41,31 +36,8 @@ use percipiolondon\staff\elements\PayRun as PayRunElement;
 use percipiolondon\staff\elements\PayRunEntry as PayRunEntryElement;
 use percipiolondon\staff\elements\Request as RequestElement;
 use percipiolondon\staff\elements\SettingsEmployee;
-use percipiolondon\staff\gql\interfaces\elements\BenefitProvider as BenefitProviderInterface;
-use percipiolondon\staff\gql\interfaces\elements\BenefitVariant as BenefitVariantInterface;
-use percipiolondon\staff\gql\interfaces\elements\Employer as EmployerInterface;
-use percipiolondon\staff\gql\interfaces\elements\Employee as EmployeeInterface;
-use percipiolondon\staff\gql\interfaces\elements\History as HistoryInterface;
-use percipiolondon\staff\gql\interfaces\elements\Notification as NotificationInterface;
-use percipiolondon\staff\gql\interfaces\elements\PayRun as PayRunInterface;
-use percipiolondon\staff\gql\interfaces\elements\PayRunEntry as PayRunEntryInterface;
-use percipiolondon\staff\gql\interfaces\elements\Request as RequestInterface;
-use percipiolondon\staff\gql\mutations\BenefitVariantEmployeesMutation;
-use percipiolondon\staff\gql\mutations\NotificationMutation;
-use percipiolondon\staff\gql\mutations\RequestMutation;
-use percipiolondon\staff\gql\mutations\SettingsEmployeeMutation;
-use percipiolondon\staff\gql\queries\BenefitProvider as BenefitProviderQueries;
-use percipiolondon\staff\gql\queries\BenefitVariant as BenefitVariantQueries;
-use percipiolondon\staff\gql\queries\Employee as EmployeeQueries;
-use percipiolondon\staff\gql\queries\Employer as EmployerQueries;
-use percipiolondon\staff\gql\queries\History as HistoryQueries;
-use percipiolondon\staff\gql\queries\Notifications as NotificationQueries;
-use percipiolondon\staff\gql\queries\PayRun as PayRunQueries;
-use percipiolondon\staff\gql\queries\PayRunEntry as PayRunEntryQueries;
-use percipiolondon\staff\gql\queries\Request as RequestQueries;
-use percipiolondon\staff\gql\queries\SettingsEmployee as SettingsEmployeeQueries;
-use percipiolondon\staff\gql\queries\Settings as SettingsQueries;
 use percipiolondon\staff\models\Settings;
+use percipiolondon\staff\plugin\Gql as StaffGql;
 use percipiolondon\staff\plugin\Services as StaffServices;
 use percipiolondon\staff\services\Addresses;
 use percipiolondon\staff\services\Employees;
@@ -114,6 +86,7 @@ use yii\base\ModelEvent;
 class Staff extends Plugin
 {
     use StaffServices;
+    use StaffGql;
 
     // Static Properties
     // =========================================================================
@@ -216,15 +189,9 @@ class Staff extends Plugin
         $this->name = self::$settings->pluginName;
 
         $this->_setPluginComponents();
-
-        $this->_registerGqlInterfaces();
-        $this->_registerGqlSchemaComponents();
-
-        $this->_registerGqlQueries();
-        $this->_registerGqlMutations();
+        $this->_registerGql();
         $this->_registerElementTypes();
         $this->_registerControllers();
-
         $this->installEventListeners();
 
         /**
@@ -503,98 +470,6 @@ class Staff extends Plugin
     // Private Methods
     // =========================================================================
 
-    private function _registerGqlInterfaces(): void
-    {
-        Event::on(
-            Gql::class,
-            Gql::EVENT_REGISTER_GQL_TYPES,
-            function(RegisterGqlTypesEvent $event) {
-                $event->types[] = BenefitProviderInterface::class;
-                $event->types[] = BenefitVariantInterface::class;
-                $event->types[] = EmployerInterface::class;
-                $event->types[] = EmployeeInterface::class;
-                $event->types[] = HistoryInterface::class;
-                $event->types[] = NotificationInterface::class;
-                $event->types[] = PayRunInterface::class;
-                $event->types[] = PayRunEntryInterface::class;
-                $event->types[] = RequestInterface::class;
-            }
-        );
-    }
-
-    private function _registerGqlSchemaComponents(): void
-    {
-        Event::on(
-            Gql::class,
-            Gql::EVENT_REGISTER_GQL_SCHEMA_COMPONENTS,
-            function(RegisterGqlSchemaComponentsEvent $event) {
-                $event->queries = array_merge($event->queries, [
-                    'Staff Management' => [
-                        'group-benefits:read' => ['label' => Craft::t('staff-management', 'View Group Benefits')],
-                        'employers:read' => ['label' => Craft::t('staff-management', 'View Employers')],
-                        'employees:read' => ['label' => Craft::t('staff-management', 'View Employees')],
-                        'history:read' => ['label' => Craft::t('staff-management', 'View History')],
-                        'notifications:read' => ['label' => Craft::t('staff-management', 'View Notifications')],
-                        'pay-run-entries:read' => ['label' => Craft::t('staff-management', 'View Pay Run Entries')],
-                        'pay-runs:read' => ['label' => Craft::t('staff-management', 'View Pay Runs')],
-                        'requests:read' => ['label' => Craft::t('staff-management', 'View Requests')],
-                        'settings-employee:read' => ['label' => Craft::t('staff-management', 'View Employee Settings')],
-                        'settings:read' => ['label' => Craft::t('staff-management', 'View Settings')],
-                    ],
-                ]);
-
-                $event->mutations = array_merge($event->mutations, [
-                    'Staff Management' => [
-                        'benefit-employees:create' => ['label' => Craft::t('staff-management', 'Add Employees To A Benefit Variant')],
-                        'notifications:update' => ['label' => Craft::t('staff-management', 'Update Notifications')],
-                        'requests:create' => ['label' => Craft::t('staff-management', 'Edit Requests')],
-                        'settings-employee:update' => ['label' => Craft::t('staff-management', 'Update Employee Settings')],
-                    ]
-                ]);
-            }
-        );
-    }
-
-    private function _registerGqlQueries(): void
-    {
-        Event::on(
-            Gql::class,
-            Gql::EVENT_REGISTER_GQL_QUERIES,
-            function(RegisterGqlQueriesEvent $event) {
-                $event->queries = array_merge(
-                    $event->queries,
-                    BenefitProviderQueries::getQueries(),
-                    BenefitVariantQueries::getQueries(),
-                    EmployerQueries::getQueries(),
-                    EmployeeQueries::getQueries(),
-                    HistoryQueries::getQueries(),
-                    NotificationQueries::getQueries(),
-                    PayRunQueries::getQueries(),
-                    PayRunEntryQueries::getQueries(),
-                    RequestQueries::getQueries(),
-                    SettingsQueries::getQueries(),
-                    SettingsEmployeeQueries::getQueries(),
-                );
-            }
-        );
-    }
-
-    private function _registerGqlMutations()
-    {
-        Event::on(
-            Gql::class,
-            Gql::EVENT_REGISTER_GQL_MUTATIONS,
-            function(RegisterGqlMutationsEvent $event) {
-                $event->mutations = array_merge(
-                    $event->mutations,
-                    BenefitVariantEmployeesMutation::getMutations(),
-                    NotificationMutation::getMutations(),
-                    RequestMutation::getMutations(),
-                    SettingsEmployeeMutation::getMutations(),
-                );
-            }
-        );
-    }
 
     private function _registerElementTypes(): void
     {
