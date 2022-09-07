@@ -76,6 +76,8 @@ module.exports = {
         'text-indigo-600',
         'text-indigo-900',
         'hover:text-indigo-800',
+        '-translate-x-1/2',
+        '-translate-y-1/2',
         'w-6',
     ],
     theme: {

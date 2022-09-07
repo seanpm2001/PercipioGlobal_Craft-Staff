@@ -43,4 +43,16 @@ class BenefitVariantEmployee extends ElementMutationResolver
 
         return $employee;
     }
+
+    public function removeEmployee($source, array $arguments, $context, ResolveInfo $resolveInfo)
+    {
+        $success = false;
+        $variantEmployee = BenefitEmployeeVariant::findOne(['variantId' => $arguments['variantId'], 'employeeId' => $arguments['employeeId']]);
+
+        if ($variantEmployee) {
+            $success = $variantEmployee->delete();
+        }
+
+        return $success;
+    }
 }

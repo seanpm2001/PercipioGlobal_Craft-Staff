@@ -3,8 +3,6 @@
 namespace percipiolondon\staff\gql\mutations;
 
 use Craft;
-use craft\gql\types\DateTime;
-use percipiolondon\staff\gql\interfaces\elements\Request;
 use percipiolondon\staff\gql\types\Employee;
 use percipiolondon\staff\helpers\Gql as GqlHelper;
 use craft\gql\base\Mutation;
@@ -36,19 +34,16 @@ class BenefitVariantEmployeesMutation extends Mutation
         ];
 
         // Delete a benefit variant employee
-//        $mutations['UpdateRequest'] = [
-//            'name' => 'UpdateRequest',
-//            'args' => [
-//                'id' => Type::int(),
-//                'administerId' => Type::int(),
-//                'dateAdministered' => DateTime::getType(),
-//                'note' => Type::String(),
-//                'status' => Type::String(),
-//            ],
-//            'resolve' => [$resolver, 'updateRequest'],
-//            'description' => 'Updates a request.',
-//            'type' => Request::getType()
-//        ];
+        $mutations['RemoveEmployee'] = [
+            'name' => 'RemoveEmployee',
+            'args' => [
+                'employeeId' => Type::nonNull(Type::int()),
+                'variantId' => Type::nonNull(Type::int()),
+            ],
+            'resolve' => [$resolver, 'removeEmployee'],
+            'description' => 'Remove an employee to a variant',
+            'type' => Employee::getType()
+        ];
 
         return $mutations;
     }

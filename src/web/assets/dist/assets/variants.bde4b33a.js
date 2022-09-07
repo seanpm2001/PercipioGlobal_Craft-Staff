@@ -1,6 +1,4 @@
-import { gql } from 'graphql-tag'
-
-export const VARIANT = gql`
+import{g as e}from"./useApolloClient.9f162bd9.js";const a=e`
     query BenefitVariant($id: [QueryArgument]) {
         BenefitVariant(id: $id) {
             id
@@ -36,9 +34,7 @@ export const VARIANT = gql`
             }
         }
     }
-`
-
-export const VARIANTS = gql`
+`,i=e`
     query BenefitVariants($employeeId: Int, $policyId: Int) {
         BenefitVariants(policyId: $policyId, employeeId: $employeeId) {
             id
@@ -74,9 +70,7 @@ export const VARIANTS = gql`
             }
         }
     }
-`
-
-export const VARIANT_ELIGIBLE_EMPLOYEES = gql`
+`,o=e`
     query BenefitVariantEligibleEmployees($policyId: Int!) {
           BenefitVariantEligibleEmployees(policyId: $policyId) {
                 id,
@@ -87,9 +81,7 @@ export const VARIANT_ELIGIBLE_EMPLOYEES = gql`
           }
     }
 
-`
-
-export const ADD_VARIANT_EMPLOYEE = gql`
+`,l=e`
     mutation AddEmployee($employeeId: Int!, $variantId: Int!) {
           AddEmployee(employeeId: $employeeId, variantId: $variantId) {
                 id,
@@ -99,13 +91,12 @@ export const ADD_VARIANT_EMPLOYEE = gql`
                 }
           }
     }
-`
-
-export const REMOVE_VARIANT_EMPLOYEE = gql`
+`,n=e`
     mutation RemoveEmployee($employeeId: Int!, $variantId: Int!) {
           RemoveEmployee(employeeId: $employeeId, variantId: $variantId) {
                 id
           }
     }
 
-`
+`;export{l as A,n as R,o as V,a,i as b};
+//# sourceMappingURL=variants.bde4b33a.js.map
