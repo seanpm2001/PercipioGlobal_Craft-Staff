@@ -2,7 +2,7 @@
 import { useQuery } from '@vue/apollo-composable'
 import { VARIANTS } from '~/graphql/variants.ts'
 
-const { result, loading } = useQuery(VARIANTS)
+const { result, loading } = useQuery(VARIANTS, {'policyId': parseInt(policyId)})
 </script>
 <template>
 

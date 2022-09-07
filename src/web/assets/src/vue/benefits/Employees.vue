@@ -8,7 +8,7 @@ const { result:employees, loading:loadingEmployees, refetch:refetchEligibleEmplo
 const { result:variant, loading:loadingVariant, refetch:refetchVariant, onResult } = useQuery(VARIANT, {'id': parseInt(variantId)})
 const { mutate:addVariant, onDone:onDoneAdd } = useMutation(ADD_VARIANT_EMPLOYEE)
 const { mutate:removeVariant, onDone:onDoneRemove } = useMutation(REMOVE_VARIANT_EMPLOYEE)
-const list2 = ref([])
+const selectedEmployees = ref([])
 
 const handleRemove = (id) => {
     loadingVariant.value = true
@@ -29,7 +29,7 @@ const handleUpdate = (evt) => {
 }
 
 onResult(queryResult => {
-    list2.value = queryResult.data.BenefitVariant.employees
+    selectedEmployees.value = queryResult.data.BenefitVariant.employees
 })
 
 onDoneAdd( queryResult => {
@@ -51,11 +51,11 @@ const sortedEmployees = computed(() => {
 })
 
 const sortedList = computed(() => {
-    if (list2.value) {
-        return list2.value.sort((a, b) => (a.personalDetails.firstName+''+a.personalDetails.lastName > b.personalDetails.firstName+''+b.personalDetails.lastName) ? 1 : -1)
+    if (selectedEmployees.value) {
+        return selectedEmployees.value.sort((a, b) => (a.personalDetails.firstName+''+a.personalDetails.lastName > b.personalDetails.firstName+''+b.personalDetails.lastName) ? 1 : -1)
     }
 
-    return list2.value
+    return selectedEmployees.value
 })
 
 </script>
@@ -95,6 +95,7 @@ const sortedList = computed(() => {
                 loadingEmployees ? 'opacity-60 pointer-events-none' : ''
             ]">
                 <div class="p-2 relative min-h-[50px]">
+                    <span v-if="(employees?.BenefitVariantEligibleEmployees ?? []).length === 0  && !loadingEmployees" class="absolute top-0 left-0 p-4">There are no eligible employees</span>
                     <VueDraggableNext
                         v-if="employees"
                         v-model="employees.BenefitVariantEligibleEmployees"
@@ -106,7 +107,7 @@ const sortedList = computed(() => {
                             :key="item.id"
                         >
                             <div
-                                v-if="!list2.find(employee => employee.id == item.id)"
+                                v-if="!selectedEmployees.find(employee => employee.id == item.id)"
                                 class="bg-white rounded-xl mb-2 w-full px-4 py-2 box-border flex items-center cursor-move h-12"
                             >
                                 <span class="text-blue-600 text-xl leading-tight mb-0">✥</span>
@@ -156,10 +157,10 @@ const sortedList = computed(() => {
                 'w-full bg-black bg-opacity-10 flex-grow rounded-xl',
                 loadingVariant ? 'opacity-60 pointer-events-none' : ''
             ]">
-                <div class="p-2 h-full w-full box-border relative min-h-[50px]">
+                <div class="pt-2 px-2 h-full w-full box-border relative min-h-[50px]">
+                    <span v-if="selectedEmployees.length === 0 && !loadingVariant" class="absolute top-0 left-0 p-4">There are no selected employees</span>
                     <VueDraggableNext
-                        v-if="list2.length > 0"
-                        v-model="list2"
+                        v-model="selectedEmployees"
                         :sort="false"
                         group="employees"
                         @change="handleUpdate"

@@ -21,6 +21,7 @@ export default defineConfig(({command}) => ({
                 benefitEmployers: './src/js/benefit-employers.ts',
                 benefitPolicy: './src/js/benefit-policy.ts',
                 benefitVariants: './src/js/benefit-variants.ts',
+                benefitVariantDelete: './src/js/benefit-variant-delete.ts',
                 employers: './src/js/employers.ts',
                 details: './src/js/payrun-details.ts',
                 payruns: './src/js/payruns.ts',

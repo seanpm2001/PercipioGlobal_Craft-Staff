@@ -378,6 +378,29 @@ class BenefitController extends Controller
         return $this->renderTemplate('staff-management/benefits/variant/form', $variables);
     }
 
+    /**
+     * @throws \yii\db\StaleObjectException
+     * @throws NotFoundHttpException
+     */
+    public function actionVariantDelete(int $variantId): Response
+    {
+        $variant = BenefitVariant::findOne($variantId);
+
+        if(is_null($variant)) {
+            throw new NotFoundHttpException('Variant does not exist');
+        }
+
+        $policy = BenefitPolicy::findOne($variant->policyId);
+
+        if(is_null($policy)) {
+            throw new NotFoundHttpException('Policy does not exist');
+        }
+
+        Craft::$app->getElements()->deleteElementById($variant->id);
+
+        return $this->redirect('/admin/staff-management/benefits/employers/' . $policy->employerId . '/policy/' . $policy->id);
+    }
+
     public function actionVariantSave(): Response
     {
         $this->requireLogin();

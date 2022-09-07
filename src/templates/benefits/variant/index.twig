@@ -88,6 +88,10 @@
         <div class="block bg-gray-100 h-6 top-full left-0 w-full absolute"></div>
     </section>
 
+    <section class="flex justify-end absolute top-full text-right mt-4 w-full box-border left-0 pr-6">
+        <div id="benefit-variants-container"></div>
+    </section>
+
 {%- endset -%}
 
 {%- block foot -%}
@@ -102,4 +106,5 @@
         ]
     } -%}
     {{  craft.staff.register('src/js/benefit-employees.ts', false, tagOptions) }}
+    {{  craft.staff.register('src/js/benefit-variant-delete.ts', false, tagOptions) }}
 {%- endblock -%}
