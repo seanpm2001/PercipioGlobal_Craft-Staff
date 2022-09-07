@@ -212,7 +212,7 @@ class BenefitVariant extends Element
     {
         return match ($benefitTypeName ?? '') {
             'Group Critical Illness Cover' => $this->_gcic ? $this->_gcic->toArray() : $this->getGcic()->toArray(),
-            default => null
+            default => []
         };
     }
 
