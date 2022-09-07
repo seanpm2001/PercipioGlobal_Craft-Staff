@@ -50,7 +50,7 @@ const sortedEmployees = computed(() => {
 
 const sortedList = computed(() => {
     if (list2.value) {
-        return list2.value.sort((a, b) => (a.personalDetails.firstName > b.personalDetails.firstName) ? 1 : -1)
+        return list2.value.sort((a, b) => (a.personalDetails.firstName+''+a.personalDetails.lastName > b.personalDetails.firstName+''+b.personalDetails.lastName) ? 1 : -1)
     }
 
     return list2.value
@@ -59,6 +59,32 @@ const sortedList = computed(() => {
 </script>
 
 <template>
+    <div
+        v-if="loadingEmployees || loadingVariant"
+        class="fixed flex items-center justify-center w-screen h-screen inset-0 bg-gray-500 bg-opacity-75 transition-opacity z-10"
+    >
+        <svg
+            class="animate-spin h-5 w-5 text-indigo-900"
+            xmlns="http://www.w3.org/2000/svg"
+            fill="none"
+            viewBox="0 0 24 24"
+        >
+            <circle
+                class="opacity-25"
+                cx="12"
+                cy="12"
+                r="10"
+                stroke="currentColor"
+                stroke-width="4"
+            />
+            <path
+                class="opacity-75"
+                fill="currentColor"
+                d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+            />
+        </svg>
+    </div>
+
     <div class="w-full items-stretch mt-10 md:flex">
         <div class="flex-grow mb-10 md:mb-0">
 
@@ -70,31 +96,6 @@ const sortedList = computed(() => {
                 loadingEmployees ? 'opacity-60 pointer-events-none' : ''
             ]">
                 <div class="p-2 relative min-h-[50px]">
-                    <div
-                        v-if="loadingEmployees"
-                        class="absolute left-1/2 top-1/2 -mt-2.5 h-5 w-5"
-                    >
-                        <svg
-                            class="animate-spin h-5 w-5 text-indigo-900"
-                            xmlns="http://www.w3.org/2000/svg"
-                            fill="none"
-                            viewBox="0 0 24 24"
-                        >
-                            <circle
-                                class="opacity-25"
-                                cx="12"
-                                cy="12"
-                                r="10"
-                                stroke="currentColor"
-                                stroke-width="4"
-                            />
-                            <path
-                                class="opacity-75"
-                                fill="currentColor"
-                                d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
-                            />
-                        </svg>
-                    </div>
                     <VueDraggableNext
                         v-if="employees"
                         v-model="employees.BenefitVariantEligibleEmployees"
@@ -134,31 +135,6 @@ const sortedList = computed(() => {
                 loadingVariant ? 'opacity-60 pointer-events-none' : ''
             ]">
                 <div class="p-2 h-full w-full box-border relative min-h-[50px]">
-                    <div
-                        v-if="loadingVariant"
-                        class="absolute left-1/2 top-1/2 -mt-2.5 h-5 w-5"
-                    >
-                        <svg
-                            class="animate-spin h-5 w-5 text-indigo-900"
-                            xmlns="http://www.w3.org/2000/svg"
-                            fill="none"
-                            viewBox="0 0 24 24"
-                        >
-                            <circle
-                                class="opacity-25"
-                                cx="12"
-                                cy="12"
-                                r="10"
-                                stroke="currentColor"
-                                stroke-width="4"
-                            />
-                            <path
-                                class="opacity-75"
-                                fill="currentColor"
-                                d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
-                            />
-                        </svg>
-                    </div>
                     <VueDraggableNext
                         v-if="list2.length > 0"
                         v-model="list2"
