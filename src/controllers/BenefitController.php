@@ -10,6 +10,7 @@ use percipiolondon\staff\elements\BenefitProvider;
 use percipiolondon\staff\elements\BenefitVariant;
 use percipiolondon\staff\records\BenefitPolicy;
 use percipiolondon\staff\records\BenefitType;
+use percipiolondon\staff\records\BenefitVariant as BenefitVariantRecord;
 use percipiolondon\staff\elements\Employer;
 use percipiolondon\staff\records\TotalRewardsStatement;
 use percipiolondon\staff\Staff;
@@ -371,6 +372,49 @@ class BenefitController extends Controller
         $variables['benefitType'] = BenefitType::findOne($policy->benefitTypeId);
         $variables['trs'] = null;
         $variables['variant'] = null;
+        $variables['errors'] = null;
+        $variables['errorsTrs'] = null;
+
+        // Render the template
+        return $this->renderTemplate('staff-management/benefits/variant/form', $variables);
+    }
+
+    /**
+     * @param int $employerId
+     * @param int $policyId
+     * @return Response
+     * @throws NotFoundHttpException
+     */
+    public function actionVariantEdit(int $variantId): Response
+    {
+        $this->requireLogin();
+
+        $variant = BenefitVariant::findOne($variantId);
+
+        if(is_null($variant)) {
+            throw new NotFoundHttpException('Variant does not exist');
+        }
+
+        $policy = $variant->getPolicy();
+        $trs = $variant->getTotalRewardsStatement();
+        $benefitType = BenefitType::findOne($policy->benefitTypeId ?? null);
+
+        $variantValues = $variant->toArray();
+        $variantValues = array_merge($variantValues, $variant->getValues($benefitType->name ?? ''));
+
+        $pluginName = Staff::$settings->pluginName;
+        $templateTitle = Craft::t('staff-management', 'Add Variant');
+
+        $variables = [];
+        $variables['pluginName'] = $pluginName;
+        $variables['title'] = $templateTitle;
+        $variables['docTitle'] = "{$pluginName} - {$templateTitle}";
+        $variables['selectedSubnavItem'] = 'benefits';
+        $variables['policy'] = $policy;
+        $variables['employer'] = Employer::findOne($policy->employerId);
+        $variables['benefitType'] = BenefitType::findOne($policy->benefitTypeId);
+        $variables['trs'] = $trs;
+        $variables['variant'] = $variantValues;
         $variables['errors'] = null;
         $variables['errorsTrs'] = null;
 
