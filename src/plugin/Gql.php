@@ -9,7 +9,6 @@ use craft\events\RegisterGqlSchemaComponentsEvent;
 use craft\events\RegisterGqlTypesEvent;
 use craft\gql\TypeLoader;
 use craft\services\Gql as GqlService;
-use percipiolondon\staff\gql\interfaces\elements\BenefitProvider as BenefitProviderInterface;
 use percipiolondon\staff\gql\interfaces\elements\BenefitVariant as BenefitVariantInterface;
 use percipiolondon\staff\gql\interfaces\elements\Employee as EmployeeInterface;
 use percipiolondon\staff\gql\interfaces\elements\Employer as EmployerInterface;
@@ -22,7 +21,6 @@ use percipiolondon\staff\gql\mutations\BenefitVariantEmployeesMutation;
 use percipiolondon\staff\gql\mutations\NotificationMutation;
 use percipiolondon\staff\gql\mutations\RequestMutation;
 use percipiolondon\staff\gql\mutations\SettingsEmployeeMutation;
-use percipiolondon\staff\gql\queries\BenefitProvider as BenefitProviderQueries;
 use percipiolondon\staff\gql\queries\BenefitVariant as BenefitVariantQueries;
 use percipiolondon\staff\gql\queries\Employee as EmployeeQueries;
 use percipiolondon\staff\gql\queries\Employer as EmployerQueries;
@@ -34,6 +32,7 @@ use percipiolondon\staff\gql\queries\Request as RequestQueries;
 use percipiolondon\staff\gql\queries\Settings as SettingsQueries;
 use percipiolondon\staff\gql\queries\SettingsEmployee as SettingsEmployeeQueries;
 use percipiolondon\staff\gql\types\Address;
+use percipiolondon\staff\gql\types\BenefitProvider;
 use percipiolondon\staff\gql\types\BenefitVariantGcic;
 use percipiolondon\staff\gql\types\Employee;
 use percipiolondon\staff\gql\types\Employer;
@@ -67,7 +66,6 @@ trait Gql
             \craft\services\Gql::class,
             GqlService::EVENT_REGISTER_GQL_TYPES,
             function(RegisterGqlTypesEvent $event) {
-                $event->types[] = BenefitProviderInterface::class;
                 $event->types[] = BenefitVariantInterface::class;
                 $event->types[] = EmployerInterface::class;
                 $event->types[] = EmployeeInterface::class;
@@ -83,6 +81,7 @@ trait Gql
     private function _registerGqlTypes(): void
     {
         TypeLoader::registerType(Address::getName(), Address::class . '::getType');
+        TypeLoader::registerType(BenefitProvider::getName(), BenefitProvider::class . '::getType');
         TypeLoader::registerType(BenefitVariantGcic::getName(), BenefitVariantGcic::class . '::getType');
         TypeLoader::registerType(Employee::getName(), Employee::class . '::getType');
         TypeLoader::registerType(Employer::getName(), Employer::class . '::getType');
@@ -139,7 +138,6 @@ trait Gql
             function(RegisterGqlQueriesEvent $event) {
                 $event->queries = array_merge(
                     $event->queries,
-                    BenefitProviderQueries::getQueries(),
                     BenefitVariantQueries::getQueries(),
                     EmployerQueries::getQueries(),
                     EmployeeQueries::getQueries(),

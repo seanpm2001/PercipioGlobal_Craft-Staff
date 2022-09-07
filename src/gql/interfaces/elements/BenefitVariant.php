@@ -8,6 +8,7 @@ use craft\gql\TypeManager;
 use GraphQL\Type\Definition\InterfaceType;
 use GraphQL\Type\Definition\Type;
 use percipiolondon\staff\elements\BenefitVariant as CraftElement;
+use percipiolondon\staff\gql\types\BenefitProvider;
 use percipiolondon\staff\gql\types\BenefitVariantGcic;
 use percipiolondon\staff\gql\types\generators\BenefitVariantGenerator as Generator;
 use percipiolondon\staff\gql\types\TotalRewardsStatement;
@@ -82,6 +83,10 @@ class BenefitVariant extends Element
             'employees' => [
                 'name' => 'employees',
                 'type' => Type::listOf(\percipiolondon\staff\gql\types\Employee::getType()),
+            ],
+            'provider' => [
+                'name' => 'provider',
+                'type' => BenefitProvider::getType(),
             ],
             'type' => [
                 'name' => 'type',

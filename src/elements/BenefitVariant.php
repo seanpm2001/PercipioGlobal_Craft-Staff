@@ -3,6 +3,7 @@
 namespace percipiolondon\staff\elements;
 
 use Craft;
+use craft\elements\Asset;
 use DateTime;
 use craft\base\Element;
 use craft\elements\db\ElementQueryInterface;
@@ -36,7 +37,7 @@ class BenefitVariant extends Element
 
     private ?TotalRewardsStatement $_totalRewardsStatement = null;
     private ?BenefitPolicy $_policy = null;
-    private ?BenefitProvider $_provider = null;
+    private ?array $_provider = null;
     private ?array $_employees = null;
     private ?string $_type = null;
 
@@ -132,7 +133,10 @@ class BenefitVariant extends Element
         return $this->_policy;
     }
 
-    public function getProvider(): ?BenefitProvider
+    /**
+     * @throws \yii\base\InvalidConfigException
+     */
+    public function getProvider(): ?array
     {
         if ($this->_provider === null) {
             if ($this->policyId === null) {
@@ -145,7 +149,11 @@ class BenefitVariant extends Element
                 return null;
             }
 
-            $this->_provider = BenefitProvider::findOne($this->_policy['providerId']);
+            $this->_provider = BenefitProvider::findOne($this->_policy['providerId'])->toArray();
+
+            if ($this->_provider) {
+                $this->_provider['logo'] = Asset::findOne($this->_provider['logo'])?->getUrl();
+            }
         }
 
         return $this->_provider;
