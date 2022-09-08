@@ -230,10 +230,9 @@ class BenefitController extends Controller
 
         $employer = Employer::findOne($request->getBodyParam('employerId'));
         $benefit = BenefitType::findOne($request->getBodyParam('benefitTypeId'));
-        $provider = BenefitProvider::findOne($request->getBodyParam('providerId'));
 
-        if(is_null($employer) || is_null($benefit) || is_null($provider)) {
-            throw new NotFoundHttpException('Employer, provider or benefit does not exist');
+        if(is_null($employer) || is_null($benefit)) {
+            throw new NotFoundHttpException('Employer or benefit does not exist');
         }
 
         if ($policyId) {
@@ -242,7 +241,9 @@ class BenefitController extends Controller
             $policy = new BenefitPolicy();
         }
 
-        $policy->providerId = $provider->id;
+        $provider = BenefitProvider::findOne($request->getBodyParam('providerId'));
+
+        $policy->providerId = $provider->id ?? null;
         $policy->benefitTypeId = $benefit->id;
         $policy->employerId = $employer->id;
         $policy->internalCode = $request->getBodyParam('internalCode');
