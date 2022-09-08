@@ -2,7 +2,7 @@
 
 <hr/>
 
-<h2>Group Critical Illness Cover fields</h2>
+<h2>Group Death In Service fields</h2>
 
 <section class="mt-8 grid grid-cols-1 md:grid-cols-2 gap-6">
     <div>
@@ -10,7 +10,7 @@
             label: "Rate Review Guarantee Date"|t('staff-management'),
             id: 'rateReviewGuaranteeDate',
             name: 'rateReviewGuaranteeDate',
-            value: variant ? variant["rateReviewGuaranteeDate"] ?? '' : '',
+            value: variant["rateReviewGuaranteeDate"] ?? '',
             errors: errors['rateReviewGuaranteeDate'] ?? null,
         }) }}
     </div>
@@ -34,7 +34,7 @@
             label: "Costing Basis"|t('staff-management'),
             id: 'costingBasis',
             name: 'costingBasis',
-            value: variant ? variant["costingBasis"] ?? '' : '',
+            value: variant["costingBasis"] ?? '',
             options: costingBasisOptions,
             errors: errors['costingBasis'] ?? null,
             required: false,
@@ -60,7 +60,7 @@
             label: "Unit Rate Suffix"|t('staff-management'),
             id: 'unitRateSuffix',
             name: 'unitRateSuffix',
-            value: variant ? variant["unitRateSuffix"] ?? '' : '',
+            value: variant["unitRateSuffix"] ?? '',
             options: unitRateSuffixOptions,
             errors: errors['unitRateSuffix'] ?? null,
             required: false,
@@ -73,7 +73,7 @@
             id: 'unitRate',
             name: 'unitRate',
             type: 'number',
-            value: variant ? variant['unitRate'] : '',
+            value: variant['unitRate'] ?? '',
             errors: errors['unitRate'] ?? null,
             required: false,
         }) }}
@@ -85,7 +85,7 @@
             id: 'freeCoverLevelAutomaticAcceptanceLimit',
             name: 'freeCoverLevelAutomaticAcceptanceLimit',
             type: 'number',
-            value: variant ? variant['freeCoverLevelAutomaticAcceptanceLimit'] : '',
+            value: variant['freeCoverLevelAutomaticAcceptanceLimit'] ?? '',
             errors: errors['freeCoverLevelAutomaticAcceptanceLimit'] ?? null,
             required: false,
         }) }}
@@ -110,9 +110,42 @@
             label: "Date Refresh Frequency"|t('staff-management'),
             id: 'dateRefreshFrequency',
             name: 'dateRefreshFrequency',
-            value: variant ? variant["dateRefreshFrequency"] ?? '' : '',
+            value: variant["dateRefreshFrequency"] ?? null,
             options: dateRefreshFrequencyOptions,
             errors: errors['dateRefreshFrequency'] ?? null,
+            required: false,
+        }) }}
+    </div>
+
+    <div>
+        {{ forms.textField({
+            label: "Pension Scheme Tax Reference Number"|t('staff-management'),
+            id: 'pensionSchemeTaxReferenceNumber',
+            name: 'pensionSchemeTaxReferenceNumber',
+            value: variant['pensionSchemeTaxReferenceNumber'] ?? '',
+            errors: errors['pensionSchemeTaxReferenceNumber'] ?? null,
+            required: false,
+        }) }}
+    </div>
+
+    <div>
+        {{ forms.dateField({
+            label: "Date Of Trust Deed"|t('staff-management'),
+            id: 'dateOfTrustDeed',
+            name: 'dateOfTrustDeed',
+            value: variant["dateOfTrustDeed"] ?? null,
+            errors: errors['dateOfTrustDeed'] ?? null,
+        }) }}
+    </div>
+
+    <div>
+        {{ forms.textField({
+            label: "Event Limit"|t('staff-management'),
+            id: 'eventLimit',
+            name: 'eventLimit',
+            type: 'number',
+            value: variant['eventLimit'] ?? '',
+            errors: errors['eventLimit'] ?? null,
             required: false,
         }) }}
     </div>

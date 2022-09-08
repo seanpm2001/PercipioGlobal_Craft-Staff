@@ -157,7 +157,7 @@ const sortedList = computed(() => {
                 'w-full bg-black bg-opacity-10 flex-grow rounded-xl',
                 loadingVariant ? 'opacity-60 pointer-events-none' : ''
             ]">
-                <div class="pt-2 px-2 h-full w-full box-border relative min-h-[50px]">
+                <div class="p-2 h-full w-full box-border relative min-h-[50px]">
                     <span v-if="selectedEmployees.length === 0 && !loadingVariant" class="absolute top-0 left-0 p-4">There are no selected employees</span>
                     <VueDraggableNext
                         v-model="selectedEmployees"

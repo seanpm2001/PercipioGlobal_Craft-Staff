@@ -1,12 +1,12 @@
 {
   "src/js/benefit-employees.ts": {
-    "file": "assets/benefitEmployees.87a34e5a.js",
+    "file": "assets/benefitEmployees.36847573.js",
     "src": "src/js/benefit-employees.ts",
     "isEntry": true,
     "imports": [
       "_vue.esm-bundler.fd9c3e39.js",
       "_useApolloClient.6990f8c6.js",
-      "_variants.b34d7225.js"
+      "_variants.9abc840a.js"
     ]
   },
   "src/js/benefit-employers.ts": {
@@ -29,13 +29,13 @@
     ]
   },
   "src/js/benefit-variants.ts": {
-    "file": "assets/benefitVariants.a7ecb897.js",
+    "file": "assets/benefitVariants.4e814bf6.js",
     "src": "src/js/benefit-variants.ts",
     "isEntry": true,
     "imports": [
       "_vue.esm-bundler.fd9c3e39.js",
       "_useApolloClient.6990f8c6.js",
-      "_variants.b34d7225.js"
+      "_variants.9abc840a.js"
     ]
   },
   "src/js/benefit-variant-delete.ts": {
@@ -101,11 +101,11 @@
     ]
   },
   "src/js/staff.ts": {
-    "file": "assets/staff.327210a0.js",
+    "file": "assets/staff.508edcf9.js",
     "src": "src/js/staff.ts",
     "isEntry": true,
     "css": [
-      "assets/staff.06f8ff77.css"
+      "assets/staff.36e7c2d4.css"
     ]
   },
   "src/js/tiptap.ts": {
@@ -125,8 +125,8 @@
       "_vue.esm-bundler.fd9c3e39.js"
     ]
   },
-  "_variants.b34d7225.js": {
-    "file": "assets/variants.b34d7225.js",
+  "_variants.9abc840a.js": {
+    "file": "assets/variants.9abc840a.js",
     "imports": [
       "_useApolloClient.6990f8c6.js"
     ]

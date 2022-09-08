@@ -2,20 +2,18 @@
 
 namespace percipiolondon\staff\helpers\variants;
 
-use Craft;
-use craft\helpers\DateTimeHelper;
 use craft\helpers\Db;
 use craft\web\Request;
-use percipiolondon\staff\records\BenefitVariantGcic;
+use percipiolondon\staff\records\BenefitVariantGdis;
 
-class VariantGcic
+class VariantGdis
 {
-    public static function fill(?int $variantId, Request $request): BenefitVariantGcic
+    public static function fill(?int $variantId, Request $request): BenefitVariantGdis
     {
-        $benefit = BenefitVariantGcic::findOne($variantId);
+        $benefit = BenefitVariantGdis::findOne($variantId);
 
         if (is_null($benefit)) {
-            $benefit = new BenefitVariantGcic();
+            $benefit = new BenefitVariantGdis();
             $benefit->id = $variantId;
         }
 
@@ -25,6 +23,9 @@ class VariantGcic
         $benefit->unitRateSuffix = $request->getBodyParam('unitRateSuffix');
         $benefit->freeCoverLevelAutomaticAcceptanceLimit = $request->getBodyParam('freeCoverLevelAutomaticAcceptanceLimit');
         $benefit->dateRefreshFrequency = $request->getBodyParam('dateRefreshFrequency');
+        $benefit->pensionSchemeTaxReferenceNumber = $request->getBodyParam('pensionSchemeTaxReferenceNumber');
+        $benefit->dateOfTrustDeed = Db::prepareDateForDb($request->getBodyParam('dateOfTrustDeed'));
+        $benefit->eventLimit = $request->getBodyParam('eventLimit');
 
         return $benefit;
     }
@@ -40,6 +41,9 @@ class VariantGcic
         $benefit['unitRateSuffix'] = $request->getBodyParam('unitRateSuffix');
         $benefit['freeCoverLevelAutomaticAcceptanceLimit'] = $request->getBodyParam('freeCoverLevelAutomaticAcceptanceLimit');
         $benefit['dateRefreshFrequency'] = $request->getBodyParam('dateRefreshFrequency');
+        $benefit['pensionSchemeTaxReferenceNumber'] = $request->getBodyParam('pensionSchemeTaxReferenceNumber');
+        $benefit['dateOfTrustDeed'] = Db::prepareDateForDb($request->getBodyParam('dateOfTrustDeed'));
+        $benefit['eventLimit'] = $request->getBodyParam('eventLimit');
 
         return $benefit;
     }

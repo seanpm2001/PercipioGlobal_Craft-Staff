@@ -14,19 +14,12 @@ use craft\db\ActiveRecord;
 use percipiolondon\staff\db\Table;
 
 /**
- * @property \DateTime $rateReviewGuaranteeDate
- * @property string $costingBasis
- * @property float $unitRate
- * @property string $unitRateSuffix
- * @property float $freeCoverLevelAutomaticAcceptanceLimit
- * @property string $dateRefreshFrequency
- * @property string $pensionSchemeTaxReferenceNumber
- * @property \DateTime $dateOfTrustDeed
- * @property float $eventLimit
+ * @property string underwritingBasis
+ * @property string hospitalList
  *
  */
 
-class BenefitVariantGdis extends ActiveRecord
+class BenefitVariantPmi extends ActiveRecord
 {
 //    public function rules(): array
 //    {
@@ -50,6 +43,6 @@ class BenefitVariantGdis extends ActiveRecord
      */
     public static function tableName(): string
     {
-        return Table::BENEFIT_VARIANT_GDIS;
+        return Table::BENEFIT_VARIANT_PMI;
     }
 }

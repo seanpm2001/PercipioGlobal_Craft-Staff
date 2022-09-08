@@ -40,7 +40,7 @@
         </div>
 
         <!-- specific fields -->
-        {%- include 'staff-management/benefits/variant/values/'~benefitType['name']|replace(' ','-')|lower ignore missing -%}
+        {%- include 'staff-management/benefits/variant/values/'~benefitType['slug'] ignore missing -%}
 
         <!-- TRS -->
         <div class="md:col-span-2 mt-8">
@@ -56,11 +56,11 @@
         </div>
         <div>
             <span class="text-xs font-bold text-gray-400 block mb-2">Start Date</span>
-            <span class="text-base block capitalize">{{ trs.startDateFormat|date('jS M, Y') }}</span>
+            <span class="text-base block capitalize">{{ (trs.startDateFormat ?? null) ? trs.startDateFormat|date('jS M, Y') : '-' }}</span>
         </div>
         <div>
             <span class="text-xs font-bold text-gray-400 block mb-2">End Date</span>
-            <span class="text-base block capitalize">{{ trs.endDateFormat|date('jS M, Y') }}</span>
+            <span class="text-base block capitalize">{{ (trs.endDateFormat ?? null) ? trs.endDateFormat|date('jS M, Y') : '-' }}</span>
         </div>
     </section>
 
