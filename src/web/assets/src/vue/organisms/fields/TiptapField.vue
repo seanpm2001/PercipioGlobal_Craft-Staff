@@ -1,5 +1,6 @@
 <script setup lang="ts">
     import editor from '~/vue/atoms/inputs/input--tiptap.vue'
+    import { ref } from 'vue'
 
     interface Options {
         id: string,
@@ -16,6 +17,8 @@
     const props = withDefaults(defineProps<Props>(), {
         content: ''
     })
+
+    const richText = ref(props.content);
 </script>
 
 <template>
@@ -24,7 +27,6 @@
         :id="'fields-' + options.id + '-field'"
         class="field" 
     >
-
         <div class="heading">
             <label
                 :id="'fields-' + options.id + '-label'"
@@ -42,14 +44,14 @@
             </span>
         </div>
 
-        <editor v-model:content="content" />
+        <editor v-model:content="richText" />
 
         <input 
             type="hidden"
             :id="'fields-' + options.id"
             :name="options.name"
             :aria-describedby="'fields-' + options.name + '-instructions'"
-            :value="content"
+            :value="richText"
         >
     </div>
     

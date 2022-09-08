@@ -8,7 +8,7 @@ const tiptapField = async () => {
 
     tiptapFields.forEach( (tiptapField) => {
     
-        let field = tiptapField.id.replace('-', '')
+        const field = tiptapField.id.replace('-', '')
 
         tiptapFieldsToMount[field] = {
             'id': '#' + tiptapField.id,
@@ -18,7 +18,7 @@ const tiptapField = async () => {
     })
 
     const tiptap = Object.entries(tiptapFieldsToMount).map(entry => {
-        let field = entry[1]
+        const field = entry[1]
         return field.tiptap.mount(field.id)
     })
     

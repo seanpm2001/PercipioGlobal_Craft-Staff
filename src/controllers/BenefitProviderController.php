@@ -99,7 +99,6 @@ class BenefitProviderController extends Controller
 
         $providerId = $request->getBodyParam('providerId');
         $provider = new BenefitProvider();
-        $savedProvider = null;
 
         if($providerId) {
             $provider = BenefitProvider::findOne($providerId);
@@ -112,7 +111,6 @@ class BenefitProviderController extends Controller
 
         if( $provider->validate() ) {
             $success = $elementsService->saveElement($provider);
-            $savedProvider = BenefitProviderRecord::findOne($provider->id);
         }
 
         $pluginName = Staff::$settings->pluginName;
@@ -123,7 +121,7 @@ class BenefitProviderController extends Controller
         $variables['title'] = $templateTitle;
         $variables['docTitle'] = "{$pluginName} - {$templateTitle}";
         $variables['selectedSubnavItem'] = 'benefits';
-        $variables['provider'] = $savedProvider;
+        $variables['provider'] = $provider;
         $variables['volume'] = $this->_getVolume();
         $variables['errors'] = $provider->getErrors();
 

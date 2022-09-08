@@ -209,40 +209,34 @@
                 required: true,
             }) }}
 
-{#            {%- set tiptapOptions = { #}
-{#                id: 'description',#}
-{#                label: 'Description',#}
-{#                instructions: 'Add a description with a short explanation about the policy.',#}
-{#                name: 'description',#}
-{#                description: policy.description  ?? '',#}
-{#            } -%}#}
+            {%- set tiptapOptions = {
+                id: 'description',
+                label: 'Description',
+                instructions: 'Add a description with a short explanation about the policy.',
+                name: 'description',
+                description: policy.description  ?? '',
+            } -%}
 
-{#            <div id="description_tiptap">#}
-{#                <tiptap-field#}
-{#                    content="{{- tiptapOptions.description -}}"#}
-{#                    :options="{{- tiptapOptions | json_encode -}}"#}
-{#                >#}
-{#                </tiptap-field>#}
-{#            </div>#}
+            <div id="description_tiptap">
+                <tiptap-field
+                    content="{{- tiptapOptions.description -}}"
+                    :options="{{- tiptapOptions | json_encode -}}"
+                >
+                </tiptap-field>
+            </div>
 
-{#            {%- if errors['description'] ?? null -%}#}
-{#                <ul id="content-errors" class="errors">#}
-{#                    {%- for error in errors['description'] -%}#}
-{#                        <li>#}
-{#                            <span class="visually-hidden">Error:</span>#}
-{#                            {{- error -}}#}
-{#                        </li>#}
-{#                    {%- endfor -%}#}
-{#                </ul>#}
-{#            {%- endif -%}#}
+            {%- if errors['description'] ?? null -%}
+                <ul id="content-errors" class="errors">
+                    {%- for error in errors['description'] -%}
+                        <li>
+                            <span class="visually-hidden">Error:</span>
+                            {{- error -}}
+                        </li>
+                    {%- endfor -%}
+                </ul>
+            {%- endif -%}
         </div>
     </section>
-
-
-
-
-
-
 
 {%- endset -%}
 
