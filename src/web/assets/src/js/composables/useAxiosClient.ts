@@ -9,7 +9,7 @@ export const fetchPayRuns = (employerId: string, taxYear: string) => {
     const store = usePayRunStore()
     store.loadingFetched = true
 
-    const url = taxYear ? `${ENDPOINT}/staff-management/pay-runs/fetch-pay-runs/${employerId}/${taxYear}` : `${ENDPOINT}/staff-management/pay-runs/fetch-pay-runs/${employerId}`
+    const url = taxYear ? `${ENDPOINT}/admin/staff-management/pay-runs/fetch-pay-runs/${employerId}/${taxYear}` : `${ENDPOINT}/admin/staff-management/pay-runs/fetch-pay-runs/${employerId}`
 
     axios({
         method: 'get',
@@ -28,7 +28,7 @@ export const fetchPayRun = (payRunId: string) => {
 
     axios({
         method: 'get',
-        url: `${ENDPOINT}/staff-management/pay-runs/fetch-pay-run/${payRunId}`,
+        url: `${ENDPOINT}/admin/staff-management/pay-runs/fetch-pay-run/${payRunId}`,
     })
     .then(() => {
         store.loadingFetched = false
@@ -42,7 +42,7 @@ export const getQueue = () => {
 
     axios({
         method: 'get',
-        url: `${ENDPOINT}/staff-management/pay-runs/queue`,
+        url: `${ENDPOINT}/admin/staff-management/pay-runs/queue`,
     })
     .then((response) => {
         store.queue = response?.data?.total ? response.data.total : 0
@@ -56,7 +56,7 @@ export const getPayRunLogs = (payRunId: string) => {
 
     axios({
         method: 'get',
-        url: `${ENDPOINT}/staff-management/pay-runs/get-logs/${payRunId}`,
+        url: `${ENDPOINT}/admin/staff-management/pay-runs/get-logs/${payRunId}`,
     })
         .then((response) => {
             store.logs = response?.data?.logs ? response.data.logs : []
@@ -73,7 +73,7 @@ export const getToken = async (): Promise<string|null> => {
 
     await axios({
         method: 'get',
-        url: `${ENDPOINT}/staff-management/settings/get-gql-token`,
+        url: `${ENDPOINT}/admin/staff-management/settings/get-gql-token`,
     })
     .then( (response) => {
         token.value = response?.data?.token ? response.data.token : null
