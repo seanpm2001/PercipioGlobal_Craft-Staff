@@ -10,7 +10,6 @@ use percipiolondon\staff\elements\BenefitProvider;
 use percipiolondon\staff\elements\BenefitVariant;
 use percipiolondon\staff\records\BenefitPolicy;
 use percipiolondon\staff\records\BenefitType;
-use percipiolondon\staff\records\BenefitVariant as BenefitVariantRecord;
 use percipiolondon\staff\elements\Employer;
 use percipiolondon\staff\records\TotalRewardsStatement;
 use percipiolondon\staff\Staff;
@@ -231,10 +230,9 @@ class BenefitController extends Controller
 
         $employer = Employer::findOne($request->getBodyParam('employerId'));
         $benefit = BenefitType::findOne($request->getBodyParam('benefitTypeId'));
-        $provider = BenefitProvider::findOne($request->getBodyParam('providerId'));
 
-        if(is_null($employer) || is_null($benefit) || is_null($provider)) {
-            throw new NotFoundHttpException('Employer, provider or benefit does not exist');
+        if(is_null($employer) || is_null($benefit)) {
+            throw new NotFoundHttpException('Employer or benefit does not exist');
         }
 
         if ($policyId) {
@@ -243,7 +241,9 @@ class BenefitController extends Controller
             $policy = new BenefitPolicy();
         }
 
-        $policy->providerId = $provider->id;
+        $provider = BenefitProvider::findOne($request->getBodyParam('providerId'));
+
+        $policy->providerId = $provider->id ?? null;
         $policy->benefitTypeId = $benefit->id;
         $policy->employerId = $employer->id;
         $policy->internalCode = $request->getBodyParam('internalCode');
@@ -330,7 +330,7 @@ class BenefitController extends Controller
         $benefitType = BenefitType::findOne($policy->benefitTypeId ?? null);
 
         $variantValues = $variant->toArray();
-        $variantValues = array_merge($variantValues, $variant->getValues($benefitType->name ?? ''));
+        $variantValues = array_merge($variantValues, $variant->getValues($benefitType->slug ?? ''));
 
         $pluginName = Staff::$settings->pluginName;
         $templateTitle = Craft::t('staff-management', 'Variant');
@@ -400,7 +400,7 @@ class BenefitController extends Controller
         $benefitType = BenefitType::findOne($policy->benefitTypeId ?? null);
 
         $variantValues = $variant->toArray();
-        $variantValues = array_merge($variantValues, $variant->getValues($benefitType->name ?? ''));
+        $variantValues = array_merge($variantValues, $variant->getValues($benefitType->slug ?? ''));
 
         $pluginName = Staff::$settings->pluginName;
         $templateTitle = Craft::t('staff-management', 'Add Variant');
@@ -472,7 +472,11 @@ class BenefitController extends Controller
         $variant->policyId = $policyId;
         $variant->name = $request->getBodyParam('name');
         $variant->request = $request;
-        $success = Craft::$app->getElements()->saveElement($variant);
+
+        //@TODO: before save --> make sure the record that needs saving is valid
+        $benefitType = BenefitType::findOne($policy->benefitTypeId);
+        $variantFilled = $variant->getFilledVariant($benefitType->slug ?? '');
+        $success = $variantFilled->validate() && Craft::$app->getElements()->saveElement($variant);
 
         // save TRS
         if ($trsId) {
@@ -485,10 +489,10 @@ class BenefitController extends Controller
         $trs->monetaryValue = $request->getBodyParam('trsMonetaryValue');
         $trs->startDate = Db::prepareDateForDb($request->getBodyParam('trsStartDate'));
         $trs->endDate = Db::prepareDateForDb($request->getBodyParam('trsEndDate'));
-        $trs->save();
+        $successTrs = $trs->save();
 
-        if ($success) {
-            return $this->redirect('/admin/staff-management/benefits/employers/' . $policy->employerId . '/policy/' . $policy->id);
+        if ($success && $successTrs) {
+            return $this->redirect('/admin/staff-management/benefits/variant/' . $variant->id);
         }
 
         $pluginName = Staff::$settings->pluginName;
@@ -504,9 +508,11 @@ class BenefitController extends Controller
         $variables['employer'] = Employer::findOne($policy->employerId);
         $variables['benefitType'] = BenefitType::findOne($policy->benefitTypeId);
         $variables['trs'] = $trs;
-        $variables['variant'] = $variant->getFields($benefitType->name ?? '');
-        $variables['errors'] = $variant->getErrors();
+        $variables['variant'] = $variant->getFields($benefitType->slug ?? '');
+        $variables['errors'] = array_merge($variantFilled->getErrors(), $variant->getErrors());
         $variables['errorsTrs'] = $trs->getErrors();
+
+//        Craft::dd($variables['variant']);
 
         // Render the template
         return $this->renderTemplate('staff-management/benefits/variant/form', $variables);

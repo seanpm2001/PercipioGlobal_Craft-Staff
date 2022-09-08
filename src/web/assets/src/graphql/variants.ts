@@ -40,7 +40,7 @@ export const VARIANT = gql`
 
 export const VARIANTS = gql`
     query BenefitVariants($employeeId: Int, $policyId: Int) {
-        BenefitVariants(policyId: $policyId, employeeId: $employeeId) {
+        BenefitVariants(policyId: $policyId, employeeId: $employeeId, orderBy: "name ASC") {
             id
             name
             policy {

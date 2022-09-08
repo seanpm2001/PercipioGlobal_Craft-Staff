@@ -53,7 +53,7 @@
         }) }}
     </div>
 
-    {%- include 'staff-management/benefits/variant/fields/'~benefitType['name']|replace(' ','-')|lower ignore missing -%}
+    {%- include 'staff-management/benefits/variant/fields/'~benefitType['slug'] ignore missing -%}
 
     <hr/>
 
@@ -67,7 +67,7 @@
                 instructions: "What's the title of the TRS"|t('staff-management'),
                 id: 'trsTitle',
                 name: 'trsTitle',
-                value: trs ? trs.title : '',
+                value: trs.title ?? '',
                 errors: errorsTrs['title'] ?? null,
                 required: true,
             }) }}
@@ -80,7 +80,7 @@
                 instructions: "What's the monetary value of the TRS"|t('staff-management'),
                 id: 'trsMonetaryValue',
                 name: 'trsMonetaryValue',
-                value: trs ? trs.monetaryValue : '',
+                value: trs.monetaryValue ?? '',
                 errors: errorsTrs['monetaryValue'] ?? null,
                 type: 'number',
                 required: true,
@@ -93,7 +93,7 @@
                 instructions: "Start date of the TRS"|t('staff-management'),
                 id: 'trsStartDate',
                 name: 'trsStartDate',
-                value: trs ? trs.startDate : '',
+                value: trs.startDate ?? '',
                 errors: errorsTrs['startDate'] ?? null,
                 required: true,
             }) }}
@@ -105,7 +105,7 @@
                 instructions: "End date of the TRS"|t('staff-management'),
                 id: 'trsEndDate',
                 name: 'trsEndDate',
-                value: trs ? trs.endDate : '',
+                value: trs.endDate ?? '',
                 errors: errorsTrs['endDate'] ?? null,
                 required: true,
             }) }}

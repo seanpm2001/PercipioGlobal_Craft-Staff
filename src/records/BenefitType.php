@@ -15,6 +15,7 @@ use percipiolondon\staff\db\Table;
 
 /**
  * @property string $name
+ * @property string $slug
  */
 
 class BenefitType extends ActiveRecord

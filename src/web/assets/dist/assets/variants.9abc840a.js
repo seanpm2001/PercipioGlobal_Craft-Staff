@@ -36,7 +36,7 @@ import{g as e}from"./useApolloClient.6990f8c6.js";const a=e`
     }
 `,i=e`
     query BenefitVariants($employeeId: Int, $policyId: Int) {
-        BenefitVariants(policyId: $policyId, employeeId: $employeeId) {
+        BenefitVariants(policyId: $policyId, employeeId: $employeeId, orderBy: "name ASC") {
             id
             name
             policy {
@@ -98,4 +98,4 @@ import{g as e}from"./useApolloClient.6990f8c6.js";const a=e`
     }
 
 `;export{l as A,n as R,o as V,a,i as b};
-//# sourceMappingURL=variants.b34d7225.js.map
+//# sourceMappingURL=variants.9abc840a.js.map

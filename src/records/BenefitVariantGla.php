@@ -26,7 +26,7 @@ use percipiolondon\staff\db\Table;
  *
  */
 
-class BenefitVariantGdis extends ActiveRecord
+class BenefitVariantGla extends ActiveRecord
 {
 //    public function rules(): array
 //    {
@@ -50,6 +50,6 @@ class BenefitVariantGdis extends ActiveRecord
      */
     public static function tableName(): string
     {
-        return Table::BENEFIT_VARIANT_GDIS;
+        return Table::BENEFIT_VARIANT_GLA;
     }
 }

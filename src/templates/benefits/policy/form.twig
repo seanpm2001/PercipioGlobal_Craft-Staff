@@ -27,7 +27,7 @@
                 <div class="flex items-center mb-0">
                     <a href="{{url('staff-management') ~ '/benefits/employers/' ~ employer.id }}" title="Go back to overview" class="inline-flex no-underline items-center px-2.5 py-1.5 rounded-full text-sm text-indigo-700 bg-indigo-100 hover:bg-indigo-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 mb-0">&larr;</a>
                     <h1 class="ml-2 text-xl font-semibold text-gray-900">
-                        {{ policy ? 'Edit' : 'New' }} Benefit Policy
+                        {{ (policy.id ?? null) ? 'Edit ' ~ (policy.policyName ?? 'Benefit Policy') : 'New ' ~ (benefit.name ?? 'Benefit') ~ ' Policy' }}
                     </h1>
                 </div>
             </div>
@@ -35,9 +35,9 @@
     </div>
 
     <input type="hidden" name="action" value="staff-management/benefit/policy-save" />
-    <input type="hidden" name="policyId" value="{{- policy ? policy.id : '' -}}" />
-    <input type="hidden" name="benefitTypeId" value="{{- benefit ? benefit.id : '' -}}" />
-    <input type="hidden" name="employerId" value="{{- employer ? employer.id : '' -}}" />
+    <input type="hidden" name="policyId" value="{{- policy.id ?? '' -}}" />
+    <input type="hidden" name="benefitTypeId" value="{{- benefit.id ?? '' -}}" />
+    <input type="hidden" name="employerId" value="{{- employer.id ?? '' -}}" />
 
     <section class="mt-8 grid grid-cols-1 md:grid-cols-2 gap-6">
         <div>
@@ -47,7 +47,7 @@
                 instructions: "Name of the policy"|t('staff-management'),
                 id: 'policyName',
                 name: 'policyName',
-                value: policy ? policy.policyName : '',
+                value: policy.policyName ??  '',
                 errors: errors['policyName'] ?? null,
                 autofocus: true,
                 required: true,
@@ -61,7 +61,7 @@
                 instructions: "Number of the policy"|t('staff-management'),
                 id: 'policyNumber',
                 name: 'policyNumber',
-                value: policy ? policy.policyNumber : '',
+                value:  policy.policyNumber ?? '',
                 errors: errors['policyNumber'] ?? null,
                 required: true,
             }) }}
@@ -74,7 +74,7 @@
                 instructions: "Internal code of the policy"|t('staff-management'),
                 id: 'internalCode',
                 name: 'internalCode',
-                value: policy ? policy.internalCode : '',
+                value:  policy.internalCode ?? '',
                 errors: errors['internalCode'] ?? null,
                 required: true,
             }) }}
@@ -87,7 +87,7 @@
                 instructions: "Holder of the policy"|t('staff-management'),
                 id: 'policyHolder',
                 name: 'policyHolder',
-                value: policy ? policy.policyHolder : '',
+                value:  policy.policyHolder ?? '',
                 errors: errors['policyHolder'] ?? null,
                 required: true,
             }) }}
@@ -99,7 +99,7 @@
                 instructions: "Choose the benefit provider for this policy"|t('staff-management'),
                 id: 'providerId',
                 name: 'providerId',
-                value: policy ? policy.providerId : null,
+                value:  policy.providerId ?? null,
                 options: providers ?? [],
                 errors: errors['providerId'] ?? null,
                 required: false,
@@ -126,7 +126,7 @@
                 instructions: "Status of the policy payment"|t('staff-management'),
                 id: 'status',
                 name: 'status',
-                value: policy ? policy["status"] ?? '' : '',
+                value:  policy["status"] ?? '',
                 options: statusFields,
                 errors: errors['status'] ?? null,
                 required: true,
@@ -139,7 +139,7 @@
                 instructions: "Start date of the policy"|t('staff-management'),
                 id: 'policyStartDate',
                 name: 'policyStartDate',
-                value: policy ? policy.policyStartDate : '',
+                value:  policy.policyStartDate ?? '',
                 errors: errors['policyStartDate'] ?? null,
                 required: true,
             }) }}
@@ -151,7 +151,7 @@
                 instructions: "Renewal date of the policy"|t('staff-management'),
                 id: 'policyRenewalDate',
                 name: 'policyRenewalDate',
-                value: policy ? policy.policyRenewalDate : '',
+                value:  policy.policyRenewalDate ?? '',
                 errors: errors['policyRenewalDate'] ?? null,
                 required: true,
             }) }}
@@ -177,7 +177,7 @@
                 instructions: "Frequency of the policy payment"|t('staff-management'),
                 id: 'paymentFrequency',
                 name: 'paymentFrequency',
-                value: policy ? policy["paymentFrequency"] ?? '' : '',
+                value:  policy["paymentFrequency"] ?? '',
                 options: paymentFrequencyFields,
                 errors: errors['paymentFrequency'] ?? null,
                 required: true,
@@ -191,7 +191,7 @@
                 id: 'commissionRate',
                 name: 'commissionRate',
                 type: 'number',
-                value: policy ? policy['commissionRate'] : '',
+                value:  policy['commissionRate'] ?? '',
                 errors: errors['commissionRate'] ?? null,
                 required: true,
             }) }}
@@ -204,7 +204,7 @@
                 id: 'description',
                 name: 'description',
                 type: 'number',
-                value: policy ? policy['description'] : '',
+                value:  policy['description'] ?? '',
                 errors: errors['description'] ?? null,
                 required: true,
             }) }}
@@ -214,7 +214,7 @@
 {#                label: 'Description',#}
 {#                instructions: 'Add a description with a short explanation about the policy.',#}
 {#                name: 'description',#}
-{#                description: policy.description ?? '',#}
+{#                description: policy.description  ?? '',#}
 {#            } -%}#}
 
 {#            <div id="description_tiptap">#}

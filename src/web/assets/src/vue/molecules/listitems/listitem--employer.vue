@@ -26,7 +26,7 @@
 <template>
   <a 
     v-if="employer"
-    :href="`/admin/staff-management/pay-runs/${employer.id}/${employer.currentPayRun?.taxYear}`" 
+    :href="`/admin/staff-management/pay-runs/${employer.id}/${employer.currentPayRun?.taxYear}`"
     :title="`Go to pay runs of ${employer.name}`" 
     class="grid grid-cols-6 border-b border-solid border-gray-200 no-underline hover:bg-gray-200" 
   >

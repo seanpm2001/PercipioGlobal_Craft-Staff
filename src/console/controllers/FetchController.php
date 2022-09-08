@@ -19,7 +19,7 @@ class FetchController extends Controller
 {
     /**
      * Fetch all the employers/employees/payruns/pensions/... from staffology
-     * e.g.: actions/staff-management/employer-controller/fetch
+     * e.g.: actions/admin/staff-management/employer-controller/fetch
      */
     public function actionIndex()
     {

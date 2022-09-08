@@ -50,7 +50,7 @@ class BenefitPolicy extends ActiveRecord
             'policyStartDate',
             'policyRenewalDate',
             'paymentFrequency',
-            'commissionRate'
+            'commissionRate',
         ], 'required'];
 
         return $rules;
