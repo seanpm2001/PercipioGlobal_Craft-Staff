@@ -72,7 +72,7 @@
         </div>
         <div>
             <span class="text-xs font-bold text-gray-400 block mb-2">Description</span>
-            <span class="text-base block">{{ policy.description ?? '-' }}</span>
+            <div class="prose font-primary">{{ (policy.description ?? '-')|raw }}</div>
         </div>
     </section>
 

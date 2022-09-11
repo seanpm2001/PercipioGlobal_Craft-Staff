@@ -262,7 +262,7 @@ class BenefitController extends Controller
         }
 
         if($success) {
-            return $this->redirect('/admin/staff-management/benefits/employers/' . $employer->id);
+            return $this->redirect('/admin/staff-management/benefits/employers/' . $employer->id . '/policy/' . $policyId);
         }
 
         $pluginName = Staff::$settings->pluginName;
@@ -476,7 +476,7 @@ class BenefitController extends Controller
         //@TODO: before save --> make sure the record that needs saving is valid
         $benefitType = BenefitType::findOne($policy->benefitTypeId);
         $variantFilled = $variant->getFilledVariant($benefitType->slug ?? '');
-        $success = $variantFilled->validate() && Craft::$app->getElements()->saveElement($variant);
+        $success = (!$variantFilled || $variantFilled->validate()) && Craft::$app->getElements()->saveElement($variant);
 
         // save TRS
         if ($trsId) {

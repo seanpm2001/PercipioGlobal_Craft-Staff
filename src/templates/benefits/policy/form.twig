@@ -198,16 +198,16 @@
         </div>
 
         <div class="md:col-span-2">
-            {{ forms.textareaField({
-                label: "Description"|t('staff-management'),
-                instructions: 'Add a description with a short explanation about the policy.'|t('staff-management'),
-                id: 'description',
-                name: 'description',
-                type: 'number',
-                value:  policy['description'] ?? '',
-                errors: errors['description'] ?? null,
-                required: true,
-            }) }}
+{#            {{ forms.textareaField({#}
+{#                label: "Description"|t('staff-management'),#}
+{#                instructions: 'Add a description with a short explanation about the policy.'|t('staff-management'),#}
+{#                id: 'description',#}
+{#                name: 'description',#}
+{#                type: 'number',#}
+{#                value:  policy['description'] ?? '',#}
+{#                errors: errors['description'] ?? null,#}
+{#                required: true,#}
+{#            }) }}#}
 
             {%- set tiptapOptions = {
                 id: 'description',

@@ -376,6 +376,7 @@ class Staff extends Plugin
             'staff-management/dashboard' => 'staff-management/settings/dashboard',
             // benefits providers
             'staff-management/benefits/providers' => 'staff-management/benefit-provider',
+            'staff-management/benefits/providers/<providerId:\d+>' => 'staff-management/benefit-provider/detail',
             'staff-management/benefits/providers/new' => 'staff-management/benefit-provider/edit',
             'staff-management/benefits/providers/edit/<providerId:\d+>' => 'staff-management/benefit-provider/edit',
             // benefit employers

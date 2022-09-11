@@ -49,7 +49,7 @@
 
           <EmployerList
             v-if="result"
-            :employers="result.employers"
+            :employers="result.Employers"
           />
         </div>
       </div>
