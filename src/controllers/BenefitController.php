@@ -262,7 +262,7 @@ class BenefitController extends Controller
         }
 
         if($success) {
-            return $this->redirect('/admin/staff-management/benefits/employers/' . $employer->id . '/policy/' . $policyId);
+            return $this->redirect('/admin/staff-management/benefits/employers/' . $employer->id . '/policy/' . $policy->id);
         }
 
         $pluginName = Staff::$settings->pluginName;
