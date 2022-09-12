@@ -1,0 +1,23 @@
+{%- requirePermission "hub:group-benefits" -%}
+
+{%- extends 'staff-management/_layouts/hub-cp.twig' -%}
+
+{%- set sidebar -%}
+    {%- include "staff-management/benefits/_nav" -%}
+{%- endset -%}
+
+{%- set content -%}
+
+    <div id="benefit-employer-container"></div>
+
+{%- endset -%}
+
+{%- block foot -%}
+    {{ parent() }}
+    {%- set tagOptions = {
+        'depends': [
+            'percipiolondon\\staff\\assetbundles\\staff\\StaffAsset'
+        ]
+    } -%}
+    {{  craft.staff.register('src/js/benefit-employers.ts', false, tagOptions) }}
+{%- endblock -%}

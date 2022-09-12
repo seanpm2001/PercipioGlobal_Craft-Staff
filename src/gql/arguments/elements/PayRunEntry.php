@@ -39,6 +39,11 @@ class PayRunEntry extends HardingArguments
                 'type' => Type::boolean(),
                 'description' => 'Narrows the query results based if the payruns is closed.',
             ],
+            'taxYear' => [
+                'name' => 'taxYear',
+                'type' => Type::string(),
+                'description' => 'Narrows down the query results based on the tax year'
+            ]
         ]);
     }
 }

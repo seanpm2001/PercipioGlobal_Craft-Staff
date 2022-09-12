@@ -83,7 +83,7 @@ class Install extends Migration
                 'content' => $this->longText()
             ]);
 
-            $this->createTable(Table::BENETFIT_TYPE_DENTAL, [
+            $this->createTable(Table::BENEFIT_TYPE_DENTAL, [
                 'id' => $this->primaryKey(),
                 'dateCreated' => $this->dateTime()->notNull(),
                 'dateUpdated' => $this->dateTime()->notNull(),
@@ -106,7 +106,7 @@ class Install extends Migration
                 'benefitType' => $this->string(255)->notNull()->defaultValue('dental')
             ]);
 
-            $this->createTable(Table::BENETFIT_TYPE_GROUP_CRITICAL_ILLNESS_COVER, [
+            $this->createTable(Table::BENEFIT_TYPE_GROUP_CRITICAL_ILLNESS_COVER, [
                 'id' => $this->primaryKey(),
                 'dateCreated' => $this->dateTime()->notNull(),
                 'dateUpdated' => $this->dateTime()->notNull(),
@@ -136,7 +136,7 @@ class Install extends Migration
                 'dateRefreshFrequency' => $this->enum('dateRefreshFrequency', ['annual', 'monthly'])
             ]);
 
-            $this->createTable(Table::BENETFIT_TYPE_GROUP_DEATH_IN_SERVICE, [
+            $this->createTable(Table::BENEFIT_TYPE_GROUP_DEATH_IN_SERVICE, [
                 'id' => $this->primaryKey(),
                 'dateCreated' => $this->dateTime()->notNull(),
                 'dateUpdated' => $this->dateTime()->notNull(),
@@ -169,7 +169,7 @@ class Install extends Migration
                 'eventLimit' => $this->float()
             ]);
 
-            $this->createTable(Table::BENETFIT_TYPE_GROUP_INCOME_PROTECTION, [
+            $this->createTable(Table::BENEFIT_TYPE_GROUP_INCOME_PROTECTION, [
                 'id' => $this->primaryKey(),
                 'dateCreated' => $this->dateTime()->notNull(),
                 'dateUpdated' => $this->dateTime()->notNull(),
@@ -199,7 +199,7 @@ class Install extends Migration
                 'dateRefreshFrequency' => $this->enum('dateRefreshFrequency', ['annual', 'monthly'])
             ]);
 
-            $this->createTable(Table::BENETFIT_TYPE_GROUP_LIFE_ASSURANCE, [
+            $this->createTable(Table::BENEFIT_TYPE_GROUP_LIFE_ASSURANCE, [
                 'id' => $this->primaryKey(),
                 'dateCreated' => $this->dateTime()->notNull(),
                 'dateUpdated' => $this->dateTime()->notNull(),
@@ -232,7 +232,7 @@ class Install extends Migration
                 'eventLimit' => $this->float()
             ]);
 
-            $this->createTable(Table::BENETFIT_TYPE_HEALTH_CASH_PLAN, [
+            $this->createTable(Table::BENEFIT_TYPE_HEALTH_CASH_PLAN, [
                 'id' => $this->primaryKey(),
                 'dateCreated' => $this->dateTime()->notNull(),
                 'dateUpdated' => $this->dateTime()->notNull(),
@@ -255,7 +255,7 @@ class Install extends Migration
                 'benefitType' => $this->string(255)->notNull()->defaultValue('health-cash-plan'),
             ]);
 
-            $this->createTable(Table::BENETFIT_TYPE_PRIVATE_MEDICAL_INSURANCE, [
+            $this->createTable(Table::BENEFIT_TYPE_PRIVATE_MEDICAL_INSURANCE, [
                 'id' => $this->primaryKey(),
                 'dateCreated' => $this->dateTime()->notNull(),
                 'dateUpdated' => $this->dateTime()->notNull(),
@@ -1643,22 +1643,22 @@ class Install extends Migration
         $this->createIndex(null, Table::BENEFIT_PROVIDERS, 'name', true);
 
         // Benefit Types [benefitType]
-        $this->createIndex(null, Table::BENETFIT_TYPE_DENTAL, 'benefitType', true);
-        $this->createIndex(null, Table::BENETFIT_TYPE_GROUP_CRITICAL_ILLNESS_COVER, 'benefitType', true);
-        $this->createIndex(null, Table::BENETFIT_TYPE_GROUP_DEATH_IN_SERVICE, 'benefitType', true);
-        $this->createIndex(null, Table::BENETFIT_TYPE_GROUP_INCOME_PROTECTION, 'benefitType', true);
-        $this->createIndex(null, Table::BENETFIT_TYPE_GROUP_LIFE_ASSURANCE, 'benefitType', true);
-        $this->createIndex(null, Table::BENETFIT_TYPE_HEALTH_CASH_PLAN, 'benefitType', true);
-        $this->createIndex(null, Table::BENETFIT_TYPE_PRIVATE_MEDICAL_INSURANCE, 'benefitType', true);
+        $this->createIndex(null, Table::BENEFIT_TYPE_DENTAL, 'benefitType', true);
+        $this->createIndex(null, Table::BENEFIT_TYPE_GROUP_CRITICAL_ILLNESS_COVER, 'benefitType', true);
+        $this->createIndex(null, Table::BENEFIT_TYPE_GROUP_DEATH_IN_SERVICE, 'benefitType', true);
+        $this->createIndex(null, Table::BENEFIT_TYPE_GROUP_INCOME_PROTECTION, 'benefitType', true);
+        $this->createIndex(null, Table::BENEFIT_TYPE_GROUP_LIFE_ASSURANCE, 'benefitType', true);
+        $this->createIndex(null, Table::BENEFIT_TYPE_HEALTH_CASH_PLAN, 'benefitType', true);
+        $this->createIndex(null, Table::BENEFIT_TYPE_PRIVATE_MEDICAL_INSURANCE, 'benefitType', true);
 
         // Benefit Types [internalCode]
-        $this->createIndex(null, Table::BENETFIT_TYPE_DENTAL, 'internalCode', true);
-        $this->createIndex(null, Table::BENETFIT_TYPE_GROUP_CRITICAL_ILLNESS_COVER, 'internalCode', true);
-        $this->createIndex(null, Table::BENETFIT_TYPE_GROUP_DEATH_IN_SERVICE, 'internalCode', true);
-        $this->createIndex(null, Table::BENETFIT_TYPE_GROUP_INCOME_PROTECTION, 'internalCode', true);
-        $this->createIndex(null, Table::BENETFIT_TYPE_GROUP_LIFE_ASSURANCE, 'internalCode', true);
-        $this->createIndex(null, Table::BENETFIT_TYPE_HEALTH_CASH_PLAN, 'internalCode', true);
-        $this->createIndex(null, Table::BENETFIT_TYPE_PRIVATE_MEDICAL_INSURANCE, 'internalCode', true);
+        $this->createIndex(null, Table::BENEFIT_TYPE_DENTAL, 'internalCode', true);
+        $this->createIndex(null, Table::BENEFIT_TYPE_GROUP_CRITICAL_ILLNESS_COVER, 'internalCode', true);
+        $this->createIndex(null, Table::BENEFIT_TYPE_GROUP_DEATH_IN_SERVICE, 'internalCode', true);
+        $this->createIndex(null, Table::BENEFIT_TYPE_GROUP_INCOME_PROTECTION, 'internalCode', true);
+        $this->createIndex(null, Table::BENEFIT_TYPE_GROUP_LIFE_ASSURANCE, 'internalCode', true);
+        $this->createIndex(null, Table::BENEFIT_TYPE_HEALTH_CASH_PLAN, 'internalCode', true);
+        $this->createIndex(null, Table::BENEFIT_TYPE_PRIVATE_MEDICAL_INSURANCE, 'internalCode', true);
 
         // Employees [id]
         $this->createIndex(null, Table::AUTO_ENROLMENT, 'employeeId', false);
@@ -1852,13 +1852,13 @@ class Install extends Migration
     {
         /** BASE **/
         // Benefit Providers [id]
-        $this->addForeignKey(null, Table::BENETFIT_TYPE_DENTAL, ['providerId'], Table::BENEFIT_PROVIDERS, ['id'], 'CASCADE', 'CASCADE' );
-        $this->addForeignKey(null, Table::BENETFIT_TYPE_GROUP_CRITICAL_ILLNESS_COVER, ['providerId'], Table::BENEFIT_PROVIDERS, ['id'], 'CASCADE', 'CASCADE' );
-        $this->addForeignKey(null, Table::BENETFIT_TYPE_GROUP_DEATH_IN_SERVICE, ['providerId'], Table::BENEFIT_PROVIDERS, ['id'], 'CASCADE', 'CASCADE' );
-        $this->addForeignKey(null, Table::BENETFIT_TYPE_GROUP_INCOME_PROTECTION, ['providerId'], Table::BENEFIT_PROVIDERS, ['id'], 'CASCADE', 'CASCADE' );
-        $this->addForeignKey(null, Table::BENETFIT_TYPE_GROUP_LIFE_ASSURANCE, ['providerId'], Table::BENEFIT_PROVIDERS, ['id'], 'CASCADE', 'CASCADE' );
-        $this->addForeignKey(null, Table::BENETFIT_TYPE_HEALTH_CASH_PLAN, ['providerId'], Table::BENEFIT_PROVIDERS, ['id'], 'CASCADE', 'CASCADE' );
-        $this->addForeignKey(null, Table::BENETFIT_TYPE_PRIVATE_MEDICAL_INSURANCE, ['providerId'], Table::BENEFIT_PROVIDERS, ['id'], 'CASCADE', 'CASCADE' );
+        $this->addForeignKey(null, Table::BENEFIT_TYPE_DENTAL, ['providerId'], Table::BENEFIT_PROVIDERS, ['id'], 'CASCADE', 'CASCADE' );
+        $this->addForeignKey(null, Table::BENEFIT_TYPE_GROUP_CRITICAL_ILLNESS_COVER, ['providerId'], Table::BENEFIT_PROVIDERS, ['id'], 'CASCADE', 'CASCADE' );
+        $this->addForeignKey(null, Table::BENEFIT_TYPE_GROUP_DEATH_IN_SERVICE, ['providerId'], Table::BENEFIT_PROVIDERS, ['id'], 'CASCADE', 'CASCADE' );
+        $this->addForeignKey(null, Table::BENEFIT_TYPE_GROUP_INCOME_PROTECTION, ['providerId'], Table::BENEFIT_PROVIDERS, ['id'], 'CASCADE', 'CASCADE' );
+        $this->addForeignKey(null, Table::BENEFIT_TYPE_GROUP_LIFE_ASSURANCE, ['providerId'], Table::BENEFIT_PROVIDERS, ['id'], 'CASCADE', 'CASCADE' );
+        $this->addForeignKey(null, Table::BENEFIT_TYPE_HEALTH_CASH_PLAN, ['providerId'], Table::BENEFIT_PROVIDERS, ['id'], 'CASCADE', 'CASCADE' );
+        $this->addForeignKey(null, Table::BENEFIT_TYPE_PRIVATE_MEDICAL_INSURANCE, ['providerId'], Table::BENEFIT_PROVIDERS, ['id'], 'CASCADE', 'CASCADE' );
 
         // Employees [id]
         $this->addForeignKey(null, Table::AUTO_ENROLMENT, ['employeeId'], Table::EMPLOYEES, ['id'], 'CASCADE', 'CASCADE');
@@ -2015,13 +2015,13 @@ class Install extends Migration
         /** CRAFT **/
         // Elements [id]
         $this->addForeignKey(null, Table::BENEFIT_PROVIDERS, ['id'], CraftTable::ELEMENTS, ['id'], 'CASCADE', 'CASCADE' );
-        $this->addForeignKey(null, Table::BENETFIT_TYPE_DENTAL, ['id'], CraftTable::ELEMENTS, ['id'], 'CASCADE', 'CASCADE' );
-        $this->addForeignKey(null, Table::BENETFIT_TYPE_GROUP_CRITICAL_ILLNESS_COVER, ['id'], CraftTable::ELEMENTS, ['id'], 'CASCADE', 'CASCADE' );
-        $this->addForeignKey(null, Table::BENETFIT_TYPE_GROUP_DEATH_IN_SERVICE, ['id'], CraftTable::ELEMENTS, ['id'], 'CASCADE', 'CASCADE' );
-        $this->addForeignKey(null, Table::BENETFIT_TYPE_GROUP_INCOME_PROTECTION, ['id'], CraftTable::ELEMENTS, ['id'], 'CASCADE', 'CASCADE' );
-        $this->addForeignKey(null, Table::BENETFIT_TYPE_GROUP_LIFE_ASSURANCE, ['id'], CraftTable::ELEMENTS, ['id'], 'CASCADE', 'CASCADE' );
-        $this->addForeignKey(null, Table::BENETFIT_TYPE_HEALTH_CASH_PLAN, ['id'], CraftTable::ELEMENTS, ['id'], 'CASCADE', 'CASCADE' );
-        $this->addForeignKey(null, Table::BENETFIT_TYPE_PRIVATE_MEDICAL_INSURANCE, ['id'], CraftTable::ELEMENTS, ['id'], 'CASCADE', 'CASCADE' );
+        $this->addForeignKey(null, Table::BENEFIT_TYPE_DENTAL, ['id'], CraftTable::ELEMENTS, ['id'], 'CASCADE', 'CASCADE' );
+        $this->addForeignKey(null, Table::BENEFIT_TYPE_GROUP_CRITICAL_ILLNESS_COVER, ['id'], CraftTable::ELEMENTS, ['id'], 'CASCADE', 'CASCADE' );
+        $this->addForeignKey(null, Table::BENEFIT_TYPE_GROUP_DEATH_IN_SERVICE, ['id'], CraftTable::ELEMENTS, ['id'], 'CASCADE', 'CASCADE' );
+        $this->addForeignKey(null, Table::BENEFIT_TYPE_GROUP_INCOME_PROTECTION, ['id'], CraftTable::ELEMENTS, ['id'], 'CASCADE', 'CASCADE' );
+        $this->addForeignKey(null, Table::BENEFIT_TYPE_GROUP_LIFE_ASSURANCE, ['id'], CraftTable::ELEMENTS, ['id'], 'CASCADE', 'CASCADE' );
+        $this->addForeignKey(null, Table::BENEFIT_TYPE_HEALTH_CASH_PLAN, ['id'], CraftTable::ELEMENTS, ['id'], 'CASCADE', 'CASCADE' );
+        $this->addForeignKey(null, Table::BENEFIT_TYPE_PRIVATE_MEDICAL_INSURANCE, ['id'], CraftTable::ELEMENTS, ['id'], 'CASCADE', 'CASCADE' );
         $this->addForeignKey(null, Table::EMPLOYEES, ['id'], CraftTable::ELEMENTS, ['id'], 'CASCADE', 'CASCADE' );
         $this->addForeignKey(null, Table::EMPLOYERS, ['id'], CraftTable::ELEMENTS, ['id'], 'CASCADE', 'CASCADE' );
         $this->addForeignKey(null, Table::PAY_RUN, ['id'], CraftTable::ELEMENTS, ['id'], 'CASCADE', 'CASCADE' );

@@ -17,7 +17,11 @@ export default defineConfig(({command}) => ({
         sourcemap: true,
         rollupOptions: {
             input: {
-                benefitTypes: './src/js/benefitTypes.ts',
+                benefitEmployees: './src/js/benefit-employees.ts',
+                benefitEmployers: './src/js/benefit-employers.ts',
+                benefitPolicy: './src/js/benefit-policy.ts',
+                benefitVariants: './src/js/benefit-variants.ts',
+                benefitVariantDelete: './src/js/benefit-variant-delete.ts',
                 employers: './src/js/employers.ts',
                 details: './src/js/payrun-details.ts',
                 payruns: './src/js/payruns.ts',

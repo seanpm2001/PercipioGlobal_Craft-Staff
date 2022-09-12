@@ -1,0 +1,137 @@
+{%- requirePermission 'hub:benefits' -%}
+
+{%- extends 'staff-management/_layouts/hub-cp.twig' -%}
+{%- import '_includes/forms' as forms -%}
+{%- import 'timeloop/fields/timeloop-input' as timeloop %}
+
+{%- set sidebar -%}
+    {%- include 'staff-management/benefits/_nav' -%}
+{%- endset -%}
+
+{%- block actionButton -%}
+    {%- include 'staff-management/_atoms/buttons/button--submit' with {
+        options: {
+            title: 'Save Policy Variant',
+            action: 'staff-management/benefit/variant-save'
+        }
+    } -%}
+{%- endblock -%}
+
+{%- set fullPageForm = true -%}
+
+{%- set content -%}
+
+    <div class="md:flex items-start">
+        <div class="flex-grow pr-4 mb-0">
+            <div class="flex items-center">
+                <div class="flex items-center mb-0">
+                    <a href="{{url('staff-management') ~ '/benefits/employers/' ~ employer.id ~ '/policy/' ~ policy.id }}" title="Go back to overview" class="inline-flex no-underline items-center px-2.5 py-1.5 rounded-full text-sm text-indigo-700 bg-indigo-100 hover:bg-indigo-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 mb-0">&larr;</a>
+                    <h1 class="ml-2 text-xl font-semibold text-gray-900">
+                        {{ policy.policyName }} {{ variant ? variant.name : 'variant' }}
+                    </h1>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <input type="hidden" name="action" value="staff-management/benefit/variant-save" />
+    <input type="hidden" name="policyId" value="{{- policy ? policy.id : '' -}}" />
+    <input type="hidden" name="trsId" value="{{- trs ? trs.id : '' -}}" />
+    <input type="hidden" name="variantId" value="{{- variant ? variant.id : '' -}}" />
+
+    <div class="mt-8">
+        {{ forms.textField({
+            first: true,
+            label: "Name"|t('staff-management'),
+            instructions: "What's the name of the policy variant"|t('staff-management'),
+            id: 'name',
+            name: 'name',
+            value: variant ? variant.name : '',
+            errors: errors['name'] ?? null,
+            autofocus: true,
+            required: true,
+        }) }}
+    </div>
+
+    {%- include 'staff-management/benefits/variant/fields/'~benefitType['slug'] ignore missing -%}
+
+    <hr/>
+
+    <h2>Total Rewards Statement</h2>
+
+    <section class="mt-8 grid grid-cols-1 md:grid-cols-2 gap-6">
+        <div>
+            {{ forms.textField({
+                first: true,
+                label: "Title"|t('staff-management'),
+                instructions: "What's the title of the TRS"|t('staff-management'),
+                id: 'trsTitle',
+                name: 'trsTitle',
+                value: trs.title ?? '',
+                errors: errorsTrs['title'] ?? null,
+                required: true,
+            }) }}
+        </div>
+
+        <div>
+            {{ forms.textField({
+                first: true,
+                label: "Monetary Value"|t('staff-management'),
+                instructions: "What's the monetary value of the TRS"|t('staff-management'),
+                id: 'trsMonetaryValue',
+                name: 'trsMonetaryValue',
+                value: trs.monetaryValue ?? '',
+                errors: errorsTrs['monetaryValue'] ?? null,
+                type: 'number',
+                required: true,
+            }) }}
+        </div>
+
+        <div>
+            {{ forms.dateField({
+                label: "Start Date"|t('staff-management'),
+                instructions: "Start date of the TRS"|t('staff-management'),
+                id: 'trsStartDate',
+                name: 'trsStartDate',
+                value: trs.startDate ?? '',
+                errors: errorsTrs['startDate'] ?? null,
+                required: true,
+            }) }}
+        </div>
+
+        <div>
+            {{ forms.dateField({
+                label: "End Date"|t('staff-management'),
+                instructions: "End date of the TRS"|t('staff-management'),
+                id: 'trsEndDate',
+                name: 'trsEndDate',
+                value: trs.endDate ?? '',
+                errors: errorsTrs['endDate'] ?? null,
+                required: true,
+            }) }}
+        </div>
+    </section>
+
+
+{#    {#}
+{#    id: int                                                       auto increment#}
+{#    title: varchar(255)#}
+{#    monetaryValue: int#}
+{#    startDate: datetime#}
+{#    endDate: datetime#}
+{#    dateCreated: datetime                                         craft default#}
+{#    dateUpdated: datetime                                         craft default#}
+{#    }#}
+
+{%- endset -%}
+
+{%- block foot -%}
+    {{ parent() }}
+    {%- set tagOptions = {
+        'depends': [
+            'percipiolondon\\staff\\assetbundles\\staff\\StaffAsset'
+        ]
+    } -%}
+    {{- craft.staff.register('src/js/tiptap.ts', false, tagOptions) -}}
+{%- endblock -%}
+

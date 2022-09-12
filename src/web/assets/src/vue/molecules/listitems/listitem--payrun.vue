@@ -13,7 +13,7 @@
   <a 
     v-for="payrun in payrunData"
     :key="payrun.id"
-    :href="`/admin/staff-management/pay-runs/${payrun.employerId}/${currentYear}/${payrun.id}`" 
+    :href="`/admin/staff-management/pay-runs/${payrun.employerId}/${currentYear}/${payrun.id}`"
     :title="`Go to pay run ${payrun.period}/${payrun.taxYear}`" 
     class="grid grid-cols-4 lg:grid-cols-7 border-b border-solid border-gray-200 no-underline hover:bg-gray-200" 
   >
