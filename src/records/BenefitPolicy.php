@@ -53,6 +53,8 @@ class BenefitPolicy extends ActiveRecord
             'commissionRate',
         ], 'required'];
 
+        $rules[] = [['internalCode'], 'unique'];
+
         return $rules;
     }
 
