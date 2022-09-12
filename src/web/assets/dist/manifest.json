@@ -1,12 +1,12 @@
 {
   "src/js/benefit-employees.ts": {
-    "file": "assets/benefitEmployees.c88ab9fd.js",
+    "file": "assets/benefitEmployees.da7b8f3b.js",
     "src": "src/js/benefit-employees.ts",
     "isEntry": true,
     "imports": [
       "_vue.esm-bundler.fd9c3e39.js",
       "_useApolloClient.40cb325f.js",
-      "_variants.de1667b3.js"
+      "_variants.dd3c3488.js"
     ]
   },
   "src/js/benefit-employers.ts": {
@@ -29,13 +29,13 @@
     ]
   },
   "src/js/benefit-variants.ts": {
-    "file": "assets/benefitVariants.1d2502de.js",
+    "file": "assets/benefitVariants.3d5f1e1a.js",
     "src": "src/js/benefit-variants.ts",
     "isEntry": true,
     "imports": [
       "_vue.esm-bundler.fd9c3e39.js",
       "_useApolloClient.40cb325f.js",
-      "_variants.de1667b3.js"
+      "_variants.dd3c3488.js"
     ]
   },
   "src/js/benefit-variant-delete.ts": {
@@ -125,8 +125,8 @@
       "_vue.esm-bundler.fd9c3e39.js"
     ]
   },
-  "_variants.de1667b3.js": {
-    "file": "assets/variants.de1667b3.js",
+  "_variants.dd3c3488.js": {
+    "file": "assets/variants.dd3c3488.js",
     "imports": [
       "_useApolloClient.40cb325f.js"
     ]

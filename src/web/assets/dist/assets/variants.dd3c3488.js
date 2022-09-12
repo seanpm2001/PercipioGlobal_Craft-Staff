@@ -1,6 +1,6 @@
 import{g as e}from"./useApolloClient.40cb325f.js";const a=e`
     query BenefitVariant($id: [QueryArgument]) {
-        BenefitVariant(id: $id) {
+        BenefitVariant(id: $id, orderBy: "name ASC") {
             id
             name
             policy {
@@ -98,4 +98,4 @@ import{g as e}from"./useApolloClient.40cb325f.js";const a=e`
     }
 
 `;export{l as A,n as R,o as V,a,i as b};
-//# sourceMappingURL=variants.de1667b3.js.map
+//# sourceMappingURL=variants.dd3c3488.js.map
