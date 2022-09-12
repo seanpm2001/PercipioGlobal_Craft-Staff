@@ -2,7 +2,7 @@ import { gql } from 'graphql-tag'
 
 export const VARIANT = gql`
     query BenefitVariant($id: [QueryArgument]) {
-        BenefitVariant(id: $id) {
+        BenefitVariant(id: $id, orderBy: "name ASC") {
             id
             name
             policy {
