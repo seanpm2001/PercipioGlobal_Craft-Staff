@@ -4,6 +4,17 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](http://keepachangelog.com/) and this project adheres to [Semantic Versioning](http://semver.org/).
 
+## 1.0.0-beta.16 - 2022-09-12
+
+### Added
+- Added benefit types to the database
+- Added a benefit company dashboard with an overview of policies and variants on a benefit type
+- Added a create / edit / delete benefit policy
+- Added a create / edit / delete benefit variant
+- Added a create / edit / delete benefit TRS
+- Added a flow to assign employees to benefit variants
+- Added GraphQL queries to select the benefit policies and variants from the backend
+
 ## 1.0.0-beta.15 - 2022-08-30
 
 ### Added
