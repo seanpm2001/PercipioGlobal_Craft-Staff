@@ -24,6 +24,7 @@ use percipiolondon\staff\db\Table;
  * @property string $type;
  * @property string $status;
  * @property string $note;
+ * @property string $error;
  */
 
 class Requests extends ActiveRecord

@@ -52,6 +52,7 @@ class RequestQuery extends ElementQuery
             'staff_requests.type',
             'staff_requests.status',
             'staff_requests.note',
+            'staff_requests.error',
         ]);
 
         if ($this->employeeId) {
