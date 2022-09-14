@@ -531,7 +531,7 @@ class PayRuns extends Component
      * @param array $employer
      * @throws \Throwable
      */
-    public function savePayRun(array $payRun, string $payRunUrl, array $employer): void
+    public function savePayRun(array $payRun, string $payRunUrl, array $employer, bool $fetchPayRunEntry = true): void
     {
         $logger = new Logger();
         $logger->stdout("✓ Save pay run of " . $employer['name'] . ' ' . $payRun['taxYear'] . ' / ' . $payRun['taxMonth'] . '...', $logger::RESET);
@@ -569,15 +569,17 @@ class PayRuns extends Component
             if ($success) {
 
                 // GET PAYRUNENTRY FROM PAYRUN
-                $queue = Craft::$app->getQueue();
-                $queue->push(new CreatePayRunEntryJob([
-                    'description' => 'Fetch pay run entry',
-                    'criteria' => [
-                        'payRun' => $payRunRecord,
-                        'payRunEntries' => $payRun['entries'],
-                        'employer' => $employer,
-                    ],
-                ]));
+                if ($fetchPayRunEntry) {
+                    $queue = Craft::$app->getQueue();
+                    $queue->push(new CreatePayRunEntryJob([
+                        'description' => 'Fetch pay run entry',
+                        'criteria' => [
+                            'payRun' => $payRunRecord,
+                            'payRunEntries' => $payRun['entries'],
+                            'employer' => $employer,
+                        ],
+                    ]));
+                }
 
                 $logger->stdout(" done" . PHP_EOL, $logger::FG_GREEN);
 
