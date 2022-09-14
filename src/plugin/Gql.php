@@ -38,6 +38,7 @@ use percipiolondon\staff\gql\types\Employee;
 use percipiolondon\staff\gql\types\Employer;
 use percipiolondon\staff\gql\types\EmploymentDetails;
 use percipiolondon\staff\gql\types\HmrcDetails;
+use percipiolondon\staff\gql\types\LeaveSettings;
 use percipiolondon\staff\gql\types\PayOptions;
 use percipiolondon\staff\gql\types\PayRunTotals;
 use percipiolondon\staff\gql\types\PensionSummary;
@@ -45,6 +46,7 @@ use percipiolondon\staff\gql\types\PersonalDetails;
 use percipiolondon\staff\gql\types\Policy;
 use percipiolondon\staff\gql\types\StarterDetails;
 use percipiolondon\staff\gql\types\TotalRewardsStatement;
+use percipiolondon\staff\gql\types\WorkerGroup;
 use yii\base\Event;
 
 trait Gql
@@ -65,7 +67,7 @@ trait Gql
         Event::on(
             \craft\services\Gql::class,
             GqlService::EVENT_REGISTER_GQL_TYPES,
-            function(RegisterGqlTypesEvent $event) {
+            function (RegisterGqlTypesEvent $event) {
                 $event->types[] = BenefitVariantInterface::class;
                 $event->types[] = EmployerInterface::class;
                 $event->types[] = EmployeeInterface::class;
@@ -96,7 +98,6 @@ trait Gql
         TypeLoader::registerType(StarterDetails::getName(), StarterDetails::class . '::getType');
         TypeLoader::registerType(TotalRewardsStatement::getName(), TotalRewardsStatement::class . '::getType');
         TypeLoader::registerType(WorkerGroup::getName(), WorkerGroup::class . '::getType');
-
     }
 
     private function _registerGqlSchemaComponents(): void
@@ -104,7 +105,7 @@ trait Gql
         Event::on(
             GqlService::class,
             GqlService::EVENT_REGISTER_GQL_SCHEMA_COMPONENTS,
-            function(RegisterGqlSchemaComponentsEvent $event) {
+            function (RegisterGqlSchemaComponentsEvent $event) {
                 $event->queries = array_merge($event->queries, [
                     'Staff Management' => [
                         'group-benefits:read' => ['label' => Craft::t('staff-management', 'View Group Benefits')],
@@ -137,7 +138,7 @@ trait Gql
         Event::on(
             GqlService::class,
             GqlService::EVENT_REGISTER_GQL_QUERIES,
-            function(RegisterGqlQueriesEvent $event) {
+            function (RegisterGqlQueriesEvent $event) {
                 $event->queries = array_merge(
                     $event->queries,
                     BenefitVariantQueries::getQueries(),
@@ -160,7 +161,7 @@ trait Gql
         Event::on(
             GqlService::class,
             GqlService::EVENT_REGISTER_GQL_MUTATIONS,
-            function(RegisterGqlMutationsEvent $event) {
+            function (RegisterGqlMutationsEvent $event) {
                 $event->mutations = array_merge(
                     $event->mutations,
                     BenefitVariantEmployeesMutation::getMutations(),
