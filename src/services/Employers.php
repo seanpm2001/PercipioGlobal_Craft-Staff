@@ -1,4 +1,5 @@
 <?php
+
 /**
  * staff-management plugin for Craft CMS 3.x
  *
@@ -107,11 +108,11 @@ class Employers extends Component
             return [];
         }
 
-        if(!$raw) {
+        if (!$raw) {
             $employer = $this->parseEmployer($employer);
         }
 
-        if($employer['defaultPayOptionsId'] ?? null) {
+        if ($employer['defaultPayOptionsId'] ?? null) {
             $query = new Query();
             $query->from(Table::PAY_OPTIONS)
                 ->where('id = ' . $employer['defaultPayOptionsId'])
@@ -241,11 +242,11 @@ class Employers extends Component
                 $employers = Json::decodeIfJson($response->getBody()->getContents(), true);
 
                 //TESTING PURPOSE
-//                if (App::parseEnv('$HUB_DEV_MODE') && App::parseEnv('$HUB_DEV_MODE') == 1) {
-//                    $employers = array_filter($employers, static function($emp) {
-//                        return $emp['name'] == 'Acme Limited (Demo)';
-//                    });
-//                }
+                //                if (App::parseEnv('$HUB_DEV_MODE') && App::parseEnv('$HUB_DEV_MODE') == 1) {
+                //                    $employers = array_filter($employers, static function($emp) {
+                //                        return $emp['name'] == 'Acme Limited (Demo)';
+                //                    });
+                //                }
 
                 if (count($employers) > 0) {
                     $logger->stdout("End fetching list of " . count($employers) . " employers " . PHP_EOL, $logger::RESET);
@@ -286,7 +287,7 @@ class Employers extends Component
     public function syncEmployers(array $employers): void
     {
         $logger = new Logger();
-        $logger->stdout('↧ Sync employers'. PHP_EOL, $logger::RESET);
+        $logger->stdout('↧ Sync employers' . PHP_EOL, $logger::RESET);
 
         $hubEmployers = Employer::findAll();
 
@@ -303,7 +304,7 @@ class Employers extends Component
 
             // remove the employer if it doesn't exists anymore
             if (!$exists) {
-                $logger->stdout('✓ Delete employer '. $hubEmp['name']. PHP_EOL, $logger::FG_YELLOW);
+                $logger->stdout('✓ Delete employer ' . $hubEmp['name'] . PHP_EOL, $logger::FG_YELLOW);
                 Craft::$app->getElements()->deleteElementById($hubEmp['id']);
             }
         }
