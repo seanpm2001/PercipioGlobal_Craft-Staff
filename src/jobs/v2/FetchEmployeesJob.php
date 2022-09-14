@@ -33,7 +33,7 @@ class FetchEmployeesJob extends BaseJob
                 $employees = Json::decodeIfJson($response->getBody()->getContents(), true);
 
                 //Delete existing if they don't exist on Staffology anymore
-                Staff::$plugin->employees->syncEmployees($this->criteria['employer'], $employees);
+                Staff::$plugin->employees->syncEmployees($employer, $employees);
 
                 foreach ($employees as $i => $employee) {
                     $employeeName = $employee['name'];

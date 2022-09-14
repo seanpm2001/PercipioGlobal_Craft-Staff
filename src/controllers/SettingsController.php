@@ -14,6 +14,8 @@ use craft\errors\MissingComponentException;
 use craft\helpers\App;
 use craft\web\Controller;
 
+use percipiolondon\staff\elements\Employee;
+use percipiolondon\staff\elements\Employer;
 use percipiolondon\staff\elements\SettingsAdmin;
 use percipiolondon\staff\records\Settings;
 use percipiolondon\staff\Staff;
@@ -72,6 +74,8 @@ class SettingsController extends Controller
         $variables['title'] = $templateTitle;
         $variables['docTitle'] = "{$pluginName} - {$templateTitle}";
         $variables['selectedSubnavItem'] = 'dashboard';
+        $variables['employers'] = Employer::findAll();
+        $variables['employees'] = Employee::findAll();
 
         // Render the template
         return $this->renderTemplate('staff-management/dashboard/index', $variables);
