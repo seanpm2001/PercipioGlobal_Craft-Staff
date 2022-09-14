@@ -95,11 +95,11 @@ class FetchController extends Controller
         $this->stdout('' . PHP_EOL, Console::RESET);
 
         $queue = Craft::$app->getQueue();
-        $queue->push(new FetchEmployeesJob([
+        $queue->push(new FetchPayRunJob([
             'criteria' => [
                 'employers' => Employer::findAll(),
             ],
-            'description' => 'Fetching employees',
+            'description' => 'Fetching pay run',
         ]));
 
         $this->_runQueue();
