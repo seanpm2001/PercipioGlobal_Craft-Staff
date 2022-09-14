@@ -18,7 +18,7 @@ class FetchEmployersJob extends BaseJob
         $logger = new Logger();
         $api = App::parseEnv(Staff::$plugin->getSettings()->apiKeyStaffology);
         $credentials = base64_encode('staff:' . $api);
-        $base_url = $base_url = Staff::$plugin->getSettings()->apiBaseUrl . 'employers';
+        $base_url = Staff::$plugin->getSettings()->apiBaseUrl . 'employers';
         $headers = [
             'headers' => [
                 'Authorization' => 'Basic ' . $credentials,
@@ -30,6 +30,9 @@ class FetchEmployersJob extends BaseJob
             $response = $client->get($base_url, $headers);
 
             $employers = Json::decodeIfJson($response->getBody()->getContents(), true);
+
+            //Delete existing if they don't exist on Staffology anymore
+            Staff::$plugin->employers->syncEmployers($employers);
 
             foreach ($employers as $i => $employer) {
 
@@ -60,7 +63,7 @@ class FetchEmployersJob extends BaseJob
 
         } catch (\Exception $e) {
             $logger->stdout($e->getMessage() . PHP_EOL, $logger::FG_RED);
-            Craft::error($e->getMessage(), __METHOD__);
+            Craft::error($e->getMessage() . ': thrown with API key: ' . $api, __METHOD__);
         }
     }
 }

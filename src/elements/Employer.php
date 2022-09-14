@@ -240,6 +240,11 @@ class Employer extends Element
         return static::gqlTypeNameByContext($this);
     }
 
+    public function getCrn(): string
+    {
+        return SecurityHelper::decrypt($this->crn);
+    }
+
     // Events
     // -------------------------------------------------------------------------
 

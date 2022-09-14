@@ -101,11 +101,11 @@
     ]
   },
   "src/js/staff.ts": {
-    "file": "assets/staff.1d4acbdc.js",
+    "file": "assets/staff.9f223bf4.js",
     "src": "src/js/staff.ts",
     "isEntry": true,
     "css": [
-      "assets/staff.a9d4f89a.css"
+      "assets/staff.df349d8a.css"
     ]
   },
   "src/js/tiptap.ts": {

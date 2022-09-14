@@ -280,6 +280,13 @@ class Staff extends Plugin
             'url' => 'staff-management/settings/user-settings',
         ];
 
+        if ($currentUser->can('hub:plugin-settings')) {
+            $subNavs['fetches'] = [
+                'label' => Craft::t('staff-management', 'Fetches'),
+                'url' => 'staff-management/fetch',
+            ];
+        }
+
         $editableSettings = true;
         // Check against allowAdminChanges
         if (!Craft::$app->getConfig()->getGeneral()->allowAdminChanges) {
@@ -406,6 +413,11 @@ class Staff extends Plugin
             'staff-management/requests' => 'staff-management/request',
             'staff-management/requests/<requestId:\d+>' => 'staff-management/request/detail',
             'staff-management/requests/undo/<requestId:\d+>' => 'staff-management/request/undo',
+            // fetch
+            'staff-management/fetch' => 'staff-management/fetch',
+            'staff-management/fetch/employer' => 'staff-management/fetch/employer',
+            'staff-management/fetch/employee' => 'staff-management/fetch/employee',
+            'staff-management/fetch/pay-run' => 'staff-management/fetch/pay-run',
             // settings
             'staff-management/plugin' => 'staff-management/settings/plugin',
             'staff-management/settings/get-gql-token' => 'staff-management/settings/get-gql-token',

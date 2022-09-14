@@ -417,12 +417,12 @@ class PayRuns extends Component
      *
      * @param array $employers
      */
-    public function syncPayCode(array $employer, array $payCodes)
+    public function syncPayCode(array|Employer $employer, array $payCodes)
     {
         $logger = new Logger();
         $logger->stdout('↧ Sync pay codes of '. $employer['name']. PHP_EOL, $logger::RESET);
 
-        $hubEmployer = Employer::findOne(['staffologyId' => $employer['id']]);
+        $hubEmployer = is_array($employer) ? Employer::findOne(['staffologyId' => $employer['id']]) : $employer;
         $hubPayCodes = PayCode::findAll(['employerId' => $hubEmployer['id']]);
 
         foreach ($hubPayCodes as $hubPayCode) {
@@ -452,7 +452,7 @@ class PayRuns extends Component
      * @param array $payCode
      * @param array $employer
      */
-    public function savePayCode(array $payCode, array $employer): void
+    public function savePayCode(array $payCode, array|Employer $employer): void
     {
         $logger = new Logger();
         $logger->stdout("✓ Save pay code " . $payCode['code'] . "...", $logger::RESET);
@@ -494,7 +494,7 @@ class PayRuns extends Component
      * @param array $employer
      * @param array $payruns
      */
-    public function syncPayRuns(array $employer, array $payRuns)
+    public function syncPayRuns(array|Employer $employer, array $payRuns)
     {
         $logger = new Logger();
         $logger->stdout('↧ Sync pay run of '. $employer['name']. PHP_EOL, $logger::RESET);
@@ -503,8 +503,9 @@ class PayRuns extends Component
 
         // only check to delete pay runs if we have a tax year
         if($taxYear) {
-            $hubEmployer = Employer::findOne(['staffologyId' => $employer['id']]);
+            $hubEmployer = is_array($employer) ? Employer::findOne(['staffologyId' => $employer['id']]) : $employer;
             $hubPayRuns = PayRun::findAll(['employerId' => $hubEmployer['id'], 'taxYear' => $taxYear]);
+
             foreach ($hubPayRuns as $hubPayRun) {
 
                 $exists = false;
@@ -531,7 +532,7 @@ class PayRuns extends Component
      * @param array $employer
      * @throws \Throwable
      */
-    public function savePayRun(array $payRun, string $payRunUrl, array $employer): void
+    public function savePayRun(array $payRun, string $payRunUrl, array|Employer $employer, bool $fetchPayRunEntry = true): ?PayRun
     {
         $logger = new Logger();
         $logger->stdout("✓ Save pay run of " . $employer['name'] . ' ' . $payRun['taxYear'] . ' / ' . $payRun['taxMonth'] . '...', $logger::RESET);
@@ -569,40 +570,48 @@ class PayRuns extends Component
             if ($success) {
 
                 // GET PAYRUNENTRY FROM PAYRUN
-                $queue = Craft::$app->getQueue();
-                $queue->push(new CreatePayRunEntryJob([
-                    'description' => 'Fetch pay run entry',
-                    'criteria' => [
-                        'payRun' => $payRunRecord,
-                        'payRunEntries' => $payRun['entries'],
-                        'employer' => $employer,
-                    ],
-                ]));
+                if ($fetchPayRunEntry) {
+                    $queue = Craft::$app->getQueue();
+                    $queue->push(new CreatePayRunEntryJob([
+                        'description' => 'Fetch pay run entry',
+                        'criteria' => [
+                            'payRun' => $payRunRecord,
+                            'payRunEntries' => $payRun['entries'],
+                            'employer' => $employer,
+                        ],
+                    ]));
+                }
 
                 $logger->stdout(" done" . PHP_EOL, $logger::FG_GREEN);
 
                 if ($payRun['totals'] ?? null) {
                     Staff::$plugin->totals->savePayRunTotals($payRun['totals'], $payRunRecord->id);
                 }
+
+                return $payRunRecord;
 //                $this->savePayRunLog($payRun, $payRunUrl, $payRunRecord->id, $employer['id']);
-            } else {
-                $logger->stdout(" failed" . PHP_EOL, $logger::FG_RED);
-
-                $errors = "";
-
-                foreach ($payRunRecord->errors as $err) {
-                    $errors .= implode(',', $err);
-                }
-
-                $logger->stdout($errors . PHP_EOL, $logger::FG_RED);
-                Craft::error($payRunRecord->errors, __METHOD__);
             }
+
+            $logger->stdout(" failed" . PHP_EOL, $logger::FG_RED);
+
+            $errors = "";
+
+            foreach ($payRunRecord->errors as $err) {
+                $errors .= implode(',', $err);
+            }
+
+            $logger->stdout($errors . PHP_EOL, $logger::FG_RED);
+            Craft::error($payRunRecord->errors, __METHOD__);
+
+            return null;
         } catch (\Exception $e) {
             $logger = new Logger();
             $logger->stdout(PHP_EOL, $logger::RESET);
             $logger->stdout($e->getMessage() . PHP_EOL, $logger::FG_RED);
             Craft::error($e->getMessage(), __METHOD__);
         }
+
+        return null;
     }
 
     /**

@@ -32,6 +32,8 @@ class FetchEmployeesJob extends BaseJob
                 $response = $client->get($base_url, $headers);
                 $employees = Json::decodeIfJson($response->getBody()->getContents(), true);
 
+                //Delete existing if they don't exist on Staffology anymore
+                Staff::$plugin->employees->syncEmployees($employer, $employees);
 
                 foreach ($employees as $i => $employee) {
                     $employeeName = $employee['name'];
@@ -62,7 +64,7 @@ class FetchEmployeesJob extends BaseJob
 
             } catch (\Exception $e) {
                 $logger->stdout($e->getMessage() . PHP_EOL, $logger::FG_RED);
-                Craft::error($e->getMessage(), __METHOD__);
+                Craft::error($e->getMessage() . ': thrown with API key: ' . $api, __METHOD__);
             }
         }
     }
