@@ -85,7 +85,7 @@ class FetchPayRunJob extends BaseJob
 
                         foreach ($payRunData as $i => $payRun) {
 
-                            $url = Staff::$plugin->getSettings()->apiBaseUrl . (strpos($payRun['url'], 'api.staffology') > 0 ? str_replace('https://api.staffology.co.uk', '', $payRun['url']) : $payRun['url']);
+                            $url = Staff::$plugin->getSettings()->apiBaseUrl . (strpos($payRun['url'], 'api.staffology') > 0 ? str_replace('https://api.staffology.co.uk/', '', $payRun['url']) : $payRun['url']);
 
                             $taxYear = $payRun['metadata']['taxYear'] ?? $payRun['taxYear'] ?? '';
                             $name = $payRun['name'] ?? '';

@@ -1,4 +1,5 @@
 <?php
+
 /**
  * staff-management plugin for Craft CMS 3.x
  *
@@ -123,9 +124,9 @@ class PayRuns extends Component
         $payCodes = PayCodeRecord::find()->where(['employerId' => $payRunEmployerId, 'isSystemCode' => 0])->all();
 
         //create pay codes for all entries
-        $payCodeKeys = array_map(function($code) {
+        $payCodeKeys = array_map(function ($code) {
             return $code['code'];
-        },$payCodes);
+        }, $payCodes);
         sort($payCodeKeys);
 
         $csvEntries = [];
@@ -185,7 +186,7 @@ class PayRuns extends Component
             $csvEntries[] = $payRunEntry;
         }
 
-        usort($csvEntries, function($a, $b) {
+        usort($csvEntries, function ($a, $b) {
             return $a['payrollCode'] > $b['payrollCode'];
         });
 
@@ -261,49 +262,48 @@ class PayRuns extends Component
     public function fetchPayRunByEmployer(string $emp, string $taxYear)
     {
         $logger = new Logger();
-        
+
         $queue = Craft::$app->getQueue();
         $startTaxYear = 2020;
 
         if ($emp === '*' || strpos($emp, ',')) {
 
             // Fetch all the employers
-            if($emp === '*') {
+            if ($emp === '*') {
                 $employers = Staff::$plugin->employers->getEmployers();
-            }else{
+            } else {
                 $ids = explode(',', $emp);
                 $employers = [];
 
-                foreach($ids as $id) {
+                foreach ($ids as $id) {
                     $employers[] = Staff::$plugin->employers->getEmployerById($id);
                 }
             }
 
             // Fetch the pay runs of all employers
-            foreach($employers as $employer) {
+            foreach ($employers as $employer) {
 
                 // If tax year is not provided or as *, fetch all the tax years starting from 2020
-                if($taxYear === '*' || strpos($taxYear, ',')) {
+                if ($taxYear === '*' || strpos($taxYear, ',')) {
 
                     $taxYears = [];
 
-                    if($taxYear === '*') {
+                    if ($taxYear === '*') {
                         $endTaxYear = (int) str_replace('Year', '', $employer['currentYear']);
                         $taxYears = range($startTaxYear, $endTaxYear);
                     } else {
                         $taxYears = explode(',', $taxYear);
                     }
 
-                    foreach($taxYears as $year) {
+                    foreach ($taxYears as $year) {
                         $queue->push(new CreatePayRunByEmployerJob([
                             'description' => 'Fetch pay runs',
                             'criteria' => [
-                                'taxYear' => 'Year'.$year,
+                                'taxYear' => 'Year' . $year,
                                 'employer' => $employer,
                             ],
                         ]));
                     }
-
                 } else {
                     $queue->push(new CreatePayRunByEmployerJob([
                         'description' => 'Fetch pay runs',
@@ -311,9 +311,8 @@ class PayRuns extends Component
                             'taxYear' => $taxYear,
                             'employer' => $employer,
                         ],
-                    ]));                    
+                    ]));
                 }
-                
             }
         } else {
 
@@ -321,11 +320,11 @@ class PayRuns extends Component
             $employer = Staff::$plugin->employers->getEmployerById($emp);
 
             // If tax year is not provided or as *, fetch all the tax years starting from 2020
-            if($taxYear === '*' || strpos($taxYear, ',')) {
+            if ($taxYear === '*' || strpos($taxYear, ',')) {
 
                 $taxYears = [];
 
-                if($taxYear === '*') {
+                if ($taxYear === '*') {
                     // if tax year is * --> fetch range between 2020 and current tax year of employer
                     $endTaxYear = (int) str_replace('Year', '', $employer['currentYear']);
                     $taxYears = range($startTaxYear, $endTaxYear);
@@ -334,16 +333,15 @@ class PayRuns extends Component
                     $taxYears = explode(',', $taxYear);
                 }
 
-                foreach($taxYears as $year) {
+                foreach ($taxYears as $year) {
                     $queue->push(new CreatePayRunByEmployerJob([
                         'description' => 'Fetch pay runs',
                         'criteria' => [
-                            'taxYear' => 'Year'.$year,
+                            'taxYear' => 'Year' . $year,
                             'employer' => $employer,
                         ],
                     ]));
                 }
-
             } else {
                 $queue->push(new CreatePayRunByEmployerJob([
                     'description' => 'Fetch pay runs',
@@ -420,7 +418,7 @@ class PayRuns extends Component
     public function syncPayCode(array|Employer $employer, array $payCodes)
     {
         $logger = new Logger();
-        $logger->stdout('↧ Sync pay codes of '. $employer['name']. PHP_EOL, $logger::RESET);
+        $logger->stdout('↧ Sync pay codes of ' . $employer['name'] . PHP_EOL, $logger::RESET);
 
         $hubEmployer = is_array($employer) ? Employer::findOne(['staffologyId' => $employer['id']]) : $employer;
         $hubPayCodes = PayCode::findAll(['employerId' => $hubEmployer['id']]);
@@ -438,10 +436,10 @@ class PayRuns extends Component
 
             // remove the employee if it doesn't exists anymore
             if (!$exists) {
-                $logger->stdout('✓ Delete pay code ' . $hubPayCode['code'] . ' from '. $employer['name']. PHP_EOL, $logger::FG_YELLOW);
+                $logger->stdout('✓ Delete pay code ' . $hubPayCode['code'] . ' from ' . $employer['name'] . PHP_EOL, $logger::FG_YELLOW);
 
                 $payCode = PayCode::findOne(['code' => $hubPayCode['code']]);
-                if($payCode) {
+                if ($payCode) {
                     $payCode->delete();
                 }
             }
@@ -458,7 +456,7 @@ class PayRuns extends Component
         $logger->stdout("✓ Save pay code " . $payCode['code'] . "...", $logger::RESET);
 
         $employerRecord = is_int($employer['id'] ?? null) ? $employer : EmployerRecord::findOne(['staffologyId' => $employer['id'] ?? null]);
-        $payCodeRecord = PayCodeRecord::findOne(['code' => $payCode['code'], 'employerId' => $employerRecord->id ?? null]);
+        $payCodeRecord = PayCodeRecord::findOne(['code' => $payCode['code'], 'employerId' => $employerRecord['id']]);
 
         if (!$payCodeRecord) {
             $payCodeRecord = new PayCodeRecord();
@@ -497,12 +495,12 @@ class PayRuns extends Component
     public function syncPayRuns(array|Employer $employer, array $payRuns)
     {
         $logger = new Logger();
-        $logger->stdout('↧ Sync pay run of '. $employer['name']. PHP_EOL, $logger::RESET);
+        $logger->stdout('↧ Sync pay run of ' . $employer['name'] . PHP_EOL, $logger::RESET);
 
         $taxYear = $payRuns[0]['metadata']['taxYear'] ?? '';
 
         // only check to delete pay runs if we have a tax year
-        if($taxYear) {
+        if ($taxYear) {
             $hubEmployer = is_array($employer) ? Employer::findOne(['staffologyId' => $employer['id']]) : $employer;
             $hubPayRuns = PayRun::findAll(['employerId' => $hubEmployer['id'], 'taxYear' => $taxYear]);
 
@@ -512,14 +510,15 @@ class PayRuns extends Component
 
                 // loop through our pay runs and check if the pay run is still on staffology
                 foreach ($payRuns as $payRun) {
-                    if ($payRun['url'] === 'https://api.staffology.co.uk'.$hubPayRun['url']) {
+                    // if ($payRun['url'] === 'https://api.staffology.co.uk' . $hubPayRun['url']) {
+                    if ($payRun['url'] === $hubPayRun['url']) {
                         $exists = true;
                     }
                 }
 
                 // remove the pay run if it doesn't exists anymore
                 if (!$exists) {
-                    $logger->stdout('✓ Delete pay run ' . $hubPayRun['taxYear'] . '/' . $hubPayRun['taxMonth'] . ' from '. $employer['name']. PHP_EOL, $logger::FG_YELLOW);
+                    $logger->stdout('✓ Delete pay run ' . $hubPayRun['taxYear'] . '/' . $hubPayRun['taxMonth'] . ' from ' . $employer['name'] . PHP_EOL, $logger::FG_YELLOW);
                     Craft::$app->getElements()->deleteElementById($hubPayRun['id']);
                 }
             }
@@ -545,10 +544,10 @@ class PayRuns extends Component
             }
 
             //foreign keys
-//            $totals = Staff::$plugin->totals->saveTotals($payRun['totals'] ?? [], $totalsId);
+            //            $totals = Staff::$plugin->totals->saveTotals($payRun['totals'] ?? [], $totalsId);
             $emp = is_int($employer['id'] ?? null) ? $employer : EmployerRecord::findOne(['staffologyId' => $employer['id'] ?? null]);
 
-            $payRunRecord->employerId = $emp->id ?? null;
+            $payRunRecord->employerId = $emp->id ?? $emp['id'] ?? null;
             $payRunRecord->taxYear = $payRun['taxYear'] ?? '';
             $payRunRecord->taxMonth = $payRun['taxMonth'] ?? null;
             $payRunRecord->payPeriod = $payRun['payPeriod'] ?? '';
@@ -589,7 +588,7 @@ class PayRuns extends Component
                 }
 
                 return $payRunRecord;
-//                $this->savePayRunLog($payRun, $payRunUrl, $payRunRecord->id, $employer['id']);
+                //                $this->savePayRunLog($payRun, $payRunUrl, $payRunRecord->id, $employer['id']);
             }
 
             $logger->stdout(" failed" . PHP_EOL, $logger::FG_RED);
