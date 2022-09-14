@@ -134,7 +134,7 @@ class FetchPayRunJob extends BaseJob
 
         } catch (\Exception $e) {
             $logger->stdout($e->getMessage() . PHP_EOL, $logger::FG_RED);
-            Craft::error($e->getMessage(), __METHOD__);
+                Craft::error($e->getMessage(). ': thrown with API key: '.$api, __METHOD__);
         }
     }
 }
