@@ -4,7 +4,10 @@ namespace percipiolondon\staff\controllers;
 
 use Craft;
 use craft\helpers\Queue;
+use craft\helpers\App;
 use craft\web\Controller;
+use craft\queue\QueueInterface;
+use yii\queue\redis\Queue as RedisQueue;
 use percipiolondon\staff\elements\Employer;
 use percipiolondon\staff\jobs\v2\FetchEmployeesJob;
 use percipiolondon\staff\jobs\v2\FetchEmployersJob;
@@ -59,6 +62,23 @@ class FetchController extends Controller
             ],
             'description' => 'Fetching pay run',
         ]));
+
+        return $this->redirect('staff-management/fetch');
+    }
+
+    public function actionAll(): Response
+    {
+        $employers = Staff::$plugin->employers->fetchEmployerList();
+        Staff::$plugin->employers->fetchEmployers($employers);
+
+        // This might take a while
+        App::maxPowerCaptain();
+        $queue = Craft::$app->getQueue();
+        if ($queue instanceof QueueInterface) {
+            $queue->run();
+        } elseif ($queue instanceof RedisQueue) {
+            $queue->run(false);
+        }
 
         return $this->redirect('staff-management/fetch');
     }
