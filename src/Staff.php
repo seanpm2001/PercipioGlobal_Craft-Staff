@@ -418,6 +418,7 @@ class Staff extends Plugin
             'staff-management/fetch/employer' => 'staff-management/fetch/employer',
             'staff-management/fetch/employee' => 'staff-management/fetch/employee',
             'staff-management/fetch/pay-run' => 'staff-management/fetch/pay-run',
+            'staff-management/fetch/all' => 'staff-management/fetch/all',
             // settings
             'staff-management/plugin' => 'staff-management/settings/plugin',
             'staff-management/settings/get-gql-token' => 'staff-management/settings/get-gql-token',

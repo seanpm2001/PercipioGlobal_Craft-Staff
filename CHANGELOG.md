@@ -13,7 +13,6 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 
 ### Added
 - Added an admin template to fire employers / employees / pay runs fetches
-- Added a liniear fetch for employers, employees and pay run
 
 ### Fixed
 - Fixed the LeaveSettings registery type for GQL

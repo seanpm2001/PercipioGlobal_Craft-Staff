@@ -1,4 +1,5 @@
 <?php
+
 /**
  * staff-management plugin for Craft CMS 3.x
  *
@@ -177,10 +178,10 @@ class Employees extends Component
         $employmentDetails = $employmentDetails->toArray();
 
         // directorship details
-//        $directorshipDetails = DirectorshipDetails::findOne($employmentDetails['directorshipDetailsId']);
-//        if ($directorshipDetails) {
-//            $employmentDetails['directorshipDetails'] = $directorshipDetails->toArray();
-//        }
+        //        $directorshipDetails = DirectorshipDetails::findOne($employmentDetails['directorshipDetailsId']);
+        //        if ($directorshipDetails) {
+        //            $employmentDetails['directorshipDetails'] = $directorshipDetails->toArray();
+        //        }
 
         // starter details
         $starterDetails = StarterDetails::findOne(['employmentDetailsId' => $employmentDetails['id']]);
@@ -238,12 +239,12 @@ class Employees extends Component
      * @param array $employer
      * @param array $employees
      */
-    public function syncEmployees(array|Employer $employer, array $employees)
+    public function syncEmployees(array $employer, array $employees)
     {
         $logger = new Logger();
-        $logger->stdout('↧ Sync employees of '. $employer['name']. PHP_EOL, $logger::RESET);
+        $logger->stdout('↧ Sync employees of ' . $employer['name'] . PHP_EOL, $logger::RESET);
 
-        $hubEmployer = is_array($employer) ? Employer::findOne(['staffologyId' => $employer['id']]) : $employer;
+        $hubEmployer = Employer::findOne(['staffologyId' => $employer['id']]);
         $hubEmployees = Employee::findAll(['employerId' => $hubEmployer['id']]);
 
         foreach ($hubEmployees as $hubEmp) {
@@ -259,7 +260,7 @@ class Employees extends Component
 
             // remove the employee if it doesn't exists anymore
             if (!$exists) {
-                $logger->stdout('✓ Delete employee from '. $employer['name']. PHP_EOL, $logger::FG_YELLOW);
+                $logger->stdout('✓ Delete employee from ' . $employer['name'] . PHP_EOL, $logger::FG_YELLOW);
                 Craft::$app->getElements()->deleteElementById($hubEmp['id']);
             }
         }
@@ -271,7 +272,7 @@ class Employees extends Component
      * @param array $employer
      * @throws \Throwable
      */
-    public function saveEmployee(array $employee, string $employeeName, array|Employer $employer): void
+    public function saveEmployee(array $employee, string $employeeName, array $employer): void
     {
         $logger = new Logger();
         $logger->stdout("✓ Save employee " . $employeeName . '...', $logger::RESET);
@@ -283,7 +284,7 @@ class Employees extends Component
                 $employeeRecord = new Employee();
             }
 
-            $employerRecord = is_array($employer) ? Employer::findOne(['staffologyId' => $employer['id']]) : $employer;
+            $employerRecord = EmployerRecord::findOne(['staffologyId' => $employer['id']]);
 
             $employeeRecord->employerId = $employerRecord['id'] ?? null;
             $employeeRecord->staffologyId = $employee['id'];
@@ -351,7 +352,7 @@ class Employees extends Component
         $record->title = $personalDetails['title'] ?? '';
         $record->firstName = $personalDetails['firstName'] ?? '';
         $record->middleName = $personalDetails['middleName'] ?? '';
-        $record->lastName =$personalDetails['lastName'] ?? '';
+        $record->lastName = $personalDetails['lastName'] ?? '';
         $record->email = SecurityHelper::encrypt($personalDetails['email'] ?? '');
         $record->emailPayslip = $personalDetails['emailPayslip'] ?? null;
         $record->passwordProtectPayslip = $personalDetails['passwordProtectPayslip'] ?? null;
@@ -407,7 +408,7 @@ class Employees extends Component
 
         $success = $record->save();
 
-        if($success) {
+        if ($success) {
             $this->saveStarterDetails($employmentDetails['starterDetails'], $record->id);
         }
 
