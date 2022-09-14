@@ -55,6 +55,7 @@ module.exports = {
         '-mt-2.5',
         'mt-0',
         'mt-1',
+        'overflow-hidden',
         'p-1',
         'p-2',
         'p-6',
@@ -72,6 +73,7 @@ module.exports = {
         'rounded-lg',
         'rounded-sm',
         'text-4xl',
+        'text-ellipsis',
         'text-blue-600',
         'text-indigo-600',
         'text-indigo-900',
@@ -79,6 +81,8 @@ module.exports = {
         '-translate-x-1/2',
         '-translate-y-1/2',
         'w-6',
+        'w-10/12',
+        'whitespace-nowrap',
     ],
     theme: {
 

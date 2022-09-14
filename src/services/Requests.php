@@ -14,16 +14,16 @@ use percipiolondon\staff\Staff;
 
 class Requests extends Component
 {
-    public function saveToStaffology(RequestRecord $request): void
+    public function saveToStaffology(RequestRecord $request): bool
     {
-        match (true) {
+        return match (true) {
             $request->type === 'address' => $this->_syncEmployee($request),
             $request->type === 'personal_details' => $this->_syncEmployee($request),
             $request->type === 'telephone' => $this->_syncEmployee($request),
         };
     }
 
-    private function _syncEmployee(RequestRecord $request): void
+    private function _syncEmployee(RequestRecord $request): bool
     {
         $employer = Employer::findOne($request->employerId);
         $employee = Employee::findOne($request->employeeId);
@@ -33,8 +33,10 @@ class Requests extends Component
             $staffologyEmployee = $employee->staffologyId;
             $endpoint = '/employers/'.$staffologyEmployer.'/employees/'.$staffologyEmployee;
 
-            $this->_sync($endpoint, $request, 'employee');
+            return $this->_sync($endpoint, $request, 'employee');
         }
+
+        return false;
     }
 
     private function _sync(string $endpoint, RequestRecord $request, string $type): bool
@@ -65,15 +67,19 @@ class Requests extends Component
                 $type === 'employee' => $this->_saveEmployee($result, $request)
             };
 
+            $request->error = '';
+
             return true;
         } catch (GuzzleException $e) {
             Craft::error($e->getMessage(), __METHOD__);
             Craft::$app->getSession()->setNotice(Craft::t('staff-management', 'There were validation errors when saving to Staffology'));
 
             $request->status = "pending";
+            $request->error = json_decode($e->getResponse()->getBody()->getContents())->error;
             $request->save();
 
             return false;
+//            return json_decode($e->getResponse()->getBody()->getContents())->error;
         }
     }
 

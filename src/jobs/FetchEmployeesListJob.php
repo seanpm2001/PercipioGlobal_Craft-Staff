@@ -6,6 +6,7 @@ use Craft;
 use craft\helpers\App;
 use craft\helpers\Json;
 use craft\queue\BaseJob;
+use percipiolondon\staff\elements\Employer;
 use percipiolondon\staff\helpers\Logger;
 use percipiolondon\staff\Staff;
 
@@ -47,13 +48,20 @@ class FetchEmployeesListJob extends BaseJob
                 $currentEmployee++;
 
                 Staff::$plugin->employees->fetchEmployee($employee, $this->criteria['employer']);
-//                Staff::$plugin->pensions->fetchPension($employee, $this->criteria['employer']['id']);
 
-                if ($currentEmployee === $totalEmployees) {
-                    Staff::$plugin->payRuns->fetchPayRunByStaffologyEmployer($this->criteria['employer']);
-                }
+//                if ($currentEmployee === $totalEmployees) {
+//                    Staff::$plugin->payRuns->fetchPayRunByStaffologyEmployer($this->criteria['employer']);
+//                }
 
                 $this->setProgress($queue, $currentEmployee / $totalEmployees);
+            }
+
+            $emp = Employer::findOne(['staffologyId' => $this->criteria['employer']['id']]);
+
+            if ($emp) {
+                Staff::$plugin->payRuns->fetchPayRunByEmployer($emp->id, $this->criteria['employer']['metadata']['currentYear']);
+            } else {
+                Staff::$plugin->payRuns->fetchPayRunByStaffologyEmployer($this->criteria['employer']);
             }
         } catch (\Exception $e) {
             $logger->stdout(PHP_EOL, $logger::RESET);

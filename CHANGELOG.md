@@ -4,6 +4,15 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](http://keepachangelog.com/) and this project adheres to [Semantic Versioning](http://semver.org/).
 
+## 1.0.0-beta.16.1 - 2022-09-14
+
+### Fixed
+- Fixed the template permissions for the hub panel
+
+### Added
+- Added Staffology errors on the requests panel
+- Added a liniear fetch for employers and employees [wip]
+
 ## 1.0.0-beta.16 - 2022-09-12
 
 ### Added

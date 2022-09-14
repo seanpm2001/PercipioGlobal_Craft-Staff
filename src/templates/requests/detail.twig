@@ -1,4 +1,4 @@
-{%- requirePermission "hub:request" -%}
+{%- requirePermission "hub:requests" -%}
 
 {%- extends 'staff-management/_layouts/hub-cp.twig' -%}
 
@@ -31,6 +31,14 @@
             </div>
         {%- endif -%}
     </div>
+
+    {%- if request.error -%}
+        <div class="w-full pt-6">
+            <div class="bg-red-100 p-4">
+                <p class="text-red-900">Staffology error: {{ request.error }}</p>
+            </div>
+        </div>
+    {%- endif -%}
 
     <div class="w-full pt-10">
         <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-{{- request.status != 'approved' and request.status != 'pending' ? '5' : '4' }} gap-x-4">
@@ -101,6 +109,7 @@
                 </span>
             </div>
         {% endif %}
+
     </div>
 
 {%- endset -%}

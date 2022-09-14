@@ -271,7 +271,7 @@ class Employees extends Component
      * @param array $employer
      * @throws \Throwable
      */
-    public function saveEmployee(array $employee, string $employeeName, array $employer): void
+    public function saveEmployee(array $employee, string $employeeName, array|Employer $employer): void
     {
         $logger = new Logger();
         $logger->stdout("✓ Save employee " . $employeeName . '...', $logger::RESET);
@@ -283,7 +283,7 @@ class Employees extends Component
                 $employeeRecord = new Employee();
             }
 
-            $employerRecord = EmployerRecord::findOne(['staffologyId' => $employer['id']]);
+            $employerRecord = is_array($employer) ? Employer::findOne(['staffologyId' => $employer['id']]) : $employer;
 
             $employeeRecord->employerId = $employerRecord['id'] ?? null;
             $employeeRecord->staffologyId = $employee['id'];
