@@ -87,6 +87,7 @@ trait Gql
         TypeLoader::registerType(Employer::getName(), Employer::class . '::getType');
         TypeLoader::registerType(EmploymentDetails::getName(), EmploymentDetails::class . '::getType');
         TypeLoader::registerType(HmrcDetails::getName(), HmrcDetails::class . '::getType');
+        TypeLoader::registerType(LeaveSettings::getName(), LeaveSettings::class . '::getType');
         TypeLoader::registerType(PayOptions::getName(), PayOptions::class . '::getType');
         TypeLoader::registerType(PayRunTotals::getName(), PayRunTotals::class . '::getType');
         TypeLoader::registerType(PensionSummary::getName(), PensionSummary::class . '::getType');
@@ -94,6 +95,7 @@ trait Gql
         TypeLoader::registerType(Policy::getName(), Policy::class . '::getType');
         TypeLoader::registerType(StarterDetails::getName(), StarterDetails::class . '::getType');
         TypeLoader::registerType(TotalRewardsStatement::getName(), TotalRewardsStatement::class . '::getType');
+        TypeLoader::registerType(WorkerGroup::getName(), WorkerGroup::class . '::getType');
 
     }
 
