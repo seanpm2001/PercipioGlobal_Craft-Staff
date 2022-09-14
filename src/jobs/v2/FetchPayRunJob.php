@@ -55,7 +55,7 @@ class FetchPayRunJob extends BaseJob
                         } catch (\Exception $e) {
                             $logger->stdout(PHP_EOL, $logger::RESET);
                             $logger->stdout($e->getMessage() . PHP_EOL, $logger::FG_RED);
-                            Craft::error($e->getMessage(), __METHOD__);
+                            Craft::error($e->getMessage() . ': thrown with API key: ' . $api, __METHOD__);
                         }
                     }
 
@@ -70,7 +70,7 @@ class FetchPayRunJob extends BaseJob
                 } catch (\Exception $e) {
                     $logger->stdout(PHP_EOL, $logger::RESET);
                     $logger->stdout($e->getMessage() . PHP_EOL, $logger::FG_RED);
-                    Craft::error($e->getMessage(), __METHOD__);
+                    Craft::error($e->getMessage() . ': thrown with API key: ' . $api, __METHOD__);
                 }
 
                 // fetch pay run
@@ -118,7 +118,7 @@ class FetchPayRunJob extends BaseJob
                                     } catch (\Exception $e) {
                                         $logger->stdout(PHP_EOL, $logger::RESET);
                                         $logger->stdout($e->getMessage() . PHP_EOL, $logger::FG_RED);
-                                        Craft::error($e->getMessage(), __METHOD__);
+                                        Craft::error($e->getMessage() . ': thrown with API key: ' . $api, __METHOD__);
                                     }
                                 }
                             }
@@ -128,13 +128,13 @@ class FetchPayRunJob extends BaseJob
                 } catch (\Exception $e) {
                     $logger->stdout(PHP_EOL, $logger::RESET);
                     $logger->stdout($e->getMessage() . PHP_EOL, $logger::FG_RED);
-                    Craft::error($e->getMessage(), __METHOD__);
+                    Craft::error($e->getMessage() . ': thrown with API key: ' . $api, __METHOD__);
                 }
             }
 
         } catch (\Exception $e) {
             $logger->stdout($e->getMessage() . PHP_EOL, $logger::FG_RED);
-                Craft::error($e->getMessage(). ': thrown with API key: '.$api, __METHOD__);
+            Craft::error($e->getMessage() . ': thrown with API key: ' . $api, __METHOD__);
         }
     }
 }
