@@ -239,12 +239,12 @@ class Employees extends Component
      * @param array $employer
      * @param array $employees
      */
-    public function syncEmployees(array $employer, array $employees)
+    public function syncEmployees(array|Employer $employer, array $employees)
     {
         $logger = new Logger();
         $logger->stdout('↧ Sync employees of ' . $employer['name'] . PHP_EOL, $logger::RESET);
 
-        $hubEmployer = Employer::findOne(['staffologyId' => $employer['id']]);
+        $hubEmployer = is_array($employer) ? Employer::findOne(['staffologyId' => $employer['id']]) : $employer;
         $hubEmployees = Employee::findAll(['employerId' => $hubEmployer['id']]);
 
         foreach ($hubEmployees as $hubEmp) {
