@@ -415,12 +415,12 @@ class PayRuns extends Component
      *
      * @param array $employers
      */
-    public function syncPayCode(array $employer, array $payCodes)
+    public function syncPayCode(array|Employer $employer, array $payCodes)
     {
         $logger = new Logger();
         $logger->stdout('↧ Sync pay codes of ' . $employer['name'] . PHP_EOL, $logger::RESET);
 
-        $hubEmployer = Employer::findOne(['staffologyId' => $employer['id']]);
+        $hubEmployer = is_array($employer) ? Employer::findOne(['staffologyId' => $employer['id']]) : $employer;
         $hubPayCodes = PayCode::findAll(['employerId' => $hubEmployer['id']]);
 
         foreach ($hubPayCodes as $hubPayCode) {
@@ -450,7 +450,7 @@ class PayRuns extends Component
      * @param array $payCode
      * @param array $employer
      */
-    public function savePayCode(array $payCode, array $employer): void
+    public function savePayCode(array $payCode, array|Employer $employer): void
     {
         $logger = new Logger();
         $logger->stdout("✓ Save pay code " . $payCode['code'] . "...", $logger::RESET);
@@ -492,7 +492,7 @@ class PayRuns extends Component
      * @param array $employer
      * @param array $payruns
      */
-    public function syncPayRuns(array $employer, array $payRuns)
+    public function syncPayRuns(array|Employer $employer, array $payRuns)
     {
         $logger = new Logger();
         $logger->stdout('↧ Sync pay run of ' . $employer['name'] . PHP_EOL, $logger::RESET);
