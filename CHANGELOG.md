@@ -4,6 +4,12 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](http://keepachangelog.com/) and this project adheres to [Semantic Versioning](http://semver.org/).
 
+## 1.0.0-beta.17 - 2022-09-15
+
+### Added
+- Added a liniear fetch for employers, employees, pay run and pay run entries
+- Added an admin template to fire employers / employees / pay runs fetches
+
 ## 1.0.0-beta.16.3 - 2022-09-14
 
 ### Fixed
@@ -11,8 +17,8 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 
 ## 1.0.0-beta.16.2 - 2022-09-14
 
-### Added
-- Added an admin template to fire employers / employees / pay runs fetches
+### Added 
+- Added an admin template to fire employers / employees / pay runs fetches [wip]
 
 ### Fixed
 - Fixed the LeaveSettings registery type for GQL
