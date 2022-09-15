@@ -118,7 +118,7 @@ class PayRunEntries extends Component
             $payRunEntryRecord->aeNotEnroledWarning = $payRunEntryData['aeNotEnroledWarning'] ?? null;
             $payRunEntryRecord->receivingOffsetPay = $payRunEntryData['receivingOffsetPay'] ?? null;
             $payRunEntryRecord->paymentAfterLearning = $payRunEntryData['paymentAfterLearning'] ?? null;
-            $payRunEntryRecord->pdf = '';
+            $payRunEntryRecord->pdf = $payRunEntryRecord->pdf ?? '';
 
             $elementsService = Craft::$app->getElements();
             $success = $elementsService->saveElement($payRunEntryRecord);
@@ -206,12 +206,12 @@ class PayRunEntries extends Component
         }
     }
 
-    public function savePaySlip(array $paySlip, array $payRunEntry): void
+    public function savePaySlip(array $paySlip, array|PayRunEntryRecord $payRunEntry): void
     {
         $logger = new Logger();
-        $logger->stdout('✓ Save pay slip of ' . $payRunEntry['employee']['name'] ?? '' . '...', $logger::RESET);
+        $logger->stdout('✓ Save pay slip ...', $logger::RESET);
 
-        $record = PayRunEntryRecord::findOne(['staffologyId' => $payRunEntry['id']]);
+        $record = is_array($payRunEntry) ? PayRunEntryRecord::findOne(['staffologyId' => $payRunEntry['id']]) : $payRunEntry;
 
         if ($paySlip['content'] && $record) {
             $record->pdf = SecurityHelper::encrypt($paySlip['content'] ?? '');
