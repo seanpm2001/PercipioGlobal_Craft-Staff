@@ -7,8 +7,10 @@ use craft\console\Controller;
 use craft\helpers\App;
 use craft\queue\QueueInterface;
 use percipiolondon\staff\elements\Employer;
+use percipiolondon\staff\elements\PayRun;
 use percipiolondon\staff\jobs\v2\FetchEmployeesJob;
 use percipiolondon\staff\jobs\v2\FetchEmployersJob;
+use percipiolondon\staff\jobs\v2\FetchPayRunEntriesJob;
 use percipiolondon\staff\jobs\v2\FetchPayRunJob;
 use percipiolondon\staff\Staff;
 use yii\helpers\Console;
@@ -100,6 +102,27 @@ class FetchController extends Controller
                 'employers' => Employer::findAll(),
             ],
             'description' => 'Fetching pay run',
+        ]));
+
+        $this->_runQueue();
+
+        $this->stdout('' . PHP_EOL, Console::RESET);
+        $this->stdout('--------------------------------- Done fetching from Staffology' . PHP_EOL, Console::FG_CYAN);
+        $this->stdout('' . PHP_EOL, Console::RESET);
+    }
+
+    public function actionPayRunEntries()
+    {
+        $this->stdout('' . PHP_EOL, Console::RESET);
+        $this->stdout('--------------------------------- Start fetching data from Staffology' . PHP_EOL, Console::FG_CYAN);
+        $this->stdout('' . PHP_EOL, Console::RESET);
+
+        $queue = Craft::$app->getQueue();
+        $queue->push(new FetchPayRunEntriesJob([
+            'criteria' => [
+                'payRuns' => PayRun::findAll(),
+            ],
+            'description' => 'Fetching pay run entries',
         ]));
 
         $this->_runQueue();

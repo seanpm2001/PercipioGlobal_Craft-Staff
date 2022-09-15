@@ -456,7 +456,7 @@ class PayRuns extends Component
         $logger->stdout("✓ Save pay code " . $payCode['code'] . "...", $logger::RESET);
 
         $employerRecord = is_int($employer['id'] ?? null) ? $employer : EmployerRecord::findOne(['staffologyId' => $employer['id'] ?? null]);
-        $payCodeRecord = PayCodeRecord::findOne(['code' => $payCode['code'], 'employerId' => $employerRecord->id ?? null]);
+        $payCodeRecord = PayCodeRecord::findOne(['code' => $payCode['code'], 'employerId' => $employerRecord['id']]);
 
         if (!$payCodeRecord) {
             $payCodeRecord = new PayCodeRecord();
@@ -501,7 +501,7 @@ class PayRuns extends Component
 
         // only check to delete pay runs if we have a tax year
         if ($taxYear) {
-            $hubEmployer = Employer::findOne(['staffologyId' => $employer['id']]);
+            $hubEmployer = is_array($employer) ? Employer::findOne(['staffologyId' => $employer['id']]) : $employer;
             $hubPayRuns = PayRun::findAll(['employerId' => $hubEmployer['id'], 'taxYear' => $taxYear]);
             foreach ($hubPayRuns as $hubPayRun) {
 
@@ -509,7 +509,8 @@ class PayRuns extends Component
 
                 // loop through our pay runs and check if the pay run is still on staffology
                 foreach ($payRuns as $payRun) {
-                    if ($payRun['url'] === 'https://api.staffology.co.uk' . $hubPayRun['url']) {
+                    // if ($payRun['url'] === 'https://api.staffology.co.uk' . $hubPayRun['url']) {
+                    if ($payRun['url'] === $hubPayRun['url']) {
                         $exists = true;
                     }
                 }
@@ -545,7 +546,7 @@ class PayRuns extends Component
             //            $totals = Staff::$plugin->totals->saveTotals($payRun['totals'] ?? [], $totalsId);
             $emp = is_int($employer['id'] ?? null) ? $employer : EmployerRecord::findOne(['staffologyId' => $employer['id'] ?? null]);
 
-            $payRunRecord->employerId = $emp->id ?? null;
+            $payRunRecord->employerId = $emp->id ?? $emp['id'] ?? null;
             $payRunRecord->taxYear = $payRun['taxYear'] ?? '';
             $payRunRecord->taxMonth = $payRun['taxMonth'] ?? null;
             $payRunRecord->payPeriod = $payRun['payPeriod'] ?? '';
