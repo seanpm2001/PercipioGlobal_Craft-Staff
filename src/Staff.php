@@ -415,9 +415,10 @@ class Staff extends Plugin
             'staff-management/requests/undo/<requestId:\d+>' => 'staff-management/request/undo',
             // fetch
             'staff-management/fetch' => 'staff-management/fetch',
-            'staff-management/fetch/employer' => 'staff-management/fetch/employer',
-            'staff-management/fetch/employee' => 'staff-management/fetch/employee',
-            'staff-management/fetch/pay-run' => 'staff-management/fetch/pay-run',
+            'staff-management/fetch/employers' => 'staff-management/fetch/employers',
+            'staff-management/fetch/employees' => 'staff-management/fetch/employees',
+            'staff-management/fetch/pay-runs' => 'staff-management/fetch/pay-runs',
+            'staff-management/fetch/pay-run-entries' => 'staff-management/fetch/pay-run-entries',
             // settings
             'staff-management/plugin' => 'staff-management/settings/plugin',
             'staff-management/settings/get-gql-token' => 'staff-management/settings/get-gql-token',

@@ -20,27 +20,17 @@
     </div>
 
     <div class="w-full mt-8">
-        <article class="w-full flex border-b border-gray-200 border-solid py-4">
-            <div class="flex-grow mb-0">
-                <h2 class="mb-0">Fetch all the employers from Staffology</h2>
-                <p class="mt-1">This will fetch all the employers registered on Staffology for this environment.</p>
-            </div>
-            <a href="/admin/staff-management/fetch/employer" class="mb-0 cursor-pointer inline-flex items-center justify-center rounded-md border border-transparent bg-indigo-600 disabled:bg-indigo-400 disabled:cursor-not-allowed px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 sm:w-auto">Fetch Employers</a>
-        </article>
-        <article class="w-full flex border-b border-gray-200 border-solid py-4">
-            <div class="flex-grow mb-0">
-                <h2 class="mb-0">Fetch all the employees from Staffology</h2>
-                <p class="mt-1">This will grab all the employers on our system and fetch their employees on Staffology for this environment.</p>
-            </div>
-            <a href="/admin/staff-management/fetch/employee" class="mb-0 cursor-pointer inline-flex items-center justify-center rounded-md border border-transparent bg-indigo-600 disabled:bg-indigo-400 disabled:cursor-not-allowed px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 sm:w-auto">Fetch Employees</a>
-        </article>
-        <article class="w-full flex py-4">
-            <div class="flex-grow mb-0">
-                <h2 class="mb-0">Fetch all the pay runs from Staffology</h2>
-                <p class="mt-1">This will grab all the employers on our system and fetch the pay runs for the current tax year on Staffology for this environment.</p>
-            </div>
-            <a href="/admin/staff-management/fetch/pay-run" class="mb-0 cursor-pointer inline-flex items-center justify-center rounded-md border border-transparent bg-indigo-600 disabled:bg-indigo-400 disabled:cursor-not-allowed px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 sm:w-auto">Fetch Pay Run</a>
-        </article>
+        <div id="fetch-container"></div>
     </div>
 
 {%- endset -%}
+
+{%- block foot -%}
+    {{ parent() }}
+    {%- set tagOptions = {
+        'depends': [
+            'percipiolondon\\staff\\assetbundles\\staff\\StaffAsset'
+        ]
+    } -%}
+    {{  craft.staff.register('src/js/fetch.ts', false, tagOptions) }}
+{%- endblock -%}

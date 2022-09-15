@@ -29,27 +29,23 @@ class FetchPayRunJob extends BaseJob
 
             foreach ($this->criteria['employers'] as $employer) {
 
+                $logger->stdout('--- Start pay run fetching for ' . $employer->name . PHP_EOL, $logger::RESET);
+
                 $id = $employer['staffologyId'] ?? '';
                 $taxYear = $employer['currentYear'];
                 $payPeriod = $employer['defaultPayOptions']['period'] ?? 'Monthly';
 
                 // fetch pay code
-
                 try {
+                    $logger->stdout('↧ Fetching pay codes for' . $employer->name . '...', $logger::RESET);
                     $response = $client->get(Staff::$plugin->getSettings()->apiBaseUrl . 'employers/' . $employer->staffologyId . '/paycodes', $headers);
                     $payCodes = Json::decodeIfJson($response->getBody()->getContents(), true);
 
-                    $logger->stdout(' done' . PHP_EOL, $logger::FG_GREEN);
-
                     foreach ($payCodes as $payCode) {
-
-                        $logger->stdout('↧ Fetch pay code info from ' . $payCode['name'], $logger::RESET);
 
                         try {
                             $response = $client->get($payCode['url'], $headers);
                             $result = Json::decodeIfJson($response->getBody()->getContents(), true);
-
-                            $logger->stdout(' done' . PHP_EOL, $logger::FG_GREEN);
 
                             $fetchedPayCodes[] = $result;
                         } catch (\Exception $e) {
@@ -58,6 +54,8 @@ class FetchPayRunJob extends BaseJob
                             Craft::error($e->getMessage() . ': thrown with API key: ' . $api, __METHOD__);
                         }
                     }
+
+                    $logger->stdout('done' . PHP_EOL, $logger::FG_GREEN);
 
                     //Delete existing if they don't exist on Staffology anymore
                     Staff::$plugin->payRuns->syncPayCode($employer, $fetchedPayCodes);
@@ -89,40 +87,48 @@ class FetchPayRunJob extends BaseJob
 
                             $taxYear = $payRun['metadata']['taxYear'] ?? $payRun['taxYear'] ?? '';
                             $name = $payRun['name'] ?? '';
-                            $logger->stdout('[' . $i+1 . '/' . count($payRunData) .'] ↧ Fetching pay run info of ' . $taxYear . ' / ' . $name . '...', $logger::FG_PURPLE);
+                            $logger->stdout('[' . $i+1 . '/' . count($payRunData) .'] ↧ Fetching pay run info of ' . $taxYear . ' / ' . $name . '...', $logger::RESET);
 
                             $response = $client->get( $url, $headers);
                             $payRunFetchedData = Json::decode($response->getBody()->getContents(), true);
 
                             $logger->stdout(' done' . PHP_EOL, $logger::FG_GREEN);
 
-                            $payRunElement = Staff::$plugin->payRuns->savePayRun($payRunFetchedData, $url, $employer->toArray(), false);
+                            Staff::$plugin->payRuns->savePayRun($payRunFetchedData, $url, $employer->toArray(), false);
+
+                            $this->setProgress(
+                                $queue,
+                                $i / count($payRunData),
+                                Craft::t('staff-management', 'Pay run fetch from ' . $employer->name . ': {step, number} of {total, number}', [
+                                    'step' => $i + 1,
+                                    'total' => count($payRunData),
+                                ])
+                            );
 
                             // pay run entries
-                            if ($payRunElement) {
-                                foreach ($payRunFetchedData['entries'] as $j => $payRunEntryData) {
-                                    $logger->stdout('Pay run ' . $taxYear . ' / ' . $name . '[' . $i+1 . '/' . count($payRunData) .']' . ' - Pay run entry [' . $j+1 . '/' . count($payRunFetchedData['entries']) . '] ↧ Fetching pay run entry of ' . $payRunEntryData['name'] . '...', $logger::RESET);
-                                    $logger->stdout(' done' . PHP_EOL, $logger::FG_GREEN);
-
-                                    $url = Staff::$plugin->getSettings()->apiBaseUrl . $payRunEntryData['url'];
-
-                                    try {
-                                        $response = $client->get($url, $headers);
-                                        $result = Json::decode($response->getBody()->getContents(), true);
-
-                                        Staff::$plugin->payRunEntries->savePayRunEntry($result, $employer->toArray(), $payRunElement->id);
-
-                                        if(!App::parseEnv('$HUB_DEV_MODE')) {
-                                            Staff::$plugin->payRunEntries->fetchPaySlip($result, $this->criteria['employer']);
-                                        }
-                                    } catch (\Exception $e) {
-                                        $logger->stdout(PHP_EOL, $logger::RESET);
-                                        $logger->stdout($e->getMessage() . PHP_EOL, $logger::FG_RED);
-                                        Craft::error($e->getMessage() . ': thrown with API key: ' . $api, __METHOD__);
-                                    }
-                                }
-                            }
-
+//                            if ($payRunElement) {
+//                                foreach ($payRunFetchedData['entries'] as $j => $payRunEntryData) {
+//                                    $logger->stdout('Pay run ' . $taxYear . ' / ' . $name . '[' . $i+1 . '/' . count($payRunData) .']' . ' - Pay run entry [' . $j+1 . '/' . count($payRunFetchedData['entries']) . '] ↧ Fetching pay run entry of ' . $payRunEntryData['name'] . '...', $logger::RESET);
+//                                    $logger->stdout(' done' . PHP_EOL, $logger::FG_GREEN);
+//
+//                                    $url = Staff::$plugin->getSettings()->apiBaseUrl . $payRunEntryData['url'];
+//
+//                                    try {
+//                                        $response = $client->get($url, $headers);
+//                                        $result = Json::decode($response->getBody()->getContents(), true);
+//
+//                                        Staff::$plugin->payRunEntries->savePayRunEntry($result, $employer->toArray(), $payRunElement->id);
+//
+//                                        if(!App::parseEnv('$HUB_DEV_MODE')) {
+//                                            Staff::$plugin->payRunEntries->fetchPaySlip($result, $this->criteria['employer']);
+//                                        }
+//                                    } catch (\Exception $e) {
+//                                        $logger->stdout(PHP_EOL, $logger::RESET);
+//                                        $logger->stdout($e->getMessage() . PHP_EOL, $logger::FG_RED);
+//                                        Craft::error($e->getMessage() . ': thrown with API key: ' . $api, __METHOD__);
+//                                    }
+//                                }
+//                            }
                         }
                     }
                 } catch (\Exception $e) {
@@ -130,6 +136,8 @@ class FetchPayRunJob extends BaseJob
                     $logger->stdout($e->getMessage() . PHP_EOL, $logger::FG_RED);
                     Craft::error($e->getMessage() . ': thrown with API key: ' . $api, __METHOD__);
                 }
+
+                $logger->stdout('--- End pay run fetching for ' . $employer->name . PHP_EOL, $logger::RESET);
             }
 
         } catch (\Exception $e) {

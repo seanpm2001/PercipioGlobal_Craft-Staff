@@ -6,11 +6,12 @@ use Craft;
 use craft\helpers\Queue;
 use craft\web\Controller;
 use percipiolondon\staff\elements\Employer;
+use percipiolondon\staff\elements\PayRun;
 use percipiolondon\staff\jobs\v2\FetchEmployeesJob;
 use percipiolondon\staff\jobs\v2\FetchEmployersJob;
+use percipiolondon\staff\jobs\v2\FetchPayRunEntriesJob;
 use percipiolondon\staff\jobs\v2\FetchPayRunJob;
 use percipiolondon\staff\Staff;
-use yii\base\BaseObject;
 use yii\web\Response;
 
 class FetchController extends Controller
@@ -30,17 +31,25 @@ class FetchController extends Controller
         return $this->renderTemplate('staff-management/fetch', $variables);
     }
 
-    public function actionEmployer(): Response
+    public function actionEmployers(): Response
     {
+        $this->requireLogin();
+        $this->requireAcceptsJson();
+
         Queue::push(new FetchEmployersJob([
             'description' => 'Fetching employers',
         ]));
 
-        return $this->redirect('staff-management/fetch');
+        return $this->asJson([
+            'success' => true,
+        ]);
     }
 
-    public function actionEmployee(): Response
+    public function actionEmployees(): Response
     {
+        $this->requireLogin();
+        $this->requireAcceptsJson();
+
         Queue::push(new FetchEmployeesJob([
             'criteria' => [
                 'employers' => Employer::findAll(),
@@ -48,11 +57,16 @@ class FetchController extends Controller
             'description' => 'Fetching employees',
         ]));
 
-        return $this->redirect('staff-management/fetch');
+        return $this->asJson([
+            'success' => true,
+        ]);
     }
 
-    public function actionPayRun(): Response
+    public function actionPayRuns(): Response
     {
+        $this->requireLogin();
+        $this->requireAcceptsJson();
+
         Queue::push(new FetchPayRunJob([
             'criteria' => [
                 'employers' => Employer::findAll(),
@@ -60,6 +74,25 @@ class FetchController extends Controller
             'description' => 'Fetching pay run',
         ]));
 
-        return $this->redirect('staff-management/fetch');
+        return $this->asJson([
+            'success' => true,
+        ]);
+    }
+
+    public function actionPayRunEntries(): Response
+    {
+        $this->requireLogin();
+        $this->requireAcceptsJson();
+
+        Queue::push(new FetchPayRunEntriesJob([
+            'criteria' => [
+                'payRuns' => PayRun::findAll(),
+            ],
+            'description' => 'Fetching pay run entries',
+        ]));
+
+        return $this->asJson([
+            'success' => true,
+        ]);
     }
 }

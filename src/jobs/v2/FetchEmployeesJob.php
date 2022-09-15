@@ -55,7 +55,7 @@ class FetchEmployeesJob extends BaseJob
                     $this->setProgress(
                         $queue,
                         $i / count($employees),
-                        \Craft::t('staff-management', 'Employees fetch from ' . $employer->name . ': {step, number} of {total, number}', [
+                        Craft::t('staff-management', 'Employees fetch from ' . $employer->name . ': {step, number} of {total, number}', [
                             'step' => $i + 1,
                             'total' => count($employees),
                         ])

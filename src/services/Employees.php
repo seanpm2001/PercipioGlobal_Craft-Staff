@@ -278,6 +278,8 @@ class Employees extends Component
 
         $employeeRecord = Employee::findOne(['staffologyId' => $employee['id']]);
 
+        Craft::info("Staff management: save employee ".$employeeName);
+
         try {
             if (!$employeeRecord) {
                 $employeeRecord = new Employee();
