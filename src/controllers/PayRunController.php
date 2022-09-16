@@ -4,6 +4,7 @@ namespace percipiolondon\staff\controllers;
 
 use Craft;
 use craft\helpers\ArrayHelper;
+use craft\helpers\Queue;
 use craft\web\Controller;
 use League\Csv\AbstractCsv;
 use League\Csv\Exception;
@@ -13,10 +14,12 @@ use percipiolondon\staff\db\Table;
 use percipiolondon\staff\elements\Employer;
 use percipiolondon\staff\elements\PayRun;
 use percipiolondon\staff\helpers\Security as SecurityHelper;
+use percipiolondon\staff\jobs\v2\FetchPayRunJob;
 use percipiolondon\staff\records\PayLine as PayLineRecord;
 use percipiolondon\staff\records\PayRunImport;
 
 use percipiolondon\staff\Staff;
+use yii\base\BaseObject;
 use yii\web\NotFoundHttpException;
 use yii\web\Response;
 use yii\web\UploadedFile;
@@ -153,7 +156,14 @@ class PayRunController extends Controller
         $this->requireLogin();
         $this->requireAcceptsJson();
 
-        Staff::$plugin->payRuns->fetchPayRunByEmployer($employerId, $taxYear);
+        Queue::push(new FetchPayRunJob([
+            'criteria' => [
+                'employers' => $employerId ? Employer::findAll() : [Employer::findOne($employerId)],
+                'taxYear' => $taxYear === '' ? null : $taxYear,
+                'fetchEntries' => true
+            ],
+            'description' => 'Fetching pay run',
+        ]));
 
         return $this->asJson([
             'success' => true,

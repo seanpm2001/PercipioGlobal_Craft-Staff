@@ -10,6 +10,7 @@ use percipiolondon\staff\elements\Employer;
 use percipiolondon\staff\elements\PayRun;
 use percipiolondon\staff\jobs\v2\FetchEmployeesJob;
 use percipiolondon\staff\jobs\v2\FetchEmployersJob;
+use percipiolondon\staff\jobs\v2\FetchPayRunByEmployerJob;
 use percipiolondon\staff\jobs\v2\FetchPayRunEntriesJob;
 use percipiolondon\staff\jobs\v2\FetchPayRunJob;
 use percipiolondon\staff\Staff;
@@ -23,6 +24,31 @@ use yii\queue\redis\Queue as RedisQueue;
  */
 class FetchController extends Controller
 {
+    /**
+     * Provide a specific tax year. If not provided, the current tax year will be used
+     * @var string
+     */
+    public $taxYear = '*';
+
+    /**
+     * Provide an employer to fetch [required]
+     * @var string
+     */
+    public $employer = '*';
+
+    /**
+     * @param string $actionID
+     * @return int[]|string[]
+     */
+    public function options($actionID)
+    {
+        $options = parent::options($actionID);
+        $options[] = 'taxYear';
+        $options[] = 'employer';
+
+        return $options;
+    }
+
     /**
      * Fetch all the employers/employees/payruns/pensions/... from staffology
      * e.g.: actions/admin/staff-management/employer-controller/fetch
@@ -100,6 +126,36 @@ class FetchController extends Controller
         $queue->push(new FetchPayRunJob([
             'criteria' => [
                 'employers' => Employer::findAll(),
+            ],
+            'description' => 'Fetching pay run',
+        ]));
+
+        $this->_runQueue();
+
+        $this->stdout('' . PHP_EOL, Console::RESET);
+        $this->stdout('--------------------------------- Done fetching from Staffology' . PHP_EOL, Console::FG_CYAN);
+        $this->stdout('' . PHP_EOL, Console::RESET);
+    }
+
+    /**
+     * Fetch pay runs from an employer. If you want a specific tax year, you can provide the tax year. parameter examples: --employer='1234' --taxYear='2021'
+     * e.g. staff-management/pay-run/fetch-pay-run-by-employer --employer="1234" --taxYear="2021"
+     *
+     * @throws \GuzzleHttp\Exception\GuzzleException
+     */
+    public function actionPayRunByEmployer()
+    {
+        $this->stdout('' . PHP_EOL, Console::RESET);
+        $this->stdout('--------------------------------- Start fetching data from Staffology' . PHP_EOL, Console::FG_CYAN);
+        $this->stdout('' . PHP_EOL, Console::RESET);
+
+        $queue = Craft::$app->getQueue();
+
+        $queue->push(new FetchPayRunJob([
+            'criteria' => [
+                'employers' => $this->employer === '*' ? Employer::findAll() : [Employer::findOne($this->employer)],
+                'taxYear' => $this->taxYear === '*' ? null : $this->taxYear,
+                'fetchEntries' => true
             ],
             'description' => 'Fetching pay run',
         ]));
