@@ -262,7 +262,7 @@ class PayRunEntries extends Component
                     ]
                 );
 
-                $this->fetchPayRunByPayRunId($payRunId, true);
+                Staff::$plugin->payRuns->fetchPayRunByPayRunId($payRunId, true);
 
                 return true;
             } catch (GuzzleException $e) {

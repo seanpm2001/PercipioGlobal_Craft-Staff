@@ -518,7 +518,9 @@ class Employees extends Component
         $personalDetails['mobile'] = SecurityHelper::decrypt($personalDetails['mobile'] ?? '');
         $personalDetails['niNumber'] = SecurityHelper::decrypt($personalDetails['niNumber'] ?? '');
         $personalDetails['passportNumber'] = SecurityHelper::decrypt($personalDetails['passportNumber'] ?? '');
-        $personalDetails['address'] = Staff::$plugin->addresses->parseAddress($personalDetails['address']);
+
+        $address = $personalDetails['address'] ?? null;
+        $personalDetails['address'] = $address ? Staff::$plugin->addresses->parseAddress($address) : null;
 
         return $personalDetails;
     }
