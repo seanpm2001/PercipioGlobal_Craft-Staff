@@ -4,7 +4,6 @@ namespace percipiolondon\staff\controllers;
 
 use Craft;
 use craft\helpers\ArrayHelper;
-use craft\helpers\Queue;
 use craft\web\Controller;
 use League\Csv\AbstractCsv;
 use League\Csv\Exception;
@@ -14,12 +13,10 @@ use percipiolondon\staff\db\Table;
 use percipiolondon\staff\elements\Employer;
 use percipiolondon\staff\elements\PayRun;
 use percipiolondon\staff\helpers\Security as SecurityHelper;
-use percipiolondon\staff\jobs\FetchPayRunsJob;
 use percipiolondon\staff\records\PayLine as PayLineRecord;
 use percipiolondon\staff\records\PayRunImport;
 
 use percipiolondon\staff\Staff;
-use yii\base\BaseObject;
 use yii\web\NotFoundHttpException;
 use yii\web\Response;
 use yii\web\UploadedFile;

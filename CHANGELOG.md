@@ -4,6 +4,22 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](http://keepachangelog.com/) and this project adheres to [Semantic Versioning](http://semver.org/).
 
+## 1.0.0-beta.18 - 2022-09-17
+
+### Changed
+- Changed settings handling in the services
+- Changed the code structure with cleanups and added comments
+- Changed the employees selection to show the former employoees
+- Changed the install migration for the benefit types
+- Changed linear fetch for "Refresh Pay Run" action from the dashboard
+
+### Removed
+- Removed all queue v1 job tasks
+
+### Fixed
+- Fixed the create request bug where error expected a default value
+- Fixed the download latest pay run template and upload csv to staffology on a pay run according to the new linear queue process
+
 ## 1.0.0-beta.17 - 2022-09-15
 
 ### Added
