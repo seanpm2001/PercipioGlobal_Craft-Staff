@@ -27,6 +27,9 @@ class BenefitVariant extends Query
                 'id' => [
                     'type' => Type::string()
                 ],
+                'status' => [
+                    'type' => Type::string()
+                ],
                 'personalDetails' => [
                     'type' => PersonalDetails::getType(),
                 ]

@@ -24,6 +24,10 @@ onResult(queryResult => {
 
 const onLoadMore = () => {
     pagination.value.currentPage += 1
+    variables.value = {
+        limit: pagination.value.hitsPerPage,
+        offset: pagination.value.currentPage * pagination.value.hitsPerPage
+    }
 
     fetchMore({
         variables: variables.value,
@@ -85,38 +89,41 @@ const setFilter = (filterValue) => {
             <button
                 @click="() => setFilter('all')"
                 :class="[
-                    'cursor-pointer font-bold relative inline-flex items-center px-4 py-2 rounded-l-md text-sm font-medium focus:z-10 focus:outline-none focus:ring-1 focus:ring-indigo-500 focus:border-indigo-500',
+                    'cursor-pointer font-bold relative flex items-center px-4 py-2 rounded-l-md text-sm font-medium focus:z-10 focus:outline-none focus:ring-1 focus:ring-indigo-500 focus:border-indigo-500',
                     filter === 'all' ? 'bg-indigo-600 text-white' : 'bg-gray-100 text-gray-700 hover:bg-indigo-400 hover:text-white'
                 ]"
             >
-                All
+                <span class="mb-0">All</span>
             </button>
             <button
                 @click="() => setFilter('pending')"
                 :class="[
-                    'cursor-pointer font-bold -ml-px relative inline-flex items-center px-4 py-2 text-sm font-medium focus:z-10 focus:outline-none focus:ring-1 focus:ring-indigo-500 focus:border-indigo-500',
+                    'cursor-pointer font-bold -ml-px relative flex items-center px-4 py-2 text-sm font-medium focus:z-10 focus:outline-none focus:ring-1 focus:ring-indigo-500 focus:border-indigo-500',
                     filter === 'pending' ? 'bg-indigo-600 text-white' : 'bg-gray-100 text-gray-700 hover:bg-indigo-400 hover:text-white'
                 ]"
             >
-                Pending
+                <span class="mb-0">Pending</span>
+                <span class="rounded-full w-3 h-3 bg-yellow-300 mb-0">&nbsp;</span>
             </button>
             <button
                 @click="() => setFilter('approved')"
                 :class="[
-                    'cursor-pointer font-bold -ml-px relative inline-flex items-center px-4 py-2 text-sm font-medium focus:z-10 focus:outline-none focus:ring-1 focus:ring-indigo-500 focus:border-indigo-500',
+                    'cursor-pointer font-bold -ml-px relative flex items-center px-4 py-2 text-sm font-medium focus:z-10 focus:outline-none focus:ring-1 focus:ring-indigo-500 focus:border-indigo-500',
                     filter === 'approved' ? 'bg-indigo-600 text-white' : 'bg-gray-100 text-gray-700 hover:bg-indigo-400 hover:text-white'
                 ]"
             >
-                Approved
+                <span class=mb-0>Approved</span>
+                <span class="rounded-full w-3 h-3 bg-emerald-300 mb-0">&nbsp;</span>
             </button>
             <button
                 @click="() => setFilter('declined')"
                 :class="[
-                    'cursor-pointer font-bold -ml-px relative inline-flex items-center px-4 py-2 rounded-r-md text-sm font-medium focus:z-10 focus:outline-none focus:ring-1 focus:ring-indigo-500 focus:border-indigo-500',
+                    'cursor-pointer font-bold -ml-px relative flex items-center px-4 py-2 rounded-r-md text-sm font-medium focus:z-10 focus:outline-none focus:ring-1 focus:ring-indigo-500 focus:border-indigo-500',
                     filter === 'declined' ? 'bg-indigo-600 text-white' : 'bg-gray-100 text-gray-700 hover:bg-indigo-400 hover:text-white'
                 ]"
             >
-                Declined
+                <span class=mb-0>Declined</span>
+                <span class="rounded-full w-3 h-3 bg-red-300 mb-0">&nbsp;</span>
             </button>
         </span>
     </div>
@@ -135,9 +142,9 @@ const setFilter = (filterValue) => {
                         <div class="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">Status</div>
                     </div>
 
-                    <LoadingList v-if="loading" />
                     <NoResultsList v-if="!loading && result?.Requests?.length === 0" />
                     <RequestList v-if="result" :requests="result.Requests" />
+                    <LoadingList v-if="loading" />
                 </div>
             </div>
         </div>
