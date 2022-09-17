@@ -22,6 +22,8 @@ use yii\helpers\Markdown;
  */
 class Notifications extends Component
 {
+    // Public Methods
+    // =========================================================================
     /**
      * @param int $employeeId
      * @param string $type
@@ -60,6 +62,15 @@ class Notifications extends Component
         }
     }
 
+    /**
+     * @param int $userId
+     * @param string $emailMessage
+     * @param array $parameters
+     * @throws \Twig\Error\LoaderError
+     * @throws \Twig\Error\RuntimeError
+     * @throws \Twig\Error\SyntaxError
+     * @throws \yii\base\Exception
+     */
     public function sendNotificationByUser(int $userId, string $emailMessage, array $parameters = []): void
     {
         $user = User::findOne($userId);
@@ -95,6 +106,8 @@ class Notifications extends Component
         }
     }
 
+    // Private Methods
+    // =========================================================================
     /**
      * @param string $email
      * @param string $body

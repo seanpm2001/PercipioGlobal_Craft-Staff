@@ -111,7 +111,7 @@ const sortedList = computed(() => {
                                 class="bg-white rounded-xl mb-2 w-full px-4 py-2 box-border flex items-center cursor-move h-12"
                             >
                                 <span class="text-blue-600 text-xl leading-tight mb-0">✥</span>
-                                <span class="font-bold flex-grow mb-0">{{ item.personalDetails.firstName }} {{ item.personalDetails.lastName }}</span>
+                                <span class="font-bold flex-grow mb-0">{{ item.personalDetails.firstName }} {{ item.personalDetails.lastName }}<span v-if="item.status !== 'Current'"> ({{ item.status }})</span></span>
                             </div>
                         </div>
                     </VueDraggableNext>
@@ -173,7 +173,7 @@ const sortedList = computed(() => {
                                 class="bg-white rounded-xl mb-2 w-full px-4 py-2 box-border flex items-center cursor-move h-12"
                             >
                                 <span class="text-blue-600 text-xl leading-tight mb-0">✥</span>
-                                <span class="font-bold flex-grow mb-0">{{ item.personalDetails.firstName }} {{ item.personalDetails.lastName }}</span>
+                                <span class="font-bold flex-grow mb-0">{{ item.personalDetails.firstName }} {{ item.personalDetails.lastName }}<span v-if="item.status !== 'Current'"> ({{ item.status }})</span></span>
                                 <button @click="() => handleRemove(item.id)" class="text-gray-600 cursor-pointer mb-0">✕</button>
                             </div>
                         </div>

@@ -83,50 +83,69 @@ class Install extends Migration
                 'content' => $this->longText()
             ]);
 
-            $this->createTable(Table::BENEFIT_TYPE_DENTAL, [
+            $this->createTable(Table::BENEFIT_TYPES, [
                 'id' => $this->primaryKey(),
                 'dateCreated' => $this->dateTime()->notNull(),
                 'dateUpdated' => $this->dateTime()->notNull(),
-                'uid' => $this->uid(),
-                'siteId' => $this->integer(),
-                //FK
-                //intern
-                'providerId' => $this->integer(),
                 //generic fields
-                'internalCode' => $this->string(255)->notNull(),
-                'status' => $this->string(255)->notNull(),
-                'policyName' => $this->string(255)->notNull(),
-                'policyNumber' => $this->string(255)->notNull(),
-                'policyHolder' => $this->string(255)->notNull(),
-                'content' => $this->longText(),
-                'policyStartDate' => $this->dateTime()->notNull(),
-                'policyRenewalDate' => $this->dateTime()->notNull(),
-                'paymentFrequency' => $this->enum('status', ['annual', 'monthly'])->notNull(),
-                'commissionRate' => $this->float()->notNull(),
-                'benefitType' => $this->string(255)->notNull()->defaultValue('dental')
+                'name' => $this->string(255)->notNull(),
+                'slug' => $this->string(255)->notNull(),
             ]);
 
-            $this->createTable(Table::BENEFIT_TYPE_GROUP_CRITICAL_ILLNESS_COVER, [
+            $this->createTable(Table::BENEFIT_POLICIES, [
                 'id' => $this->primaryKey(),
                 'dateCreated' => $this->dateTime()->notNull(),
                 'dateUpdated' => $this->dateTime()->notNull(),
                 'uid' => $this->uid(),
-                'siteId' => $this->integer(),
                 //FK
                 //intern
                 'providerId' => $this->integer(),
+                'employerId' => $this->integer(),
+                'benefitTypeId' => $this->integer(),
                 //generic fields
                 'internalCode' => $this->string(255)->notNull(),
                 'status' => $this->string(255)->notNull(),
                 'policyName' => $this->string(255)->notNull(),
                 'policyNumber' => $this->string(255)->notNull(),
                 'policyHolder' => $this->string(255)->notNull(),
-                'content' => $this->longText(),
                 'policyStartDate' => $this->dateTime()->notNull(),
                 'policyRenewalDate' => $this->dateTime()->notNull(),
-                'paymentFrequency' => $this->enum('status', ['annual', 'monthly'])->notNull(),
+                'paymentFrequency' => $this->enum('paymentFrequency', ['annual', 'monthly'])->notNull(),
                 'commissionRate' => $this->float()->notNull(),
-                'benefitType' => $this->string(255)->notNull()->defaultValue('group-critical-illness-cover'),
+                'description' => $this->longText(),
+            ]);
+
+            $this->createTable(Table::BENEFIT_TRS, [
+                'id' => $this->primaryKey(),
+                'dateCreated' => $this->dateTime()->notNull(),
+                'dateUpdated' => $this->dateTime()->notNull(),
+                'uid' => $this->uid(),
+                //FK
+                'variantId' => $this->integer(),
+                //generic fields
+                'title' => $this->string(255)->notNull(),
+                'monetaryValue' => $this->float(),
+                'startDate' => $this->dateTime()->notNull(),
+                'endDate' => $this->dateTime()->notNull()
+            ]);
+
+            $this->createTable(Table::BENEFIT_EMPLOYEES_VARIANTS, [
+                'id' => $this->primaryKey(),
+                'dateCreated' => $this->dateTime()->notNull(),
+                'dateUpdated' => $this->dateTime()->notNull(),
+                'uid' => $this->uid(),
+                //FK
+                //intern
+                'employeeId' => $this->integer(),
+                'variantId' => $this->integer()
+            ]);
+
+            $this->createTable(Table::BENEFIT_VARIANT_GCIC, [
+                'id' => $this->primaryKey(),
+                'dateCreated' => $this->dateTime()->notNull(),
+                'dateUpdated' => $this->dateTime()->notNull(),
+                'uid' => $this->uid(),
+                //FK
                 //custom fields
                 'rateReviewGuaranteeDate' => $this->dateTime(),
                 'costingBasis' => $this->enum('costingBasis', ['unit', 'sp']),
@@ -136,27 +155,12 @@ class Install extends Migration
                 'dateRefreshFrequency' => $this->enum('dateRefreshFrequency', ['annual', 'monthly'])
             ]);
 
-            $this->createTable(Table::BENEFIT_TYPE_GROUP_DEATH_IN_SERVICE, [
+            $this->createTable(Table::BENEFIT_VARIANT_GDIS, [
                 'id' => $this->primaryKey(),
                 'dateCreated' => $this->dateTime()->notNull(),
                 'dateUpdated' => $this->dateTime()->notNull(),
                 'uid' => $this->uid(),
-                'siteId' => $this->integer(),
                 //FK
-                //intern
-                'providerId' => $this->integer(),
-                //generic fields
-                'internalCode' => $this->string(255)->notNull(),
-                'status' => $this->string(255)->notNull(),
-                'policyName' => $this->string(255)->notNull(),
-                'policyNumber' => $this->string(255)->notNull(),
-                'policyHolder' => $this->string(255)->notNull(),
-                'content' => $this->longText(),
-                'policyStartDate' => $this->dateTime()->notNull(),
-                'policyRenewalDate' => $this->dateTime()->notNull(),
-                'paymentFrequency' => $this->enum('status', ['annual', 'monthly'])->notNull(),
-                'commissionRate' => $this->float()->notNull(),
-                'benefitType' => $this->string(255)->notNull()->defaultValue('group-death-in-service'),
                 //custom fields
                 'rateReviewGuaranteeDate' => $this->dateTime(),
                 'costingBasis' => $this->enum('costingBasis', ['unit', 'sp']),
@@ -169,27 +173,12 @@ class Install extends Migration
                 'eventLimit' => $this->float()
             ]);
 
-            $this->createTable(Table::BENEFIT_TYPE_GROUP_INCOME_PROTECTION, [
+            $this->createTable(Table::BENEFIT_VARIANT_GIP, [
                 'id' => $this->primaryKey(),
                 'dateCreated' => $this->dateTime()->notNull(),
                 'dateUpdated' => $this->dateTime()->notNull(),
                 'uid' => $this->uid(),
-                'siteId' => $this->integer(),
                 //FK
-                //intern
-                'providerId' => $this->integer(),
-                //generic fields
-                'internalCode' => $this->string(255)->notNull(),
-                'status' => $this->string(255)->notNull(),
-                'policyName' => $this->string(255)->notNull(),
-                'policyNumber' => $this->string(255)->notNull(),
-                'policyHolder' => $this->string(255)->notNull(),
-                'content' => $this->longText(),
-                'policyStartDate' => $this->dateTime()->notNull(),
-                'policyRenewalDate' => $this->dateTime()->notNull(),
-                'paymentFrequency' => $this->enum('status', ['annual', 'monthly'])->notNull(),
-                'commissionRate' => $this->float()->notNull(),
-                'benefitType' => $this->string(255)->notNull()->defaultValue('group-income-protection'),
                 //custom fields
                 'rateReviewGuaranteeDate' => $this->dateTime(),
                 'costingBasis' => $this->enum('costingBasis', ['unit', 'sp']),
@@ -199,27 +188,12 @@ class Install extends Migration
                 'dateRefreshFrequency' => $this->enum('dateRefreshFrequency', ['annual', 'monthly'])
             ]);
 
-            $this->createTable(Table::BENEFIT_TYPE_GROUP_LIFE_ASSURANCE, [
+            $this->createTable(Table::BENEFIT_VARIANT_GLA, [
                 'id' => $this->primaryKey(),
                 'dateCreated' => $this->dateTime()->notNull(),
                 'dateUpdated' => $this->dateTime()->notNull(),
                 'uid' => $this->uid(),
-                'siteId' => $this->integer(),
                 //FK
-                //intern
-                'providerId' => $this->integer(),
-                //generic fields
-                'internalCode' => $this->string(255)->notNull(),
-                'status' => $this->string(255)->notNull(),
-                'policyName' => $this->string(255)->notNull(),
-                'policyNumber' => $this->string(255)->notNull(),
-                'policyHolder' => $this->string(255)->notNull(),
-                'content' => $this->longText(),
-                'policyStartDate' => $this->dateTime()->notNull(),
-                'policyRenewalDate' => $this->dateTime()->notNull(),
-                'paymentFrequency' => $this->enum('status', ['annual', 'monthly'])->notNull(),
-                'commissionRate' => $this->float()->notNull(),
-                'benefitType' => $this->string(255)->notNull()->defaultValue('group-life-assurance'),
                 //custom fields
                 'rateReviewGuaranteeDate' => $this->dateTime(),
                 'costingBasis' => $this->enum('costingBasis', ['unit', 'sp']),
@@ -232,53 +206,27 @@ class Install extends Migration
                 'eventLimit' => $this->float()
             ]);
 
-            $this->createTable(Table::BENEFIT_TYPE_HEALTH_CASH_PLAN, [
+            $this->createTable(Table::BENEFIT_VARIANT_PMI, [
                 'id' => $this->primaryKey(),
                 'dateCreated' => $this->dateTime()->notNull(),
                 'dateUpdated' => $this->dateTime()->notNull(),
                 'uid' => $this->uid(),
-                'siteId' => $this->integer(),
                 //FK
-                //intern
-                'providerId' => $this->integer(),
-                //generic fields
-                'internalCode' => $this->string(255)->notNull(),
-                'status' => $this->string(255)->notNull(),
-                'policyName' => $this->string(255)->notNull(),
-                'policyNumber' => $this->string(255)->notNull(),
-                'policyHolder' => $this->string(255)->notNull(),
-                'content' => $this->longText(),
-                'policyStartDate' => $this->dateTime()->notNull(),
-                'policyRenewalDate' => $this->dateTime()->notNull(),
-                'paymentFrequency' => $this->enum('status', ['annual', 'monthly'])->notNull(),
-                'commissionRate' => $this->float()->notNull(),
-                'benefitType' => $this->string(255)->notNull()->defaultValue('health-cash-plan'),
-            ]);
-
-            $this->createTable(Table::BENEFIT_TYPE_PRIVATE_MEDICAL_INSURANCE, [
-                'id' => $this->primaryKey(),
-                'dateCreated' => $this->dateTime()->notNull(),
-                'dateUpdated' => $this->dateTime()->notNull(),
-                'uid' => $this->uid(),
-                'siteId' => $this->integer(),
-                //FK
-                //intern
-                'providerId' => $this->integer(),
-                //generic fields
-                'internalCode' => $this->string(255)->notNull(),
-                'status' => $this->string(255)->notNull(),
-                'policyName' => $this->string(255)->notNull(),
-                'policyNumber' => $this->string(255)->notNull(),
-                'policyHolder' => $this->string(255)->notNull(),
-                'content' => $this->longText(),
-                'policyStartDate' => $this->dateTime()->notNull(),
-                'policyRenewalDate' => $this->dateTime()->notNull(),
-                'paymentFrequency' => $this->enum('status', ['annual', 'monthly'])->notNull(),
-                'commissionRate' => $this->float()->notNull(),
-                'benefitType' => $this->string(255)->notNull()->defaultValue('private-medical-insurance'),
                 //custom fields
                 'underwritingBasis' => $this->enum('underwritingBasis', ['moratorium', 'medical-history-disregarded', 'full-medical-underwriting']),
                 'hospitalList' => $this->string(),
+            ]);
+
+            $this->createTable(Table::BENEFIT_VARIANT, [
+                'id' => $this->primaryKey(),
+                'dateCreated' => $this->dateTime()->notNull(),
+                'dateUpdated' => $this->dateTime()->notNull(),
+                'uid' => $this->uid(),
+                //FK
+                //intern
+                'policyId' => $this->integer(),
+                //generic fields
+                'name' => $this->string(255)->notNull()
             ]);
 
             $this->createTable(Table::EMPLOYEES, [
@@ -1639,26 +1587,9 @@ class Install extends Migration
     public function createIndexes(): void
     {
         /** BASE **/
-        // Benefit Providers [name]
+        // Benefits
         $this->createIndex(null, Table::BENEFIT_PROVIDERS, 'name', true);
-
-        // Benefit Types [benefitType]
-        $this->createIndex(null, Table::BENEFIT_TYPE_DENTAL, 'benefitType', true);
-        $this->createIndex(null, Table::BENEFIT_TYPE_GROUP_CRITICAL_ILLNESS_COVER, 'benefitType', true);
-        $this->createIndex(null, Table::BENEFIT_TYPE_GROUP_DEATH_IN_SERVICE, 'benefitType', true);
-        $this->createIndex(null, Table::BENEFIT_TYPE_GROUP_INCOME_PROTECTION, 'benefitType', true);
-        $this->createIndex(null, Table::BENEFIT_TYPE_GROUP_LIFE_ASSURANCE, 'benefitType', true);
-        $this->createIndex(null, Table::BENEFIT_TYPE_HEALTH_CASH_PLAN, 'benefitType', true);
-        $this->createIndex(null, Table::BENEFIT_TYPE_PRIVATE_MEDICAL_INSURANCE, 'benefitType', true);
-
-        // Benefit Types [internalCode]
-        $this->createIndex(null, Table::BENEFIT_TYPE_DENTAL, 'internalCode', true);
-        $this->createIndex(null, Table::BENEFIT_TYPE_GROUP_CRITICAL_ILLNESS_COVER, 'internalCode', true);
-        $this->createIndex(null, Table::BENEFIT_TYPE_GROUP_DEATH_IN_SERVICE, 'internalCode', true);
-        $this->createIndex(null, Table::BENEFIT_TYPE_GROUP_INCOME_PROTECTION, 'internalCode', true);
-        $this->createIndex(null, Table::BENEFIT_TYPE_GROUP_LIFE_ASSURANCE, 'internalCode', true);
-        $this->createIndex(null, Table::BENEFIT_TYPE_HEALTH_CASH_PLAN, 'internalCode', true);
-        $this->createIndex(null, Table::BENEFIT_TYPE_PRIVATE_MEDICAL_INSURANCE, 'internalCode', true);
+        $this->createIndex(null, Table::BENEFIT_POLICIES, 'internalCode', true);
 
         // Employees [id]
         $this->createIndex(null, Table::AUTO_ENROLMENT, 'employeeId', false);
@@ -1851,16 +1782,22 @@ class Install extends Migration
     protected function addForeignKeys()
     {
         /** BASE **/
-        // Benefit Providers [id]
-        $this->addForeignKey(null, Table::BENEFIT_TYPE_DENTAL, ['providerId'], Table::BENEFIT_PROVIDERS, ['id'], 'CASCADE', 'CASCADE' );
-        $this->addForeignKey(null, Table::BENEFIT_TYPE_GROUP_CRITICAL_ILLNESS_COVER, ['providerId'], Table::BENEFIT_PROVIDERS, ['id'], 'CASCADE', 'CASCADE' );
-        $this->addForeignKey(null, Table::BENEFIT_TYPE_GROUP_DEATH_IN_SERVICE, ['providerId'], Table::BENEFIT_PROVIDERS, ['id'], 'CASCADE', 'CASCADE' );
-        $this->addForeignKey(null, Table::BENEFIT_TYPE_GROUP_INCOME_PROTECTION, ['providerId'], Table::BENEFIT_PROVIDERS, ['id'], 'CASCADE', 'CASCADE' );
-        $this->addForeignKey(null, Table::BENEFIT_TYPE_GROUP_LIFE_ASSURANCE, ['providerId'], Table::BENEFIT_PROVIDERS, ['id'], 'CASCADE', 'CASCADE' );
-        $this->addForeignKey(null, Table::BENEFIT_TYPE_HEALTH_CASH_PLAN, ['providerId'], Table::BENEFIT_PROVIDERS, ['id'], 'CASCADE', 'CASCADE' );
-        $this->addForeignKey(null, Table::BENEFIT_TYPE_PRIVATE_MEDICAL_INSURANCE, ['providerId'], Table::BENEFIT_PROVIDERS, ['id'], 'CASCADE', 'CASCADE' );
+        // Benefits
+        $this->addForeignKey(null, Table::BENEFIT_VARIANT, ['id'], CraftTable::ELEMENTS, ['id'], 'CASCADE', 'CASCADE');
+        $this->addForeignKey(null, Table::BENEFIT_VARIANT, ['policyId'], Table::BENEFIT_POLICIES, ['id'], 'CASCADE', 'CASCADE');
+        $this->addForeignKey(null, Table::BENEFIT_VARIANT_PMI, ['id'], CraftTable::ELEMENTS, ['id'], 'CASCADE', 'CASCADE');
+        $this->addForeignKey(null, Table::BENEFIT_VARIANT_GLA, ['id'], CraftTable::ELEMENTS, ['id'], 'CASCADE', 'CASCADE');
+        $this->addForeignKey(null, Table::BENEFIT_VARIANT_GIP, ['id'], CraftTable::ELEMENTS, ['id'], 'CASCADE', 'CASCADE');
+        $this->addForeignKey(null, Table::BENEFIT_VARIANT_GDIS, ['id'], CraftTable::ELEMENTS, ['id'], 'CASCADE', 'CASCADE');
+        $this->addForeignKey(null, Table::BENEFIT_VARIANT_GCIC, ['id'], CraftTable::ELEMENTS, ['id'], 'CASCADE', 'CASCADE');
+        $this->addForeignKey(null, Table::BENEFIT_EMPLOYEES_VARIANTS, ['employeeId'], Table::EMPLOYEES, ['id'], 'CASCADE', 'CASCADE');
+        $this->addForeignKey(null, Table::BENEFIT_EMPLOYEES_VARIANTS, ['variantId'], CraftTable::ELEMENTS, ['id'], 'CASCADE', 'CASCADE');
+        $this->addForeignKey(null, Table::BENEFIT_TRS, ['variantId'], Table::BENEFIT_VARIANT, ['id'], 'CASCADE', 'CASCADE');
+        $this->addForeignKey(null, Table::BENEFIT_POLICIES, ['providerId'], Table::BENEFIT_PROVIDERS, ['id'], 'CASCADE', 'CASCADE');
+        $this->addForeignKey(null, Table::BENEFIT_POLICIES, ['employerId'], Table::EMPLOYERS, ['id'], 'CASCADE', 'CASCADE');
+        $this->addForeignKey(null, Table::BENEFIT_POLICIES, ['benefitTypeId'], Table::BENEFIT_TYPES, ['id'], 'CASCADE', 'CASCADE');
 
-        // Employees [id]
+       // Employees [id]
         $this->addForeignKey(null, Table::AUTO_ENROLMENT, ['employeeId'], Table::EMPLOYEES, ['id'], 'CASCADE', 'CASCADE');
         $this->addForeignKey(null, Table::ADDRESSES, ['employeeId'], Table::EMPLOYEES, ['id'], 'CASCADE', 'CASCADE');
         $this->addForeignKey(null, Table::BANK_DETAILS, ['employeeId'], Table::EMPLOYEES, ['id'], 'CASCADE', 'CASCADE');
@@ -2015,13 +1952,6 @@ class Install extends Migration
         /** CRAFT **/
         // Elements [id]
         $this->addForeignKey(null, Table::BENEFIT_PROVIDERS, ['id'], CraftTable::ELEMENTS, ['id'], 'CASCADE', 'CASCADE' );
-        $this->addForeignKey(null, Table::BENEFIT_TYPE_DENTAL, ['id'], CraftTable::ELEMENTS, ['id'], 'CASCADE', 'CASCADE' );
-        $this->addForeignKey(null, Table::BENEFIT_TYPE_GROUP_CRITICAL_ILLNESS_COVER, ['id'], CraftTable::ELEMENTS, ['id'], 'CASCADE', 'CASCADE' );
-        $this->addForeignKey(null, Table::BENEFIT_TYPE_GROUP_DEATH_IN_SERVICE, ['id'], CraftTable::ELEMENTS, ['id'], 'CASCADE', 'CASCADE' );
-        $this->addForeignKey(null, Table::BENEFIT_TYPE_GROUP_INCOME_PROTECTION, ['id'], CraftTable::ELEMENTS, ['id'], 'CASCADE', 'CASCADE' );
-        $this->addForeignKey(null, Table::BENEFIT_TYPE_GROUP_LIFE_ASSURANCE, ['id'], CraftTable::ELEMENTS, ['id'], 'CASCADE', 'CASCADE' );
-        $this->addForeignKey(null, Table::BENEFIT_TYPE_HEALTH_CASH_PLAN, ['id'], CraftTable::ELEMENTS, ['id'], 'CASCADE', 'CASCADE' );
-        $this->addForeignKey(null, Table::BENEFIT_TYPE_PRIVATE_MEDICAL_INSURANCE, ['id'], CraftTable::ELEMENTS, ['id'], 'CASCADE', 'CASCADE' );
         $this->addForeignKey(null, Table::EMPLOYEES, ['id'], CraftTable::ELEMENTS, ['id'], 'CASCADE', 'CASCADE' );
         $this->addForeignKey(null, Table::EMPLOYERS, ['id'], CraftTable::ELEMENTS, ['id'], 'CASCADE', 'CASCADE' );
         $this->addForeignKey(null, Table::PAY_RUN, ['id'], CraftTable::ELEMENTS, ['id'], 'CASCADE', 'CASCADE' );

@@ -18,7 +18,10 @@ use percipiolondon\staff\elements\db\EmployerQuery;
 use percipiolondon\staff\helpers\Logger;
 use percipiolondon\staff\helpers\Security as SecurityHelper;
 
+use percipiolondon\staff\records\Address;
 use percipiolondon\staff\records\Employer as EmployerRecord;
+use percipiolondon\staff\records\HmrcDetails;
+use percipiolondon\staff\records\PayOption;
 use percipiolondon\staff\Staff;
 use yii\db\Exception;
 use yii\db\Query;
@@ -33,24 +36,61 @@ class Employer extends Element
 {
     // Public Properties
     // =========================================================================
-
+    /**
+     * @var string|null
+     */
     public ?string $staffologyId = null;
+    /**
+     * @var string|null
+     */
     public ?string $name = null;
+    /**
+     * @var string|null
+     */
     public ?string $logoUrl = null;
+    /**
+     * @var string|null
+     */
     public ?string $crn = null;
+    /**
+     * @var string|null
+     */
     public ?string $startYear = null;
+    /**
+     * @var string|null
+     */
     public ?string $currentYear = null;
+    /**
+     * @var array|null
+     */
     public ?array $defaultPayOptions = null;
+    /**
+     * @var string|null
+     */
     public ?string $employeeCount = null;
 
+    // Private Properties
+    // =========================================================================
+    /**
+     * @var PayRun|null
+     */
     private ?PayRun $_currentPayRun = null;
-    private ?array $_defaultPayOptions = null;
+    /**
+     * @var PayOption|null
+     */
+    private ?PayOption $_defaultPayOptions = null;
+    /**
+     * @var array|null
+     */
     private ?array $_hmrcDetails = null;
+    /**
+     * @var array|null
+     */
     private ?array $_address = null;
+
 
     // Static Methods
     // =========================================================================
-
     /**
      * Returns the display name of this class.
      *
@@ -101,33 +141,21 @@ class Employer extends Element
     }
 
     /**
-     * Defines the sources that elements of this type may belong to.
-     *
-     * @param string|null $context The context ('index' or 'modal').
-     *
-     * @return array The sources.
-     * @see sources()
+     * @param mixed $context
+     * @return string
      */
-    protected static function defineSources(string $context = null): array
+    public static function gqlTypeNameByContext($context): string
     {
-        $ids = self::_getEmployerIds();
-
-        return [
-            [
-                'key' => '*',
-                'label' => 'All Employers',
-                'defaultSort' => ['id', 'desc'],
-                'criteria' => ['id' => $ids],
-            ],
-        ];
+        return 'Employer';
     }
+
 
     // Public Methods
     // =========================================================================
     /**
      * Returns the payrun totals.
      *
-     * @return bool|string|PayRun|null
+     * @return PayRun|null
      */
     public function getCurrentPayRun(): ?PayRun
     {
@@ -146,11 +174,11 @@ class Employer extends Element
     }
 
     /**
-     * Returns the payrun totals.
+     * Returns the the default pay options.
      *
-     * @return PayRun|null
+     * @return PayOption|null
      */
-    public function getDefaultPayOptions()
+    public function getDefaultPayOptions(): ?PayOption
     {
         if ($this->_defaultPayOptions === null) {
 
@@ -164,11 +192,11 @@ class Employer extends Element
     }
 
     /**
-     * Returns the payrun totals.
+     * Returns the hmrc details.
      *
-     * @return PayRun|null
+     * @return array|null
      */
-    public function getHmrcDetails()
+    public function getHmrcDetails(): ?array
     {
         if ($this->_hmrcDetails === null) {
 
@@ -182,55 +210,25 @@ class Employer extends Element
     }
 
     /**
-     * Returns the payrun totals.
+     * Returns the address.
      *
-     * @return PayRun|null
+     * @return Address|null
      */
-    public function getAddress()
+    public function getAddress(): ?array
     {
         if ($this->_address === null) {
 
             if (($this->_address = Staff::$plugin->employers->getAddressByEmployer($this->id)) === null) {
                 // The author is probably soft-deleted. Just no author is set
-                $this->_address = false;
+                $this->_address = null;
             }
         }
 
         return $this->_address ?: null;
     }
 
-    /**
-     * Returns the validation rules for attributes.
-     *
-     * Validation rules are used by [[validate()]] to check if attribute values are valid.
-     * Child classes may override this method to declare different validation rules.
-     *
-     * More info: http://www.yiiframework.com/doc-2.0/guide-input-validation.html
-     *
-     * @return array
-     */
-    public function rules()
-    {
-        return parent::rules();
-    }
-
-    /**
-     * Returns the field layout used by this element.
-     *
-     * @return FieldLayout|null
-     */
-    public function getFieldLayout(): ?FieldLayout
-    {
-        return null;
-    }
-
     // Indexes, etc.
     // -------------------------------------------------------------------------
-
-    public static function gqlTypeNameByContext($context): string
-    {
-        return 'Employer';
-    }
 
     /**
      * @inheritdoc
@@ -240,6 +238,9 @@ class Employer extends Element
         return static::gqlTypeNameByContext($this);
     }
 
+    /**
+     * @return string
+     */
     public function getCrn(): string
     {
         return SecurityHelper::decrypt($this->crn);
@@ -255,35 +256,19 @@ class Employer extends Element
      *
      * @return void
      */
-    public function afterSave(bool $isNew)
+    public function afterSave(bool $isNew): void
     {
         if (!$this->propagating) {
             $this->_saveRecord($isNew);
         }
 
-        return parent::afterSave($isNew);
+        parent::afterSave($isNew);
     }
 
     /**
-     * Performs actions before an element is deleted.
-     *
-     * @return bool Whether the element should be deleted
+     * Saved the employer record
+     * @param bool $isNew
      */
-    public function beforeDelete(): bool
-    {
-        return true;
-    }
-
-    /**
-     * Performs actions after an element is deleted.
-     *
-     * @return void
-     */
-    public function afterDelete()
-    {
-        return true;
-    }
-
     private function _saveRecord(bool $isNew): void
     {
         $logger = new Logger();
@@ -326,26 +311,5 @@ class Employer extends Element
             $logger->stdout($e->getMessage() . PHP_EOL, $logger::FG_RED);
             Craft::error($e->getMessage(), __METHOD__);
         }
-    }
-
-    /**
-     * Returns all employer ID's
-     *
-     * @return array
-     */
-    private static function _getEmployerIds(): array
-    {
-        $employerIds = [];
-
-        $employers = (new Query())
-            ->from('{{%staff_employers}}')
-            ->select('id')
-            ->all();
-
-        foreach ($employers as $employer) {
-            $employerIds[] = $employer['id'];
-        }
-
-        return $employerIds;
     }
 }

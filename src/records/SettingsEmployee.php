@@ -14,6 +14,7 @@ use craft\db\ActiveRecord;
 use percipiolondon\staff\db\Table;
 
 /**
+ * @property int id;
  * @property int employeeId;
  * @property int settingsId;
  */

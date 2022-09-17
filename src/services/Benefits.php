@@ -20,10 +20,24 @@ use percipiolondon\staff\records\BenefitVariantGdis;
 use percipiolondon\staff\records\TotalRewardsStatement;
 use yii\web\Request;
 
+/**
+ * Class Benefits
+ *
+ * @package percipiolondon\staff\services
+ */
 class Benefits extends Component
 {
     // Public Methods
     // =========================================================================
+
+
+    /* GETTERS */
+    /**
+     * @param int $id
+     * @param string|null $type
+     * @return array|null
+     * @throws \Exception
+     */
     public function getBenefitTypeData(int $id, ?string $type): ?array
     {
         $query = match ($type) {

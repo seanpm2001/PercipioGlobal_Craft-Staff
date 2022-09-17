@@ -13,15 +13,29 @@ use percipiolondon\staff\elements\PayRun;
 use percipiolondon\staff\elements\PayRunEntry;
 use percipiolondon\staff\helpers\Logger;
 use percipiolondon\staff\helpers\Security as SecurityHelper;
-use percipiolondon\staff\jobs\FetchPaySlipJob;
+use percipiolondon\staff\jobs\FetchPayRunEntriesJob;
 use percipiolondon\staff\records\Employee as EmployeeRecord;
 use percipiolondon\staff\records\Employer as EmployerRecord;
 use percipiolondon\staff\records\PayRunEntry as PayRunEntryRecord;
 use percipiolondon\staff\Staff;
 
+/**
+ * Class PayRunEntries
+ *
+ * @package percipiolondon\staff\services
+ */
 class PayRunEntries extends Component
 {
-    /* GETTERS AND SETTERS */
+    // Public Methods
+    // =========================================================================
+
+
+    /* GETTERS */
+    /**
+     * @param array $entries
+     * @return array
+     * @throws GuzzleException
+     */
     public function setPayRunEntry(array $entries): array
     {
         $savedEntries = [];
@@ -73,7 +87,62 @@ class PayRunEntries extends Component
 
 
     /* FETCHES */
+    /**
+     * Fetch pay run entries from Staffology
+     */
+    public function fetchPayRunEntries(): void
+    {
+        $queue = Craft::$app->getQueue();
+        $queue->push(new FetchPayRunEntriesJob([
+            'criteria' => [
+                'payRuns' => PayRun::findAll(),
+            ],
+            'description' => 'Fetching pay run entries',
+        ]));
+    }
 
+
+    /* SYNCS */
+    /**
+     * @param PayRun $payRun
+     * @param array $payRunEntries
+     * @throws \Throwable
+     */
+    public function syncPayRunEntries(PayRun $payRun, array $payRunEntries)
+    {
+        $logger = new Logger();
+        $logger->stdout('↧ Sync pay run entries of ' . $payRun['taxYear'] . '/' . $payRun['taxMonth'] . PHP_EOL, $logger::RESET);
+
+        $hubPayRunEntries = PayRunEntry::findAll(['payRunId' => $payRun['id']]);
+
+        foreach ($hubPayRunEntries as $hubPayRunEntry) {
+
+            $exists = false;
+
+            // loop through our pay run entries and check if the pay run entry is still on staffology
+            foreach ($payRunEntries as $payRunEntry) {
+                if ($payRunEntry['id'] === $hubPayRunEntry['staffologyId']) {
+                    $exists = true;
+                }
+            }
+
+            // remove the employee if it doesn't exists anymore
+            if (!$exists) {
+                $logger->stdout('✓ Delete pay run entry from ' . $payRun['taxYear'] . '/' . $payRun['taxMonth'] . PHP_EOL, $logger::FG_YELLOW);
+                Craft::$app->getElements()->deleteElementById($hubPayRunEntry['id']);
+            }
+        }
+    }
+
+
+    /* SAVES */
+    /**
+     * @param array $payRunEntryData
+     * @param array $employer
+     * @param int $payRunId
+     * @return PayRunEntry|null
+     * @throws \Throwable
+     */
     public function savePayRunEntry(array $payRunEntryData, array $employer, int $payRunId): ?PayRunEntry
     {
         $logger = new Logger();
@@ -165,47 +234,10 @@ class PayRunEntries extends Component
         return null;
     }
 
-    public function fetchPaySlip(array $payRunEntry, array $employer): void
-    {
-        $queue = Craft::$app->getQueue();
-        $queue->push(new FetchPaySlipJob([
-            'description' => 'Fetch Pay Slips',
-            'criteria' => [
-                'employer' => $employer,
-                'payPeriod' => $payRunEntry['payPeriod'] ?? null,
-                'periodNumber' => $payRunEntry['period'] ?? null,
-                'taxYear' => $payRunEntry['taxYear'] ?? null,
-                'payRunEntry' => $payRunEntry ?? null,
-            ],
-        ]));
-    }
-
-    public function syncPayRunEntries(PayRun $payRun, array $payRunEntries)
-    {
-        $logger = new Logger();
-        $logger->stdout('↧ Sync pay run entries of ' . $payRun['taxYear'] . '/' . $payRun['taxMonth'] . PHP_EOL, $logger::RESET);
-
-        $hubPayRunEntries = PayRunEntry::findAll(['payRunId' => $payRun['id']]);
-
-        foreach ($hubPayRunEntries as $hubPayRunEntry) {
-
-            $exists = false;
-
-            // loop through our pay run entries and check if the pay run entry is still on staffology
-            foreach ($payRunEntries as $payRunEntry) {
-                if ($payRunEntry['id'] === $hubPayRunEntry['staffologyId']) {
-                    $exists = true;
-                }
-            }
-
-            // remove the employee if it doesn't exists anymore
-            if (!$exists) {
-                $logger->stdout('✓ Delete pay run entry from ' . $payRun['taxYear'] . '/' . $payRun['taxMonth'] . PHP_EOL, $logger::FG_YELLOW);
-                Craft::$app->getElements()->deleteElementById($hubPayRunEntry['id']);
-            }
-        }
-    }
-
+    /**
+     * @param array $paySlip
+     * @param array|PayRunEntryRecord $payRunEntry
+     */
     public function savePaySlip(array $paySlip, array|PayRunEntryRecord $payRunEntry): void
     {
         $logger = new Logger();
@@ -230,6 +262,13 @@ class PayRunEntries extends Component
 
 
     /* UPDATES */
+    /**
+     * @param string $payPeriod
+     * @param int $employer
+     * @param int $payRunId
+     * @param array $payRunEntryUpdate
+     * @return bool
+     */
     public function updatePayRunEntry(string $payPeriod, int $employer, int $payRunId, array $payRunEntryUpdate): bool
     {
         $employer = EmployerRecord::findOne($employer);
@@ -255,14 +294,14 @@ class PayRunEntries extends Component
             #END TEST
 
             try {
-                $response = $client->post(
+                $client->post(
                     $base_url,
                     [
                         'json' => $payRunEntryUpdate,
                     ]
                 );
 
-                $this->fetchPayRunByPayRunId($payRunId, true);
+                Staff::$plugin->payRuns->fetchPayRunByPayRunId($payRunId, true);
 
                 return true;
             } catch (GuzzleException $e) {

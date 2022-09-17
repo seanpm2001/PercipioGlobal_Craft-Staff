@@ -20,6 +20,14 @@ use yii\base\ModelEvent;
  */
 class History extends Component
 {
+    // Public Methods
+    // =========================================================================
+
+
+    /* EVENTS */
+    /**
+     * Catch Craft events to save history logging from
+     */
     public function catchEventListeners(): void
     {
         // save history when user gets activated
@@ -51,6 +59,18 @@ class History extends Component
         );
     }
 
+
+    /* SAVES */
+    /**
+     * @param Employee $employee
+     * @param string $type
+     * @param string $message
+     * @param string|null $data
+     * @param int|null $administerId
+     * @throws \Throwable
+     * @throws \craft\errors\ElementNotFoundException
+     * @throws \yii\base\Exception
+     */
     public function saveHistory(Employee $employee, string $type, string $message, string $data = null, int $administerId = null): void
     {
         if ($employee) {

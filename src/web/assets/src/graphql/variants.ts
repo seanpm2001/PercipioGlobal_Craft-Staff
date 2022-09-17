@@ -29,6 +29,7 @@ export const VARIANT = gql`
             }
             employees {
                   id
+                  status
                   personalDetails{
                         firstName
                         lastName
@@ -80,6 +81,7 @@ export const VARIANT_ELIGIBLE_EMPLOYEES = gql`
     query BenefitVariantEligibleEmployees($policyId: Int!) {
           BenefitVariantEligibleEmployees(policyId: $policyId) {
                 id,
+                status,
                 personalDetails {
                       firstName
                       lastName

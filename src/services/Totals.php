@@ -9,20 +9,47 @@ use percipiolondon\staff\helpers\Security as SecurityHelper;
 use percipiolondon\staff\records\PayRunTotals;
 use yii\db\Exception;
 
+/**
+ * Class Totals
+ *
+ * @package percipiolondon\staff\services
+ */
 class Totals extends Component
 {
+    // Public Methods
+    // =========================================================================
+
+
+    /* GETTERS */
+    /**
+     * @param int $payRunId
+     * @return array
+     */
     public function getTotalsByPayRun(int $payRunId) : array
     {
         $payRunTotals = PayRunTotals::findOne(['payRunId' => $payRunId]);
         return $payRunTotals ? $payRunTotals->toArray() : [];
     }
 
+    /**
+     * @param int $payRunEntryId
+     * @return array
+     */
     public function getTotalsByPayRunEntry(int $payRunEntryId) : array
     {
         $payRunTotals = PayRunTotals::findOne(['payRunEntryId' => $payRunEntryId, 'isYtd' => false]);
         return $payRunTotals ? $payRunTotals->toArray() : [];
     }
 
+
+
+    /* SAVES */
+    /**
+     * @param array $totals
+     * @param int|null $payRunId
+     * @param bool $isYtd
+     * @return PayRunTotals
+     */
     public function savePayRunTotals(array $totals, int $payRunId = null, bool $isYtd = false): PayRunTotals
     {
         $record = PayRunTotals::findOne(['payRunId' => $payRunId]);
@@ -37,6 +64,12 @@ class Totals extends Component
         return $this->_saveRecord($record, $totals);
     }
 
+    /**
+     * @param array $totals
+     * @param int|null $payRunEntryId
+     * @param bool $isYtd
+     * @return PayRunTotals
+     */
     public function savePayRunEntryTotals(array $totals, int $payRunEntryId = null, bool $isYtd = false): PayRunTotals
     {
         $record = PayRunTotals::findOne(['payRunEntryId' => $payRunEntryId, 'isYtd' => $isYtd]);
@@ -51,6 +84,13 @@ class Totals extends Component
         return $this->_saveRecord($record, $totals);
     }
 
+
+
+    /* PARSE SECURITY VALUES */
+    /**
+     * @param array $totals
+     * @return array
+     */
     public function parseTotals(array $totals): array
     {
         $totals['basicPay'] = SecurityHelper::decrypt($totals['basicPay'] ?? '');
@@ -87,6 +127,14 @@ class Totals extends Component
         return $totals;
     }
 
+
+    // Private Methods
+    // =========================================================================
+    /**
+     * @param PayRunTotals $record
+     * @param array $totals
+     * @return PayRunTotals|null
+     */
     private function _saveRecord(PayRunTotals $record, array $totals): ?PayRunTotals
     {
         $record->basicPay = SecurityHelper::encrypt($totals['basicPay'] ?? '');

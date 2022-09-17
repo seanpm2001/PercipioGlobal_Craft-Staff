@@ -6,12 +6,6 @@ use Craft;
 use craft\console\Controller;
 use craft\helpers\App;
 use craft\queue\QueueInterface;
-use percipiolondon\staff\elements\Employer;
-use percipiolondon\staff\elements\PayRun;
-use percipiolondon\staff\jobs\v2\FetchEmployeesJob;
-use percipiolondon\staff\jobs\v2\FetchEmployersJob;
-use percipiolondon\staff\jobs\v2\FetchPayRunEntriesJob;
-use percipiolondon\staff\jobs\v2\FetchPayRunJob;
 use percipiolondon\staff\Staff;
 use yii\helpers\Console;
 use yii\queue\redis\Queue as RedisQueue;
@@ -24,31 +18,28 @@ use yii\queue\redis\Queue as RedisQueue;
 class FetchController extends Controller
 {
     /**
-     * Fetch all the employers/employees/payruns/pensions/... from staffology
-     * e.g.: actions/admin/staff-management/employer-controller/fetch
+     * Provide a specific tax year. If not provided, the current tax year will be used
+     * @var string
      */
-    public function actionIndex()
+    public $taxYear = '*';
+
+    /**
+     * Provide an employer to fetch [required]
+     * @var string
+     */
+    public $employer = '*';
+
+    /**
+     * @param string $actionID
+     * @return int[]|string[]
+     */
+    public function options($actionID)
     {
-        $this->stdout("" . PHP_EOL, Console::RESET);
-        $this->stdout("--------------------------------- Start fetching data from Staffology" . PHP_EOL, Console::FG_CYAN);
-        $this->stdout("" . PHP_EOL, Console::RESET);
+        $options = parent::options($actionID);
+        $options[] = 'taxYear';
+        $options[] = 'employer';
 
-        //Fetch a list of all employers from Staffology
-        $employers = Staff::$plugin->employers->fetchEmployerList();
-
-        //Fetch all the standalone calls needed before fetching Employer / Employee / Pay Run
-//        $this->stdout("" . PHP_EOL, Console::RESET);
-//        Staff::$plugin->pensions->fetchPensionSchemes($employers);
-//
-        // Fetch Employer / Employee
-        $this->stdout("" . PHP_EOL, Console::RESET);
-        Staff::$plugin->employers->fetchEmployers($employers);
-
-        $this->_runQueue();
-
-        $this->stdout("" . PHP_EOL, Console::RESET);
-        $this->stdout("--------------------------------- Done fetching from Staffology" . PHP_EOL, Console::FG_CYAN);
-        $this->stdout("" . PHP_EOL, Console::RESET);
+        return $options;
     }
 
     public function actionEmployers()
@@ -57,10 +48,7 @@ class FetchController extends Controller
         $this->stdout('--------------------------------- Start fetching data from Staffology' . PHP_EOL, Console::FG_CYAN);
         $this->stdout('' . PHP_EOL, Console::RESET);
 
-        $queue = Craft::$app->getQueue();
-        $queue->push(new FetchEmployersJob([
-            'description' => 'Fetching employers',
-        ]));
+        Staff::$plugin->employers->fetchEmployers();
 
         $this->_runQueue();
 
@@ -75,13 +63,7 @@ class FetchController extends Controller
         $this->stdout('--------------------------------- Start fetching data from Staffology' . PHP_EOL, Console::FG_CYAN);
         $this->stdout('' . PHP_EOL, Console::RESET);
 
-        $queue = Craft::$app->getQueue();
-        $queue->push(new FetchEmployeesJob([
-            'criteria' => [
-                'employers' => Employer::findAll(),
-            ],
-            'description' => 'Fetching employees',
-        ]));
+        Staff::$plugin->employees->fetchEmployees();
 
         $this->_runQueue();
 
@@ -96,13 +78,28 @@ class FetchController extends Controller
         $this->stdout('--------------------------------- Start fetching data from Staffology' . PHP_EOL, Console::FG_CYAN);
         $this->stdout('' . PHP_EOL, Console::RESET);
 
-        $queue = Craft::$app->getQueue();
-        $queue->push(new FetchPayRunJob([
-            'criteria' => [
-                'employers' => Employer::findAll(),
-            ],
-            'description' => 'Fetching pay run',
-        ]));
+        Staff::$plugin->payRuns->fetchPayRuns();
+
+        $this->_runQueue();
+
+        $this->stdout('' . PHP_EOL, Console::RESET);
+        $this->stdout('--------------------------------- Done fetching from Staffology' . PHP_EOL, Console::FG_CYAN);
+        $this->stdout('' . PHP_EOL, Console::RESET);
+    }
+
+    /**
+     * Fetch pay runs from an employer. If you want a specific tax year, you can provide the tax year. parameter examples: --employer='1234' --taxYear='2021'
+     * e.g. staff-management/pay-run/fetch-pay-run-by-employer --employer="1234" --taxYear="2021"
+     *
+     * @throws \GuzzleHttp\Exception\GuzzleException
+     */
+    public function actionPayRunByEmployer()
+    {
+        $this->stdout('' . PHP_EOL, Console::RESET);
+        $this->stdout('--------------------------------- Start fetching data from Staffology' . PHP_EOL, Console::FG_CYAN);
+        $this->stdout('' . PHP_EOL, Console::RESET);
+
+        Staff::$plugin->payRuns->fetchPayRuns($this->employer, $this->taxYear);
 
         $this->_runQueue();
 
@@ -117,13 +114,7 @@ class FetchController extends Controller
         $this->stdout('--------------------------------- Start fetching data from Staffology' . PHP_EOL, Console::FG_CYAN);
         $this->stdout('' . PHP_EOL, Console::RESET);
 
-        $queue = Craft::$app->getQueue();
-        $queue->push(new FetchPayRunEntriesJob([
-            'criteria' => [
-                'payRuns' => PayRun::findAll(),
-            ],
-            'description' => 'Fetching pay run entries',
-        ]));
+        Staff::$plugin->payRunEntries->fetchPayRunEntries();
 
         $this->_runQueue();
 

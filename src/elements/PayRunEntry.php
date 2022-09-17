@@ -14,19 +14,15 @@ use Craft;
 use craft\base\Element;
 use craft\elements\db\ElementQueryInterface;
 
-use craft\helpers\App;
 use craft\helpers\Queue;
 use percipiolondon\staff\elements\db\PayRunEntryQuery;
-use percipiolondon\staff\helpers\HistoryMessages;
 use percipiolondon\staff\helpers\Logger;
-use percipiolondon\staff\helpers\NotificationMessage;
 use percipiolondon\staff\jobs\CreateNotificationPaySlip;
 use percipiolondon\staff\records\Employee;
 use percipiolondon\staff\records\PayRunEntry as PayRunEntryRecord;
 
 use percipiolondon\staff\records\PayRunTotals;
 use percipiolondon\staff\Staff;
-use yii\base\InvalidConfigException;
 use yii\db\Exception;
 
 /**
@@ -34,12 +30,16 @@ use yii\db\Exception;
  *
  * Element is the base class for classes representing elements in terms of objects.
  *
+ *
+ * @property-read string $gqlTypeName
+ * @property-read null|array $totals
+ * @property-read null|string|array $employee
+ * @property-read null|string|array $pensionSummary
  */
 class PayRunEntry extends Element
 {
     // Public Properties
     // =========================================================================
-
     public ?string $staffologyId = null;
     public ?int $payRunId = null;
     public ?int $employerId = null;
@@ -71,13 +71,15 @@ class PayRunEntry extends Element
     public ?string $paymentAfterLearning = null;
     public ?string $pdf = null;
 
+    // Private Properties
+    // =========================================================================
     private ?array $_totals = null;
     private ?array $_employee = null;
     private ?array $_pensionSummary = null;
 
+
     // Static Methods
     // =========================================================================
-
     /**
      * Returns the display name of this class.
      *
@@ -125,27 +127,9 @@ class PayRunEntry extends Element
     {
         return new PayRunEntryQuery(static::class);
     }
-
-    /**
-     * Defines the sources that elements of this type may belong to.
-     *
-     * @param string|null $context The context ('index' or 'modal').
-     *
-     * @return array The sources.
-     * @see sources()
-     */
-    protected static function defineSources(string $context = null): array
+    public static function gqlTypeNameByContext($context): string
     {
-        $ids = self::_getPayrunEntryIds();
-
-        return [
-            [
-                'key' => '*',
-                'label' => 'All payrun entries',
-                'defaultSort' => ['id', 'desc'],
-                'criteria' => ['id' => $ids],
-            ],
-        ];
+        return 'PayRunEntry';
     }
 
     // Public Methods
@@ -154,7 +138,6 @@ class PayRunEntry extends Element
      * Returns the payrun totals.
      *
      * @return array|null
-     * @throws InvalidConfigException if [[totalId]] is set but invalid
      */
     public function getTotals(): ?array
     {
@@ -172,8 +155,7 @@ class PayRunEntry extends Element
     /**
      * Returns the employer
      *
-     * @return string|null
-     * @throws InvalidConfigException if [[employerId]] is set but invalid
+     * @return array|null
      */
     public function getEmployee(): ?array
     {
@@ -189,15 +171,12 @@ class PayRunEntry extends Element
         }
 
         return $this->_employee ?: null;
-
-        return null;
     }
 
     /**
      * Returns the employer
      *
-     * @return string|null
-     * @throws InvalidConfigException if [[employerId]] is set but invalid
+     * @return array|null
      */
     public function getPensionSummary(): ?array
     {
@@ -212,39 +191,8 @@ class PayRunEntry extends Element
         return $this->_pensionSummary ?: null;
     }
 
-
-    /**
-     * Returns the validation rules for attributes.
-     *
-     * Validation rules are used by [[validate()]] to check if attribute values are valid.
-     * Child classes may override this method to declare different validation rules.
-     *
-     * More info: http://www.yiiframework.com/doc-2.0/guide-input-validation.html
-     *
-     * @return array
-     */
-    public function rules()
-    {
-        return parent::rules();
-    }
-
-    /**
-     * Returns the field layout used by this element.
-     *
-     * @return FieldLayout|null
-     */
-    public function getFieldLayout()
-    {
-        return null;
-    }
-
     // Indexes, etc.
-    // -------------------------------------------------------------------------
-
-    public static function gqlTypeNameByContext($context): string
-    {
-        return 'PayRunEntry';
-    }
+    // ------------------------------------------------------------------------
 
     /**
      * @inheritdoc
@@ -268,50 +216,11 @@ class PayRunEntry extends Element
     {
         $this->_saveRecord($isNew);
 
-        return parent::afterSave($isNew);
+        parent::afterSave($isNew);
     }
 
-    /**
-     * Performs actions before an element is deleted.
-     *
-     * @return bool Whether the element should be deleted
-     */
-    public function beforeDelete(): bool
-    {
-        return true;
-    }
-
-    /**
-     * Performs actions after an element is deleted.
-     *
-     * @return void
-     */
-    public function afterDelete()
-    {
-        return true;
-    }
-
-    /**
-     * Returns all payrunEntry ID's
-     *
-     * @return array
-     */
-    private static function _getPayrunEntryIds(): array
-    {
-        $payrunEntryIds = [];
-
-        $payrunentries = (new Query())
-            ->from('{{%staff_pay_run_entries}}')
-            ->select('id')
-            ->all();
-
-        foreach ($payrunentries as $payrunentry) {
-            $payrunEntryIds[] = $payrunentry['id'];
-        }
-
-        return $payrunEntryIds;
-    }
-
+    // Private Methods
+    // -------------------------------------------------------------------------
     private function _saveRecord($isNew)
     {
         $logger = new Logger();

@@ -31,6 +31,8 @@ use percipiolondon\staff\records\SettingsEmployee as SettingsEmployeeRecord;
  */
 class SettingsEmployee extends Element
 {
+    // Public Properties
+    // =========================================================================
     /**
      * @var int|null
      */
@@ -39,6 +41,9 @@ class SettingsEmployee extends Element
      * @var int|null
      */
     public ?int $settingsId = null;
+
+    // Private Properties
+    // =========================================================================
     /**
      * @var array|null
      */
@@ -52,6 +57,9 @@ class SettingsEmployee extends Element
      */
     private ?array $_settings = null;
 
+
+    // Static Methods
+    // =========================================================================
     /**
      * @return string
      */
@@ -103,9 +111,6 @@ class SettingsEmployee extends Element
         return new SettingsEmployeeQuery(static::class);
     }
 
-    // Indexes, etc.
-    // -------------------------------------------------------------------------
-
     /**
      * @param mixed $context
      * @return string
@@ -118,18 +123,21 @@ class SettingsEmployee extends Element
     /**
      * @inheritdoc
      */
+    public static function gqlMutationNameByContext(mixed $context): string
+    {
+        return 'CreateMutation';
+    }
+
+    // Public Methods
+    // =========================================================================
+    /**
+     * @inheritdoc
+     */
     public function getGqlTypeName(): string
     {
         return static::gqlTypeNameByContext($this);
     }
 
-    /**
-     * @inheritdoc
-     */
-    public static function gqlMutationNameByContext(mixed $context): string
-    {
-        return 'CreateMutation';
-    }
 
     /**
      * Returns the employer
@@ -205,8 +213,6 @@ class SettingsEmployee extends Element
     private function _saveRecord(bool $isNew): void
     {
         try {
-            $settingsEmployee = null;
-
             if (!$isNew) {
                 $settingsEmployee = SettingsEmployeeRecord::findOne($this->id);
 

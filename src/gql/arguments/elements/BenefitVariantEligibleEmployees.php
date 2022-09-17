@@ -17,7 +17,7 @@ class BenefitVariantEligibleEmployees extends HardingArguments
             'policyId' => [
                 'name' => 'policyId',
                 'type' => Type::nonNull(Type::int()),
-            ],
+            ]
         ]);
     }
 }

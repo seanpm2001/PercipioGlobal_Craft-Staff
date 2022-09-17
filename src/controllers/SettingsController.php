@@ -40,11 +40,11 @@ class SettingsController extends Controller
     {
         $variables = [];
 
-        $pluginName = Staff::$settings->pluginName;
+        $pluginName = Staff::$plugin->settings->pluginName;
         $templateTitle = Craft::t('staff-management', 'Group BenefitProvider');
 
         $variables['controllerHandle'] = 'group-benefits';
-        $variables['pluginName'] = Staff::$settings->pluginName;
+        $variables['pluginName'] = Staff::$plugin->settings->pluginName;
         $variables['title'] = $templateTitle;
         $variables['docTitle'] = "{$pluginName} - {$templateTitle}";
         $variables['selectedSubnavItem'] = 'group-benefits';
@@ -66,11 +66,11 @@ class SettingsController extends Controller
     {
         $variables = [];
 
-        $pluginName = Staff::$settings->pluginName;
+        $pluginName = Staff::$plugin->settings->pluginName;
         $templateTitle = Craft::t('staff-management', 'Dashboard');
 
         $variables['controllerHandle'] = 'dashboard';
-        $variables['pluginName'] = Staff::$settings->pluginName;
+        $variables['pluginName'] = Staff::$plugin->settings->pluginName;
         $variables['title'] = $templateTitle;
         $variables['docTitle'] = "{$pluginName} - {$templateTitle}";
         $variables['selectedSubnavItem'] = 'dashboard';
@@ -94,11 +94,11 @@ class SettingsController extends Controller
     {
         $variables = [];
 
-        $pluginName = Staff::$settings->pluginName;
+        $pluginName = Staff::$plugin->settings->pluginName;
         $templateTitle = Craft::t('staff-management', 'Pay runs');
 
         $variables['controllerHandle'] = 'pay-runs';
-        $variables['pluginName'] = Staff::$settings->pluginName;
+        $variables['pluginName'] = Staff::$plugin->settings->pluginName;
         $variables['title'] = $templateTitle;
         $variables['docTitle'] = "{$pluginName} - {$templateTitle}";
         $variables['selectedSubnavItem'] = 'pay-runs';
@@ -118,15 +118,15 @@ class SettingsController extends Controller
     public function actionPlugin(): Response
     {
         $variables = [];
-        $pluginName = Staff::$settings->pluginName;
+        $pluginName = Staff::$plugin->settings->pluginName;
         $templateTitle = Craft::t('staff-management', 'Plugin Settings');
 
         $variables['fullPageForm'] = true;
-        $variables['pluginName'] = Staff::$settings->pluginName;
+        $variables['pluginName'] = Staff::$plugin->settings->pluginName;
         $variables['title'] = $templateTitle;
         $variables['docTitle'] = "{$pluginName} - {$templateTitle}";
         $variables['selectedSubnavItem'] = 'plugin';
-        $variables['settings'] = Staff::$settings;
+        $variables['settings'] = Staff::$plugin->settings;
 
         // Render the template
         return $this->renderTemplate('staff-management/settings/hub-settings', $variables);
@@ -135,14 +135,14 @@ class SettingsController extends Controller
     public function actionUserSettings(): Response
     {
         $variables = [];
-        $pluginName = Staff::$settings->pluginName;
+        $pluginName = Staff::$plugin->settings->pluginName;
         $templateTitle = Craft::t('staff-management', 'User Settings');
 
         $settings = Settings::find()->all();
         $currentSettings = SettingsAdmin::getSettingsAdminIds();
 
         $variables['fullPageForm'] = true;
-        $variables['pluginName'] = Staff::$settings->pluginName;
+        $variables['pluginName'] = Staff::$plugin->settings->pluginName;
         $variables['title'] = $templateTitle;
         $variables['docTitle'] = "{$pluginName} - {$templateTitle}";
         $variables['selectedSubnavItem'] = 'user-settings';

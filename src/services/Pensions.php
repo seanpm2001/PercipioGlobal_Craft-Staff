@@ -6,17 +6,23 @@ use Craft;
 use craft\base\Component;
 use percipiolondon\staff\helpers\Logger;
 use percipiolondon\staff\helpers\Security as SecurityHelper;
-use percipiolondon\staff\jobs\CreatePensionJob;
-use percipiolondon\staff\jobs\FetchPensionSchemesJob;
 use percipiolondon\staff\records\PensionSummary;
 use percipiolondon\staff\records\WorkerGroup;
 use yii\db\Exception;
 
+/**
+ * Class Pensions
+ *
+ * @package percipiolondon\staff\services
+ */
 class Pensions extends Component
 {
 
     /* GETTERS */
-
+    /**
+     * @param int $payRunEntryId
+     * @return array
+     */
     public function getPensionSummaryByPayRunEntryId(int $payRunEntryId): array
     {
         $pensionSummary = PensionSummary::findOne(['payRunEntryId' => $payRunEntryId]);
@@ -39,39 +45,39 @@ class Pensions extends Component
 
 
     /* FETCHES */
+    /**
+     * @param array $employee
+     * @param string $employer
+     */
     public function fetchPension(array $employee, string $employer)
     {
-        $queue = Craft::$app->getQueue();
-        $queue->push(new CreatePensionJob([
-            'description' => 'Fetch pension schemes',
-            'criteria' => [
-                'employee' => $employee,
-                'employer' => $employer,
-            ],
-        ]));
+        //@TODO
     }
 
+    /**
+     * @param array $employers
+     */
     public function fetchPensionSchemes(array $employers)
     {
-        $queue = Craft::$app->getQueue();
-        $queue->push(new FetchPensionSchemesJob([
-            'description' => 'Fetch pension schemes',
-            'criteria' => [
-                'employers' => $employers,
-            ],
-        ]));
+       //@TODO
     }
 
 
     /* SAVES */
-    public function savePension(array $pension)
+    /**
+     * @param array $pension
+     */
+    public function savePension(array $pension): void
     {
         $logger = new Logger();
         $logger->stdout("✓ Save pension ...", $logger::RESET);
         $logger->stdout(" done" . PHP_EOL, $logger::FG_GREEN);
     }
 
-    public function savePensionScheme(array $pensionScheme)
+    /**
+     * @param array $pensionScheme
+     */
+    public function savePensionScheme(array $pensionScheme): void
     {
         $logger = new Logger();
         $logger->stdout("✓ Save pension scheme ...", $logger::RESET);
@@ -80,8 +86,9 @@ class Pensions extends Component
 
     /**
      * @param array $pensionSummary
-     * @param int|null $pensionSummaryId
+     * @param int|null $payRunEntryId
      * @return PensionSummary
+     * @throws Exception
      */
     public function savePensionSummary(array $pensionSummary, int $payRunEntryId = null): PensionSummary
     {

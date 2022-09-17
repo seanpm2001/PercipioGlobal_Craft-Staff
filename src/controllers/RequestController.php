@@ -25,11 +25,11 @@ class RequestController extends Controller
 
         $variables = [];
 
-        $pluginName = Staff::$settings->pluginName;
+        $pluginName = Staff::$plugin->settings->pluginName;
         $templateTitle = Craft::t('staff-management', 'Requests');
 
         $variables['controllerHandle'] = 'requests';
-        $variables['pluginName'] = Staff::$settings->pluginName;
+        $variables['pluginName'] = Staff::$plugin->settings->pluginName;
         $variables['title'] = $templateTitle;
         $variables['docTitle'] = "{$pluginName} - {$templateTitle}";
         $variables['selectedSubnavItem'] = 'requests';
@@ -55,11 +55,11 @@ class RequestController extends Controller
 
         $variables = [];
 
-        $pluginName = Staff::$settings->pluginName;
+        $pluginName = Staff::$plugin->settings->pluginName;
         $templateTitle = Craft::t('staff-management', 'Requests');
 
         $variables['controllerHandle'] = 'requests';
-        $variables['pluginName'] = Staff::$settings->pluginName;
+        $variables['pluginName'] = Staff::$plugin->settings->pluginName;
         $variables['title'] = $templateTitle;
         $variables['docTitle'] = "{$pluginName} - {$templateTitle} - {$request->id}";
         $variables['selectedSubnavItem'] = 'requests';

@@ -68,8 +68,8 @@ use yii\base\ModelEvent;
  * @package   Staff
  * @since     1.0.0
  *
- * @property  Settings              $settings
- * @property  VitePluginService     $vite
+ * @property  Settings $settings
+ * @property  VitePluginService $vite
  * @property  Addresses $addresses
  * @property  Benefits $benefits
  * @property  Employees $employees
@@ -98,11 +98,6 @@ class Staff extends Plugin
      * @var Staff
      */
     public static $plugin;
-
-    /**
-     * @var Settings
-     */
-    public static Settings $settings;
 
     /**
      * @var View
@@ -183,10 +178,9 @@ class Staff extends Plugin
         self::$plugin = $this;
 
         // Initialize properties
-        self::$settings = self::$plugin->getSettings();
         self::$view = Craft::$app->getView();
 
-        $this->name = self::$settings->pluginName;
+        $this->name = self::$plugin->settings->pluginName;
 
         $this->_setPluginComponents();
         $this->_registerGql();

@@ -13,9 +13,6 @@ namespace percipiolondon\staff\services;
 
 use Craft;
 use craft\base\Component;
-use craft\errors\ElementNotFoundException;
-use craft\helpers\App;
-use craft\helpers\Json;
 use percipiolondon\staff\db\Table;
 use percipiolondon\staff\elements\Employer;
 use percipiolondon\staff\helpers\Logger;
@@ -23,11 +20,8 @@ use percipiolondon\staff\helpers\Security as SecurityHelper;
 use percipiolondon\staff\jobs\FetchEmployersJob;
 use percipiolondon\staff\records\Address;
 use percipiolondon\staff\records\Countries;
-use percipiolondon\staff\records\FpsFields;
 use percipiolondon\staff\records\HmrcDetails;
-use percipiolondon\staff\records\PayOption;
 use percipiolondon\staff\Staff;
-use Throwable;
 use yii\db\Exception;
 use yii\db\Query;
 
@@ -51,45 +45,6 @@ class Employers extends Component
 
 
     /* GETTERS */
-    /**
-     * @return array
-     * @throws Exception
-     */
-    public function getEmployers(): array
-    {
-        $query = new Query();
-        $query->from(Table::EMPLOYERS)
-            ->all();
-        $command = $query->createCommand();
-        $employersQuery = $command->queryAll();
-
-        $employers = [];
-
-        if (!$employersQuery) {
-            return [];
-        }
-
-        foreach ($employersQuery as $employer) {
-            $employers[] = $this->parseEmployer($employer);
-        }
-
-        return $employers;
-    }
-
-    /**
-     * @param array $employer
-     * @return array
-     */
-    public function parseEmployer(array $employer): array
-    {
-        $employer['name'] = $employer['name'] ?? '';
-        $employer['crn'] = SecurityHelper::decrypt($employer['crn'] ?? '');
-        $employer['slug'] = $employer['slug'] ?? '';
-        $employer['logoUrl'] = $employer['logoUrl'] ?? '';
-
-        return $employer;
-    }
-
     /**
      * @param int $employerId
      * @return array
@@ -129,30 +84,6 @@ class Employers extends Component
     }
 
     /**
-     * @param int $payOptionsId
-     * @return array
-     */
-    public function getPayOptionsById(int $payOptionsId): array
-    {
-        $payOptions = PayOption::findOne($payOptionsId);
-
-        if (!$payOptions) {
-            return [];
-        }
-
-        $payOptions = $payOptions->toArray();
-
-        // address
-        $fpsFields = FpsFields::findOne($payOptions['fpsFieldsId']);
-        if ($fpsFields) {
-            $fpsFields = $fpsFields->toArray();
-            $payOptions['fpsFields'] = $fpsFields;
-        }
-
-        return $payOptions;
-    }
-
-    /**
      * @param int $employerId
      * @return string
      */
@@ -182,9 +113,6 @@ class Employers extends Component
         return $hmrcDetails->toArray();
     }
 
-
-    /* FETCHES */
-
     /**
      * @param int $employerId
      * @return array
@@ -208,77 +136,23 @@ class Employers extends Component
         return $address;
     }
 
+
+
+    /* FETCHES */
     /**
-     * @return array
-     * @throws \GuzzleHttp\Exception\GuzzleException
+     * Fetch employers from Staffology
      */
-    public function fetchEmployerList(): array
-    {
-        $logger = new Logger();
-        $api = App::parseEnv(Staff::$plugin->getSettings()->apiKeyStaffology);
-
-        if (!$api) {
-            $logger->stdout("There is no staffology API key set" . PHP_EOL, $logger::FG_RED);
-            Craft::error("There is no staffology API key set");
-        } else {
-
-            // connection props
-            $base_url = 'https://api.staffology.co.uk/employers';
-            $credentials = base64_encode('staff:' . $api);
-            $headers = [
-                'headers' => [
-                    'Authorization' => 'Basic ' . $credentials,
-                ],
-            ];
-
-            $client = new \GuzzleHttp\Client();
-
-            $logger->stdout("Start fetching employer list" . PHP_EOL, $logger::RESET);
-
-            // FETCH THE EMPLOYERS LIST
-            try {
-                $response = $client->get($base_url, $headers);
-
-                $employers = Json::decodeIfJson($response->getBody()->getContents(), true);
-
-                //TESTING PURPOSE
-                //                if (App::parseEnv('$HUB_DEV_MODE') && App::parseEnv('$HUB_DEV_MODE') == 1) {
-                //                    $employers = array_filter($employers, static function($emp) {
-                //                        return $emp['name'] == 'Acme Limited (Demo)';
-                //                    });
-                //                }
-
-                if (count($employers) > 0) {
-                    $logger->stdout("End fetching list of " . count($employers) . " employers " . PHP_EOL, $logger::RESET);
-
-                    return $employers;
-                }
-
-                $logger->stdout("There are no employers found on Staffology" . PHP_EOL, $logger::FG_RED);
-                Craft::error("There are no employers found on Staffology");
-            } catch (\Exception $e) {
-                $logger->stdout($e->getMessage() . PHP_EOL, $logger::FG_RED);
-                Craft::error($e->getMessage(), __METHOD__);
-            }
-        }
-
-        return [];
-    }
-
-    /**
-     * @param array $employers
-     */
-    public function fetchEmployers(array $employers): void
+    public function fetchEmployers(): void
     {
         $queue = Craft::$app->getQueue();
         $queue->push(new FetchEmployersJob([
             'description' => 'Fetching employers',
-            'criteria' => [
-                'employers' => $employers,
-            ],
         ]));
     }
 
+
+
+    /* SYNCS */
     /**
      * Checks if our database has employers that are deleted on staffology, if so, delete them on our system
      *
@@ -310,8 +184,15 @@ class Employers extends Component
         }
     }
 
+
+
+    /* SAVES */
     /**
      * @param array $employer
+     * @throws \Throwable
+     * @throws \craft\errors\ElementNotFoundException
+     * @throws \yii\base\Exception
+     * @throws \yii\db\StaleObjectException
      */
     public function saveEmployer(array $employer): void
     {
@@ -363,9 +244,6 @@ class Employers extends Component
         }
     }
 
-
-    /* PARSE SECURITY VALUES */
-
     /**
      * @param array $hmrcDetails
      * @param int|null $hmrcDetailsId
@@ -397,5 +275,22 @@ class Employers extends Component
         $record->save();
 
         return $record;
+    }
+
+
+
+    /* PARSE SECURITY VALUES */
+    /**
+     * @param array $employer
+     * @return array
+     */
+    public function parseEmployer(array $employer): array
+    {
+        $employer['name'] = $employer['name'] ?? '';
+        $employer['crn'] = SecurityHelper::decrypt($employer['crn'] ?? '');
+        $employer['slug'] = $employer['slug'] ?? '';
+        $employer['logoUrl'] = $employer['logoUrl'] ?? '';
+
+        return $employer;
     }
 }

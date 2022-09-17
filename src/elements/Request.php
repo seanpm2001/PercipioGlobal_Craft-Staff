@@ -13,7 +13,6 @@ namespace percipiolondon\staff\elements;
 use Craft;
 use craft\elements\User;
 use craft\helpers\App;
-use craft\helpers\DateTimeHelper;
 use DateTime;
 use craft\base\Element;
 use craft\elements\db\ElementQueryInterface;
@@ -26,17 +25,30 @@ use percipiolondon\staff\helpers\requests\CreateTelephoneRequest;
 use percipiolondon\staff\records\Employee;
 use percipiolondon\staff\records\Requests;
 use percipiolondon\staff\Staff;
+use yii\base\InvalidConfigException;
 
 /**
  * Request Element
  *
  * Element is the base class for classes representing elements in terms of objects.
  *
+ *
+ * @property-read string $gqlTypeName
+ * @property-read null|string $employer
+ * @property-read null|string $admin
+ * @property-read null|string|array $employee
  */
 class Request extends Element
 {
+    // Static Properties
+    // =========================================================================
+    /**
+     * @var array
+     */
     public const STATUSES = ['approved', 'canceled', 'declined', 'pending'];
 
+    // Public Properties
+    // =========================================================================
     /**
      * @var string|null
      */
@@ -81,6 +93,9 @@ class Request extends Element
      * @var string|null
      */
     public ?string $error = null;
+
+    // Private Properties
+    // =========================================================================
     /**
      * @var string|null
      */
@@ -94,6 +109,9 @@ class Request extends Element
      */
     private ?array $_employee = null;
 
+
+    // Static Methods
+    // =========================================================================
     /**
      * @return string
      */
@@ -162,6 +180,9 @@ class Request extends Element
         return 'Request';
     }
 
+
+    // Public Methods
+    // =========================================================================
     /**
      * @inheritdoc
      */
@@ -184,7 +205,7 @@ class Request extends Element
      * @return string|null
      * @throws InvalidConfigException if [[employerId]] is set but invalid
      */
-    public function getEmployer()
+    public function getEmployer(): ?string
     {
         if ($this->_employer === null) {
             if ($this->employerId === null) {
@@ -205,7 +226,7 @@ class Request extends Element
      *
      * @return string|null
      */
-    public function getAdmin()
+    public function getAdmin(): ?string
     {
         if ($this->_admin === null) {
             if ($this->administerId === null) {
@@ -251,13 +272,16 @@ class Request extends Element
     {
         $this->_saveRecord($isNew);
 
-        parent::beforeSave($isNew);
+        parent::afterSave($isNew);
     }
 
+
+    // Private Methods
+    // =========================================================================
     /**
      * @param bool $isNew
      */
-    private function _saveRecord(bool $isNew): bool
+    private function _saveRecord(bool $isNew): void
     {
         try {
             if(!$isNew) {
@@ -289,6 +313,7 @@ class Request extends Element
             $request->status = $this->status ?? 'pending';
             $request->note = $this->note ?? '';
             $request->data = $this->data;
+            $request->error = '';
 
             // create the data object according to the request type if it's not an approved request
 
@@ -351,11 +376,9 @@ class Request extends Element
                 }
             }
 
-            return $valid;
+            return;
         } catch (\Exception $e) {
             Craft::error($e->getMessage(), __METHOD__);
         }
-
-        return false;
     }
 }

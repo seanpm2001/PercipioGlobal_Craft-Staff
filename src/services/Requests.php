@@ -12,8 +12,22 @@ use percipiolondon\staff\elements\Employer;
 use percipiolondon\staff\records\Requests as RequestRecord;
 use percipiolondon\staff\Staff;
 
+/**
+ * Class Requests
+ *
+ * @package percipiolondon\staff\services
+ */
 class Requests extends Component
 {
+    // Public Methods
+    // =========================================================================
+
+
+    /* SAVES */
+    /**
+     * @param RequestRecord $request
+     * @return bool
+     */
     public function saveToStaffology(RequestRecord $request): bool
     {
         return match (true) {
@@ -23,6 +37,14 @@ class Requests extends Component
         };
     }
 
+    // Private Methods
+    // =========================================================================
+
+    /* SYNCS */
+    /**
+     * @param RequestRecord $request
+     * @return bool
+     */
     private function _syncEmployee(RequestRecord $request): bool
     {
         $employer = Employer::findOne($request->employerId);
@@ -39,6 +61,13 @@ class Requests extends Component
         return false;
     }
 
+    /**
+     * @param string $endpoint
+     * @param RequestRecord $request
+     * @param string $type
+     * @return bool
+     * @throws \craft\errors\MissingComponentException
+     */
     private function _sync(string $endpoint, RequestRecord $request, string $type): bool
     {
         $api = App::parseEnv(Staff::$plugin->getSettings()->apiKeyStaffology);
@@ -83,6 +112,12 @@ class Requests extends Component
         }
     }
 
+    /* SAVES */
+    /**
+     * @param array $employee
+     * @param RequestRecord $request
+     * @throws \Throwable
+     */
     private function _saveEmployee(array $employee, RequestRecord $request): void
     {
         $employeeName = ($employee['personalDetails']['firstName'] ?? ''). ' ' .($employee['personalDetails']['lastName'] ?? '');

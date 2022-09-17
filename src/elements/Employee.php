@@ -22,7 +22,6 @@ use percipiolondon\staff\helpers\Logger;
 use percipiolondon\staff\helpers\Security as SecurityHelper;
 use percipiolondon\staff\records\Employee as EmployeeRecord;
 use percipiolondon\staff\records\Permission;
-use percipiolondon\staff\records\PersonalDetails;
 use percipiolondon\staff\Staff;
 
 use yii\base\InvalidConfigException;
@@ -36,18 +35,53 @@ class Employee extends Element
 {
     // Public Properties
     // =========================================================================
-
+    /**
+     * @var string|null
+     */
     public ?string $staffologyId = null;
+    /**
+     * @var int|null
+     */
     public ?int $employerId = null;
+    /**
+     * @var int|null
+     */
     public ?int $userId = null;
+    /**
+     * @var string|null
+     */
     public ?string $status = null;
+    /**
+     * @var string|null
+     */
     public ?string $niNumber = null;
+    /**
+     * @var array|null
+     */
     public ?array $personalDetailsObject = null;
+    /**
+     * @var bool|null
+     */
     public ?bool $isDirector = null;
 
-    private ?array $_employmentDetails = null;
+
+    // Private Properties
+    // =========================================================================
+    /**
+     * @var array|null|bool
+     */
+    private null|array|bool $_employmentDetails = null;
+    /**
+     * @var array|null
+     */
     private ?array $_leaveSettings = null;
+    /**
+     * @var array|null
+     */
     private ?array $_personalDetails = null;
+    /**
+     * @var array|null
+     */
     private ?array $_employer = null;
 
 
@@ -103,25 +137,12 @@ class Employee extends Element
     }
 
     /**
-     * Defines the sources that elements of this type may belong to.
-     *
-     * @param string|null $context The context ('index' or 'modal').
-     *
-     * @return array The sources.
-     * @see sources()
+     * @param mixed $context
+     * @return string
      */
-    protected static function defineSources(string $context = null): array
+    public static function gqlTypeNameByContext($context): string
     {
-        $ids = self::_getEmployeeIds();
-
-        return [
-            [
-                'key' => '*',
-                'label' => 'All Employees',
-                'defaultSort' => ['id', 'desc'],
-                'criteria' => ['id' => $ids],
-            ],
-        ];
+        return 'Employee';
     }
 
     // Public Methods
@@ -129,8 +150,7 @@ class Employee extends Element
     /**
      * Returns the employment details
      *
-     * @return array|null
-     * @throws InvalidConfigException if [[employerId]] is set but invalid
+     * @return bool|array|null
      */
     public function getEmploymentDetails(): bool|array|null
     {
@@ -148,13 +168,13 @@ class Employee extends Element
      * @return array|null
      * @throws InvalidConfigException if [[employerId]] is set but invalid
      */
-    public function getLeaveSettings()
+    public function getLeaveSettings(): ?array
     {
         if ($this->_leaveSettings === null) {
 
             if (($this->_leaveSettings = Staff::$plugin->employees->getLeaveSettingsByEmployee($this->id)) === null) {
                 // The author is probably soft-deleted. Just no author is set
-                $this->_leaveSettings = false;
+                $this->_leaveSettings = null;
             }
         }
 
@@ -167,13 +187,13 @@ class Employee extends Element
      * @return array|null
      * @throws InvalidConfigException if [[employerId]] is set but invalid
      */
-    public function getPersonalDetails()
+    public function getPersonalDetails(): ?array
     {
         if ($this->_personalDetails === null) {
 
             if (($this->_personalDetails = Staff::$plugin->employees->getPersonalDetailsByEmployee($this->id)) === null) {
                 // The author is probably soft-deleted. Just no author is set
-                $this->_personalDetails = false;
+                $this->_personalDetails = null;
             }
         }
 
@@ -186,36 +206,21 @@ class Employee extends Element
      * @return array|null
      * @throws InvalidConfigException if [[employerId]] is set but invalid
      */
-    public function getEmployer()
+    public function getEmployer(): ?array
     {
         if ($this->_employer === null) {
 
             if (($this->_employer = Staff::$plugin->employers->getEmployerById($this->employerId, true)) === null) {
                 // The author is probably soft-deleted. Just no author is set
-                $this->_employer = false;
+                $this->_employer = null;
             }
         }
 
         return $this->_employer ?: null;
     }
 
-    /**
-     * Returns the field layout used by this element.
-     *
-     * @return FieldLayout|null
-     */
-    public function getFieldLayout(): ?FieldLayout
-    {
-        return null;
-    }
-
     // Indexes, etc.
     // -------------------------------------------------------------------------
-
-    public static function gqlTypeNameByContext($context): string
-    {
-        return 'Employee';
-    }
 
     /**
      * @inheritdoc
@@ -234,34 +239,20 @@ class Employee extends Element
      * @param bool $isNew Whether the element is brand new
      *
      * @return void
+     * @throws \Throwable
      */
-    public function afterSave(bool $isNew)
+    public function afterSave(bool $isNew): void
     {
         $this->_saveRecord($isNew);
 
-        return parent::afterSave($isNew);
+        parent::afterSave($isNew);
     }
 
     /**
-     * Performs actions before an element is deleted.
-     *
-     * @return bool Whether the element should be deleted
+     * Saved the employee record
+     * @param $isNew
+     * @throws \Throwable
      */
-    public function beforeDelete(): bool
-    {
-        return true;
-    }
-
-    /**
-     * Performs actions after an element is deleted.
-     *
-     * @return void
-     */
-    public function afterDelete()
-    {
-        return true;
-    }
-
     private function _saveRecord($isNew): void
     {
         try {

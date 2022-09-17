@@ -4,11 +4,9 @@ namespace percipiolondon\staff\elements;
 
 use Craft;
 use craft\elements\Asset;
-use DateTime;
 use craft\base\Element;
 use craft\elements\db\ElementQueryInterface;
 use craft\web\Request;
-use percipiolondon\staff\db\Table;
 use percipiolondon\staff\elements\db\BenefitVariantQuery;
 use percipiolondon\staff\helpers\variants\VariantGcic;
 use percipiolondon\staff\helpers\variants\VariantGdis;
@@ -23,7 +21,6 @@ use percipiolondon\staff\records\BenefitVariantGla;
 use percipiolondon\staff\records\BenefitVariantPmi;
 use percipiolondon\staff\records\TotalRewardsStatement;
 use percipiolondon\staff\records\BenefitVariant as BenefitVariantRecord;
-use yii\base\BaseObject;
 use yii\web\NotFoundHttpException;
 
 /**
@@ -36,22 +33,68 @@ use yii\web\NotFoundHttpException;
  */
 class BenefitVariant extends Element
 {
+    // Public Properties
+    // =========================================================================
+    /**
+     * @var TotalRewardsStatement|null
+     */
     public ?TotalRewardsStatement $trs = null;
+    /**
+     * @var int|null
+     */
     public ?int $policyId = null;
+    /**
+     * @var Request|null
+     */
     public ?Request $request = null;
+    /**
+     * @var string|null
+     */
     public ?string $name = null;
 
+    // Private Properties
+    // =========================================================================
+    /**
+     * @var TotalRewardsStatement|null
+     */
     private ?TotalRewardsStatement $_totalRewardsStatement = null;
+    /**
+     * @var BenefitPolicy|null
+     */
     private ?BenefitPolicy $_policy = null;
+    /**
+     * @var array|null
+     */
     private ?array $_provider = null;
+    /**
+     * @var array|null
+     */
     private ?array $_employees = null;
+    /**
+     * @var string|null
+     */
     private ?string $_type = null;
-
+    /**
+     * @var BenefitVariantGcic|null
+     */
     private ?BenefitVariantGcic $_gcic = null;
+    /**
+     * @var BenefitVariantGdis|null
+     */
     private ?BenefitVariantGdis $_gdis = null;
+    /**
+     * @var BenefitVariantGla|null
+     */
     private ?BenefitVariantGla $_gla = null;
+    /**
+     * @var BenefitVariantPmi|null
+     */
     private ?BenefitVariantPmi $_pmi = null;
 
+
+
+    // Static Methods
+    // =========================================================================
     /**
      * @return string
      */
@@ -85,12 +128,13 @@ class BenefitVariant extends Element
     }
 
     /**
-     * @return array
+     * @return ElementQueryInterface
      */
-    public function defineRules(): array
+    public static function find(): ElementQueryInterface
     {
-        return parent::defineRules();
+        return new BenefitVariantQuery(static::class);
     }
+
     /**
      * @param mixed $context
      * @return string
@@ -100,6 +144,20 @@ class BenefitVariant extends Element
         return 'BenefitVariant';
     }
 
+
+
+    // Public Methods
+    // =========================================================================
+    /**
+     * @return array
+     */
+    public function defineRules(): array
+    {
+        return parent::defineRules();
+    }
+
+    // Getters
+    // -------------------------------------------------------------------------
     /**
      * @inheritdoc
      */
@@ -109,13 +167,8 @@ class BenefitVariant extends Element
     }
 
     /**
-     * @return ElementQueryInterface
+     * @return TotalRewardsStatement|null
      */
-    public static function find(): ElementQueryInterface
-    {
-        return new BenefitVariantQuery(static::class);
-    }
-
     public function getTotalRewardsStatement(): ?TotalRewardsStatement
     {
         if ($this->_totalRewardsStatement === null) {
@@ -129,6 +182,9 @@ class BenefitVariant extends Element
         }
     }
 
+    /**
+     * @return BenefitPolicy|null
+     */
     public function getPolicy(): ?BenefitPolicy
     {
         if ($this->_policy === null) {
@@ -168,6 +224,9 @@ class BenefitVariant extends Element
         return $this->_provider;
     }
 
+    /**
+     * @return array|null
+     */
     public function getEmployees(): ?array
     {
         if ($this->_employees === null) {
@@ -182,6 +241,9 @@ class BenefitVariant extends Element
         }
     }
 
+    /**
+     * @return string|null
+     */
     public function getType(): ?string
     {
         $benefitType = BenefitType::findOne($this->getPolicy()->benefitTypeId ?? null);
@@ -193,6 +255,11 @@ class BenefitVariant extends Element
         return $this->_type;
     }
 
+    // Getters for specific benefit type
+    // -------------------------------------------------------------------------
+    /**
+     * @return BenefitVariantGcic|null
+     */
     public function getGcic(): ?BenefitVariantGcic
     {
         if ($this->_gcic === null) {
@@ -202,6 +269,9 @@ class BenefitVariant extends Element
         return $this->_gcic;
     }
 
+    /**
+     * @return BenefitVariantGdis|null
+     */
     public function getGdis(): ?BenefitVariantGdis
     {
         if ($this->_gdis === null) {
@@ -211,6 +281,9 @@ class BenefitVariant extends Element
         return $this->_gdis;
     }
 
+    /**
+     * @return BenefitVariantGla|null
+     */
     public function getGla(): ?BenefitVariantGla
     {
         if ($this->_gla === null) {
@@ -220,6 +293,9 @@ class BenefitVariant extends Element
         return $this->_gla;
     }
 
+    /**
+     * @return BenefitVariantPmi|null
+     */
     public function getPmi(): ?BenefitVariantPmi
     {
         if ($this->_pmi === null) {
@@ -229,6 +305,12 @@ class BenefitVariant extends Element
         return $this->_pmi;
     }
 
+    // Get fields and their values for specific benefit types
+    // -------------------------------------------------------------------------
+    /**
+     * @param string $benefitTypeSlug
+     * @return array|null
+     */
     public function getFields(string $benefitTypeSlug): ?array
     {
         $variant = match ($benefitTypeSlug ?? '') {
@@ -246,6 +328,10 @@ class BenefitVariant extends Element
         return null;
     }
 
+    /**
+     * @param string $benefitTypeSlug
+     * @return array|null
+     */
     public function getValues(string $benefitTypeSlug): ?array
     {
         return match ($benefitTypeSlug ?? '') {
@@ -257,6 +343,10 @@ class BenefitVariant extends Element
         };
     }
 
+    /**
+     * @param string $benefitSlug
+     * @return mixed
+     */
     public function getFilledVariant(string $benefitSlug): mixed
     {
         return match ($benefitSlug ?? '') {
@@ -268,6 +358,8 @@ class BenefitVariant extends Element
         };
     }
 
+    // Events
+    // -------------------------------------------------------------------------
     /**
      * @param bool $isNew
      */
@@ -280,6 +372,13 @@ class BenefitVariant extends Element
         parent::afterSave($isNew);
     }
 
+
+
+    // Private Methods
+    // =========================================================================
+    /**
+     * Save the Benefit Variant record
+     */
     private function _saveRecord(): void
     {
         try {
