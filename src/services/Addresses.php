@@ -15,41 +15,11 @@ use yii\db\Exception;
  */
 class Addresses extends Component
 {
-    /**
-     * @param array $address
-     * @param int|null $employerId
-     * @return Address
-     */
-    public function saveAddressByEmployer(array $address, int $employerId = null): Address
-    {
-        $record = $this->getAddressByEmployer($employerId);
+    // Public Methods
+    // =========================================================================
 
-        if (!$record) {
-            $record = new Address();
-        }
 
-        $record->employerId = $employerId;
-
-        return $this->_saveRecord($record, $address);
-    }
-    /**
-     * @param array $address
-     * @param int|null $employeeId
-     * @return Address
-     */
-    public function saveAddressByEmployee(array $address, int $employeeId = null): Address
-    {
-        $record = $this->getAddressByEmployee($employeeId);
-
-        if (!$record) {
-            $record = new Address();
-        }
-
-        $record->employeeId = $employeeId;
-
-        return $this->_saveRecord($record, $address);
-    }
-
+    /* GETTERS */
     /**
      * @param int $id
      * @return Address|null
@@ -83,15 +53,65 @@ class Addresses extends Component
         return $country->name;
     }
 
+
+    /* SAVES */
     /**
-     * @param int $id
-     * @return Address|null
+     * @param array $address
+     * @param int|null $employerId
+     * @return Address
      */
-    public function getAddressById(int $id): ?Address
+    public function saveAddressByEmployer(array $address, int $employerId = null): Address
     {
-        return Address::findOne($id);
+        $record = $this->getAddressByEmployer($employerId);
+
+        if (!$record) {
+            $record = new Address();
+        }
+
+        $record->employerId = $employerId;
+
+        return $this->_saveRecord($record, $address);
     }
 
+    /**
+     * @param array $address
+     * @param int|null $employeeId
+     * @return Address
+     */
+    public function saveAddressByEmployee(array $address, int $employeeId = null): Address
+    {
+        $record = $this->getAddressByEmployee($employeeId);
+
+        if (!$record) {
+            $record = new Address();
+        }
+
+        $record->employeeId = $employeeId;
+
+        return $this->_saveRecord($record, $address);
+    }
+
+
+
+    /* PARSE SECURITY VALUES */
+    /**
+     * @param array $address
+     * @return array
+     */
+    public function parseAddress(array $address): array
+    {
+        $address['address1'] = SecurityHelper::decrypt($address['address1']);
+        $address['address2'] = SecurityHelper::decrypt($address['address2']);
+        $address['address3'] = SecurityHelper::decrypt($address['address3']);
+        $address['address4'] = SecurityHelper::decrypt($address['address4']);
+        $address['zipCode'] = SecurityHelper::decrypt($address['zipCode']);
+
+        return $address;
+    }
+
+
+    // Private Methods
+    // =========================================================================
     /**
      * @param Address $record
      * @param array $address
@@ -116,20 +136,5 @@ class Addresses extends Component
         $record->save();
 
         return $record;
-    }
-
-    /**
-     * @param array $address
-     * @return array
-     */
-    public function parseAddress(array $address): array
-    {
-        $address['address1'] = SecurityHelper::decrypt($address['address1']);
-        $address['address2'] = SecurityHelper::decrypt($address['address2']);
-        $address['address3'] = SecurityHelper::decrypt($address['address3']);
-        $address['address4'] = SecurityHelper::decrypt($address['address4']);
-        $address['zipCode'] = SecurityHelper::decrypt($address['zipCode']);
-
-        return $address;
     }
 }

@@ -36,7 +36,7 @@ class BenefitController extends Controller
 
         $variables = [];
 
-        $pluginName = Staff::$settings->pluginName;
+        $pluginName = Staff::$plugin->settings->pluginName;
         $templateTitle = Craft::t('staff-management', 'Employers');
 
         $variables['pluginName'] = $pluginName;
@@ -87,7 +87,7 @@ class BenefitController extends Controller
             return (($countA > $countB) ? -1 : 1);
         });
 
-        $pluginName = Staff::$settings->pluginName;
+        $pluginName = Staff::$plugin->settings->pluginName;
         $templateTitle = Craft::t('staff-management', 'Benefits > ' . $employer['name']);
 
         $variables['pluginName'] = $pluginName;
@@ -128,7 +128,7 @@ class BenefitController extends Controller
         $policy->policyStartDate = DateTimeHelper::toDateTime($policy->policyStartDate)->format('jS M, Y');
         $policy->policyRenewalDate = DateTimeHelper::toDateTime($policy->policyRenewalDate)->format('jS M, Y');
 
-        $pluginName = Staff::$settings->pluginName;
+        $pluginName = Staff::$plugin->settings->pluginName;
         $templateTitle = Craft::t('staff-management', 'Policy "' . $policy->policyName . '"');
 
         $variables = [];
@@ -162,7 +162,7 @@ class BenefitController extends Controller
 
         $benefit = BenefitType::findOne($policy->benefitTypeId);
 
-        $pluginName = Staff::$settings->pluginName;
+        $pluginName = Staff::$plugin->settings->pluginName;
         $templateTitle = Craft::t('staff-management', 'Add Policy');
 
         $variables = [];
@@ -195,7 +195,7 @@ class BenefitController extends Controller
             throw new NotFoundHttpException('Employer or benefit does not exist');
         }
 
-        $pluginName = Staff::$settings->pluginName;
+        $pluginName = Staff::$plugin->settings->pluginName;
         $templateTitle = Craft::t('staff-management', 'Add Policy');
 
         $variables = [];
@@ -265,7 +265,7 @@ class BenefitController extends Controller
             return $this->redirect('/admin/staff-management/benefits/employers/' . $employer->id . '/policy/' . $policy->id);
         }
 
-        $pluginName = Staff::$settings->pluginName;
+        $pluginName = Staff::$plugin->settings->pluginName;
         $templateTitle = Craft::t('staff-management', ($policyId ? 'Edit Policy' : 'Add Policy'));
 
         $variables = [];
@@ -332,7 +332,7 @@ class BenefitController extends Controller
         $variantValues = $variant->toArray();
         $variantValues = array_merge($variantValues, $variant->getValues($benefitType->slug ?? ''));
 
-        $pluginName = Staff::$settings->pluginName;
+        $pluginName = Staff::$plugin->settings->pluginName;
         $templateTitle = Craft::t('staff-management', 'Variant');
 
         $variables = [];
@@ -359,7 +359,7 @@ class BenefitController extends Controller
             throw new NotFoundHttpException('Policy does not exist');
         }
 
-        $pluginName = Staff::$settings->pluginName;
+        $pluginName = Staff::$plugin->settings->pluginName;
         $templateTitle = Craft::t('staff-management', 'Add Variant');
 
         $variables = [];
@@ -402,7 +402,7 @@ class BenefitController extends Controller
         $variantValues = $variant->toArray();
         $variantValues = array_merge($variantValues, $variant->getValues($benefitType->slug ?? ''));
 
-        $pluginName = Staff::$settings->pluginName;
+        $pluginName = Staff::$plugin->settings->pluginName;
         $templateTitle = Craft::t('staff-management', 'Add Variant');
 
         $variables = [];
@@ -495,7 +495,7 @@ class BenefitController extends Controller
             return $this->redirect('/admin/staff-management/benefits/variant/' . $variant->id);
         }
 
-        $pluginName = Staff::$settings->pluginName;
+        $pluginName = Staff::$plugin->settings->pluginName;
         $templateTitle = Craft::t('staff-management', ($variantId ? 'Edit Variant' : 'Add Variant'));
         $benefitType = BenefitType::findOne($policy->benefitTypeId);
 

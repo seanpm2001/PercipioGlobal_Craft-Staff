@@ -1,6 +1,6 @@
 <?php
 
-namespace percipiolondon\staff\jobs\v2;
+namespace percipiolondon\staff\jobs;
 
 use Craft;
 use craft\helpers\App;
@@ -10,7 +10,7 @@ use percipiolondon\staff\helpers\Logger;
 use percipiolondon\staff\Staff;
 use percipiolondon\staff\records\PayRunEntry as PayRunEntryRecord;
 
-class FetchPayRunJob extends BaseJob
+class FetchPayRunsJob extends BaseJob
 {
     public array $criteria = [];
 
@@ -42,6 +42,7 @@ class FetchPayRunJob extends BaseJob
                     $response = $client->get(Staff::$plugin->getSettings()->apiBaseUrl . 'employers/' . $employer->staffologyId . '/paycodes', $headers);
                     $payCodes = Json::decodeIfJson($response->getBody()->getContents(), true);
 
+                    $fetchedPayCodes = [];
                     foreach ($payCodes as $payCode) {
 
                         try {
@@ -92,7 +93,7 @@ class FetchPayRunJob extends BaseJob
                             $payRunFetchedData = Json::decode($response->getBody()->getContents(), true);
 
 
-                            $payRunRecord = Staff::$plugin->payRuns->savePayRun($payRunFetchedData, $url, $employer->toArray(), false);
+                            $payRunRecord = Staff::$plugin->payRuns->savePayRun($payRunFetchedData, $url, $employer->toArray());
 
                             $this->setProgress(
                                 $queue,
@@ -104,7 +105,7 @@ class FetchPayRunJob extends BaseJob
                             );
 
                             // pay run entries
-                            if ($this->criteria['fetchEntries'] ?? false) {
+                            if (($this->criteria['fetchEntries'] ?? false) && $payRunRecord) {
 
                                 $logger->stdout('--- Start pay run entries fetching for ' . ($employer->name ?? '-') . ' [' . $payRunRecord['taxYear'] . '/'  .$payRunRecord['taxMonth'] . ']' . PHP_EOL, $logger::RESET);
 

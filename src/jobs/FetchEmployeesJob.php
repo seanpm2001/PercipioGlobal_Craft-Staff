@@ -1,6 +1,6 @@
 <?php
 
-namespace percipiolondon\staff\jobs\v2;
+namespace percipiolondon\staff\jobs;
 
 use Craft;
 use craft\helpers\App;

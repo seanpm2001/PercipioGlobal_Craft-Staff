@@ -6,13 +6,6 @@ use Craft;
 use craft\console\Controller;
 use craft\helpers\App;
 use craft\queue\QueueInterface;
-use percipiolondon\staff\elements\Employer;
-use percipiolondon\staff\elements\PayRun;
-use percipiolondon\staff\jobs\v2\FetchEmployeesJob;
-use percipiolondon\staff\jobs\v2\FetchEmployersJob;
-use percipiolondon\staff\jobs\v2\FetchPayRunByEmployerJob;
-use percipiolondon\staff\jobs\v2\FetchPayRunEntriesJob;
-use percipiolondon\staff\jobs\v2\FetchPayRunJob;
 use percipiolondon\staff\Staff;
 use yii\helpers\Console;
 use yii\queue\redis\Queue as RedisQueue;
@@ -49,44 +42,13 @@ class FetchController extends Controller
         return $options;
     }
 
-    /**
-     * Fetch all the employers/employees/payruns/pensions/... from staffology
-     * e.g.: actions/admin/staff-management/employer-controller/fetch
-     */
-    public function actionIndex()
-    {
-        $this->stdout("" . PHP_EOL, Console::RESET);
-        $this->stdout("--------------------------------- Start fetching data from Staffology" . PHP_EOL, Console::FG_CYAN);
-        $this->stdout("" . PHP_EOL, Console::RESET);
-
-        //Fetch a list of all employers from Staffology
-        $employers = Staff::$plugin->employers->fetchEmployerList();
-
-        //Fetch all the standalone calls needed before fetching Employer / Employee / Pay Run
-//        $this->stdout("" . PHP_EOL, Console::RESET);
-//        Staff::$plugin->pensions->fetchPensionSchemes($employers);
-//
-        // Fetch Employer / Employee
-        $this->stdout("" . PHP_EOL, Console::RESET);
-        Staff::$plugin->employers->fetchEmployers($employers);
-
-        $this->_runQueue();
-
-        $this->stdout("" . PHP_EOL, Console::RESET);
-        $this->stdout("--------------------------------- Done fetching from Staffology" . PHP_EOL, Console::FG_CYAN);
-        $this->stdout("" . PHP_EOL, Console::RESET);
-    }
-
     public function actionEmployers()
     {
         $this->stdout('' . PHP_EOL, Console::RESET);
         $this->stdout('--------------------------------- Start fetching data from Staffology' . PHP_EOL, Console::FG_CYAN);
         $this->stdout('' . PHP_EOL, Console::RESET);
 
-        $queue = Craft::$app->getQueue();
-        $queue->push(new FetchEmployersJob([
-            'description' => 'Fetching employers',
-        ]));
+        Staff::$plugin->employers->fetchEmployers();
 
         $this->_runQueue();
 
@@ -101,13 +63,7 @@ class FetchController extends Controller
         $this->stdout('--------------------------------- Start fetching data from Staffology' . PHP_EOL, Console::FG_CYAN);
         $this->stdout('' . PHP_EOL, Console::RESET);
 
-        $queue = Craft::$app->getQueue();
-        $queue->push(new FetchEmployeesJob([
-            'criteria' => [
-                'employers' => Employer::findAll(),
-            ],
-            'description' => 'Fetching employees',
-        ]));
+        Staff::$plugin->employees->fetchEmployees();
 
         $this->_runQueue();
 
@@ -122,13 +78,7 @@ class FetchController extends Controller
         $this->stdout('--------------------------------- Start fetching data from Staffology' . PHP_EOL, Console::FG_CYAN);
         $this->stdout('' . PHP_EOL, Console::RESET);
 
-        $queue = Craft::$app->getQueue();
-        $queue->push(new FetchPayRunJob([
-            'criteria' => [
-                'employers' => Employer::findAll(),
-            ],
-            'description' => 'Fetching pay run',
-        ]));
+        Staff::$plugin->payRuns->fetchPayRuns();
 
         $this->_runQueue();
 
@@ -149,16 +99,7 @@ class FetchController extends Controller
         $this->stdout('--------------------------------- Start fetching data from Staffology' . PHP_EOL, Console::FG_CYAN);
         $this->stdout('' . PHP_EOL, Console::RESET);
 
-        $queue = Craft::$app->getQueue();
-
-        $queue->push(new FetchPayRunJob([
-            'criteria' => [
-                'employers' => $this->employer === '*' ? Employer::findAll() : [Employer::findOne($this->employer)],
-                'taxYear' => $this->taxYear === '*' ? null : $this->taxYear,
-                'fetchEntries' => true
-            ],
-            'description' => 'Fetching pay run',
-        ]));
+        Staff::$plugin->payRuns->fetchPayRuns($this->employer, $this->taxYear);
 
         $this->_runQueue();
 
@@ -173,13 +114,7 @@ class FetchController extends Controller
         $this->stdout('--------------------------------- Start fetching data from Staffology' . PHP_EOL, Console::FG_CYAN);
         $this->stdout('' . PHP_EOL, Console::RESET);
 
-        $queue = Craft::$app->getQueue();
-        $queue->push(new FetchPayRunEntriesJob([
-            'criteria' => [
-                'payRuns' => PayRun::findAll(),
-            ],
-            'description' => 'Fetching pay run entries',
-        ]));
+        Staff::$plugin->payRunEntries->fetchPayRunEntries();
 
         $this->_runQueue();
 

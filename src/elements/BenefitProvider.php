@@ -12,33 +12,43 @@ namespace percipiolondon\staff\elements;
 
 use Craft;
 use craft\base\Element;
-use craft\base\ElementInterface;
 use craft\db\Query;
 use craft\elements\db\ElementQueryInterface;
 
-use craft\helpers\App;
 use percipiolondon\staff\db\Table;
 use percipiolondon\staff\elements\db\BenefitProviderQuery as ProviderQuery;
 use percipiolondon\staff\helpers\Logger;
 use percipiolondon\staff\records\BenefitProvider as ProviderRecord;
 
 /**
- * Employee Element
+ * Benefit Provder Element
+ *
+ * @property-read string $gqlTypeName
  */
-
 class BenefitProvider extends Element
 {
     // Public Properties
     // =========================================================================
-
+    /**
+     * @var string
+     */
     public string $name = '';
+    /**
+     * @var string|null
+     */
     public ?string $url = null;
-    public ?int $logo = null;
+    /**
+     * @var int|null|string
+     */
+    public int|string|null $logo = null;
+    /**
+     * @var string|null
+     */
     public ?string $content = null;
+
 
     // Static Methods
     // =========================================================================
-
     /**
      * Returns the display name of this class.
      *
@@ -87,6 +97,19 @@ class BenefitProvider extends Element
         return new ProviderQuery(static::class);
     }
 
+    /**
+     * @param mixed $context
+     * @return string
+     */
+    public static function gqlTypeNameByContext($context): string
+    {
+        return 'BenefitProvider';
+    }
+
+
+
+    // Protected Methods
+    // =========================================================================
     /**
      * Defines the sources that elements of this type may belong to.
      *
@@ -147,6 +170,9 @@ class BenefitProvider extends Element
         ];
     }
 
+    // Public Methods
+    // =========================================================================
+
     /**
      * @param string $attribute
      * @return string
@@ -175,33 +201,13 @@ class BenefitProvider extends Element
      *
      * @return array
      */
-    public function rules()
+    public function defineRules(): array
     {
-        $rules = parent::rules();
+        $rules = parent::defineRules();
 
         $rules[] = [['name', 'content'], 'required'];
 
         return $rules;
-    }
-
-    // Public Methods
-    // =========================================================================
-    /**
-     * Returns the field layout used by this element.
-     *
-     * @return FieldLayout|null
-     */
-    public function getFieldLayout(): ?FieldLayout
-    {
-        return null;
-    }
-
-    // Indexes, etc.
-    // -------------------------------------------------------------------------
-
-    public static function gqlTypeNameByContext($context): string
-    {
-        return 'BenefitProvider';
     }
 
     /**
@@ -221,34 +227,17 @@ class BenefitProvider extends Element
      * @param bool $isNew Whether the element is brand new
      *
      */
-    public function afterSave(bool $isNew)
+    public function afterSave(bool $isNew): void
     {
-        $this->_saveRecord($isNew);
+        $this->_saveRecord();
 
-        return parent::afterSave($isNew);
+        parent::afterSave($isNew);
     }
 
     /**
-     * Performs actions before an element is deleted.
-     *
-     * @return bool Whether the element should be deleted
+     * Save benefit provider record
      */
-    public function beforeDelete(): bool
-    {
-        return true;
-    }
-
-    /**
-     * Performs actions after an element is deleted.
-     *
-     * @return void
-     */
-    public function afterDelete()
-    {
-        return true;
-    }
-
-    private function _saveRecord($isNew): void
+    private function _saveRecord(): void
     {
         try{
             $record = ProviderRecord::findOne($this->id);
@@ -273,6 +262,9 @@ class BenefitProvider extends Element
         }
     }
 
+
+    // Private Methods
+    // =========================================================================
     /**
      * Returns all employee ID's
      *

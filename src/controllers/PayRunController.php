@@ -14,7 +14,7 @@ use percipiolondon\staff\db\Table;
 use percipiolondon\staff\elements\Employer;
 use percipiolondon\staff\elements\PayRun;
 use percipiolondon\staff\helpers\Security as SecurityHelper;
-use percipiolondon\staff\jobs\v2\FetchPayRunJob;
+use percipiolondon\staff\jobs\FetchPayRunsJob;
 use percipiolondon\staff\records\PayLine as PayLineRecord;
 use percipiolondon\staff\records\PayRunImport;
 
@@ -41,11 +41,11 @@ class PayRunController extends Controller
 
         $variables = [];
 
-        $pluginName = Staff::$settings->pluginName;
+        $pluginName = Staff::$plugin->settings->pluginName;
         $templateTitle = Craft::t('staff-management', 'Pay Runs');
 
         $variables['controllerHandle'] = 'payruns';
-        $variables['pluginName'] = Staff::$settings->pluginName;
+        $variables['pluginName'] = Staff::$plugin->settings->pluginName;
         $variables['title'] = $templateTitle;
         $variables['docTitle'] = "{$pluginName} - {$templateTitle}";
         $variables['selectedSubnavItem'] = 'payRuns';
@@ -76,11 +76,11 @@ class PayRunController extends Controller
 
 //        $payRuns = PayRunRecord::findAll(['employerId' => $employer['id']]);
 
-        $pluginName = Staff::$settings->pluginName;
+        $pluginName = Staff::$plugin->settings->pluginName;
         $templateTitle = Craft::t('staff-management', 'Pay Runs > ' . $employer['name']);
 
         $variables['controllerHandle'] = 'payruns';
-        $variables['pluginName'] = Staff::$settings->pluginName;
+        $variables['pluginName'] = Staff::$plugin->settings->pluginName;
         $variables['title'] = $templateTitle;
         $variables['docTitle'] = "{$pluginName} - {$templateTitle} - {$employer['name']}";
         $variables['selectedSubnavItem'] = 'payRuns';
@@ -118,11 +118,11 @@ class PayRunController extends Controller
         $taxYear = $payRun['taxYear'] ?? '';
         $period = $payRun['period'] ?? '';
 
-        $pluginName = Staff::$settings->pluginName;
+        $pluginName = Staff::$plugin->settings->pluginName;
         $templateTitle = Craft::t('staff-management', 'Pay Runs > ' . $employer->name . ' > ' . $taxYear . ' / ' . $period);
 
         $variables['controllerHandle'] = 'payruns';
-        $variables['pluginName'] = Staff::$settings->pluginName;
+        $variables['pluginName'] = Staff::$plugin->settings->pluginName;
         $variables['title'] = $templateTitle;
         $variables['docTitle'] = "{$pluginName} - {$templateTitle} - {$employer->name}";
         $variables['selectedSubnavItem'] = 'payRuns';
@@ -156,14 +156,7 @@ class PayRunController extends Controller
         $this->requireLogin();
         $this->requireAcceptsJson();
 
-        Queue::push(new FetchPayRunJob([
-            'criteria' => [
-                'employers' => $employerId ? Employer::findAll() : [Employer::findOne($employerId)],
-                'taxYear' => $taxYear === '' ? null : $taxYear,
-                'fetchEntries' => true
-            ],
-            'description' => 'Fetching pay run',
-        ]));
+        Staff::$plugin->payRuns->fetchPayRuns($employerId, $taxYear, true);
 
         return $this->asJson([
             'success' => true,
@@ -332,11 +325,11 @@ class PayRunController extends Controller
         $taxYear = $payRun['taxYear'] ?? '';
         $period = $payRun['period'] ?? '';
 
-        $pluginName = Staff::$settings->pluginName;
+        $pluginName = Staff::$plugin->settings->pluginName;
         $templateTitle = Craft::t('staff-management', 'Pay Runs > ' . $employerName . ' > ' . $taxYear . ' / ' . $period);
 
         $variables['controllerHandle'] = 'payruns';
-        $variables['pluginName'] = Staff::$settings->pluginName;
+        $variables['pluginName'] = Staff::$plugin->settings->pluginName;
         $variables['title'] = $templateTitle;
         $variables['docTitle'] = "{$pluginName} - {$templateTitle} - {$employerName}";
         $variables['selectedSubnavItem'] = 'payRuns';

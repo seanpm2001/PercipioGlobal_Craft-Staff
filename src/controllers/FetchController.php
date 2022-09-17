@@ -10,10 +10,10 @@ use craft\queue\QueueInterface;
 use yii\queue\redis\Queue as RedisQueue;
 use percipiolondon\staff\elements\Employer;
 use percipiolondon\staff\elements\PayRun;
-use percipiolondon\staff\jobs\v2\FetchEmployeesJob;
-use percipiolondon\staff\jobs\v2\FetchEmployersJob;
-use percipiolondon\staff\jobs\v2\FetchPayRunEntriesJob;
-use percipiolondon\staff\jobs\v2\FetchPayRunJob;
+use percipiolondon\staff\jobs\FetchEmployeesJob;
+use percipiolondon\staff\jobs\FetchEmployersJob;
+use percipiolondon\staff\jobs\FetchPayRunEntriesJob;
+use percipiolondon\staff\jobs\FetchPayRunsJob;
 use percipiolondon\staff\Staff;
 use yii\web\Response;
 
@@ -22,10 +22,10 @@ class FetchController extends Controller
     public function actionIndex(): Response
     {
         $variables = [];
-        $pluginName = Staff::$settings->pluginName;
+        $pluginName = Staff::$plugin->settings->pluginName;
         $templateTitle = Craft::t('staff-management', 'Staffology Fetches');
 
-        $variables['pluginName'] = Staff::$settings->pluginName;
+        $variables['pluginName'] = Staff::$plugin->settings->pluginName;
         $variables['title'] = $templateTitle;
         $variables['docTitle'] = "{$pluginName} - {$templateTitle}";
         $variables['selectedSubnavItem'] = 'fetches';
@@ -70,7 +70,7 @@ class FetchController extends Controller
         $this->requireLogin();
         $this->requireAcceptsJson();
 
-        Queue::push(new FetchPayRunJob([
+        Queue::push(new FetchPayRunsJob([
             'criteria' => [
                 'employers' => Employer::findAll(),
             ],

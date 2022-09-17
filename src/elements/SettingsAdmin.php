@@ -12,12 +12,10 @@ namespace percipiolondon\staff\elements;
 
 use Craft;
 use craft\base\Element;
-use craft\db\Query;
 use craft\elements\db\ElementQueryInterface;
 use percipiolondon\staff\elements\db\SettingsAdminQuery;
 use percipiolondon\staff\records\Settings;
 use percipiolondon\staff\records\SettingsAdmin as SettingsAdminRecord;
-use yii\base\BaseObject;
 
 /**
  * Request Element
@@ -32,6 +30,8 @@ use yii\base\BaseObject;
  */
 class SettingsAdmin extends Element
 {
+    // Public Properties
+    // =========================================================================
     /**
      * @var int|null
      */
@@ -40,6 +40,10 @@ class SettingsAdmin extends Element
      * @var int|null
      */
     public ?int $settingsId = null;
+
+
+    // Private Properties
+    // =========================================================================
     /**
      * @var string|null
      */
@@ -49,6 +53,9 @@ class SettingsAdmin extends Element
      */
     private ?array $_settings = null;
 
+
+    // Static Methods
+    // =========================================================================
     /**
      * @return string
      */
@@ -82,26 +89,12 @@ class SettingsAdmin extends Element
     }
 
     /**
-     * @return array
-     */
-    public function defineRules(): array
-    {
-        $rules = parent::defineRules();
-        $rules[] = [['userId', 'settingsId'], 'required'];
-
-        return $rules;
-    }
-
-    /**
      * @return ElementQueryInterface
      */
     public static function find(): ElementQueryInterface
     {
         return new SettingsAdminQuery(static::class);
     }
-
-    // Indexes, etc.
-    // -------------------------------------------------------------------------
 
     /**
      * @param mixed $context
@@ -112,6 +105,21 @@ class SettingsAdmin extends Element
         return 'SettingAdmin';
     }
 
+    // Public Methods
+    // =========================================================================
+    /**
+     * @return array
+     */
+    public function defineRules(): array
+    {
+        $rules = parent::defineRules();
+        $rules[] = [['userId', 'settingsId'], 'required'];
+
+        return $rules;
+    }
+
+    // Indexes, etc.
+    // -------------------------------------------------------------------------
     /**
      * @inheritdoc
      */
@@ -180,6 +188,9 @@ class SettingsAdmin extends Element
         parent::afterSave($isNew);
     }
 
+
+    // Private Methods
+    // =========================================================================
     /**
      * @param bool $isNew
      */

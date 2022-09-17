@@ -35,11 +35,11 @@ class BenefitProviderController extends Controller
 
         $variables = [];
 
-        $pluginName = Staff::$settings->pluginName;
+        $pluginName = Staff::$plugin->settings->pluginName;
         $templateTitle = Craft::t('staff-management', 'Benefit Providers');
 
         $variables['controllerHandle'] = 'benefit-type';
-        $variables['pluginName'] = Staff::$settings->pluginName;
+        $variables['pluginName'] = Staff::$plugin->settings->pluginName;
         $variables['title'] = $templateTitle;
         $variables['docTitle'] = "{$pluginName} - {$templateTitle}";
         $variables['selectedSubnavItem'] = 'benefits';
@@ -68,11 +68,11 @@ class BenefitProviderController extends Controller
 
         $variables = [];
 
-        $pluginName = Staff::$settings->pluginName;
+        $pluginName = Staff::$plugin->settings->pluginName;
         $templateTitle = Craft::t('staff-management', 'Benefit Providers');
 
         $variables['controllerHandle'] = 'benefit-type';
-        $variables['pluginName'] = Staff::$settings->pluginName;
+        $variables['pluginName'] = Staff::$plugin->settings->pluginName;
         $variables['title'] = $templateTitle;
         $variables['docTitle'] = "{$pluginName} - {$templateTitle}";
         $variables['selectedSubnavItem'] = 'benefits';
@@ -113,7 +113,7 @@ class BenefitProviderController extends Controller
             $success = $elementsService->saveElement($provider);
         }
 
-        $pluginName = Staff::$settings->pluginName;
+        $pluginName = Staff::$plugin->settings->pluginName;
         $templateTitle = Craft::t('staff-management', 'Benefit Providers');
         $variables = [];
         $variables['controllerHandle'] = 'benefit-type';
@@ -146,12 +146,12 @@ class BenefitProviderController extends Controller
 
         $provider = BenefitProvider::findOne($providerId);
 
-        $pluginName = Staff::$settings->pluginName;
+        $pluginName = Staff::$plugin->settings->pluginName;
         $templateTitle = Craft::t('staff-management', 'Benefit Providers');
 
         $variables = [];
         $variables['controllerHandle'] = 'benefit-type';
-        $variables['pluginName'] = Staff::$settings->pluginName;
+        $variables['pluginName'] = Staff::$plugin->settings->pluginName;
         $variables['title'] = $templateTitle;
         $variables['docTitle'] = "{$pluginName} - {$templateTitle}";
         $variables['selectedSubnavItem'] = 'benefits';

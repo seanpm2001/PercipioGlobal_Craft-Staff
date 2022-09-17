@@ -12,7 +12,6 @@ namespace percipiolondon\staff\elements;
 
 use Craft;
 use craft\base\Element;
-use craft\db\Query;
 use craft\elements\db\ElementQueryInterface;
 
 use percipiolondon\staff\elements\db\PayRunQuery;
@@ -26,39 +25,100 @@ use yii\db\Exception;
 /**
  * PayRun Element
  *
- * @property PayRunTotals|null $payRunTotals the payrun totals.
  * Element is the base class for classes representing elements in terms of objects.
  *
+ *
+ * @property-read string $gqlTypeName
+ * @property-read null|string $employer
+ * @property-read null|array $totals
  */
 class PayRun extends Element
 {
     // Public Properties
     // =========================================================================
-
+    /**
+     * @var string|null
+     */
     public ?string $staffologyId = null;
+    /**
+     * @var string|null
+     */
     public ?string $taxYear = null;
+    /**
+     * @var string|null
+     */
     public ?string $taxMonth = null;
+    /**
+     * @var string|null
+     */
     public ?string $payPeriod = null;
+    /**
+     * @var string|null
+     */
     public ?string $ordinal = null;
+    /**
+     * @var string|null
+     */
     public ?string $period = null;
+    /**
+     * @var string|null
+     */
     public ?string $startDate = null;
+    /**
+     * @var string|null
+     */
     public ?string $endDate = null;
+    /**
+     * @var string|null
+     */
     public ?string $paymentDate = null;
+    /**
+     * @var string|null
+     */
     public ?string $employeeCount = null;
+    /**
+     * @var string|null
+     */
     public ?string $subContractorCount = null;
+    /**
+     * @var string|null
+     */
     public ?string $state = null;
+    /**
+     * @var string|null
+     */
     public ?string $dateClosed = null;
+    /**
+     * @var string|null
+     */
     public ?string $pdf = null;
+    /**
+     * @var string|null
+     */
     public ?string $url = null;
+    /**
+     * @var bool|null
+     */
     public ?bool $isClosed = null;
+    /**
+     * @var int|null
+     */
     public ?int $employerId = null;
 
+    // Private Properties
+    // =========================================================================
+    /**
+     * @var array|null
+     */
     private ?array $_totals = null;
+    /**
+     * @var string|null
+     */
     private ?string $_employer = null;
+
 
     // Static Methods
     // =========================================================================
-
     /**
      * Returns the display name of this class.
      *
@@ -108,30 +168,16 @@ class PayRun extends Element
     }
 
     /**
-     * Defines the sources that elements of this type may belong to.
-     *
-     * @param string|null $context The context ('index' or 'modal').
-     *
-     * @return array The sources.
-     * @see sources()
+     * @param mixed $context
+     * @return string
      */
-    protected static function defineSources(string $context = null): array
+    public static function gqlTypeNameByContext($context): string
     {
-        $ids = self::_getPayrunIds();
-
-        return [
-            [
-                'key' => '*',
-                'label' => 'All payruns',
-                'defaultSort' => ['id', 'desc'],
-                'criteria' => ['id' => $ids],
-            ],
-        ];
+        return 'PayRun';
     }
 
     // Public Methods
     // =========================================================================
-
     /**
      * Returns the payrun totals.
      *
@@ -155,9 +201,8 @@ class PayRun extends Element
      * Returns the employer
      *
      * @return string|null
-     * @throws InvalidConfigException if [[employerId]] is set but invalid
      */
-    public function getEmployer()
+    public function getEmployer(): string|null
     {
         if ($this->_employer === null) {
             if ($this->employerId === null) {
@@ -166,46 +211,15 @@ class PayRun extends Element
 
             if (($this->_employer = Staff::$plugin->employers->getEmployerNameById($this->employerId)) === null) {
                 // The author is probably soft-deleted. Just no author is set
-                $this->_employer = false;
+                $this->_employer = null;
             }
         }
 
         return $this->_employer ?: null;
     }
 
-    /**
-     * Returns the validation rules for attributes.
-     *
-     * Validation rules are used by [[validate()]] to check if attribute values are valid.
-     * Child classes may override this method to declare different validation rules.
-     *
-     * More info: http://www.yiiframework.com/doc-2.0/guide-input-validation.html
-     *
-     * @return array
-     */
-    public function rules()
-    {
-        return parent::rules();
-    }
-
-    /**
-     * Returns the field layout used by this element.
-     *
-     * @return FieldLayout|null
-     */
-    public function getFieldLayout()
-    {
-        return null;
-    }
-
     // Indexes, etc.
     // -------------------------------------------------------------------------
-
-    public static function gqlTypeNameByContext($context): string
-    {
-        return 'PayRun';
-    }
-
     /**
      * @inheritdoc
      */
@@ -224,65 +238,19 @@ class PayRun extends Element
      *
      * @return void
      */
-    public function afterSave(bool $isNew)
+    public function afterSave(bool $isNew): void
     {
         $this->_saveRecord($isNew);
 
-        return parent::afterSave($isNew);
+        parent::afterSave($isNew);
     }
 
+
+    // Private Methods
+    // -------------------------------------------------------------------------
     /**
-     * Performs actions before an element is deleted.
-     *
-     * @return bool Whether the element should be deleted
+     * @param $isNew
      */
-    public function beforeDelete(): bool
-    {
-        return true;
-    }
-
-    /**
-     * Performs actions after an element is deleted.
-     *
-     * @return void
-     */
-    public function afterDelete()
-    {
-        return true;
-    }
-
-//    public function datetimeAttributes(): array
-//    {
-//        $attributes = parent::datetimeAttributes();
-//        $attributes[] = 'dateClosed';
-//        $attributes[] = 'paymentDate';
-//        $attributes[] = 'startDate';
-//        $attributes[] = 'endDate';
-//        return $attributes;
-//    }
-
-    /**
-     * Returns all payrun ID's
-     *
-     * @return array
-     */
-
-    private static function _getPayrunIds(): array
-    {
-        $payrunIds = [];
-
-        $payruns = (new Query())
-            ->from('{{%staff_pay_run}}')
-            ->select('id')
-            ->all();
-
-        foreach ($payruns as $payrun) {
-            $payrunIds[] = $payrun['id'];
-        }
-
-        return $payrunIds;
-    }
-
     private function _saveRecord($isNew)
     {
         $logger = new Logger();

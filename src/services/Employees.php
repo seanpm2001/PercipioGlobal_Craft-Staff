@@ -18,11 +18,9 @@ use percipiolondon\staff\elements\Employee;
 use percipiolondon\staff\elements\Employer;
 use percipiolondon\staff\helpers\Logger;
 use percipiolondon\staff\helpers\Security as SecurityHelper;
-use percipiolondon\staff\jobs\CreateEmployeeJob;
-use percipiolondon\staff\jobs\FetchEmployeesListJob;
+use percipiolondon\staff\jobs\FetchEmployeesJob;
 use percipiolondon\staff\records\Address;
 use percipiolondon\staff\records\Countries;
-use percipiolondon\staff\records\DirectorshipDetails;
 use percipiolondon\staff\records\Employer as EmployerRecord;
 use percipiolondon\staff\records\EmploymentDetails;
 use percipiolondon\staff\records\LeaverDetails;
@@ -87,21 +85,6 @@ class Employees extends Component
 
     /**
      * @param int $employeeId
-     * @return string
-     */
-    public function getEmployeeNameById(int $employeeId): string
-    {
-        $employee = Employer::findOne($employeeId);
-
-        if ($employee) {
-            return $employee['name'];
-        }
-
-        return '';
-    }
-
-    /**
-     * @param int $employeeId
      * @return array
      */
     public function getPersonalDetailsByEmployee(int $employeeId, bool $parse = false): array
@@ -152,21 +135,6 @@ class Employees extends Component
      * @param int $employeeId
      * @return array
      */
-    public function getStarterDetailsByEmployee(int $employeeId): array
-    {
-        $starterDetails = LeaveSettings::findOne(['employeeId' => $employeeId]);
-
-        if (!$starterDetails) {
-            return [];
-        }
-
-        return $starterDetails->toArray();
-    }
-
-    /**
-     * @param int $employeeId
-     * @return array
-     */
     public function getEmploymentDetailsByEmployee(int $employeeId): array
     {
         $employmentDetails = EmploymentDetails::findOne(['employeeId' => $employeeId]);
@@ -201,45 +169,31 @@ class Employees extends Component
 
 
     /* FETCHES */
-
     /**
+     * @param array $payRuns
      * @param array $employer
      */
-    public function fetchEmployeesByEmployer(array $employer)
+    public function fetchEmployees(): void
     {
         $queue = Craft::$app->getQueue();
-        $queue->push(new FetchEmployeesListJob([
-            'description' => 'Fetch the employees',
+        $queue->push(new FetchEmployeesJob([
             'criteria' => [
-                'employer' => $employer,
+                'employers' => Employer::findAll(),
             ],
-        ]));
-    }
-
-    /**
-     * @param array $employee
-     * @param array $employer
-     */
-    public function fetchEmployee(array $employee, array $employer)
-    {
-        $queue = Craft::$app->getQueue();
-        $queue->push(new CreateEmployeeJob([
-            'description' => 'Save employees',
-            'criteria' => [
-                'employee' => $employee,
-                'employer' => $employer,
-            ],
+            'description' => 'Fetching employees',
         ]));
     }
 
 
+    /* SYNCS */
     /**
      * Checks if our database has employers that are deleted on staffology, if so, delete them on our system
      *
-     * @param array $employer
+     * @param array|Employer $employer
      * @param array $employees
+     * @throws \Throwable
      */
-    public function syncEmployees(array|Employer $employer, array $employees)
+    public function syncEmployees(array|Employer $employer, array $employees): void
     {
         $logger = new Logger();
         $logger->stdout('↧ Sync employees of ' . $employer['name'] . PHP_EOL, $logger::RESET);
@@ -266,10 +220,13 @@ class Employees extends Component
         }
     }
 
+
+
+    /* SAVES */
     /**
      * @param array $employee
      * @param string $employeeName
-     * @param array $employer
+     * @param array|Employer $employer
      * @throws \Throwable
      */
     public function saveEmployee(array $employee, string $employeeName, array|Employer $employer): void

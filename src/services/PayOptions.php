@@ -18,11 +18,22 @@ use yii\db\Exception;
  */
 class PayOptions extends Component
 {
+    // Public Methods
+    // =========================================================================
+
+
+    /* GETTERS */
+    /**
+     * @param int $employerId
+     * @return PayOptionRecord
+     */
     public function getPayOptionsByEmployer(int $employerId): PayOptionRecord
     {
         return PayOptionRecord::findOne(['employerId' => $employerId]);
     }
 
+
+    /* SAVES */
     /**
      * @param array $payOptions
      * @param int|null $employerId
@@ -42,6 +53,12 @@ class PayOptions extends Component
         return $this->_saveRecord($record, $payOptions);
     }
 
+    /**
+     * @param array $payOptions
+     * @param int|null $payRunEntryId
+     * @return PayOptionRecord
+     * @throws \yii\db\StaleObjectException
+     */
     public function savePayOptionsByPayRunEntry(array $payOptions, int $payRunEntryId = null): PayOptionRecord
     {
         $record = PayOptionRecord::findOne(['payRunEntryId' => $payRunEntryId]);
@@ -107,18 +124,6 @@ class PayOptions extends Component
     }
 
     /**
-     * @param array $payOptions
-     * @return array
-     */
-    public function parsePayOptions(array $payOptions): array
-    {
-        $payOptions['payAmount'] = SecurityHelper::decrypt($payOptions['payAmount'] ?? '');
-        $payOptions['baseHourlyRate'] = SecurityHelper::decrypt($payOptions['baseHourlyRate'] ?? '');
-
-        return $payOptions;
-    }
-
-    /**
      * @param array $payLine
      * @return array
      */
@@ -130,6 +135,8 @@ class PayOptions extends Component
         return $payLine;
     }
 
+    // Private Methods
+    // =========================================================================
     /**
      * @param PayOptionRecord $record
      * @return PayOptionRecord|null

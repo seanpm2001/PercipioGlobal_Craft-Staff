@@ -4,12 +4,14 @@ namespace percipiolondon\staff\console\controllers;
 
 use Craft;
 use craft\console\Controller;
+use craft\errors\ElementNotFoundException;
 use percipiolondon\staff\elements\Employee;
 use percipiolondon\staff\elements\Employer;
 use percipiolondon\staff\elements\PayRun;
 use percipiolondon\staff\elements\PayRunEntry;
 use percipiolondon\staff\helpers\Logger;
 use percipiolondon\staff\records\PayCode;
+use yii\base\Exception;
 
 /**
  * Class TestDataController
@@ -18,42 +20,53 @@ use percipiolondon\staff\records\PayCode;
  */
 class TestDataController extends Controller
 {
-
     /**
      * Provide a test employer / employee / paycodes / pay run and pay run entry
      */
-    public function actionIndex()
+    public function actionIndex(): void
     {
-        $this->_createEmployer();
-        $this->_createEmployee();
-        $this->_createPayCode();
-        $this->_createPayRun();
-        $this->_createPayRunEntry();
+        try {
+            $this->_createEmployer();
+            $this->_createEmployee();
+            $this->_createPayCode();
+            $this->_createPayRun();
+            $this->_createPayRunEntry();
+        } catch (ElementNotFoundException | Exception | \Throwable $e) {
+            Craft::error($e->getMessage(), __METHOD__);
+        }
     }
 
     /**
      * Provide a test employer
      */
-    public function actionTestEmployer()
+    public function actionTestEmployer(): void
     {
-        $this->_createEmployer();
+        try {
+            $this->_createEmployer();
+        } catch (ElementNotFoundException | Exception | \Throwable $e) {
+            Craft::error($e->getMessage(), __METHOD__);
+        }
     }
 
     /**
      * Provide a test employee
      */
-    public function actionTestEmployee()
+    public function actionTestEmployee(): void
     {
-        $this->_createEmployee();
+        try {
+            $this->_createEmployee();
+        } catch (ElementNotFoundException | Exception | \Throwable $e) {
+            Craft::error($e->getMessage(), __METHOD__);
+        }
     }
 
     /**
-     * @return Employer|null
+     * @return void
      * @throws \Throwable
      * @throws \craft\errors\ElementNotFoundException
      * @throws \yii\base\Exception
      */
-    private function _createEmployer(): ?Employer
+    private function _createEmployer(): void
     {
         $logger = new Logger();
         $logger->stdout('✓ Save employer Test company...', $logger::RESET);
@@ -71,7 +84,7 @@ class TestDataController extends Controller
         $testEmployer->crn = 'crn';
         $testEmployer->startYear = 'startYear';
         $testEmployer->currentYear = 'currentYear';
-        $testEmployer->defaultPayOptions = 'defaultPayOptions';
+        $testEmployer->defaultPayOptions = null;
         $testEmployer->employeeCount = 'employeeCount';
 
         $elementsService = Craft::$app->getElements();
@@ -80,12 +93,10 @@ class TestDataController extends Controller
         if ($success) {
             $logger->stdout(' done' . PHP_EOL, $logger::FG_GREEN);
 
-            return $testEmployer;
+            return;
         }
 
         $logger->stdout(' failed' . PHP_EOL, $logger::FG_RED);
-
-        return null;
     }
 
     /**
@@ -93,7 +104,7 @@ class TestDataController extends Controller
      * @throws \craft\errors\ElementNotFoundException
      * @throws \yii\base\Exception
      */
-    private function _createEmployee()
+    private function _createEmployee(): void
     {
         $logger = new Logger();
         $logger->stdout('✓ Save employee Test...', $logger::RESET);
@@ -128,7 +139,7 @@ class TestDataController extends Controller
     /**
      *
      */
-    private function _createPayCode()
+    private function _createPayCode(): void
     {
         $logger = new Logger();
         $logger->stdout('✓ Save pay code Test...', $logger::RESET);
@@ -161,7 +172,7 @@ class TestDataController extends Controller
      * @throws \craft\errors\ElementNotFoundException
      * @throws \yii\base\Exception
      */
-    private function _createPayRun()
+    private function _createPayRun(): void
     {
         $logger = new Logger();
         $logger->stdout('✓ Save pay run test...', $logger::RESET);
@@ -205,7 +216,7 @@ class TestDataController extends Controller
      * @throws \craft\errors\ElementNotFoundException
      * @throws \yii\base\Exception
      */
-    private function _createPayRunEntry()
+    private function _createPayRunEntry(): void
     {
         $logger = new Logger();
         $logger->stdout('✓ Save pay run entry test...', $logger::RESET);

@@ -16,6 +16,7 @@ use percipiolondon\staff\services\Requests;
 use percipiolondon\staff\services\Settings;
 use percipiolondon\staff\services\Totals;
 use percipiolondon\staff\services\UserPermissions;
+use percipiolondon\staff\Staff;
 
 trait Services
 {
@@ -33,6 +34,7 @@ trait Services
             'payRunEntries' => PayRunEntries::class,
             'pensions' => Pensions::class,
             'requests'  => Requests::class,
+            'settings' => Staff::$plugin->getSettings(),
             'staffSettings'  => Settings::class,
             'totals' => Totals::class,
             'userPermissions' => UserPermissions::class,

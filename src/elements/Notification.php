@@ -30,8 +30,15 @@ use percipiolondon\staff\records\Notifications as NotificationsRecord;
  */
 class Notification extends Element
 {
+    // Static Properties
+    // =========================================================================
+    /**
+     * @var array
+     */
     public const TYPES = ['app', 'system', 'payroll', 'pension', 'employee', 'benefit'];
 
+    // Public Properties
+    // =========================================================================
     /**
      * @var int|null
      */
@@ -52,6 +59,10 @@ class Notification extends Element
      * @var bool|null
      */
     public ?bool $viewed = false;
+
+
+    // Private Properties
+    // =========================================================================
     /**
      * @var string|null
      */
@@ -61,6 +72,10 @@ class Notification extends Element
      */
     private ?array $_employee = null;
 
+
+
+    // Static Methods
+    // =========================================================================
     /**
      * @return string
      */
@@ -94,24 +109,6 @@ class Notification extends Element
     }
 
     /**
-     * @return array
-     */
-    public function defineRules(): array
-    {
-        $rules = parent::defineRules();
-        $rules[] = [['employerId', 'employeeId', 'type'], 'required'];
-        $rules[] = [
-            'type', function($attribute, $params) {
-                if (!in_array($this->$attribute, self::TYPES, true)) {
-                    $this->addError($attribute, "$attribute is not a valid type");
-                }
-            }
-        ];
-
-        return $rules;
-    }
-
-    /**
      * @return ElementQueryInterface
      */
     public static function find(): ElementQueryInterface
@@ -129,6 +126,26 @@ class Notification extends Element
     public static function gqlTypeNameByContext($context): string
     {
         return 'Notification';
+    }
+
+    // Public Methods
+    // =========================================================================
+    /**
+     * @return array
+     */
+    public function defineRules(): array
+    {
+        $rules = parent::defineRules();
+        $rules[] = [['employerId', 'employeeId', 'type'], 'required'];
+        $rules[] = [
+            'type', function($attribute, $params) {
+                if (!in_array($this->$attribute, self::TYPES, true)) {
+                    $this->addError($attribute, "$attribute is not a valid type");
+                }
+            }
+        ];
+
+        return $rules;
     }
 
     /**
@@ -193,6 +210,9 @@ class Notification extends Element
         parent::afterSave($isNew);
     }
 
+
+    // Private Methods
+    // =========================================================================
     /**
      * @param bool $isNew
      */

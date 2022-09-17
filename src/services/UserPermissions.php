@@ -35,7 +35,6 @@ class UserPermissions extends Component
 {
     // Public Methods
     // =========================================================================
-
     /**
      * @param $permissions
      * @param $userId
@@ -66,7 +65,6 @@ class UserPermissions extends Component
      * @param int $userId
      * @return bool
      */
-
     public function applyCanParam(string $permission, int $userId): bool
     {
         if (!$permission || $userId) {
